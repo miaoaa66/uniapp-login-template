@@ -1,0 +1,267 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index",
+			"style": {
+				"navigationBarTitleText": "登录模板库",
+				"navigationBarBackgroundColor": "#859926",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/login1/login",
+			"style": {
+				"navigationBarTitleText": "登录",
+				"navigationBarBackgroundColor": "#fd661f",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/login1/register",
+			"style": {
+				"navigationBarTitleText": "注册",
+				"navigationBarBackgroundColor": "#fd661f",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/login1/forget",
+			"style": {
+				"navigationBarTitleText": "忘记密码",
+				"navigationBarBackgroundColor": "#fd661f",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/login2/login",
+			"style": {
+				"navigationBarBackgroundColor": "#5de97f"
+			}
+		},
+		{
+			"path": "pages/login3/login"
+		},
+		{
+			"path": "pages/login3/register"
+		},
+		{
+			"path": "pages/login3/forget"
+		},
+		{
+			"path": "pages/login4/login",
+			"style": {
+				"navigationBarTitleText": "登录",
+				"navigationBarBackgroundColor": "#007AFF",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/login4/register",
+			"style": {
+				"navigationBarTitleText": "注册",
+				"navigationBarBackgroundColor": "#007AFF",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/login5/login",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/login5/register",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/login6/login"
+		},
+		{
+			"path": "pages/login6/register"
+		},
+		{
+			"path": "pages/login7/index",
+			"style": {
+				"navigationBarBackgroundColor": "#ce4b3b"
+			}
+		},
+		{
+			"path": "pages/login7/login",
+			"style": {
+				"navigationBarBackgroundColor": "#ce4b3b"
+			}
+		},
+		{
+			"path": "pages/login7/register",
+			"style": {
+				"navigationBarBackgroundColor": "#ce4b3b"
+			}
+		},
+		{
+			"path": "pages/login8/login",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/login9/login"
+		},
+		{
+			"path": "pages/login9/register"
+		},
+		{
+			"path": "pages/login10/login"
+		},
+		{
+			"path": "pages/login10/register"
+		},
+		{
+			"path": "pages/login11/login",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/login11/register",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/login12/login"
+		},
+		{
+			"path": "pages/login13/login",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/login14/login"
+		},
+		{
+			"path": "pages/login15/login",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/login16/login",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/login17/login"
+		},
+		{
+			"path": "pages/login18/login",
+			"style": {
+				"navigationBarBackgroundColor": "#ececee"
+			}
+		},
+		{
+			"path": "pages/login19/login"
+		},
+		{
+			"path": "pages/login20/login",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/login21/login",
+			"style": {
+				"navigationBarBackgroundColor": "#d9e4e8"
+			}
+		},
+		{
+			"path": "pages/login22/login",
+			"style": {
+				"navigationBarBackgroundColor": "#1f265a"
+			}
+		},
+		{
+			"path": "pages/login23/login",
+			"style": {
+				"navigationBarBackgroundColor": "#ffdcc8"
+			}
+		},
+		{
+			"path": "pages/login24/login"
+		},
+		{
+			"path": "pages/login24/register"
+		},
+		{
+			"path": "pages/login25/login"
+		},
+		{
+			"path": "pages/login26/login",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/login27/login",
+			"style": {
+				"navigationBarBackgroundColor": "#0b0c14"
+			}
+		},
+		{
+			"path": "pages/login27/forget",
+			"style": {
+				"navigationBarBackgroundColor": "#0b0c14"
+			}
+		},
+		{
+			"path": "pages/login27/register",
+			"style": {
+				"navigationBarBackgroundColor": "#0b0c14"
+			}
+		},
+		{
+			"path": "pages/login28/login",
+			"style": {
+				"navigationBarBackgroundColor": "#222e3c"
+			}
+		},
+		{
+			"path": "pages/login29/index",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/login29/login"
+		},
+		{
+			"path": "pages/login29/register"
+		},
+		{
+			"path": "pages/login30/login",
+			"style": {
+				"navigationBarBackgroundColor": "#81d7cf"
+			}
+		},
+		{
+			"path": "pages/login31/login"
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "",
+		"navigationBarBackgroundColor": "#FFFFFF",
+		"backgroundColor": "#FFFFFF"
+	},
+	"condition": { //模式配置，仅开发期间生效
+		"current": 0, //当前激活的模式(list 的索引项)
+		"list": [{
+			"name": "", //模式名称
+			"path": "", //启动页面，必选
+			"query": "" //启动参数，在页面的onLoad函数里面得到
+		}]
+	}
+}
