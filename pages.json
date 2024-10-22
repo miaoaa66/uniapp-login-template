@@ -248,6 +248,84 @@
 		},
 		{
 			"path": "pages/login31/login"
+		},
+		{
+			"path": "pages/login32/login",
+			"style": {
+				"navigationBarBackgroundColor": "#f3f1fe"
+			}
+		},
+		{
+			"path": "pages/login33/login",
+			"style": {
+				"navigationBarBackgroundColor": "#3fad28"
+			}
+		},
+		{
+			"path": "pages/login34/login"
+		},
+		{
+			"path": "pages/login35/login",
+			"style": {
+				"navigationBarBackgroundColor": "#d3e5fe"
+			}
+		},
+		{
+			"path": "pages/login36/login"
+		},
+		{
+			"path": "pages/login37/login",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/login38/login",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/login39/login"
+		},
+		{
+			"path": "pages/login40/login"
+		},
+		{
+			"path": "pages/login41/login"
+		},
+		{
+			"path": "pages/login42/login"
+		},
+		{
+			"path": "pages/login43/login"
+		},
+		{
+			"path": "pages/login44/login"
+		},
+		{
+			"path": "pages/login45/login"
+		},
+		{
+			"path": "pages/login46/login"
+		},
+		{
+			"path": "pages/login47/login"
+		},
+		{
+			"path": "pages/login48/login"
+		},
+		{
+			"path": "pages/login49/login"
+		},
+		{
+			"path": "pages/login50/login"
+		},
+		{
+			"path": "pages/login51/login"
+		},
+		{
+			"path": "pages/login51/register"
 		}
 	],
 	"globalStyle": {

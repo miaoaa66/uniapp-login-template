@@ -153,6 +153,106 @@ export default {
 			cover: "https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login31/login31_cover.png",
 			path: "/pages/login31/login",
 			tags: ["登录"]
+		},
+		{
+			cover: "https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login32/login32_cover.jpg",
+			path: "/pages/login32/login",
+			tags: ["登录", "注册"]
+		},
+		{
+			cover: "https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login33/login33_cover.jpg",
+			path: "/pages/login33/login",
+			tags: ["登录"]
+		},
+		{
+			cover: "https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login34/login34_cover.jpg",
+			path: "/pages/login34/login",
+			tags: ["登录"]
+		},
+		{
+			cover: "https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login35/login35_cover.png",
+			path: "/pages/login35/login",
+			tags: ["登录", "注册"]
+		},
+		{
+			cover: "https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login36/login36_cover.png",
+			path: "/pages/login36/login",
+			tags: ["登录", "注册"]
+		},
+		{
+			cover: "https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login37/login37_cover.jpg",
+			path: "/pages/login37/login",
+			tags: ["登录"]
+		},
+		{
+			cover: "https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login38/login38_cover.jpg",
+			path: "/pages/login38/login",
+			tags: ["快捷", "授权"]
+		},
+		{
+			cover: "https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login39/login39_cover.jpg",
+			path: "/pages/login39/login",
+			tags: ["登录", "动画"]
+		},
+		{
+			cover: "https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login40/login40_cover.jpg",
+			path: "/pages/login40/login",
+			tags: ["登录", "动画"]
+		},
+		{
+			cover: "https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login41/login41_cover.jpg",
+			path: "/pages/login41/login",
+			tags: ["登录", "注册", "动画"]
+		},
+		{
+			cover: "https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login42/login42_cover.jpg",
+			path: "/pages/login42/login",
+			tags: ["登录"]
+		},
+		{
+			cover: "https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login43/login43_cover.jpg",
+			path: "/pages/login43/login",
+			tags: ["登录"]
+		},
+		{
+			cover: "https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login44/login44_cover.jpg",
+			path: "/pages/login44/login",
+			tags: ["登录"]
+		},
+		{
+			cover: "https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login45/login45_cover.jpg",
+			path: "/pages/login45/login",
+			tags: ["登录"]
+		},
+		{
+			cover: "https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login46/login46_cover.jpg",
+			path: "/pages/login46/login",
+			tags: ["登录"]
+		},
+		{
+			cover: "https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login47/login47_cover.jpg",
+			path: "/pages/login47/login",
+			tags: ["登录"]
+		},
+		{
+			cover: "https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login48/login48_cover.jpg",
+			path: "/pages/login48/login",
+			tags: ["登录"]
+		},
+		{
+			cover: "https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login49/login49_cover.jpg",
+			path: "/pages/login49/login",
+			tags: ["登录"]
+		},
+		{
+			cover: "https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login50/login50_cover.jpg",
+			path: "/pages/login50/login",
+			tags: ["登录"]
+		},
+		{
+			cover: "https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login51/login51_cover.jpg",
+			path: "/pages/login51/login",
+			tags: ["登录", "注册"]
 		}
 	]
 }
