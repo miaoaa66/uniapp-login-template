@@ -18,7 +18,6 @@
 </template>
 
 <script>
-	let interstitialAd = null
 	import menu from "../common/data.js"
 	export default {
 		data() {
@@ -27,27 +26,17 @@
 			}
 		},
 		onLoad() {
-			if (wx.createInterstitialAd) {
-				interstitialAd = wx.createInterstitialAd({
-					adUnitId: 'adunit-ec747dfd1e519f37'
-				})
-				interstitialAd.onLoad(() => {})
-				interstitialAd.onError((err) => {})
-				interstitialAd.onClose(() => {})
-			}
 		},
 		onReady() {
-			if (interstitialAd) {
-				interstitialAd.show().catch((err) => {
-					console.error(err)
-				})
-			}
 		},
 		methods: {
 			//goto
 			goto(index) {
 				uni.navigateTo({
-					url: this.listData[index].path
+					url: this.listData[index].path,
+					fail(err) {
+						console.log(err);
+					}
 				})
 			}
 		}

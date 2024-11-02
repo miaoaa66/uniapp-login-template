@@ -326,6 +326,24 @@
 		},
 		{
 			"path": "pages/login51/register"
+		},
+		{
+			"path": "pages/login52/login",
+			"style": {
+				"navigationBarBackgroundColor": "#ebeffa"
+			}
+		},
+		{
+			"path": "pages/login53/login"
+		},
+		{
+			"path": "pages/login53/register"
+		},
+		{
+			"path": "pages/login53/forget"
+		},
+		{
+			"path": "pages/login54/login"
 		}
 	],
 	"globalStyle": {

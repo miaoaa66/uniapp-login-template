@@ -253,6 +253,21 @@ export default {
 			cover: "https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login51/login51_cover.jpg",
 			path: "/pages/login51/login",
 			tags: ["登录", "注册"]
+		},
+		{
+			cover: "https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login52/login52_cover.jpg",
+			path: "/pages/login52/login",
+			tags: ["登录"]
+		},
+		{
+			cover: "https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login53/login53_cover.jpg",
+			path: "/pages/login53/login",
+			tags: ["登录", "密码", "注册"]
+		},
+		{
+			cover: "https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login54/login54_cover.jpg",
+			path: "/pages/login54/login",
+			tags: ["登录"]
 		}
 	]
 }
