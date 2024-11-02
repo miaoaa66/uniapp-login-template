@@ -6,13 +6,13 @@
 				<view class="row-input">
 					<input placeholder="Email Address" maxlength="16" />
 					<image mode="aspectFill"
-						src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login53/login53_account.png">
+						src="./static/login53_account.png">
 					</image>
 				</view>
 				<view class="row-input">
 					<input placeholder="Password" password maxlength="18" />
 					<image mode="aspectFill"
-						src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login53/login53_password.png">
+						src="./static/login53_password.png">
 					</image>
 				</view>
 				<view class="login-btn">Login Account</view>

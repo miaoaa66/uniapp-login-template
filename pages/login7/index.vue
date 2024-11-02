@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<view class="head">
-			<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login7/login7_logo.png"></image>
+			<image src="./static/login7_logo.png"></image>
 		</view>
 		<view class="menu-btn" @click="gotoLogin">登录</view>
 		<view class="menu-btn" @click="gotoRegister">注册</view>

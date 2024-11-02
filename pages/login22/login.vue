@@ -2,14 +2,14 @@
 	<view class="content">
 		<view class="title">欢迎登录XX系统</view>
 		<view class="form-box">
-			<image class="bg" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login22/login22_bg.png"></image>
+			<image class="bg" src="./static/login22_bg.png"></image>
 			<view class="form">
 				<view class="row-input">
-					<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login22/login22_phone.png"></image>
+					<image src="./static/login22_phone.png"></image>
 					<input placeholder="请输入手机号" placeholder-class="placeholder"  maxlength="11" />
 				</view>
 				<view class="row-input">
-					<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login22/login22_password.png"></image>
+					<image src="./static/login22_password.png"></image>
 					<input placeholder="请输入密码" placeholder-class="placeholder" maxlength="18" password  />
 				</view>
 				<view class="login-btn">登录</view>

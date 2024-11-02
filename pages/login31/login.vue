@@ -7,20 +7,20 @@
 		<view class="form-box">
 			<view class="row-input">
 				<image class="icon"
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login31/login31_phone.png">
+					src="./static/login31_phone.png">
 				</image>
 				<input placeholder="请输入手机号码" maxlength="12" />
 			</view>
 			<view class="row-input">
 				<image class="icon"
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login31/login31_password.png">
+					src="./static/login31_password.png">
 				</image>
 				<input placeholder="请输入账号密码" :password="showPassword" maxlength="18" />
 				<image class="sub-icon" v-if="!showPassword" @click="passwordChange"
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login31/login31_show.png">
+					src="./static/login31_show.png">
 				</image>
 				<image class="sub-icon" mode="aspectFit" v-else @click="passwordChange"
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login31/login31_hide.png">
+					src="./static/login31_hide.png">
 				</image>
 			</view>
 			<view class="menu-link">
@@ -39,13 +39,13 @@
 			</view>
 			<view class="icon-box">
 				<image
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login31/login31_wx.png">
+					src="./static/login31_wx.png">
 				</image>
 				<image
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login31/login31_qq.png">
+					src="./static/login31_qq.png">
 				</image>
 				<image
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login31/login31_wb.png">
+					src="./static/login31_wb.png">
 				</image>
 			</view>
 		</view>

@@ -2,7 +2,7 @@
 	<view class="content">
 		<view class="logo-bg">
 			<image mode="aspectFill"
-				src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login52/login52_logo_bg.png">
+				src="./static/login52_logo_bg.png">
 			</image>
 		</view>
 		<view class="title">
@@ -12,13 +12,13 @@
 		<view class="form-box">
 			<view class="row-input">
 				<image mode="aspectFill"
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login52/login52_account.png">
+					src="./static/login52_account.png">
 				</image>
 				<input placeholder="请输入账号" maxlength="12" />
 			</view>
 			<view class="row-input">
 				<image mode="aspectFill"
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login52/login52_password.png">
+					src="./static/login52_password.png">
 				</image>
 				<input placeholder="输入密码" password maxlength="18" />
 			</view>

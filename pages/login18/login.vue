@@ -7,13 +7,13 @@
 		<view class="form-box">
 			<view class="row-input">
 				<image
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login18/login18_phone.png">
+					src="./static/login18_phone.png">
 				</image>
 				<input placeholder="请输入手机号" maxlength="11" placeholder-class="placeholder" />
 			</view>
 			<view class="row-input">
 				<image
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login18/login18_password.png">
+					src="./static/login18_password.png">
 				</image>
 				<input placeholder="请输入密码" maxlength="18" password placeholder-class="placeholder" />
 			</view>
@@ -26,7 +26,7 @@
 
 		<view class="bottom-box">
 			<image
-				src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login18/login18_bg.png">
+				src="./static/login18_bg.png">
 			</image>
 		</view>
 	</view>

@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<image class="bg" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login20/login20_bg.png"></image>
+		<image class="bg" src="./static/login20_bg.png"></image>
 		<view class="title">WELCOME</view>
 		<view class="form-box">
 			<view class="row-input" style="width: 500rpx;">
@@ -15,7 +15,7 @@
 				<text>忘记密码</text>
 			</view>
 			<view class="login-btn">
-				<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login20/login20_arrow.png"></image>
+				<image src="./static/login20_arrow.png"></image>
 			</view>
 			<view class="link-tip">
 				还没有账号?

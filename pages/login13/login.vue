@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<view class="head">
-			<image mode="aspectFill" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login13/login13_bg.png"></image>
+			<image mode="aspectFill" src="./static/login13_bg.png"></image>
 		</view>
 		<view class="form-box">
 			<view class="tab-title">
@@ -18,11 +18,11 @@
 			</view>
 			<view v-if="tabIndex==0">
 				<view class="row-input">
-					<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login13/login13_card.png"></image>
+					<image src="./static/login13_card.png"></image>
 					<input placeholder="请输入身份证" maxlength="18" />
 				</view>
 				<view class="row-input">
-					<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login13/login13_password.png"></image>
+					<image src="./static/login13_password.png"></image>
 					<input placeholder="请输入密码" password maxlength="18" />
 				</view>
 				<view class="login-btn" style="margin-top: 50rpx;">登录</view>
@@ -30,23 +30,23 @@
 			</view>
 			<view v-else>
 				<view class="row-input">
-					<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login13/login13_name.png"></image>
+					<image src="./static/login13_name.png"></image>
 					<input placeholder="请输入姓名" maxlength="12" />
 				</view>
 				<view class="row-input">
-					<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login13/login13_phone.png"></image>
+					<image src="./static/login13_phone.png"></image>
 					<input placeholder="请输入手机号" maxlength="11" />
 				</view>
 				<view class="row-input">
-					<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login13/login13_card.png"></image>
+					<image src="./static/login13_card.png"></image>
 					<input placeholder="请输入身份证" maxlength="18" />
 				</view>
 				<view class="row-input">
-					<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login13/login13_password.png"></image>
+					<image src="./static/login13_password.png"></image>
 					<input placeholder="请设置密码" password maxlength="18" />
 				</view>
 				<view class="row-input">
-					<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login13/login13_password.png"></image>
+					<image src="./static/login13_password.png"></image>
 					<input placeholder="请确认密码" password maxlength="18" />
 				</view>
 				<view class="agreement">

@@ -6,7 +6,7 @@
 			</view>
 			<view class="img-box">
 				<view class="upper">
-					<image mode="aspectFill" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login49/login49_account.png"></image>
+					<image mode="aspectFill" src="./static/login49_account.png"></image>
 				</view>
 				<view class="below"></view>
 			</view>
@@ -17,7 +17,7 @@
 			</view>
 			<view class="img-box">
 				<view class="upper">
-					<image mode="aspectFill" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login49/login49_email.png"></image>
+					<image mode="aspectFill" src="./static/login49_email.png"></image>
 				</view>
 				<view class="below"></view>
 			</view>
@@ -29,7 +29,7 @@
 			</view>
 			<view class="img-box">
 				<view class="upper">
-					<image mode="aspectFill" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login49/login49_password.png"></image>
+					<image mode="aspectFill" src="./static/login49_password.png"></image>
 				</view>
 				<view class="below"></view>
 			</view>

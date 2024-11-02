@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<image class="bg" mode="aspectFill"
-			src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login38/login38_bg.png"></image>
+			src="./static/login38_bg.png"></image>
 		<view class="form-box">
 			<view class="title-box">
 				<view class="title">开启你的精彩世界</view>

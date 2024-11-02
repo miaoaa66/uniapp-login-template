@@ -2,7 +2,7 @@
 	<view class="content">
 		<view class="logo-box">
 			<image class="logo" mode="aspectFill"
-				src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login35/login35_logo.png">
+				src="./static/login35_logo.png">
 			</image>
 		</view>
 		<view class="tab-box">
@@ -16,19 +16,19 @@
 			<view class="row">
 				<input maxlength="18" placeholder="请输入密码" :password="!password" />
 				<image mode="aspectFill" v-if="password" @click="passwordClick"
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login35/login35_password.png">
+					src="./static/login35_password.png">
 				</image>
 				<image mode="aspectFill" v-else @click="passwordClick"
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login35/login35_hide.png">
+					src="./static/login35_hide.png">
 				</image>
 			</view>
 			<view class="row" v-if="!isLogin">
 				<input maxlength="18" placeholder="请确认密码" :password="!confirmPassword" />
 				<image mode="aspectFill" v-if="confirmPassword" @click="confirmPasswordClick"
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login35/login35_password.png">
+					src="./static/login35_password.png">
 				</image>
 				<image mode="aspectFill" v-else @click="confirmPasswordClick"
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login35/login35_hide.png">
+					src="./static/login35_hide.png">
 				</image>
 			</view>
 			<view class="code">

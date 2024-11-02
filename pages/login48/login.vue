@@ -3,7 +3,7 @@
 		<view class="input-box">
 			<view class="img">
 				<image mode="aspectFill"
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login48/login48_account.png">
+					src="./static/login48_account.png">
 				</image>
 			</view>
 			<input placeholder="Email ID" maxlength="11" />
@@ -11,7 +11,7 @@
 		<view class="input-box">
 			<view class="img">
 				<image mode="aspectFill"
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login48/login48_password.png">
+					src="./static/login48_password.png">
 				</image>
 			</view>
 			<input placeholder="Password" maxlength="18" password="true" />

@@ -4,7 +4,7 @@
 		<view class="row-input">
 			<view class="image-box">
 				<image mode="aspectFill"
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login45/login45_account.png">
+					src="./static/login45_account.png">
 				</image>
 			</view>
 			<view class="input-box">
@@ -14,7 +14,7 @@
 		<view class="row-input">
 			<view class="image-box">
 				<image mode="aspectFit"
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login45/login45_password.png">
+					src="./static/login45_password.png">
 				</image>
 			</view>
 			<view class="input-box">

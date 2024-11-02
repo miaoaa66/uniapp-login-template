@@ -2,22 +2,22 @@
 	<view class="content">
 		<view class="head">
 			<image class="img1" v-show="checked" mode="aspectFit"
-				src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login8/login8_bg1.png">
+				src="./static/login8_bg1.png">
 			</image>
 			<image class="img2" v-show="!checked" mode="aspectFit"
-				src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login8/login8_bg2.png">
+				src="./static/login8_bg2.png">
 			</image>
 		</view>
 		<view class="form-box">
 			<view class="row-input">
 				<image mode="aspectFit"
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login8/login8_account.png">
+					src="./static/login8_account.png">
 				</image>
 				<input placeholder="用户名/邮箱/手机号" maxlength="18" />
 			</view>
 			<view class="row-input">
 				<image mode="aspectFit"
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login8/login8_password.png">
+					src="./static/login8_password.png">
 				</image>
 				<input placeholder="密码" maxlength="18" password />
 			</view>

@@ -1,15 +1,15 @@
 <template>
 	<view class="content">
 		<view class="row-input">
-			<image mode="aspectFit" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login1/login1_email.png"></image>
+			<image mode="aspectFit" src="./static/login1_email.png"></image>
 			<input placeholder="注册邮箱" maxlength="18" />
 		</view>
 		<view class="row-input">
-			<image mode="aspectFit" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login1/login1_account.png"></image>
+			<image mode="aspectFit" src="./static/login1_account.png"></image>
 			<input placeholder="用户名" maxlength="18" />
 		</view>
 		<view class="row-input">
-			<image mode="aspectFit" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login1/login1_password.png"></image>
+			<image mode="aspectFit" src="./static/login1_password.png"></image>
 			<input placeholder="设置密码" maxlength="18" />
 		</view>
 		<view class="login-btn">

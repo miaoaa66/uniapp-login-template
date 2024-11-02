@@ -3,7 +3,7 @@
 		<view class="upper"></view>
 		<view class="logo">
 			<image mode="aspectFill"
-				src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login36/login36_logo.png">
+				src="./static/login36_logo.png">
 			</image>
 		</view>
 		<view class="form-box">
@@ -13,13 +13,13 @@
 			</view>
 			<view class="row-input">
 				<image mode="aspectFill"
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login36/login36_account.png">
+					src="./static/login36_account.png">
 				</image>
 				<input type="text" placeholder="请输入用户名/手机号" maxlength="18" />
 			</view>
 			<view class="row-input">
 				<image mode="aspectFill"
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login36/login36_password.png">
+					src="./static/login36_password.png">
 				</image>
 				<input type="text" placeholder="请输入密码" maxlength="6" />
 			</view>

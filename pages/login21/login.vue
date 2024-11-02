@@ -2,15 +2,15 @@
 	<view class="content">
 		<view class="title">登录</view>
 		<view class="head">
-			<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login21/login21_bg.png"></image>
+			<image src="./static/login21_bg.png"></image>
 		</view>
 		<view class="form-box">
 			<view class="row-input">
-				<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login21/login21_phone.png"></image>
+				<image src="./static/login21_phone.png"></image>
 				<input maxlength="11" placeholder="手机号" />
 			</view>
 			<view class="row-input">
-				<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login21/login21_password.png"></image>
+				<image src="./static/login21_password.png"></image>
 				<input maxlength="11" placeholder="密码" />
 			</view>
 			<view class="login-btn">登录</view>

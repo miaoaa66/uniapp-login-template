@@ -1,20 +1,20 @@
 <template>
 	<view class="content">
 		<view class="head">
-			<image class="bg-set" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login5/login5_register_bg.png"></image>
+			<image class="bg-set" src="./static/login5_register_bg.png"></image>
 		</view>
 		<view class="form-box">
 			<text class="tip">登录</text>
 			<view class="row-input">
 				<view class="row-img">
-					<image mode="aspectFit" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login5/login5_email.png"></image>
+					<image mode="aspectFit" src="./static/login5_email.png"></image>
 				</view>
 				<input placeholder="your email@xxxx.com" maxlength="18" />
 				<text class="row-lable" style="background-color: #FFFFFF;">邮箱</text>
 			</view>
 			<view class="row-input">
 				<view class="row-img">
-					<image mode="aspectFit" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login5/login5_password.png"></image>
+					<image mode="aspectFit" src="./static/login5_password.png"></image>
 				</view>
 				<input placeholder="密码" maxlength="18" password />
 				<text class="row-lable" style="background-color: #FFFFFF;">密码</text>

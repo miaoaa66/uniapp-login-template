@@ -4,15 +4,15 @@
 			注册
 		</view>
 		<view class="row-input">
-			<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login24/login24_email.png"></image>
+			<image src="./static/login24_email.png"></image>
 			<input placeholder="邮件或用户名" maxlength="18" />
 		</view>
 		<view class="row-input">
-			<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login24/login24_password.png"></image>
+			<image src="./static/login24_password.png"></image>
 			<input placeholder="密码" maxlength="18" password />
 		</view>
 		<view class="row-input">
-			<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login24/login24_password.png"></image>
+			<image src="./static/login24_password.png"></image>
 			<input placeholder="确认密码" maxlength="18" password />
 		</view>
 		<view class="register-btn">创建</view>

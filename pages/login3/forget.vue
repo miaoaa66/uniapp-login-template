@@ -8,7 +8,7 @@
 					<input v-model="password" maxlength="12" password placeholder="New password"
 						placeholder-class="placeholder" />
 					<image mode="aspectFit" v-show="password==''?false:true" @click="close"
-						src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login3/login3_close.png"></image>
+						src="./static/login3_close.png"></image>
 				</view>
 			</view>
 			<view class="row-input">

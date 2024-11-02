@@ -9,7 +9,7 @@
 				<text class="tip">{{phone!=''?'Phone number':''}}</text>
 				<view class="input-box">
 					<input v-model="phone" maxlength="11" placeholder="Phone number" placeholder-class="placeholder" />
-					<image mode="aspectFit" v-show="phone==''?false:true" @click="close" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login3/login3_close.png">
+					<image mode="aspectFit" v-show="phone==''?false:true" @click="close" src="./static/login3_close.png">
 					</image>
 				</view>
 			</view>

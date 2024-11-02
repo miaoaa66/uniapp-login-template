@@ -1,15 +1,15 @@
 <template>
 	<view class="content">
-		<image class="bg" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login19/login19_bg.png"></image>
+		<image class="bg" src="./static/login19_bg.png"></image>
 		<view class="title">XX系统</view>
 		<view class="form-box">
 			<text class="name">登录</text>
 			<view class="row-input" style="border-bottom: 2rpx solid #e9deec;">
-				<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login19/login19_account.png"></image>
+				<image src="./static/login19_account.png"></image>
 				<input placeholder="请输入账号" maxlength="12" />
 			</view>
 			<view class="row-input">
-				<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login19/login19_password.png"></image>
+				<image src="./static/login19_password.png"></image>
 				<input placeholder="请输入密码" maxlength="12" password />
 			</view>
 			<view class="menu-link">

@@ -1,19 +1,19 @@
 <template>
 	<view class="content">
 		<view class="head">
-			<image class="logo" mode="aspectFill" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login33/login33_logo.png"></image>
+			<image class="logo" mode="aspectFill" src="./static/login33_logo.png"></image>
 			<text class="name">登录系统</text>
 		</view>
 		<view class="form-box">
 			<view class="row-input">
 				<image mode="aspectFit"
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login33/login33_phone.png">
+					src="./static/login33_phone.png">
 				</image>
 				<input placeholder="请输入手机号" placeholder-class="input-placeholder" maxlength="18" />
 			</view>
 			<view class="row-input">
 				<image mode="aspectFit"
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login33/login33_password.png">
+					src="./static/login33_password.png">
 				</image>
 				<input placeholder="请输入密码" placeholder-class="input-placeholder" maxlength="18" password />
 			</view>

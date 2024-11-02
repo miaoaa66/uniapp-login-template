@@ -1,23 +1,23 @@
 <template>
 	<view class="content">
 		<view class="head">
-			<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login7/login7_logo.png"></image>
+			<image src="./static/login7_logo.png"></image>
 		</view>
 		<view class="form-box">
 			<view class="row-input">
-				<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login7/login7_phone.png"></image>
+				<image src="./static/login7_phone.png"></image>
 				<input maxlength="11" placeholder-class="placeholder" placeholder="输入电话"/>
 			</view>
 			<view class="row-input">
-				<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login7/login7_password.png"></image>
+				<image src="./static/login7_password.png"></image>
 				<input maxlength="18" password placeholder-class="placeholder" placeholder="输入密码"/>
 			</view>
 			<view class="row-input">
-				<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login7/login7_password.png"></image>
+				<image src="./static/login7_password.png"></image>
 				<input maxlength="18" password placeholder-class="placeholder" placeholder="再次输入密码"/>
 			</view>
 			<view class="select-box">
-				<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login7/login7_tick.png"></image>
+				<image src="./static/login7_tick.png"></image>
 			</view>
 		</view>
 	</view>

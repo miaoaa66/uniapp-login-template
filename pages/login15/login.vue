@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<image class="bg" mode="heightFix" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login15/login15_bg.png"></image>
+		<image class="bg" mode="heightFix" src="./static/login15_bg.png"></image>
 		<view class="logo">LOGO</view>
 		<view class="form-box">
 			<view class="row-input">

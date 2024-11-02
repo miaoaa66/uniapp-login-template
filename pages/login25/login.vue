@@ -7,11 +7,11 @@
 		<view class="form-box">
 			<view v-if="tabIndex==0">
 				<view class="row-input">
-					<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login25/login25_phone.png"></image>
+					<image src="./static/login25_phone.png"></image>
 					<input placeholder="用户名/手机号" maxlength="11" />
 				</view>
 				<view class="row-input">
-					<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login25/login25_password.png"></image>
+					<image src="./static/login25_password.png"></image>
 					<input placeholder="密码(6-16位数字字母组合密码)" password maxlength="11" />
 				</view>
 				<view class="menu-link">
@@ -22,15 +22,15 @@
 
 			<view v-else>
 				<view class="row-input">
-					<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login25/login25_phone.png"></image>
+					<image src="./static/login25_phone.png"></image>
 					<input placeholder="用户名/手机号" maxlength="11" />
 				</view>
 				<view class="row-input">
-					<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login25/login25_password.png"></image>
+					<image src="./static/login25_password.png"></image>
 					<input placeholder="密码(6-16位数字字母组合密码)" password maxlength="11" />
 				</view>
 				<view class="row-input">
-					<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login25/login25_code.png"></image>
+					<image src="./static/login25_code.png"></image>
 					<input placeholder="输入验证码" maxlength="6" />
 					<view class="code">
 						<text>获取验证码</text>

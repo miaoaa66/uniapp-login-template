@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<view class="upper">
-			<image mode="widthFix" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login16/login16_bg.png"></image>
+			<image mode="widthFix" src="./static/login16_bg.png"></image>
 		</view>
 		<view class="logo">LOGO</view>
 		<view class="form-box">

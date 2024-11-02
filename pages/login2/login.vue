@@ -16,11 +16,11 @@
 			</view>
 			<view v-show="tabIndex==0">
 				<view class="row-input">
-					<image mode="aspectFit" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login2/login2_phone.png"></image>
+					<image mode="aspectFit" src="./static/login2_phone.png"></image>
 					<input placeholder="输入账号/手机号" maxlength="11" />
 				</view>
 				<view class="row-input">
-					<image mode="aspectFit" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login2/login2_password.png"></image>
+					<image mode="aspectFit" src="./static/login2_password.png"></image>
 					<input placeholder="输入密码" maxlength="18" />
 				</view>
 				<view class="menu-link">
@@ -33,7 +33,7 @@
 			<view v-show="tabIndex==1">
 				<view class="row-input-code">
 					<view class="input-box">
-						<image class="img" mode="aspectFit" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login2/login2_phone.png"></image>
+						<image class="img" mode="aspectFit" src="./static/login2_phone.png"></image>
 						<input placeholder="输入手机号" maxlength="11" type="number" />
 					</view>
 					<view class="code-box" @click="getCode">
@@ -41,11 +41,11 @@
 					</view>
 				</view>
 				<view class="row-input">
-					<image mode="aspectFit" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login2/login2_password.png"></image>
+					<image mode="aspectFit" src="./static/login2_password.png"></image>
 					<input placeholder="输入验证码" maxlength="6" type="number" />
 				</view>
 				<view class="row-input">
-					<image mode="aspectFit" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login2/login2_code.png"></image>
+					<image mode="aspectFit" src="./static/login2_code.png"></image>
 					<input placeholder="输入6位密码" maxlength="6" />
 				</view>
 				<view class="login-btn register">

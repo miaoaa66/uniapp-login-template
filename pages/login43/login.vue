@@ -4,13 +4,13 @@
 			<view class="title">CUSTOMER LOGIN</view>
 			<view class="row-input">
 				<image
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login43/login43_account.png">
+					src="./static/login43_account.png">
 				</image>
 				<input placeholder="Username" maxlength="12" />
 			</view>
 			<view class="row-input">
 				<image
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login43/login43_password.png">
+					src="./static/login43_password.png">
 				</image>
 				<input placeholder="Password" password maxlength="18" />
 			</view>

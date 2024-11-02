@@ -4,33 +4,33 @@
 			<text>LOGO</text>
 		</view>
 		<view class="form-box">
-			<image class="bg-set" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login5/login5_login_bg.png"></image>
+			<image class="bg-set" src="./static/login5_login_bg.png"></image>
 			<view class="form">
 				<text class="tip">注册</text>
 				<view class="row-input">
 					<view class="row-img">
-						<image mode="aspectFit" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login5/login5_account.png"></image>
+						<image mode="aspectFit" src="./static/login5_account.png"></image>
 					</view>
 					<input placeholder="昵称" maxlength="12" />
 					<text class="row-lable" style="background-color: #551ead;">用户名</text>
 				</view>
 				<view class="row-input">
 					<view class="row-img">
-						<image mode="aspectFit" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login5/login5_email.png"></image>
+						<image mode="aspectFit" src="./static/login5_email.png"></image>
 					</view>
 					<input placeholder="your email@xxxx.com" maxlength="18" />
 					<text class="row-lable" style="background-color: #5a27b7;">邮箱</text>
 				</view>
 				<view class="row-input">
 					<view class="row-img">
-						<image mode="aspectFit" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login5/login5_phone.png"></image>
+						<image mode="aspectFit" src="./static/login5_phone.png"></image>
 					</view>
 					<input placeholder="+86" maxlength="11" />
 					<text class="row-lable" style="background-color: #5d2cbc;">手机</text>
 				</view>
 				<view class="row-input">
 					<view class="row-img">
-						<image mode="aspectFit" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login5/login5_password.png"></image>
+						<image mode="aspectFit" src="./static/login5_password.png"></image>
 					</view>
 					<input placeholder="密码" maxlength="12" />
 					<text class="row-lable" style="background-color: #6133c3;">密码</text>

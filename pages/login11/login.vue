@@ -1,15 +1,15 @@
 <template>
 	<view>
-		<image class="bg"  mode="heightFix" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login11/login11_bg.png"></image>
+		<image class="bg"  mode="heightFix" src="./static/login11_bg.png"></image>
 		<view class="logo-box">
 			<view class="logo">LOGO</view>
 		</view>
 		<view class="row-input">
-			<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login11/login11_account.png"></image>
+			<image src="./static/login11_account.png"></image>
 			<input placeholder="Username" maxlength="12" placeholder-style="color: #FFFFFF;font-size:30rpx" />
 		</view>
 		<view class="row-input">
-			<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login11/login11_password.png"></image>
+			<image src="./static/login11_password.png"></image>
 			<input placeholder="Password" maxlength="18" password placeholder-style="color: #FFFFFF;font-size:30rpx;" />
 		</view>
 		<text class="forget-link">Forget Password</text>

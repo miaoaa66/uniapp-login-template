@@ -9,13 +9,13 @@
 		</view>
 		<view class="row-input">
 			<image mode="aspectFit"
-				src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login9/login9_account.png">
+				src="./static/login9_account.png">
 			</image>
 			<input placeholder="账号" maxlength="12" />
 		</view>
 		<view class="row-input">
 			<image mode="aspectFit"
-				src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login9/login9_password.png">
+				src="./static/login9_password.png">
 			</image>
 			<input placeholder="请输入密码" password maxlength="18" />
 		</view>

@@ -8,20 +8,20 @@
 		<view class="form-box">
 			<view class="row-input">
 				<image
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login27/login27_account.png">
+					src="./static/login27_account.png">
 				</image>
 				<input placeholder="手机号码或邮箱" maxlength="18" />
 			</view>
 			<view class="row-input">
 				<image
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login27/login27_password.png">
+					src="./static/login27_password.png">
 				</image>
 				<input placeholder="登陆密码" :password="!isShowPassword" />
 				<image v-if="isShowPassword" @click="showOrHide"
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login27/login27_password_show.png">
+					src="./static/login27_password_show.png">
 				</image>
 				<image v-else @click="showOrHide"
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login27/login27_password_hide.png">
+					src="./static/login27_password_hide.png">
 				</image>
 			</view>
 			<view class="menu-link">

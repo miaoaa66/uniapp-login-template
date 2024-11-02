@@ -83,7 +83,7 @@
 	.login {
 		width: 422rpx;
 		height: 216rpx;
-		background-image: url("https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login40/login40_head.png");
+		background-image: url("./static/login40_head.png");
 		background-repeat: no-repeat;
 		background-size: 100%;
 		position: absolute;
@@ -120,7 +120,7 @@
 		position: absolute;
 		left: 40rpx;
 		top: 80rpx;
-		background-image: url("https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login40/login40_hand.png");
+		background-image: url("./static/login40_hand.png");
 		background-size: 100%;
 		transition: 0.3s ease-out;
 		transform: rotate(-20deg);

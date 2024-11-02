@@ -4,14 +4,14 @@
 			登录
 		</view>
 		<view class="row-input">
-			<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login24/login24_email.png"></image>
+			<image src="./static/login24_email.png"></image>
 			<input placeholder="邮件或用户名" maxlength="18" />
 		</view>
 		<view class="row-input">
-			<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login24/login24_password.png"></image>
+			<image src="./static/login24_password.png"></image>
 			<input placeholder="密码" maxlength="18" :password="!isShowPassword" />
-			<image v-if="isShowPassword" @click="showOrHide" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login24/login24_password_show.png"></image>
-			<image v-else @click="showOrHide" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login24/login24_password_hide.png"></image>
+			<image v-if="isShowPassword" @click="showOrHide" src="./static/login24_password_show.png"></image>
+			<image v-else @click="showOrHide" src="./static/login24_password_hide.png"></image>
 		</view>
 		<view class="menu-link">
 			<text @click="register">没有账号?</text>

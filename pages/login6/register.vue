@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<view class="head">
-			<image mode="aspectFit" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login6/login6_logo.png"></image>
+			<image mode="aspectFit" src="./static/login6_logo.png"></image>
 		</view>
 		<view class="form-box">
 			<view class="row-input">

@@ -5,19 +5,19 @@
 		</view>
 		<view class="row-type" :class="typeIndex==0?'active':''" @click="typeClick(0)">
 			<image v-if="typeIndex==0"
-				src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login10/login10_pgone1.png">
+				src="./static/login10_pgone1.png">
 			</image>
 			<image v-else
-				src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login10/login10_pgone2.png">
+				src="./static/login10_pgone2.png">
 			</image>
 			<text>手机号注册</text>
 		</view>
 		<view class="row-type" :class="typeIndex==1?'active':''" @click="typeClick(1)">
 			<image v-if="typeIndex==1"
-				src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login10/login10_email1.png">
+				src="./static/login10_email1.png">
 			</image>
 			<image v-else
-				src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login10/login10_email2.png">
+				src="./static/login10_email2.png">
 			</image>
 			<text>邮箱注册</text>
 		</view>
@@ -26,22 +26,22 @@
 			<input :placeholder="typeIndex==0?'手机号':'邮箱'" :maxlength="typeIndex==0?11:18"
 				placeholder-style="color:#b0b3bf" />
 			<image mode="aspectFit"
-				src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login10/login10_password.png">
+				src="./static/login10_pgone2.png">
 			</image>
 		</view>
 		<view class="row-input">
 			<input placeholder="验证码" maxlength="6" placeholder-style="color:#b0b3bf" />
 			<image mode="aspectFit"
-				src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login10/login10_tick.png">
+				src="./static/login10_tick.png">
 			</image>
 		</view>
 		<view class="row-input">
 			<input placeholder="密码" :password="showPassword" maxlength="18" placeholder-style="color:#b0b3bf" />
 			<image mode="aspectFit" v-if="!showPassword" @click="passwordChange"
-				src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login10/login10_password1.png">
+				src="./static/login10_password1.png">
 			</image>
 			<image mode="aspectFit" v-else @click="passwordChange"
-				src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login10/login10_password2.png">
+				src="./static/login10_password2.png">
 			</image>
 		</view>
 		<view class="agreement">

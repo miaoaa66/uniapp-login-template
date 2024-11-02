@@ -1,16 +1,16 @@
 <template>
 	<view class="content">
-		<image class="bg" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login23/login23_bg.png"></image>
+		<image class="bg" src="./static/login23_bg.png"></image>
 		<view class="logo">
 			LOGO
 		</view>
 		<view class="form-box">
 			<view class="row-input">
-				<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login23/login23_account.png"></image>
+				<image src="./static/login23_account.png"></image>
 				<input placeholder="用户名" maxlength="12" />
 			</view>
 			<view class="row-input">
-				<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login23/login23_password.png"></image>
+				<image src="./static/login23_password.png"></image>
 				<input placeholder="密码" password maxlength="18" />
 			</view>
 			<view class="login-btn">登录</view>

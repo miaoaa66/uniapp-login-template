@@ -5,22 +5,22 @@
 			<text class="cell-tab" @click="tabChange(1)" :class="tabIndex==1?'active':''">注册</text>
 		</view>
 		<view class=" head-bg">
-			<image mode="heightFix" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login28/login28_bg.png"></image>
+			<image mode="heightFix" src="./static/login28_bg.png"></image>
 		</view>
 		<view class="form-box">
 			<view class="row-input">
-				<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login28/login28_account.png"></image>
+				<image src="./static/login28_account.png"></image>
 				<input placeholder="用户名" maxlength="12" />
 			</view>
 			<view class="row-input" v-if="tabIndex==0?false:true">
-				<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login28/login28_code.png"></image>
+				<image src="./static/login28_code.png"></image>
 				<input placeholder="短信验证码" maxlength="6" />
 				<view class="code">
 					<text>获取验证码</text>
 				</view>
 			</view>
 			<view class="row-input">
-				<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login28/login28_password.png"></image>
+				<image src="./static/login28_password.png"></image>
 				<input placeholder="密码" password maxlength="18" />
 			</view>
 		</view>

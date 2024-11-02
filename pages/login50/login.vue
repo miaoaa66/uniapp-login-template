@@ -2,7 +2,7 @@
 	<view class="content">
 		<view class="logo">
 			<image mode="aspectFill"
-				src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login50/login50_logo.png">
+				src="./static/login50_logo.png">
 			</image>
 		</view>
 		<view class="top-switch">
@@ -12,13 +12,13 @@
 		<view class="form-box">
 			<view class="row-input">
 				<image mode="aspectFill"
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login50/login50_account.png">
+					src="./static/login50_account.png">
 				</image>
 				<input type="text" placeholder="账号" maxlength="18" />
 			</view>
 			<view class="row-input">
 				<image mode="aspectFill"
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login50/login50_password.png">
+					src="./static/login50_password.png">
 				</image>
 				<input type="text" placeholder="密码" maxlength="6" />
 			</view>

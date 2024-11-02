@@ -8,10 +8,10 @@
 			<view class="row-input">
 				<input maxlength="16" placeholder="密码" :password="passwordShow" />
 				<image mode="aspectFill" @click="passwordShowHide" v-if="passwordShow"
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login51/login51_password-hide.png">
+					src="./static/login51_password-hide.png">
 				</image>
 				<image mode="aspectFill" @click="passwordShowHide" v-else
-					src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login51/login51_password-show.png">
+					src="./static/login51_password-show.png">
 				</image>
 			</view>
 			<view class="login-btn">登录</view>
@@ -22,7 +22,7 @@
 		</view>
 		<view class="logo-box">
 			<image mode="aspectFill"
-				src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login51/login51_logo.png">
+				src="./static/login51_logo.png">
 			</image>
 		</view>
 	</view>

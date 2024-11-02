@@ -1,23 +1,23 @@
 <template>
 	<view class="content">
-		<image class="bg"  mode="heightFix" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login11/login11_bg.png"></image>
+		<image class="bg"  mode="heightFix" src="./static/login11_bg.png"></image>
 		<view class="title">
 			Sign Up
 		</view>
 		<view class="row-input">
-			<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login11/login11_account.png"></image>
+			<image src="./static/login11_account.png"></image>
 			<input placeholder="Name" maxlength="12" placeholder-style="color: #FFFFFF;font-size:30rpx" />
 		</view>
 		<view class="row-input">
-			<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login11/login11_email.png"></image>
+			<image src="./static/login11_email.png"></image>
 			<input placeholder="Email" maxlength="18" password placeholder-style="color: #FFFFFF;font-size:30rpx;" />
 		</view>
 		<view class="row-input">
-			<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login11/login11_password.png"></image>
+			<image src="./static/login11_password.png"></image>
 			<input placeholder="Password" maxlength="18" password placeholder-style="color: #FFFFFF;font-size:30rpx;" />
 		</view>
 		<view class="row-input">
-			<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login11/login11_code.png"></image>
+			<image src="./static/login11_code.png"></image>
 			<input placeholder="Birthday" maxlength="8" password placeholder-style="color: #FFFFFF;font-size:30rpx;" />
 		</view>
 		<view class="bottom-box">

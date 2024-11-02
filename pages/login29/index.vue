@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<image class="bg" mode="aspectFit" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login29/login29_bg.png"></image>
+		<image class="bg" mode="aspectFit" src="./static/login29_bg.png"></image>
 		<view class="box">
 			<view class="login-btn" @click="gotoLogin">登录</view>
 			<view class="tip-link">还没有账号?快来

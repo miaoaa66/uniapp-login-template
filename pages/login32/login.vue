@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<view class="bg-upper">
-			<image mode="aspectFill" src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login32/logo.png"></image>
+			<image mode="aspectFill" src="./static/login32_logo.png"></image>
 		</view>
 		<view class="bg-down"></view>
 		<view class="form-box">
@@ -14,23 +14,23 @@
 			<view class="form">
 				<view :class="accountSelected?'item-box selected-border':'item-box'">
 					<image v-show="!accountSelected"
-						src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login32/login32_account1.png.png">
+						src="./static/login32_account1.png.png">
 					</image>
 					<image v-show="accountSelected"
-						src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login32/login32_account2.png.png">
+						src="./static/login32_account2.png.png">
 					</image>
 					<input maxlength="18" placeholder="请输入用户名" placeholder-class="input-placeholder"
 						@focus="accountFocus" @blur="accountBlur" />
 					<image
-						src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login32/login32_close.png.png">
+						src="./static/login32_close.png.png">
 					</image>
 				</view>
 				<view :class="passwordSelected?'item-box selected-border':'item-box'">
 					<image v-show="!passwordSelected"
-						src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login32/login32_password1.png.png">
+						src="./static/login32_password1.png.png">
 					</image>
 					<image v-show="passwordSelected"
-						src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login32/login32_password2.png.png">
+						src="./static/login32_password2.png.png">
 					</image>
 					<input maxlength="18" placeholder="请输入密码" placeholder-class="input-placeholder"
 						@focus="passwordFocus" @blur="passwordBlur" />

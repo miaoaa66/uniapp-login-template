@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<view class="head">
-			<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login26/login26_bg.png"></image>
+			<image src="./static/login26_bg.png"></image>
 		</view>
 		<view class="title">
 			<text class="name">Hello!</text>
@@ -9,11 +9,11 @@
 		</view>
 		<view class="form-box">
 			<view class="row-input">
-				<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login26/login26_account.png"></image>
+				<image src="./static/login26_account.png"></image>
 				<input placeholder="请输入账号" maxlength="12" />
 			</view>
 			<view class="row-input">
-				<image src="https://mp-dc95b988-31eb-4147-82e1-c097f0893940.cdn.bspapp.com/登录模板库/login26/login26_password.png"></image>
+				<image src="./static/login26_password.png"></image>
 				<input placeholder="输入密码" password maxlength="18" />
 			</view>
 			<view class="menu-link">
