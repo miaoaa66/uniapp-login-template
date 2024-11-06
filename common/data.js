@@ -268,6 +268,16 @@ export default {
 			cover: require('../static/login54_cover.jpg'),
 			path: "/pages/login54/login",
 			tags: ["登录"]
+		},
+		{
+			cover: require('../static/login55_cover.jpg'),
+			path: "/pages/login55/login",
+			tags: ["登录"]
+		},
+		{
+			cover: require('../static/login56_cover.jpg'),
+			path: "/pages/login56/login",
+			tags: ["登录"]
 		}
 	]
 }

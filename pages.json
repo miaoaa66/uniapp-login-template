@@ -344,6 +344,12 @@
 		},
 		{
 			"path": "pages/login54/login"
+		},
+		{
+			"path": "pages/login55/login"
+		},
+		{
+			"path": "pages/login56/login"
 		}
 	],
 	"globalStyle": {
