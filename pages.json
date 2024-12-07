@@ -350,6 +350,42 @@
 		},
 		{
 			"path": "pages/login56/login"
+		},
+		{
+			"path": "pages/login57/login"
+		},
+		{
+			"path": "pages/login58/login"
+		},
+		{
+			"path": "pages/login58/register"
+		},
+		{
+			"path": "pages/login59/login"
+		},
+		{
+			"path": "pages/login59/register"
+		},
+		{
+			"path": "pages/login60/login"
+		},
+		{
+			"path": "pages/login60/register"
+		},
+		{
+			"path": "pages/login60/forget"
+		},
+		{
+			"path": "pages/login61/login"
+		},
+		{
+			"path": "pages/login62/login"
+		},
+		{
+			"path": "pages/login62/register"
+		},
+		{
+			"path": "pages/login63/login"
 		}
 	],
 	"globalStyle": {

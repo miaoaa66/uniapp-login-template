@@ -278,6 +278,41 @@ export default {
 			cover: require('../static/login56_cover.jpg'),
 			path: "/pages/login56/login",
 			tags: ["登录"]
+		},
+		{
+			cover: require('../static/login57_cover.jpg'),
+			path: "/pages/login57/login",
+			tags: ["登录"]
+		},
+		{
+			cover: require('../static/login58_cover.jpg'),
+			path: "/pages/login58/login",
+			tags: ["登录", "注册"]
+		},
+		{
+			cover: require('../static/login59_cover.jpg'),
+			path: "/pages/login59/login",
+			tags: ["登录", "注册"]
+		},
+		{
+			cover: require('../static/login60_cover.jpg'),
+			path: "/pages/login60/login",
+			tags: ["登录", "注册", "密码"]
+		},
+		{
+			cover: require('../static/login61_cover.jpg'),
+			path: "/pages/login61/login",
+			tags: ["登录"]
+		},
+	    {
+			cover: require('../static/login62_cover.jpg'),
+			path: "/pages/login62/login",
+			tags: ["登录", "注册"]
+		},
+		{
+			cover: require('../static/login63_cover.jpg'),
+			path: "/pages/login63/login",
+			tags: ["登录"]
 		}
 	]
 }
