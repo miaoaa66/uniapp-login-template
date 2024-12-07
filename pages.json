@@ -386,6 +386,9 @@
 		},
 		{
 			"path": "pages/login63/login"
+		},
+		{
+			"path": "pages/login74/login"
 		}
 	],
 	"globalStyle": {
