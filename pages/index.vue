@@ -1,16 +1,15 @@
 <template>
-	<view class="content">
-		<view class="ad">
-			<ad unit-id="adunit-5e3096ae624a7eca"></ad>
-		</view>
-		<view class="row-box" v-for="(item,index) in listData" :key="index" @click="goto(index)">
-			<view class="cover">
-				<image mode="aspectFit" :src="item.cover"></image>
-			</view>
-			<view class="tag-box">
-				<view class="title">Login{{index+1}}</view>
-				<view class="tag">
-					<text v-for="(item2,index2) in item.tags" :key="index2">{{item2}}</text>
+	<view class="">
+		<view class="content">
+			<view class="row-box" v-for="(item,index) in listData" :key="index" @click="goto(item.path)">
+				<view class="cover">
+					<image mode="aspectFit" :src="item.cover"></image>
+				</view>
+				<view class="tag-box">
+					<view class="title">Login{{index+1}}</view>
+					<view class="tag">
+						<text v-for="(item2,index2) in item.tags" :key="index2">{{item2}}</text>
+					</view>
 				</view>
 			</view>
 		</view>
@@ -22,18 +21,16 @@
 	export default {
 		data() {
 			return {
-				listData: menu.data
+				listData: menu.data,
 			}
 		},
-		onLoad() {
-		},
-		onReady() {
-		},
+		onLoad() {},
+		onReady() {},
 		methods: {
 			//goto
-			goto(index) {
+			goto(path) {
 				uni.navigateTo({
-					url: this.listData[index].path,
+					url: path,
 					fail(err) {
 						console.log(err);
 					}
@@ -52,11 +49,6 @@
 		padding: 20rpx;
 		display: flex;
 		flex-wrap: wrap;
-
-		.ad {
-			width: 100%;
-			margin: 0rpx 20rpx;
-		}
 
 		.row-box {
 			display: flex;
