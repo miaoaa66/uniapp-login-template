@@ -36,7 +36,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 	.content {
 		padding: 200rpx 60rpx;

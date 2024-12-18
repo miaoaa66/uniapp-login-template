@@ -45,7 +45,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.head {
 		height: 25vh;
 		display: flex;

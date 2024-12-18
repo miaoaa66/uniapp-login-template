@@ -32,7 +32,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	page {
 		background-color: #ce4b3b;
 	}

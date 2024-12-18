@@ -32,7 +32,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.content {
 		padding: 100rpx 60rpx;
 		display: flex;

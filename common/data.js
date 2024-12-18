@@ -315,9 +315,24 @@ export default {
 			tags: ["登录"]
 		},
 		{
+			cover: require('../static/login64_cover.jpg'),
+			path: "/pages/login64/login",
+			tags: ["登录"]
+		},
+		{
+			cover: require('../static/login65_cover.jpg'),
+			path: "/pages/login65/login",
+			tags: ["登录"]
+		},
+		{
 			cover: require('../static/login74_cover.jpg'),
 			path: "/pages/login74/login",
 			tags: ["登录"]
+		},
+		{
+			cover: require('../static/login75_cover.jpg'),
+			path: "/pages/login75/login",
+			tags: ["登录", "注册"]
 		}
 	]
 }

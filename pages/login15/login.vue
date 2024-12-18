@@ -22,7 +22,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.bg {
 		position: fixed;
 		top: 0;

@@ -3,7 +3,7 @@
 		<view class="content">
 			<view class="row-box" v-for="(item,index) in listData" :key="index" @click="goto(item.path)">
 				<view class="cover">
-					<image mode="aspectFit" :src="item.cover"></image>
+					<image mode="aspectFill" :src="item.cover"></image>
 				</view>
 				<view class="tag-box">
 					<view class="title">Login{{index+1}}</view>
@@ -40,7 +40,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	page {
 		background-color: #859926;
 	}

@@ -83,7 +83,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.left-box {
 		display: flex;
 		justify-content: center;

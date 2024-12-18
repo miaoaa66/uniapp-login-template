@@ -41,7 +41,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.head {
 		position: relative;
 		height: 30vh;

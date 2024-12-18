@@ -50,7 +50,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.head {
 		display: flex;
 		justify-content: center;

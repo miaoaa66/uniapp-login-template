@@ -61,7 +61,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.tab-box {
 		padding-left: 40rpx;
 		height: 200rpx;

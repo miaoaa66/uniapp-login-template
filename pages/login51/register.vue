@@ -36,7 +36,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.title {
 		line-height: 100rpx;
 		font-size: 50rpx;

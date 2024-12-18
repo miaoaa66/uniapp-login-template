@@ -115,7 +115,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.content {
 		width: 100vw;
 		height: 100vh;

@@ -27,7 +27,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	page {
 		background-color: #dfe1e5;
 	}

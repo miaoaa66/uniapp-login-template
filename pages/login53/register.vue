@@ -43,7 +43,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.title {
 		display: flex;
 		justify-content: center;

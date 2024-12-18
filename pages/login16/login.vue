@@ -30,7 +30,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.upper {
 		width: 100%;
 		height: 40vh;

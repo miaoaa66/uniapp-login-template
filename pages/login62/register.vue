@@ -34,7 +34,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.bg-left {
 		position: fixed;
 		right: -320rpx;

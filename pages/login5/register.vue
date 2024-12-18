@@ -53,7 +53,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.content {
 		display: flex;
 		flex-direction: column;

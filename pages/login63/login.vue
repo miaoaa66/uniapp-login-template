@@ -32,7 +32,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	page {
 		background-color: #424444;
 	}
@@ -46,10 +46,12 @@
 		border-radius: 100rpx;
 		background-color: #fbfbfd;
 		transform: rotate(140deg);
-		z-index: -1;
+		z-index: 2;
 	}
 
 	.form-box {
+		position: absolute;
+		z-index: 3;
 		margin-top: 200rpx;
 		margin-left: 60rpx;
 		width: 420rpx;

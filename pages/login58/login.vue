@@ -46,7 +46,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	page {
 		background: radial-gradient(at top left, #cddbfc, #f4e9db)
 	}
