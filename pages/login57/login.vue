@@ -3,17 +3,17 @@
 		<view class="form-box">
 			<view class="login-box">
 				<text class="name">Sign in</text>
-				<image class="logo" mode="aspectFill" src="@/static/logo.png">
+				<image class="logo" mode="aspectFill" src="./static/login57_logo.png">
 				</image>
 			</view>
 			<view class="row-input">
 				<input placeholder="Arian" maxlength="12" />
-				<image src="@/static/logo.png">
+				<image src="./static/login57_account.png">
 				</image>
 			</view>
 			<view class="row-input">
 				<input placeholder="Password" maxlength="18" password />
-				<image src="@/static/logo.png">
+				<image src="./static/login57_password.png">
 				</image>
 			</view>
 			<view class="login-btn">SIGN IN</view>

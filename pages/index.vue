@@ -3,7 +3,7 @@
 		<view class="content">
 			<view class="row-box" v-for="(item,index) in listData" :key="index" @click="goto(item.path)">
 				<view class="cover">
-					<image mode="aspectFill" :src="item.cover"></image>
+					<image mode="aspectFill" :src="item.cover" @click.stop="previewImage(item.cover)"></image>
 				</view>
 				<view class="tag-box">
 					<view class="title">Login{{index+1}}</view>
@@ -27,6 +27,15 @@
 		onLoad() {},
 		onReady() {},
 		methods: {
+			/**
+			 * 预览图片
+			 */
+			previewImage(img) {
+				uni.previewImage({
+					current: 0, //图片索引值
+					urls: [img],
+				});
+			},
 			//goto
 			goto(path) {
 				uni.navigateTo({
