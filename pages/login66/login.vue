@@ -41,7 +41,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	page {
 		background-image: linear-gradient(#2c221e, #283037);
 	}

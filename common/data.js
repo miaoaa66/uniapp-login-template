@@ -339,6 +339,11 @@ export default {
 			path: "/pages/login68/login",
 			tags: ["登录"]
 		},
+		{		
+			cover: require('../static/login69_cover.jpg'),
+			path: "/pages/login69/login",
+			tags: ["登录"]
+		},
 		{
 			cover: require('../static/login74_cover.jpg'),
 			path: "/pages/login74/login",
