@@ -406,6 +406,15 @@
 			"path": "pages/login69/login"
 		},
 		{
+			"path": "pages/login70/register"
+		},
+		{
+			"path": "pages/login70/login"
+		},
+		{
+			"path": "pages/login70/forget"
+		},
+		{
 			"path": "pages/login74/login"
 		},
 		{
