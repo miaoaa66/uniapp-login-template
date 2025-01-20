@@ -415,6 +415,9 @@
 			"path": "pages/login70/forget"
 		},
 		{
+			"path": "pages/login71/login"
+		},
+		{
 			"path": "pages/login74/login"
 		},
 		{

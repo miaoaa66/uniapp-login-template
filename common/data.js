@@ -350,6 +350,11 @@ export default {
 			tags: ["登录", "注册", "密码"]
 		},
 		{
+			cover: require('../static/login71_cover.jpg'),
+			path: "/pages/login71/login",
+			tags: ["登录"]
+		},
+		{
 			cover: require('../static/login74_cover.jpg'),
 			path: "/pages/login74/login",
 			tags: ["登录"]
