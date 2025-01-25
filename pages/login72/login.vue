@@ -53,7 +53,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.main {
 		position: absolute;
 		top: 40%;

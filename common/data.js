@@ -360,6 +360,11 @@ export default {
 			tags: ["登录", "注册"]
 		},
 		{
+			cover: require('../static/login73_cover.jpg'),
+			path: "/pages/login73/login",
+			tags: ["登录"]
+		},
+		{
 			cover: require('../static/login74_cover.jpg'),
 			path: "/pages/login74/login",
 			tags: ["登录"]
@@ -368,6 +373,11 @@ export default {
 			cover: require('../static/login75_cover.jpg'),
 			path: "/pages/login75/login",
 			tags: ["登录", "注册"]
-		}
+		},
+		{
+			cover: require('../static/login76_cover.jpg'),
+			path: "/pages/login76/login",
+			tags: ["登录"]
+		},
 	]
 }

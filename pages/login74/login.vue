@@ -48,7 +48,7 @@
 	};
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 	.screen {
 		background: linear-gradient(90deg, #5D54A4, #7C78B8);
 		position: relative;
