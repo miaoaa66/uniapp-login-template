@@ -379,5 +379,35 @@ export default {
 			path: "/pages/login76/login",
 			tags: ["登录"]
 		},
+		{
+			cover: require('../static/login77_cover.jpg'),
+			path: "/pages/login77/login",
+			tags: ["登录"]
+		},
+		{
+			cover: require('../static/login78_cover.jpg'),
+			path: "/pages/login78/login",
+			tags: ["登录"]
+		},
+		{
+			cover: require('../static/login79_cover.jpg'),
+			path: "/pages/login79/login",
+			tags: ["登录"]
+		},
+		{
+			cover: require('../static/login80_cover.jpg'),
+			path: "/pages/login80/login",
+			tags: ["登录"]
+		},
+		{
+			cover: require('../static/login81_cover.jpg'),
+			path: "/pages/login81/login",
+			tags: ["登录"]
+		},
+		{
+			cover: require('../static/login82_cover.jpg'),
+			path: "/pages/login82/login",
+			tags: ["登录"]
+		},
 	]
 }
