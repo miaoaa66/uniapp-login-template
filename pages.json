@@ -452,6 +452,21 @@
 		},
 		{
 			"path": "pages/login82/login"
+		},
+		{
+			"path": "pages/login83/login",
+			"style": {
+				"navigationBarBackgroundColor": "#fef4e8"
+			}
+		},
+		{
+			"path": "pages/login83/register",
+			"style": {
+				"navigationBarBackgroundColor": "#fffcf7"
+			}
+		},
+		{
+			"path": "pages/login84/login"
 		}
 	],
 	"globalStyle": {
