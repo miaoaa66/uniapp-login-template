@@ -419,5 +419,10 @@ export default {
 			path: "/pages/login84/login",
 			tags: ["登录"]
 		},
+		{
+			cover: require('../static/login85_cover.jpg'),
+			path: "/pages/login85/login",
+			tags: ["登录"]
+		},
 	]
 }

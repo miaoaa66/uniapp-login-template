@@ -467,6 +467,9 @@
 		},
 		{
 			"path": "pages/login84/login"
+		},
+		{
+			"path": "pages/login85/login"
 		}
 	],
 	"globalStyle": {
