@@ -424,5 +424,20 @@ export default {
 			path: "/pages/login85/login",
 			tags: ["登录"]
 		},
+		{
+			cover: require('../static/login86_cover.jpg'),
+			path: "/pages/login86/login",
+			tags: ["登录"]
+		},
+		{
+			cover: require('../static/login87_cover.jpg'),
+			path: "/pages/login87/login",
+			tags: ["登录"]
+		},
+		{
+			cover: require('../static/login88_cover.jpg'),
+			path: "/pages/login88/login",
+			tags: ["登录"]
+		},
 	]
 }
