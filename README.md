@@ -1,3 +1,15 @@
+
+
+[![gitee star](https://gitee.com/miaoaa66/uniapp-login-template/badge/star.svg?theme=dark)](https://gitee.com/miaoaa66/uniapp-login-template)
+[![gitee fork](https://gitee.com/miaoaa66/uniapp-login-template/badge/fork.svg?theme=dark)](https://gitee.com/miaoaa66/uniapp-login-template)
+[![GitHub stars](https://img.shields.io/github/stars/miaoaa66/uniapp-login-template?style=flat&logo=github)](https://github.com/miaoaa66/uniapp-login-template)
+[![GitHub forks](https://img.shields.io/github/forks/miaoaa66/uniapp-login-template?style=flat&logo=github)](https://github.com/miaoaa66/uniapp-login-template)
+
+
+
+
+
+
 # 描述
 
 转载自:
