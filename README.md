@@ -31,3 +31,9 @@
 # 小程序演示
 
 ![](./mpQRCode.jpg)
+
+
+
+# 预览
+
+![](./preview.webp)
