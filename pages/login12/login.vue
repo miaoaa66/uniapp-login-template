@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<view class="head">
-			<image src="./static/login12_bg .png"></image>
+			<image src="./static/login12_bg.png"></image>
 		</view>
 		<view class="form-box">
 			<view class="row-input">
