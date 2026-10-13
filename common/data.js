@@ -439,5 +439,10 @@ export default {
 			path: "/pages/login88/login",
 			tags: ["登录"]
 		},
+		{
+			cover: require('../static/login89_cover.jpg'),
+			path: "/pages/login89/login",
+			tags: ["登录", "注册", "密码", "验证码"]
+		},
 	]
 }

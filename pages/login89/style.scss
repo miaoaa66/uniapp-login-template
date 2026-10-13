@@ -1,0 +1,191 @@
+/* login89 通用样式：登录 / 注册 / 找回密码 三页共用 */
+
+.login-page {
+	min-height: 100vh;
+	box-sizing: border-box;
+	padding: 100rpx 60rpx 60rpx;
+	background-color: #ffffff;
+	display: flex;
+	flex-direction: column;
+}
+
+.page-title {
+	font-size: 52rpx;
+	font-weight: bold;
+	color: #1a1a1a;
+}
+
+.page-subtitle {
+	margin-top: 16rpx;
+	font-size: 28rpx;
+	color: #9aa0ac;
+}
+
+/* 登录方式切换 */
+.tabs {
+	display: flex;
+	margin-top: 60rpx;
+	border-bottom: 1rpx solid #eef0f4;
+}
+
+.tab {
+	flex: 1;
+	text-align: center;
+	padding-bottom: 24rpx;
+	font-size: 30rpx;
+	color: #9aa0ac;
+	position: relative;
+}
+
+.tab.active {
+	color: #3b6cff;
+	font-weight: 600;
+}
+
+.tab.active::after {
+	content: '';
+	position: absolute;
+	left: 50%;
+	bottom: -1rpx;
+	transform: translateX(-50%);
+	width: 56rpx;
+	height: 6rpx;
+	border-radius: 6rpx;
+	background-image: linear-gradient(to right, #4f7cff, #6a5cff);
+}
+
+.form {
+	margin-top: 50rpx;
+}
+
+/* 输入行 */
+.field {
+	display: flex;
+	align-items: center;
+	height: 104rpx;
+	padding: 0 30rpx;
+	margin-bottom: 30rpx;
+	background-color: #f6f7fb;
+	border-radius: 16rpx;
+	box-sizing: border-box;
+}
+
+.field-label {
+	flex-shrink: 0;
+	margin-right: 20rpx;
+	font-size: 28rpx;
+	color: #3b3f4a;
+}
+
+.field input {
+	flex: 1;
+	min-width: 0;
+	height: 100%;
+	font-size: 30rpx;
+	color: #1a1a1a;
+}
+
+.eye {
+	flex-shrink: 0;
+	margin-left: 20rpx;
+	font-size: 26rpx;
+	color: #3b6cff;
+}
+
+/* 获取验证码 */
+.code-btn {
+	flex-shrink: 0;
+	margin-left: 20rpx;
+	padding: 0 24rpx;
+	height: 60rpx;
+	line-height: 60rpx;
+	border-radius: 30rpx;
+	font-size: 26rpx;
+	color: #3b6cff;
+	background-color: #eaefff;
+}
+
+.code-btn.gray {
+	color: #9aa0ac;
+	background-color: #eef0f4;
+}
+
+/* 右对齐小链接行 */
+.row-between {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	margin-bottom: 20rpx;
+	font-size: 26rpx;
+}
+
+.link {
+	color: #3b6cff;
+}
+
+/* 主按钮 */
+.submit-btn {
+	margin-top: 30rpx;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 96rpx;
+	border-radius: 48rpx;
+	font-size: 32rpx;
+	letter-spacing: 4rpx;
+	color: #ffffff;
+	background-image: linear-gradient(to right, #4f7cff, #6a5cff);
+}
+
+/* 底部跳转 */
+.foot-link {
+	margin-top: 40rpx;
+	text-align: center;
+	font-size: 28rpx;
+	color: #9aa0ac;
+}
+
+.foot-link text {
+	color: #3b6cff;
+}
+
+/* 协议勾选 */
+.agreement {
+	display: flex;
+	align-items: center;
+	margin-top: 30rpx;
+	font-size: 24rpx;
+	color: #9aa0ac;
+}
+
+.agreement .link {
+	color: #3b6cff;
+}
+
+.checkbox {
+	position: relative;
+	flex-shrink: 0;
+	width: 32rpx;
+	height: 32rpx;
+	margin-right: 12rpx;
+	border-radius: 50%;
+	border: 2rpx solid #c6cbd6;
+	box-sizing: border-box;
+}
+
+.checkbox.checked {
+	border-color: transparent;
+	background-image: linear-gradient(to right, #4f7cff, #6a5cff);
+}
+
+.checkbox.checked::after {
+	content: '';
+	position: absolute;
+	left: 10rpx;
+	top: 5rpx;
+	width: 8rpx;
+	height: 15rpx;
+	border: solid #ffffff;
+	border-width: 0 3rpx 3rpx 0;
+	transform: rotate(45deg);
+}
