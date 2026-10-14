@@ -527,6 +527,46 @@
 				"navigationBarBackgroundColor": "#12c2a0",
 				"navigationBarTextStyle": "white"
 			}
+		},
+		{
+			"path": "pages/login91/login",
+			"style": {
+				"navigationBarTitleText": "登录",
+				"navigationBarBackgroundColor": "#4f46e5",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/login91/register",
+			"style": {
+				"navigationBarTitleText": "注册",
+				"navigationBarBackgroundColor": "#4f46e5",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/login91/forget",
+			"style": {
+				"navigationBarTitleText": "找回密码",
+				"navigationBarBackgroundColor": "#4f46e5",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/login91/phone-login",
+			"style": {
+				"navigationBarTitleText": "手机号登录",
+				"navigationBarBackgroundColor": "#4f46e5",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/login91/email-login",
+			"style": {
+				"navigationBarTitleText": "邮箱登录",
+				"navigationBarBackgroundColor": "#4f46e5",
+				"navigationBarTextStyle": "white"
+			}
 		}
 	],
 	"globalStyle": {

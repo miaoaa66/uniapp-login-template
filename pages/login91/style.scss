@@ -1,0 +1,262 @@
+/* login91 通用样式：账号密码登录 / 注册 / 找回密码 / 手机号验证码登录 / 邮箱验证码登录 共用 */
+
+page {
+	background-color: #4f46e5;
+}
+
+.page {
+	min-height: 100vh;
+	padding: 60rpx 44rpx 80rpx;
+	box-sizing: border-box;
+	background-image: linear-gradient(160deg, #7c3aed 0%, #4f46e5 60%, #3d3ad6 100%);
+}
+
+/* 顶部品牌 */
+.brand {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.logo {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 96rpx;
+	height: 96rpx;
+	border-radius: 50%;
+	background-color: #ffffff;
+	box-shadow: 0 12rpx 30rpx rgba(24, 16, 68, 0.25);
+}
+
+.logo-inner {
+	width: 44rpx;
+	height: 44rpx;
+	border-radius: 12rpx;
+	background-image: linear-gradient(135deg, #a855f7, #4f46e5);
+}
+
+.brand-name {
+	margin-top: 18rpx;
+	font-size: 28rpx;
+	letter-spacing: 4rpx;
+	color: rgba(255, 255, 255, 0.9);
+}
+
+.head {
+	margin-top: 46rpx;
+	margin-bottom: 44rpx;
+	padding-left: 8rpx;
+	color: #ffffff;
+}
+
+.head-title {
+	font-size: 52rpx;
+	font-weight: bold;
+	letter-spacing: 2rpx;
+}
+
+.head-sub {
+	margin-top: 16rpx;
+	font-size: 26rpx;
+	color: rgba(255, 255, 255, 0.78);
+}
+
+/* 白色卡片 */
+.card {
+	padding: 56rpx 48rpx 48rpx;
+	background-color: #ffffff;
+	border-radius: 36rpx;
+	box-shadow: 0 24rpx 60rpx rgba(24, 16, 68, 0.18);
+	box-sizing: border-box;
+}
+
+/* 圆角填充输入框 */
+.field {
+	margin-bottom: 28rpx;
+}
+
+.field-label {
+	display: block;
+	margin-bottom: 14rpx;
+	font-size: 26rpx;
+	color: #8a8aa3;
+}
+
+.field-box {
+	display: flex;
+	align-items: center;
+	height: 96rpx;
+	padding: 0 32rpx;
+	border-radius: 28rpx;
+	background-color: #f4f5fb;
+	box-sizing: border-box;
+}
+
+.field-prefix {
+	flex-shrink: 0;
+	margin-right: 16rpx;
+	font-size: 30rpx;
+	color: #1b1830;
+}
+
+.field-box input {
+	flex: 1;
+	min-width: 0;
+	height: 100%;
+	font-size: 30rpx;
+	color: #1b1830;
+}
+
+.eye {
+	flex-shrink: 0;
+	margin-left: 20rpx;
+	font-size: 24rpx;
+	color: #4f46e5;
+}
+
+/* 获取验证码 */
+.code-btn {
+	flex-shrink: 0;
+	margin-left: 20rpx;
+	padding: 0 22rpx;
+	height: 60rpx;
+	line-height: 60rpx;
+	border-radius: 30rpx;
+	font-size: 24rpx;
+	color: #ffffff;
+	background-image: linear-gradient(135deg, #a855f7, #4f46e5);
+}
+
+.code-btn.gray {
+	color: #8a8aa3;
+	background-color: #ececf6;
+	background-image: none;
+}
+
+/* 右对齐小链接行 */
+.row-between {
+	display: flex;
+	justify-content: flex-end;
+	margin-top: -6rpx;
+	font-size: 26rpx;
+}
+
+.link {
+	color: #4f46e5;
+}
+
+/* 主按钮 */
+.submit-btn {
+	margin-top: 46rpx;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 96rpx;
+	border-radius: 28rpx;
+	font-size: 32rpx;
+	letter-spacing: 8rpx;
+	color: #ffffff;
+	background-image: linear-gradient(135deg, #a855f7, #4f46e5);
+	box-shadow: 0 16rpx 32rpx rgba(79, 70, 229, 0.28);
+}
+
+/* 次要按钮：其他登录方式 */
+.submit-btn.plain {
+	margin-top: 0;
+	height: 84rpx;
+	border-radius: 24rpx;
+	font-size: 26rpx;
+	letter-spacing: 0;
+	color: #4f46e5;
+	background-color: #f4f5fb;
+	background-image: none;
+	box-shadow: none;
+}
+
+/* 分割线 */
+.divider {
+	display: flex;
+	align-items: center;
+	margin: 48rpx 0 30rpx;
+	font-size: 24rpx;
+	color: #b6b6c8;
+}
+
+.divider::before,
+.divider::after {
+	content: '';
+	flex: 1;
+	height: 1rpx;
+	background-color: #ececf6;
+}
+
+.divider text {
+	padding: 0 20rpx;
+}
+
+/* 其他登录方式并排 */
+.other-row {
+	display: flex;
+}
+
+.other-row .submit-btn {
+	flex: 1;
+}
+
+.other-row .submit-btn + .submit-btn {
+	margin-left: 24rpx;
+}
+
+/* 底部跳转 */
+.foot-link {
+	margin-top: 36rpx;
+	text-align: center;
+	font-size: 28rpx;
+	color: #8a8aa3;
+}
+
+.foot-link text {
+	color: #4f46e5;
+}
+
+/* 协议勾选 */
+.agreement {
+	display: flex;
+	align-items: center;
+	margin-top: 30rpx;
+	font-size: 24rpx;
+	color: #8a8aa3;
+}
+
+.agreement .link {
+	color: #4f46e5;
+}
+
+.checkbox {
+	position: relative;
+	flex-shrink: 0;
+	width: 32rpx;
+	height: 32rpx;
+	margin-right: 12rpx;
+	border-radius: 8rpx;
+	border: 2rpx solid #cccddd;
+	box-sizing: border-box;
+}
+
+.checkbox.checked {
+	border-color: transparent;
+	background-image: linear-gradient(135deg, #a855f7, #4f46e5);
+}
+
+.checkbox.checked::after {
+	content: '';
+	position: absolute;
+	left: 10rpx;
+	top: 5rpx;
+	width: 8rpx;
+	height: 15rpx;
+	border: solid #ffffff;
+	border-width: 0 3rpx 3rpx 0;
+	transform: rotate(45deg);
+}
