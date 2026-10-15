@@ -1,0 +1,69 @@
+/* ==========================================================================
+ * 像素图标（8x8 网格 / 每格 3rpx / 共 24rpx）
+ * 由 .workbuddy/tools/gen-icons.mjs 生成，颜色跟随 currentColor，
+ * 用法：<view class="pxi pxi-mail"></view>
+ * ========================================================================== */
+.pxi {
+	display: inline-block;
+	position: relative;
+	flex: none;
+	width: 24rpx;
+	height: 24rpx;
+}
+
+.pxi::before {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 3rpx;
+	height: 3rpx;
+}
+
+.pxi-user::before {
+	box-shadow: 6rpx 0rpx 0 currentColor, 9rpx 0rpx 0 currentColor, 12rpx 0rpx 0 currentColor, 15rpx 0rpx 0 currentColor, 3rpx 3rpx 0 currentColor, 6rpx 3rpx 0 currentColor, 15rpx 3rpx 0 currentColor, 18rpx 3rpx 0 currentColor, 3rpx 6rpx 0 currentColor, 6rpx 6rpx 0 currentColor, 15rpx 6rpx 0 currentColor, 18rpx 6rpx 0 currentColor, 6rpx 9rpx 0 currentColor, 9rpx 9rpx 0 currentColor, 12rpx 9rpx 0 currentColor, 15rpx 9rpx 0 currentColor, 3rpx 12rpx 0 currentColor, 6rpx 12rpx 0 currentColor, 9rpx 12rpx 0 currentColor, 12rpx 12rpx 0 currentColor, 15rpx 12rpx 0 currentColor, 18rpx 12rpx 0 currentColor, 0rpx 15rpx 0 currentColor, 3rpx 15rpx 0 currentColor, 6rpx 15rpx 0 currentColor, 9rpx 15rpx 0 currentColor, 12rpx 15rpx 0 currentColor, 15rpx 15rpx 0 currentColor, 18rpx 15rpx 0 currentColor, 21rpx 15rpx 0 currentColor, 0rpx 18rpx 0 currentColor, 3rpx 18rpx 0 currentColor, 6rpx 18rpx 0 currentColor, 9rpx 18rpx 0 currentColor, 12rpx 18rpx 0 currentColor, 15rpx 18rpx 0 currentColor, 18rpx 18rpx 0 currentColor, 21rpx 18rpx 0 currentColor;
+}
+
+.pxi-mail::before {
+	box-shadow: 0rpx 0rpx 0 currentColor, 3rpx 0rpx 0 currentColor, 6rpx 0rpx 0 currentColor, 9rpx 0rpx 0 currentColor, 12rpx 0rpx 0 currentColor, 15rpx 0rpx 0 currentColor, 18rpx 0rpx 0 currentColor, 21rpx 0rpx 0 currentColor, 0rpx 3rpx 0 currentColor, 21rpx 3rpx 0 currentColor, 0rpx 6rpx 0 currentColor, 3rpx 6rpx 0 currentColor, 18rpx 6rpx 0 currentColor, 21rpx 6rpx 0 currentColor, 0rpx 9rpx 0 currentColor, 6rpx 9rpx 0 currentColor, 9rpx 9rpx 0 currentColor, 12rpx 9rpx 0 currentColor, 15rpx 9rpx 0 currentColor, 21rpx 9rpx 0 currentColor, 0rpx 12rpx 0 currentColor, 9rpx 12rpx 0 currentColor, 12rpx 12rpx 0 currentColor, 21rpx 12rpx 0 currentColor, 0rpx 15rpx 0 currentColor, 21rpx 15rpx 0 currentColor, 0rpx 18rpx 0 currentColor, 3rpx 18rpx 0 currentColor, 6rpx 18rpx 0 currentColor, 9rpx 18rpx 0 currentColor, 12rpx 18rpx 0 currentColor, 15rpx 18rpx 0 currentColor, 18rpx 18rpx 0 currentColor, 21rpx 18rpx 0 currentColor;
+}
+
+.pxi-phone::before {
+	box-shadow: 6rpx 0rpx 0 currentColor, 9rpx 0rpx 0 currentColor, 12rpx 0rpx 0 currentColor, 15rpx 0rpx 0 currentColor, 3rpx 3rpx 0 currentColor, 18rpx 3rpx 0 currentColor, 3rpx 6rpx 0 currentColor, 18rpx 6rpx 0 currentColor, 3rpx 9rpx 0 currentColor, 18rpx 9rpx 0 currentColor, 3rpx 12rpx 0 currentColor, 18rpx 12rpx 0 currentColor, 3rpx 15rpx 0 currentColor, 18rpx 15rpx 0 currentColor, 3rpx 18rpx 0 currentColor, 9rpx 18rpx 0 currentColor, 12rpx 18rpx 0 currentColor, 18rpx 18rpx 0 currentColor, 6rpx 21rpx 0 currentColor, 9rpx 21rpx 0 currentColor, 12rpx 21rpx 0 currentColor, 15rpx 21rpx 0 currentColor;
+}
+
+.pxi-lock::before {
+	box-shadow: 6rpx 0rpx 0 currentColor, 9rpx 0rpx 0 currentColor, 12rpx 0rpx 0 currentColor, 15rpx 0rpx 0 currentColor, 3rpx 3rpx 0 currentColor, 6rpx 3rpx 0 currentColor, 15rpx 3rpx 0 currentColor, 18rpx 3rpx 0 currentColor, 3rpx 6rpx 0 currentColor, 6rpx 6rpx 0 currentColor, 15rpx 6rpx 0 currentColor, 18rpx 6rpx 0 currentColor, 0rpx 9rpx 0 currentColor, 3rpx 9rpx 0 currentColor, 6rpx 9rpx 0 currentColor, 9rpx 9rpx 0 currentColor, 12rpx 9rpx 0 currentColor, 15rpx 9rpx 0 currentColor, 18rpx 9rpx 0 currentColor, 21rpx 9rpx 0 currentColor, 0rpx 12rpx 0 currentColor, 3rpx 12rpx 0 currentColor, 18rpx 12rpx 0 currentColor, 21rpx 12rpx 0 currentColor, 0rpx 15rpx 0 currentColor, 3rpx 15rpx 0 currentColor, 6rpx 15rpx 0 currentColor, 15rpx 15rpx 0 currentColor, 18rpx 15rpx 0 currentColor, 21rpx 15rpx 0 currentColor, 0rpx 18rpx 0 currentColor, 3rpx 18rpx 0 currentColor, 18rpx 18rpx 0 currentColor, 21rpx 18rpx 0 currentColor, 0rpx 21rpx 0 currentColor, 3rpx 21rpx 0 currentColor, 6rpx 21rpx 0 currentColor, 9rpx 21rpx 0 currentColor, 12rpx 21rpx 0 currentColor, 15rpx 21rpx 0 currentColor, 18rpx 21rpx 0 currentColor, 21rpx 21rpx 0 currentColor;
+}
+
+.pxi-shield::before {
+	box-shadow: 0rpx 0rpx 0 currentColor, 3rpx 0rpx 0 currentColor, 6rpx 0rpx 0 currentColor, 9rpx 0rpx 0 currentColor, 12rpx 0rpx 0 currentColor, 15rpx 0rpx 0 currentColor, 18rpx 0rpx 0 currentColor, 21rpx 0rpx 0 currentColor, 0rpx 3rpx 0 currentColor, 3rpx 3rpx 0 currentColor, 6rpx 3rpx 0 currentColor, 9rpx 3rpx 0 currentColor, 12rpx 3rpx 0 currentColor, 15rpx 3rpx 0 currentColor, 18rpx 3rpx 0 currentColor, 21rpx 3rpx 0 currentColor, 3rpx 6rpx 0 currentColor, 6rpx 6rpx 0 currentColor, 9rpx 6rpx 0 currentColor, 12rpx 6rpx 0 currentColor, 15rpx 6rpx 0 currentColor, 18rpx 6rpx 0 currentColor, 3rpx 9rpx 0 currentColor, 6rpx 9rpx 0 currentColor, 9rpx 9rpx 0 currentColor, 12rpx 9rpx 0 currentColor, 15rpx 9rpx 0 currentColor, 18rpx 9rpx 0 currentColor, 6rpx 12rpx 0 currentColor, 9rpx 12rpx 0 currentColor, 12rpx 12rpx 0 currentColor, 15rpx 12rpx 0 currentColor, 6rpx 15rpx 0 currentColor, 9rpx 15rpx 0 currentColor, 12rpx 15rpx 0 currentColor, 15rpx 15rpx 0 currentColor, 9rpx 18rpx 0 currentColor, 12rpx 18rpx 0 currentColor, 9rpx 21rpx 0 currentColor, 12rpx 21rpx 0 currentColor;
+}
+
+.pxi-key::before {
+	box-shadow: 6rpx 0rpx 0 currentColor, 9rpx 0rpx 0 currentColor, 12rpx 0rpx 0 currentColor, 15rpx 0rpx 0 currentColor, 3rpx 3rpx 0 currentColor, 6rpx 3rpx 0 currentColor, 15rpx 3rpx 0 currentColor, 18rpx 3rpx 0 currentColor, 3rpx 6rpx 0 currentColor, 6rpx 6rpx 0 currentColor, 15rpx 6rpx 0 currentColor, 18rpx 6rpx 0 currentColor, 6rpx 9rpx 0 currentColor, 9rpx 9rpx 0 currentColor, 12rpx 9rpx 0 currentColor, 15rpx 9rpx 0 currentColor, 9rpx 12rpx 0 currentColor, 12rpx 12rpx 0 currentColor, 9rpx 15rpx 0 currentColor, 12rpx 15rpx 0 currentColor, 15rpx 15rpx 0 currentColor, 9rpx 18rpx 0 currentColor, 12rpx 18rpx 0 currentColor, 9rpx 21rpx 0 currentColor, 12rpx 21rpx 0 currentColor, 15rpx 21rpx 0 currentColor;
+}
+
+.pxi-back::before {
+	box-shadow: 15rpx 0rpx 0 currentColor, 9rpx 3rpx 0 currentColor, 12rpx 3rpx 0 currentColor, 15rpx 3rpx 0 currentColor, 3rpx 6rpx 0 currentColor, 6rpx 6rpx 0 currentColor, 9rpx 6rpx 0 currentColor, 12rpx 6rpx 0 currentColor, 15rpx 6rpx 0 currentColor, 0rpx 9rpx 0 currentColor, 3rpx 9rpx 0 currentColor, 6rpx 9rpx 0 currentColor, 9rpx 9rpx 0 currentColor, 12rpx 9rpx 0 currentColor, 15rpx 9rpx 0 currentColor, 18rpx 9rpx 0 currentColor, 0rpx 12rpx 0 currentColor, 3rpx 12rpx 0 currentColor, 6rpx 12rpx 0 currentColor, 9rpx 12rpx 0 currentColor, 12rpx 12rpx 0 currentColor, 15rpx 12rpx 0 currentColor, 18rpx 12rpx 0 currentColor, 3rpx 15rpx 0 currentColor, 6rpx 15rpx 0 currentColor, 9rpx 15rpx 0 currentColor, 12rpx 15rpx 0 currentColor, 15rpx 15rpx 0 currentColor, 9rpx 18rpx 0 currentColor, 12rpx 18rpx 0 currentColor, 15rpx 18rpx 0 currentColor, 15rpx 21rpx 0 currentColor;
+}
+
+.pxi-eye::before {
+	box-shadow: 6rpx 3rpx 0 currentColor, 9rpx 3rpx 0 currentColor, 12rpx 3rpx 0 currentColor, 15rpx 3rpx 0 currentColor, 3rpx 6rpx 0 currentColor, 18rpx 6rpx 0 currentColor, 0rpx 9rpx 0 currentColor, 9rpx 9rpx 0 currentColor, 12rpx 9rpx 0 currentColor, 21rpx 9rpx 0 currentColor, 0rpx 12rpx 0 currentColor, 9rpx 12rpx 0 currentColor, 12rpx 12rpx 0 currentColor, 21rpx 12rpx 0 currentColor, 3rpx 15rpx 0 currentColor, 18rpx 15rpx 0 currentColor, 6rpx 18rpx 0 currentColor, 9rpx 18rpx 0 currentColor, 12rpx 18rpx 0 currentColor, 15rpx 18rpx 0 currentColor;
+}
+
+.pxi-invader::before {
+	box-shadow: 6rpx 0rpx 0 currentColor, 15rpx 0rpx 0 currentColor, 3rpx 3rpx 0 currentColor, 6rpx 3rpx 0 currentColor, 9rpx 3rpx 0 currentColor, 12rpx 3rpx 0 currentColor, 15rpx 3rpx 0 currentColor, 18rpx 3rpx 0 currentColor, 0rpx 6rpx 0 currentColor, 3rpx 6rpx 0 currentColor, 9rpx 6rpx 0 currentColor, 12rpx 6rpx 0 currentColor, 18rpx 6rpx 0 currentColor, 21rpx 6rpx 0 currentColor, 0rpx 9rpx 0 currentColor, 3rpx 9rpx 0 currentColor, 6rpx 9rpx 0 currentColor, 9rpx 9rpx 0 currentColor, 12rpx 9rpx 0 currentColor, 15rpx 9rpx 0 currentColor, 18rpx 9rpx 0 currentColor, 21rpx 9rpx 0 currentColor, 0rpx 12rpx 0 currentColor, 6rpx 12rpx 0 currentColor, 9rpx 12rpx 0 currentColor, 12rpx 12rpx 0 currentColor, 15rpx 12rpx 0 currentColor, 21rpx 12rpx 0 currentColor, 0rpx 15rpx 0 currentColor, 6rpx 15rpx 0 currentColor, 15rpx 15rpx 0 currentColor, 21rpx 15rpx 0 currentColor, 9rpx 18rpx 0 currentColor, 12rpx 18rpx 0 currentColor, 3rpx 21rpx 0 currentColor, 6rpx 21rpx 0 currentColor, 15rpx 21rpx 0 currentColor, 18rpx 21rpx 0 currentColor;
+}
+
+.pxi-chip::before {
+	box-shadow: 3rpx 0rpx 0 currentColor, 9rpx 0rpx 0 currentColor, 12rpx 0rpx 0 currentColor, 18rpx 0rpx 0 currentColor, 0rpx 3rpx 0 currentColor, 3rpx 3rpx 0 currentColor, 6rpx 3rpx 0 currentColor, 9rpx 3rpx 0 currentColor, 12rpx 3rpx 0 currentColor, 15rpx 3rpx 0 currentColor, 18rpx 3rpx 0 currentColor, 21rpx 3rpx 0 currentColor, 0rpx 6rpx 0 currentColor, 6rpx 6rpx 0 currentColor, 9rpx 6rpx 0 currentColor, 12rpx 6rpx 0 currentColor, 15rpx 6rpx 0 currentColor, 21rpx 6rpx 0 currentColor, 0rpx 9rpx 0 currentColor, 6rpx 9rpx 0 currentColor, 15rpx 9rpx 0 currentColor, 21rpx 9rpx 0 currentColor, 0rpx 12rpx 0 currentColor, 6rpx 12rpx 0 currentColor, 15rpx 12rpx 0 currentColor, 21rpx 12rpx 0 currentColor, 0rpx 15rpx 0 currentColor, 6rpx 15rpx 0 currentColor, 9rpx 15rpx 0 currentColor, 12rpx 15rpx 0 currentColor, 15rpx 15rpx 0 currentColor, 21rpx 15rpx 0 currentColor, 0rpx 18rpx 0 currentColor, 3rpx 18rpx 0 currentColor, 6rpx 18rpx 0 currentColor, 9rpx 18rpx 0 currentColor, 12rpx 18rpx 0 currentColor, 15rpx 18rpx 0 currentColor, 18rpx 18rpx 0 currentColor, 21rpx 18rpx 0 currentColor, 3rpx 21rpx 0 currentColor, 9rpx 21rpx 0 currentColor, 12rpx 21rpx 0 currentColor, 18rpx 21rpx 0 currentColor;
+}
+
+.pxi-play::before {
+	box-shadow: 0rpx 0rpx 0 currentColor, 3rpx 0rpx 0 currentColor, 0rpx 3rpx 0 currentColor, 3rpx 3rpx 0 currentColor, 6rpx 3rpx 0 currentColor, 9rpx 3rpx 0 currentColor, 0rpx 6rpx 0 currentColor, 3rpx 6rpx 0 currentColor, 6rpx 6rpx 0 currentColor, 9rpx 6rpx 0 currentColor, 12rpx 6rpx 0 currentColor, 15rpx 6rpx 0 currentColor, 0rpx 9rpx 0 currentColor, 3rpx 9rpx 0 currentColor, 6rpx 9rpx 0 currentColor, 9rpx 9rpx 0 currentColor, 12rpx 9rpx 0 currentColor, 15rpx 9rpx 0 currentColor, 18rpx 9rpx 0 currentColor, 21rpx 9rpx 0 currentColor, 0rpx 12rpx 0 currentColor, 3rpx 12rpx 0 currentColor, 6rpx 12rpx 0 currentColor, 9rpx 12rpx 0 currentColor, 12rpx 12rpx 0 currentColor, 15rpx 12rpx 0 currentColor, 18rpx 12rpx 0 currentColor, 21rpx 12rpx 0 currentColor, 0rpx 15rpx 0 currentColor, 3rpx 15rpx 0 currentColor, 6rpx 15rpx 0 currentColor, 9rpx 15rpx 0 currentColor, 12rpx 15rpx 0 currentColor, 15rpx 15rpx 0 currentColor, 0rpx 18rpx 0 currentColor, 3rpx 18rpx 0 currentColor, 6rpx 18rpx 0 currentColor, 9rpx 18rpx 0 currentColor, 0rpx 21rpx 0 currentColor, 3rpx 21rpx 0 currentColor;
+}
+
+.pxi-arrow::before {
+	box-shadow: 12rpx 0rpx 0 currentColor, 15rpx 0rpx 0 currentColor, 15rpx 3rpx 0 currentColor, 18rpx 3rpx 0 currentColor, 18rpx 6rpx 0 currentColor, 21rpx 6rpx 0 currentColor, 0rpx 9rpx 0 currentColor, 3rpx 9rpx 0 currentColor, 6rpx 9rpx 0 currentColor, 9rpx 9rpx 0 currentColor, 12rpx 9rpx 0 currentColor, 15rpx 9rpx 0 currentColor, 18rpx 9rpx 0 currentColor, 0rpx 12rpx 0 currentColor, 3rpx 12rpx 0 currentColor, 6rpx 12rpx 0 currentColor, 9rpx 12rpx 0 currentColor, 12rpx 12rpx 0 currentColor, 15rpx 12rpx 0 currentColor, 18rpx 12rpx 0 currentColor, 18rpx 15rpx 0 currentColor, 21rpx 15rpx 0 currentColor, 15rpx 18rpx 0 currentColor, 18rpx 18rpx 0 currentColor, 12rpx 21rpx 0 currentColor, 15rpx 21rpx 0 currentColor;
+}

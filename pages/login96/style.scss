@@ -1,0 +1,622 @@
+/* ==========================================================================
+ * SET E · 像素 RPG 对话框
+ * pages/login96 —— 登录 / 注册 / 找回密码 三页共用
+ * 羊皮纸底 + 深棕描边，角色血蓝条与对话框、宝箱还原 8-bit 冒险界面
+ *
+ * 字体：Zpix（中文像素）+ Press Start 2P（拉丁与数字）
+ * 图标：common/pixel-icons.scss（8x8 网格，box-shadow 逐点绘制）
+ * 字号：Zpix 走 12px 的整数倍，Press Start 2P 走 8px 的整数倍
+ * ========================================================================== */
+
+@import '../../common/pixel-icons.scss';
+
+/* ---------- 设计令牌 ---------- */
+$ink: #3a2a16;         // 主文字
+$dim: #7d6647;         // 次级文字
+$bg: #f2e2c4;          // 页面底色
+$panel: #fffaf0;       // 卡片/面板底色
+$panel2: #eadcbe;      // 次级面板底色（Tab 未选中、字段底）
+$line: #3a2a16;        // 主描边
+$lineSoft: #c3ab84;    // 弱描边
+$accent: #c8860d;      // 主强调色（按钮 / 选中态）
+$accent2: #1f6f8b;     // 次强调色（链接 / 图标）
+$on: #fffaf0;          // 强调色之上的文字
+
+/* ---------- 页面容器 ---------- */
+.rq-page,
+.rq-page * {
+	box-sizing: border-box;
+}
+
+.rq-page {
+	position: relative;
+	min-height: 100vh;
+	padding-bottom: 40rpx;
+	background-color: $bg;
+	background-image: linear-gradient(rgba(58, 42, 22, .06) 2rpx, transparent 2rpx), linear-gradient(90deg, rgba(58, 42, 22, .06) 2rpx, transparent 2rpx); background-size: 32rpx 32rpx;
+	font-family: 'Zpix', sans-serif;
+	color: $ink;
+	-webkit-font-smoothing: none;
+}
+
+/* ---------- 自绘导航栏 ---------- */
+.rq-nav {
+	display: flex;
+	align-items: center;
+	height: 96rpx;
+	padding: 0 24rpx;
+	background-color: $panel;
+	border-bottom: 4rpx solid $line;
+}
+
+.rq-nav__back {
+	display: flex;
+	align-items: center;
+	width: 110rpx;
+	flex: none;
+	color: $ink;
+}
+
+.rq-nav__back:active {
+	opacity: .5;
+}
+
+.rq-nav__title {
+	flex: 1;
+	text-align: center;
+	font-size: 48rpx;
+	letter-spacing: 6rpx;
+	color: $ink;
+}
+
+.rq-nav__slot {
+	flex: none;
+	min-width: 110rpx;
+	text-align: right;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 24rpx;
+	letter-spacing: 1rpx;
+	color: $dim;
+}
+
+/* ---------- 主体与卡片 ---------- */
+.rq-body {
+	padding: 28rpx 32rpx 0;
+}
+
+.rq-card {
+	padding: 36rpx 32rpx 32rpx;
+	background-color: $panel;
+	border: 4rpx solid $line;
+	box-shadow: 10rpx 10rpx 0 rgba(0, 0, 0, .16);
+}
+
+.rq-brand {
+	display: flex;
+	align-items: center;
+}
+
+.rq-brand__logo {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 68rpx;
+	height: 68rpx;
+	flex: none;
+	color: $on;
+	background-color: $accent;
+	border: 4rpx solid $line;
+	box-shadow: 5rpx 5rpx 0 $line;
+}
+
+.rq-brand__logo .pxi {
+	transform: scale(2);
+}
+
+.rq-brand__meta {
+	margin-left: 20rpx;
+}
+
+.rq-brand__en {
+	display: block;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 32rpx;
+	letter-spacing: 1rpx;
+	color: $ink;
+}
+
+.rq-brand__cn {
+	display: block;
+	margin-top: 8rpx;
+	font-size: 24rpx;
+	letter-spacing: 4rpx;
+	color: $dim;
+}
+
+.rq-title {
+	display: block;
+	margin-top: 34rpx;
+	font-size: 48rpx;
+	line-height: 1.3;
+	letter-spacing: 8rpx;
+	color: $ink;
+}
+
+.rq-lead {
+	display: block;
+	margin-top: 16rpx;
+	font-size: 24rpx;
+	line-height: 1.6;
+	color: $dim;
+}
+
+/* ---------- 登录方式切换 ---------- */
+.rq-tabs {
+	display: flex;
+	margin-top: 36rpx;
+}
+
+.rq-tab {
+	flex: 1;
+	height: 72rpx;
+	line-height: 68rpx;
+	text-align: center;
+	font-size: 24rpx;
+	color: $dim;
+	background-color: $panel2;
+	border: 4rpx solid $lineSoft;
+}
+
+.rq-tab + .rq-tab {
+	margin-left: -4rpx;
+}
+
+.rq-tab.on {
+	position: relative;
+	z-index: 1;
+	color: $on;
+	background-color: $accent;
+	border-color: $line;
+	box-shadow: 4rpx 4rpx 0 $line;
+}
+
+/* ---------- 表单 ---------- */
+.rq-form {
+	margin-top: 32rpx;
+}
+
+.rq-field {
+	display: flex;
+	align-items: center;
+	height: 96rpx;
+	padding: 0 22rpx;
+	margin-bottom: 24rpx;
+	background-color: $panel;
+	border: 4rpx solid $line;
+}
+
+.rq-field__ico {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex: none;
+	margin-right: 18rpx;
+	color: $ink;
+}
+
+.rq-field__in {
+	flex: 1;
+	min-width: 0;
+	height: 100%;
+	padding: 0;
+	font-family: 'Zpix', sans-serif;
+	font-size: 24rpx;
+	color: $ink;
+	background-color: transparent;
+	border: 0;
+	border-radius: 0;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.rq-field__in--en {
+	font-family: 'Press Start 2P', monospace;
+	font-size: 32rpx;
+	letter-spacing: 2rpx;
+}
+
+.rq-eye {
+	flex: none;
+	margin-left: 14rpx;
+	padding: 0 6rpx;
+	color: $accent2;
+}
+
+.rq-code {
+	flex: none;
+	margin-left: 14rpx;
+	height: 64rpx;
+	line-height: 60rpx;
+	padding: 0 16rpx;
+	font-size: 24rpx;
+	color: $ink;
+	background-color: $panel2;
+	border: 4rpx solid $line;
+}
+
+.rq-code.off {
+	color: $dim;
+	border-color: $lineSoft;
+}
+
+/* 右对齐小链接行 */
+.rq-row {
+	display: flex;
+	justify-content: flex-end;
+	margin: -4rpx 0 24rpx;
+	font-size: 24rpx;
+}
+
+.rq-row__link {
+	color: $accent2;
+}
+
+/* ---------- 六格验证码 ---------- */
+.rq-cells {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 24rpx;
+}
+
+.rq-cell {
+	width: 88rpx;
+	height: 104rpx;
+	padding: 0;
+	box-sizing: border-box;
+	text-align: center;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 64rpx;
+	color: $ink;
+	background-color: $panel;
+	border: 4rpx solid $line;
+	border-radius: 0;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.rq-cell.on {
+	color: $on;
+	background-color: $accent;
+	box-shadow: 6rpx 6rpx 0 $line;
+}
+
+.rq-cell.dim {
+	color: $dim;
+	background-color: $panel2;
+	border-color: $lineSoft;
+}
+
+/* ---------- 密码强度 ---------- */
+.rq-power {
+	display: flex;
+	align-items: center;
+	margin: -4rpx 0 24rpx;
+	font-size: 24rpx;
+	color: $dim;
+}
+
+.rq-power__t {
+	margin-right: 14rpx;
+}
+
+.rq-power__bars {
+	display: flex;
+	flex: 1;
+}
+
+.rq-power__bar {
+	flex: 1;
+	height: 16rpx;
+	margin-right: 8rpx;
+	background-color: $panel2;
+	border: 3rpx solid $lineSoft;
+}
+
+.rq-power__bar.on {
+	background-color: #92cc41;
+	border-color: $line;
+}
+
+.rq-power__v {
+	width: 64rpx;
+	text-align: right;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 32rpx;
+	color: $ink;
+}
+
+/* ---------- 按钮 ---------- */
+.rq-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 96rpx;
+	margin-top: 32rpx;
+	font-size: 48rpx;
+	letter-spacing: 8rpx;
+	color: $on;
+	background-color: $accent;
+	border: 4rpx solid $line;
+	box-shadow: 8rpx 8rpx 0 $line;
+}
+
+.rq-btn .pxi {
+	margin-right: 14rpx;
+}
+
+.rq-btn:active {
+	transform: translate(4rpx, 4rpx);
+	box-shadow: 4rpx 4rpx 0 $line;
+}
+
+.rq-btn--ghost {
+	color: $ink;
+	background-color: $panel;
+}
+
+/* ---------- 页脚与协议 ---------- */
+.rq-foot {
+	margin-top: 32rpx;
+	text-align: center;
+	font-size: 24rpx;
+	color: $dim;
+}
+
+.rq-foot__link {
+	color: $accent2;
+	text-decoration: underline;
+}
+
+.rq-agree {
+	display: flex;
+	align-items: flex-start;
+	margin-top: 28rpx;
+	font-size: 24rpx;
+	line-height: 1.7;
+	color: $dim;
+}
+
+.rq-check {
+	position: relative;
+	flex: none;
+	width: 30rpx;
+	height: 30rpx;
+	margin: 4rpx 12rpx 0 0;
+	background-color: $panel;
+	border: 4rpx solid $line;
+}
+
+.rq-check.on {
+	background-color: #92cc41;
+}
+
+.rq-check.on::after {
+	content: '';
+	position: absolute;
+	left: 8rpx;
+	top: 2rpx;
+	width: 8rpx;
+	height: 15rpx;
+	border: solid $line;
+	border-width: 0 4rpx 4rpx 0;
+	transform: rotate(45deg);
+}
+
+.rq-link {
+	color: $accent2;
+}
+
+/* ---------- 步骤条 ---------- */
+.rq-steps {
+	display: flex;
+	align-items: center;
+	margin: 4rpx 0 30rpx;
+}
+
+.rq-step {
+	display: flex;
+	align-items: center;
+	font-size: 24rpx;
+	color: $dim;
+}
+
+.rq-step__n {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 48rpx;
+	height: 48rpx;
+	margin-right: 12rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 32rpx;
+	color: $ink;
+	background-color: $panel2;
+	border: 4rpx solid $lineSoft;
+}
+
+.rq-step.on .rq-step__n {
+	color: $on;
+	background-color: $accent2;
+	border-color: $line;
+}
+
+.rq-step__line {
+	flex: 1;
+	height: 4rpx;
+	margin: 0 16rpx;
+	background-color: $lineSoft;
+}
+
+.rq-step.on .rq-step__line {
+	background-color: $line;
+}
+
+/* ---------- 占位符（uniapp 用 placeholder-style 内联声明，这里兼容 H5） ---------- */
+.rq-field__in::-webkit-input-placeholder {
+	color: #a08e6d;
+}
+
+/* ---------- 主题皮肤（覆盖骨架） ---------- */
+.rq-card {
+	border-width: 6rpx;
+	box-shadow: 10rpx 10rpx 0 rgba(58, 42, 22, .28);
+}
+
+.rq-btn {
+	color: $on;
+	background-color: $accent;
+	box-shadow: 6rpx 6rpx 0 $line;
+}
+
+.rq-brand__logo {
+	background-color: $accent2;
+	color: $on;
+}
+
+/* ---------- 主题装饰 ---------- */
+.rq-status {
+	display: flex;
+	align-items: center;
+	margin-bottom: 26rpx;
+	padding: 20rpx;
+	background-color: $panel;
+	border: 6rpx solid $line;
+	box-shadow: 6rpx 6rpx 0 rgba(58, 42, 22, .2);
+}
+
+.rq-face {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 88rpx;
+	height: 88rpx;
+	flex: none;
+	color: $ink;
+	background-color: $panel2;
+	border: 4rpx solid $line;
+}
+
+.rq-face .pxi {
+	transform: scale(2);
+}
+
+.rq-status__meta {
+	flex: 1;
+	min-width: 0;
+	margin-left: 20rpx;
+}
+
+.rq-status__name {
+	display: block;
+	margin-bottom: 12rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 16rpx;
+	letter-spacing: 1rpx;
+	color: $ink;
+}
+
+.rq-bar {
+	position: relative;
+	height: 32rpx;
+	margin-bottom: 10rpx;
+	background-color: $panel2;
+	border: 4rpx solid $line;
+}
+
+.rq-bar__fill {
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+}
+
+.rq-bar--hp .rq-bar__fill { background-color: #92cc41; }
+.rq-bar--mp .rq-bar__fill { background-color: #4a90d9; }
+
+.rq-bar__t {
+	position: relative;
+	display: block;
+	line-height: 24rpx;
+	text-align: center;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 16rpx;
+	color: $ink;
+}
+
+.rq-quest {
+	display: flex;
+	align-items: flex-end;
+	margin-top: 36rpx;
+}
+
+.rq-quest__box {
+	position: relative;
+	flex: 1;
+	padding: 24rpx 20rpx;
+	background-color: $panel;
+	border: 6rpx solid $line;
+	box-shadow: 6rpx 6rpx 0 rgba(58, 42, 22, .2);
+}
+
+.rq-quest__t {
+	font-size: 24rpx;
+	line-height: 1.6;
+	color: $ink;
+}
+
+.rq-quest__arrow {
+	position: absolute;
+	right: 16rpx;
+	bottom: 8rpx;
+	width: 0;
+	height: 0;
+	border-left: 10rpx solid transparent;
+	border-right: 10rpx solid transparent;
+	border-top: 12rpx solid $accent;
+	animation: rq-bob .9s steps(2, end) infinite;
+}
+
+@keyframes rq-bob {
+	0%, 49% { transform: translateY(0); }
+	50%, 100% { transform: translateY(-6rpx); }
+}
+
+.rq-chest {
+	position: relative;
+	width: 72rpx;
+	height: 76rpx;
+	flex: none;
+	margin-left: 20rpx;
+}
+
+.rq-chest__lid {
+	height: 28rpx;
+	background-color: #a5672b;
+	border: 4rpx solid $line;
+}
+
+.rq-chest__body {
+	height: 40rpx;
+	background-color: #c8860d;
+	border: 4rpx solid $line;
+	border-top: 0;
+}
+
+.rq-chest__lock {
+	position: absolute;
+	left: 28rpx;
+	top: 30rpx;
+	width: 16rpx;
+	height: 20rpx;
+	background-color: $line;
+}

@@ -567,6 +567,279 @@
 				"navigationBarBackgroundColor": "#4f46e5",
 				"navigationBarTextStyle": "white"
 			}
+		},
+		{
+			"path": "pages/login92/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风登录 · FC 红白机"
+			}
+		},
+		{
+			"path": "pages/login92/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风注册 · FC 红白机"
+			}
+		},
+		{
+			"path": "pages/login92/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风找回密码 · FC 红白机"
+			}
+		},
+		{
+			"path": "pages/login93/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风登录 · Game Boy"
+			}
+		},
+		{
+			"path": "pages/login93/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风注册 · Game Boy"
+			}
+		},
+		{
+			"path": "pages/login93/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风找回密码 · Game Boy"
+			}
+		},
+		{
+			"path": "pages/login94/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风登录 · 赛博霓虹"
+			}
+		},
+		{
+			"path": "pages/login94/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风注册 · 赛博霓虹"
+			}
+		},
+		{
+			"path": "pages/login94/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风找回密码 · 赛博霓虹"
+			}
+		},
+		{
+			"path": "pages/login95/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风登录 · 街机柜"
+			}
+		},
+		{
+			"path": "pages/login95/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风注册 · 街机柜"
+			}
+		},
+		{
+			"path": "pages/login95/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风找回密码 · 街机柜"
+			}
+		},
+		{
+			"path": "pages/login96/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风登录 · 像素 RPG"
+			}
+		},
+		{
+			"path": "pages/login96/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风注册 · 像素 RPG"
+			}
+		},
+		{
+			"path": "pages/login96/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风找回密码 · 像素 RPG"
+			}
+		},
+		{
+			"path": "pages/login97/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风登录 · 琥珀终端"
+			}
+		},
+		{
+			"path": "pages/login97/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风注册 · 琥珀终端"
+			}
+		},
+		{
+			"path": "pages/login97/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风找回密码 · 琥珀终端"
+			}
+		},
+		{
+			"path": "pages/login98/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风登录 · 打字机"
+			}
+		},
+		{
+			"path": "pages/login98/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风注册 · 打字机"
+			}
+		},
+		{
+			"path": "pages/login98/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风找回密码 · 打字机"
+			}
+		},
+		{
+			"path": "pages/login99/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风登录 · 电子车票"
+			}
+		},
+		{
+			"path": "pages/login99/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风注册 · 电子车票"
+			}
+		},
+		{
+			"path": "pages/login99/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风找回密码 · 电子车票"
+			}
+		},
+		{
+			"path": "pages/login100/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风登录 · 深空雷达"
+			}
+		},
+		{
+			"path": "pages/login100/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风注册 · 深空雷达"
+			}
+		},
+		{
+			"path": "pages/login100/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风找回密码 · 深空雷达"
+			}
+		},
+		{
+			"path": "pages/login101/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风登录 · 便签板"
+			}
+		},
+		{
+			"path": "pages/login101/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风注册 · 便签板"
+			}
+		},
+		{
+			"path": "pages/login101/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风找回密码 · 便签板"
+			}
+		},
+		{
+			"path": "pages/login102/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风登录 · 磁带随身听"
+			}
+		},
+		{
+			"path": "pages/login102/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风注册 · 磁带随身听"
+			}
+		},
+		{
+			"path": "pages/login102/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风找回密码 · 磁带随身听"
+			}
+		},
+		{
+			"path": "pages/login103/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风登录 · 日历打卡"
+			}
+		},
+		{
+			"path": "pages/login103/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风注册 · 日历打卡"
+			}
+		},
+		{
+			"path": "pages/login103/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风找回密码 · 日历打卡"
+			}
+		},
+		{
+			"path": "pages/login104/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风登录 · 积木砖块"
+			}
+		},
+		{
+			"path": "pages/login104/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风注册 · 积木砖块"
+			}
+		},
+		{
+			"path": "pages/login104/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风找回密码 · 积木砖块"
+			}
 		}
 	],
 	"globalStyle": {

@@ -14,4 +14,6 @@
 
 <style>
 	/*每个页面公共css */
+	/* 字体统一管理（static/font/index.css） */
+	@import './static/font/index.css';
 </style>

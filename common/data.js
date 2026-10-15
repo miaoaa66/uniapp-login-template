@@ -454,5 +454,70 @@ export default {
 			path: "/pages/login91/login",
 			tags: ["登录", "注册", "密码", "验证码"]
 		},
+		{
+			cover: require('../static/cover/login92_cover.jpg'),
+			path: "/pages/login92/login",
+			tags: ["像素风", "登录", "注册", "密码", "验证码"]
+		},
+		{
+			cover: require('../static/cover/login93_cover.jpg'),
+			path: "/pages/login93/login",
+			tags: ["像素风", "登录", "注册", "密码", "验证码"]
+		},
+		{
+			cover: require('../static/cover/login94_cover.jpg'),
+			path: "/pages/login94/login",
+			tags: ["像素风", "登录", "注册", "密码", "验证码"]
+		},
+		{
+			cover: require('../static/cover/login95_cover.jpg'),
+			path: "/pages/login95/login",
+			tags: ["像素风", "街机", "登录", "注册", "密码", "验证码"]
+		},
+		{
+			cover: require('../static/cover/login96_cover.jpg'),
+			path: "/pages/login96/login",
+			tags: ["像素风", "RPG", "登录", "注册", "密码", "验证码"]
+		},
+		{
+			cover: require('../static/cover/login97_cover.jpg'),
+			path: "/pages/login97/login",
+			tags: ["像素风", "终端", "登录", "注册", "密码", "验证码"]
+		},
+		{
+			cover: require('../static/cover/login98_cover.jpg'),
+			path: "/pages/login98/login",
+			tags: ["像素风", "打字机", "登录", "注册", "密码", "验证码"]
+		},
+		{
+			cover: require('../static/cover/login99_cover.jpg'),
+			path: "/pages/login99/login",
+			tags: ["像素风", "车票", "登录", "注册", "密码", "验证码"]
+		},
+		{
+			cover: require('../static/cover/login100_cover.jpg'),
+			path: "/pages/login100/login",
+			tags: ["像素风", "太空", "登录", "注册", "密码", "验证码"]
+		},
+		{
+			cover: require('../static/cover/login101_cover.jpg'),
+			path: "/pages/login101/login",
+			tags: ["像素风", "便签", "登录", "注册", "密码", "验证码"]
+		},
+		{
+			cover: require('../static/cover/login102_cover.jpg'),
+			path: "/pages/login102/login",
+			tags: ["像素风", "磁带", "登录", "注册", "密码", "验证码"]
+		},
+		{
+			cover: require('../static/cover/login103_cover.jpg'),
+			path: "/pages/login103/login",
+			tags: ["像素风", "日历", "登录", "注册", "密码", "验证码"]
+		},
+		{
+			cover: require('../static/cover/login104_cover.jpg'),
+			path: "/pages/login104/login",
+			tags: ["像素风", "积木", "登录", "注册", "密码", "验证码"]
+		},
 	]
 }

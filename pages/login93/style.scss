@@ -1,0 +1,576 @@
+/* ==========================================================================
+ * SET B · GAME BOY 绿屏（DMG-01 · 四色点阵）
+ * pages/login93 —— 登录 / 注册 / 找回密码 三页共用
+ * 字体：Zpix（中文像素字体）+ Press Start 2P（拉丁与数字）
+ * 像素材质：LCD 点阵背景 + 深绿外壳 + 硬边描边
+ * ========================================================================== */
+
+@import '../../common/pixel-icons.scss';
+
+/* ---------- 四色令牌（DMG 经典绿） ---------- */
+$gb-0: #0f380f;
+$gb-1: #306230;
+$gb-2: #8bac0f;
+$gb-3: #9bbc0f;
+$gb-lcd: #dff0a6;
+
+/* ---------- 页面容器 ---------- */
+.gb-page,
+.gb-page * {
+	box-sizing: border-box;
+}
+
+.gb-page {
+	position: relative;
+	min-height: 100vh;
+	padding-bottom: 40rpx;
+	background-color: #9bbc0f;
+	background-image: radial-gradient(rgba(15, 56, 15, .22) 2rpx, transparent 2rpx);
+	background-size: 12rpx 12rpx;
+	font-family: 'Zpix', sans-serif;
+	color: #0f380f;
+	-webkit-font-smoothing: none;
+}
+
+/* ---------- 顶部外壳（导航） ---------- */
+.gb-nav {
+	display: flex;
+	align-items: center;
+	height: 96rpx;
+	padding: 0 24rpx;
+	background-color: #9bbc0f;
+	border-bottom: 4rpx solid #0f380f;
+}
+
+.gb-nav__back {
+	width: 80rpx;
+	display: flex;
+	align-items: center;
+	color: #0f380f;
+}
+
+.gb-nav__back:active {
+	opacity: .5;
+}
+
+.gb-nav__title {
+	flex: 1;
+	text-align: center;
+	font-size: 36rpx;
+	letter-spacing: 8rpx;
+	color: #0f380f;
+}
+
+.gb-nav__led {
+	width: 80rpx;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+
+.gb-led {
+	width: 16rpx;
+	height: 16rpx;
+	flex: none;
+	background-color: #cf1a0e;
+	border: 3rpx solid #0f380f;
+	box-shadow: 0 0 12rpx rgba(207, 26, 14, .9);
+	animation: gb-blink 1.2s steps(1, end) infinite;
+}
+
+@keyframes gb-blink {
+	0%, 59% { opacity: 1; }
+	60%, 100% { opacity: .2; }
+}
+
+/* ---------- 主体 ---------- */
+.gb-body {
+	padding: 26rpx 28rpx 0;
+}
+
+/* 掌机面板（深绿外壳） */
+.gb-shell {
+	padding: 20rpx 20rpx 26rpx;
+	background-color: #8bac0f;
+	border: 6rpx solid #0f380f;
+}
+
+.gb-shell__brand {
+	display: flex;
+	align-items: baseline;
+	margin-bottom: 16rpx;
+}
+
+.gb-shell__en {
+	font-family: 'Press Start 2P', monospace;
+	font-size: 24rpx;
+	letter-spacing: 1rpx;
+	color: #0f380f;
+	text-shadow: 3rpx 3rpx 0 #9bbc0f;
+}
+
+.gb-shell__sub {
+	flex: 1;
+	margin-left: 12rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 16rpx;
+	letter-spacing: 0;
+	color: #306230;
+}
+
+/* LCD 屏幕（内容卡片） */
+.gb-screen {
+	padding: 30rpx 26rpx 28rpx;
+	background-color: #dff0a6;
+	background-image: radial-gradient(rgba(15, 56, 15, .1) 2rpx, transparent 2rpx);
+	background-size: 10rpx 10rpx;
+	border: 6rpx solid #0f380f;
+}
+
+.gb-head {
+	display: flex;
+	align-items: center;
+}
+
+.gb-head__logo {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 64rpx;
+	height: 64rpx;
+	flex: none;
+	color: #dff0a6;
+	background-color: #0f380f;
+	border: 4rpx solid #0f380f;
+}
+
+.gb-head__logo .pxi {
+	transform: scale(2);
+}
+
+.gb-head__meta {
+	margin-left: 18rpx;
+}
+
+.gb-head__en {
+	display: block;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 24rpx;
+	letter-spacing: 1rpx;
+	color: #0f380f;
+}
+
+.gb-head__cn {
+	display: block;
+	margin-top: 6rpx;
+	font-size: 24rpx;
+	letter-spacing: 4rpx;
+	color: #306230;
+}
+
+.gb-title {
+	display: block;
+	margin-top: 26rpx;
+	font-size: 48rpx;
+	line-height: 1.3;
+	letter-spacing: 8rpx;
+	color: #0f380f;
+	text-shadow: 4rpx 4rpx 0 #8bac0f;
+}
+
+.gb-lead {
+	display: block;
+	margin-top: 12rpx;
+	font-size: 24rpx;
+	line-height: 1.6;
+	color: #306230;
+}
+
+/* ---------- 登录方式切换（卡带标签） ---------- */
+.gb-tabs {
+	display: flex;
+	margin-top: 28rpx;
+	border-bottom: 4rpx solid #0f380f;
+}
+
+.gb-tab {
+	flex: 1;
+	height: 66rpx;
+	line-height: 62rpx;
+	text-align: center;
+	font-size: 24rpx;
+	color: #306230;
+	background-color: transparent;
+	border: 4rpx solid transparent;
+	border-bottom: 0;
+}
+
+.gb-tab.on {
+	color: #dff0a6;
+	background-color: #0f380f;
+	border-color: #0f380f;
+}
+
+/* ---------- 表单 ---------- */
+.gb-form {
+	margin-top: 28rpx;
+}
+
+.gb-field {
+	display: flex;
+	align-items: center;
+	height: 88rpx;
+	padding: 0 20rpx;
+	margin-bottom: 22rpx;
+	background-color: #eaf8c4;
+	border: 4rpx solid #0f380f;
+}
+
+.gb-field__ico {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex: none;
+	margin-right: 16rpx;
+	color: #0f380f;
+}
+
+.gb-field__in {
+	flex: 1;
+	min-width: 0;
+	height: 100%;
+	padding: 0;
+	font-family: 'Zpix', sans-serif;
+	font-size: 24rpx;
+	color: #0f380f;
+	background-color: transparent;
+	border: 0;
+	border-radius: 0;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.gb-field__in--en {
+	font-family: 'Press Start 2P', monospace;
+	font-size: 24rpx;
+	letter-spacing: 2rpx;
+}
+
+.gb-eye {
+	flex: none;
+	margin-left: 12rpx;
+	padding: 0 6rpx;
+	color: #306230;
+}
+
+.gb-code {
+	flex: none;
+	margin-left: 12rpx;
+	height: 58rpx;
+	line-height: 54rpx;
+	padding: 0 14rpx;
+	font-size: 24rpx;
+	color: #dff0a6;
+	background-color: #306230;
+	border: 4rpx solid #0f380f;
+}
+
+.gb-code.off {
+	color: #8bac0f;
+	background-color: #c3d98a;
+	border-color: #8bac0f;
+}
+
+/* 六格验证码 */
+.gb-cells {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 22rpx;
+}
+
+.gb-cell {
+	width: 92rpx;
+	height: 104rpx;
+	padding: 0;
+	box-sizing: border-box;
+	text-align: center;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 30rpx;
+	color: #0f380f;
+	background-color: #eaf8c4;
+	border: 4rpx solid #0f380f;
+	border-radius: 0;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.gb-cell.on {
+	color: #dff0a6;
+	background-color: #306230;
+}
+
+.gb-cell.dim {
+	color: #8bac0f;
+	background-color: #cfe09c;
+	border-color: #8bac0f;
+}
+
+/* 右对齐小链接行 */
+.gb-row {
+	display: flex;
+	justify-content: flex-end;
+	margin: -4rpx 0 22rpx;
+	font-size: 24rpx;
+}
+
+.gb-row__link {
+	color: #306230;
+	text-decoration: underline;
+}
+
+/* ---------- 密码强度 ---------- */
+.gb-power {
+	display: flex;
+	align-items: center;
+	margin: -4rpx 0 22rpx;
+	font-size: 24rpx;
+	color: #306230;
+}
+
+.gb-power__t {
+	margin-right: 12rpx;
+}
+
+.gb-power__bars {
+	display: flex;
+	flex: 1;
+}
+
+.gb-power__bar {
+	flex: 1;
+	height: 14rpx;
+	margin-right: 8rpx;
+	background-color: #cfe09c;
+	border: 3rpx solid #8bac0f;
+}
+
+.gb-power__bar.on {
+	background-color: #0f380f;
+	border-color: #0f380f;
+}
+
+.gb-power__v {
+	width: 44rpx;
+	text-align: right;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 16rpx;
+	color: #0f380f;
+}
+
+/* ---------- 按钮 ---------- */
+.gb-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 92rpx;
+	margin-top: 28rpx;
+	font-size: 36rpx;
+	letter-spacing: 8rpx;
+	color: #dff0a6;
+	background-color: #0f380f;
+	border: 4rpx solid #0f380f;
+	box-shadow: 8rpx 8rpx 0 rgba(15, 56, 15, .35);
+	text-shadow: 2rpx 2rpx 0 #306230;
+}
+
+.gb-btn .pxi {
+	margin-right: 14rpx;
+}
+
+.gb-btn:active {
+	transform: translate(4rpx, 4rpx);
+	box-shadow: 4rpx 4rpx 0 rgba(15, 56, 15, .35);
+}
+
+/* ---------- 页脚 ---------- */
+.gb-foot {
+	margin-top: 28rpx;
+	text-align: center;
+	font-size: 24rpx;
+	color: #306230;
+}
+
+.gb-foot__link {
+	color: #0f380f;
+	text-decoration: underline;
+}
+
+.gb-agree {
+	display: flex;
+	align-items: flex-start;
+	margin-top: 26rpx;
+	font-size: 24rpx;
+	line-height: 1.7;
+	color: #306230;
+}
+
+.gb-check {
+	position: relative;
+	flex: none;
+	width: 28rpx;
+	height: 28rpx;
+	margin: 4rpx 12rpx 0 0;
+	background-color: #eaf8c4;
+	border: 4rpx solid #0f380f;
+}
+
+.gb-check.on {
+	background-color: #306230;
+}
+
+.gb-check.on::after {
+	content: '';
+	position: absolute;
+	left: 7rpx;
+	top: 1rpx;
+	width: 8rpx;
+	height: 14rpx;
+	border: solid #dff0a6;
+	border-width: 0 4rpx 4rpx 0;
+	transform: rotate(45deg);
+}
+
+.gb-link {
+	color: #0f380f;
+	text-decoration: underline;
+}
+
+/* ---------- 步骤条 ---------- */
+.gb-steps {
+	display: flex;
+	align-items: center;
+	margin: 24rpx 0 26rpx;
+}
+
+.gb-step {
+	display: flex;
+	align-items: center;
+	font-size: 24rpx;
+	color: #306230;
+}
+
+.gb-step__n {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 38rpx;
+	height: 38rpx;
+	margin-right: 10rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 16rpx;
+	color: #306230;
+	background-color: #cfe09c;
+	border: 4rpx solid #8bac0f;
+}
+
+.gb-step.on .gb-step__n {
+	color: #dff0a6;
+	background-color: #0f380f;
+	border-color: #0f380f;
+}
+
+.gb-step__line {
+	flex: 1;
+	height: 4rpx;
+	margin: 0 14rpx;
+	background-color: #8bac0f;
+}
+
+.gb-step.on .gb-step__line {
+	background-color: #0f380f;
+}
+
+/* ---------- 底部控制器 ---------- */
+.gb-ctrl {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: 22rpx;
+}
+
+.gb-dpad {
+	position: relative;
+	width: 108rpx;
+	height: 108rpx;
+	flex: none;
+}
+
+.gb-dpad__h {
+	position: absolute;
+	left: 0;
+	top: 36rpx;
+	width: 108rpx;
+	height: 36rpx;
+	background-color: #0f380f;
+}
+
+.gb-dpad__v {
+	position: absolute;
+	left: 36rpx;
+	top: 0;
+	width: 36rpx;
+	height: 108rpx;
+	background-color: #0f380f;
+}
+
+.gb-dpad__c {
+	position: absolute;
+	left: 46rpx;
+	top: 46rpx;
+	width: 16rpx;
+	height: 16rpx;
+	background-color: #8bac0f;
+}
+
+.gb-btns {
+	display: flex;
+	flex: 1;
+	justify-content: flex-end;
+	align-items: center;
+}
+
+.gb-abtn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 78rpx;
+	height: 78rpx;
+	margin-left: 20rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 24rpx;
+	color: #9bbc0f;
+	background-color: #0f380f;
+	border: 4rpx solid #0f380f;
+	box-shadow: 0 6rpx 0 rgba(15, 56, 15, .45);
+}
+
+/* 扬声器孔 */
+.gb-speaker {
+	display: flex;
+	justify-content: flex-end;
+	margin-top: 20rpx;
+}
+
+.gb-speaker__i {
+	width: 10rpx;
+	height: 56rpx;
+	margin-left: 16rpx;
+	background-color: #0f380f;
+	transform: rotate(20deg);
+}
+
+/* ---------- 占位符 ---------- */
+.gb-field__in::-webkit-input-placeholder,
+.gb-cell::-webkit-input-placeholder {
+	color: #6f8a4a;
+}

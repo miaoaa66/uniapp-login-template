@@ -1,0 +1,569 @@
+/* ==========================================================================
+ * SET F · 琥珀单色终端 AMBER
+ * pages/login97 —— 登录 / 注册 / 找回密码 三页共用
+ * 纯黑底 + 琥珀单色，窗口条与 ASCII 进度条还原 80 年代字符终端
+ *
+ * 字体：Zpix（中文像素）+ Press Start 2P（拉丁与数字）
+ * 图标：common/pixel-icons.scss（8x8 网格，box-shadow 逐点绘制）
+ * 字号：Zpix 走 12px 的整数倍，Press Start 2P 走 8px 的整数倍
+ * ========================================================================== */
+
+@import '../../common/pixel-icons.scss';
+
+/* ---------- 设计令牌 ---------- */
+$ink: #ffb000;         // 主文字
+$dim: #a06a00;         // 次级文字
+$bg: #0a0600;          // 页面底色
+$panel: #140d00;       // 卡片/面板底色
+$panel2: #1c1200;      // 次级面板底色（Tab 未选中、字段底）
+$line: #ffb000;        // 主描边
+$lineSoft: #5c3d00;    // 弱描边
+$accent: #ffb000;      // 主强调色（按钮 / 选中态）
+$accent2: #ffd166;     // 次强调色（链接 / 图标）
+$on: #0a0600;          // 强调色之上的文字
+
+/* ---------- 页面容器 ---------- */
+.am-page,
+.am-page * {
+	box-sizing: border-box;
+}
+
+.am-page {
+	position: relative;
+	min-height: 100vh;
+	padding-bottom: 40rpx;
+	background-color: $bg;
+	background-image: repeating-linear-gradient(0deg, rgba(255, 176, 0, .05) 0rpx, rgba(255, 176, 0, .05) 2rpx, transparent 2rpx, transparent 6rpx);
+	font-family: 'Zpix', sans-serif;
+	color: $ink;
+	-webkit-font-smoothing: none;
+}
+
+/* ---------- 自绘导航栏 ---------- */
+.am-nav {
+	display: flex;
+	align-items: center;
+	height: 96rpx;
+	padding: 0 24rpx;
+	background-color: $panel;
+	border-bottom: 4rpx solid $line;
+}
+
+.am-nav__back {
+	display: flex;
+	align-items: center;
+	width: 110rpx;
+	flex: none;
+	color: $ink;
+}
+
+.am-nav__back:active {
+	opacity: .5;
+}
+
+.am-nav__title {
+	flex: 1;
+	text-align: center;
+	font-size: 48rpx;
+	letter-spacing: 6rpx;
+	color: $ink;
+}
+
+.am-nav__slot {
+	flex: none;
+	min-width: 110rpx;
+	text-align: right;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 24rpx;
+	letter-spacing: 1rpx;
+	color: $dim;
+}
+
+/* ---------- 主体与卡片 ---------- */
+.am-body {
+	padding: 28rpx 32rpx 0;
+}
+
+.am-card {
+	padding: 36rpx 32rpx 32rpx;
+	background-color: $panel;
+	border: 4rpx solid $line;
+	box-shadow: 10rpx 10rpx 0 rgba(0, 0, 0, .16);
+}
+
+.am-brand {
+	display: flex;
+	align-items: center;
+}
+
+.am-brand__logo {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 68rpx;
+	height: 68rpx;
+	flex: none;
+	color: $on;
+	background-color: $accent;
+	border: 4rpx solid $line;
+	box-shadow: 5rpx 5rpx 0 $line;
+}
+
+.am-brand__logo .pxi {
+	transform: scale(2);
+}
+
+.am-brand__meta {
+	margin-left: 20rpx;
+}
+
+.am-brand__en {
+	display: block;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 32rpx;
+	letter-spacing: 1rpx;
+	color: $ink;
+}
+
+.am-brand__cn {
+	display: block;
+	margin-top: 8rpx;
+	font-size: 24rpx;
+	letter-spacing: 4rpx;
+	color: $dim;
+}
+
+.am-title {
+	display: block;
+	margin-top: 34rpx;
+	font-size: 48rpx;
+	line-height: 1.3;
+	letter-spacing: 8rpx;
+	color: $ink;
+}
+
+.am-lead {
+	display: block;
+	margin-top: 16rpx;
+	font-size: 24rpx;
+	line-height: 1.6;
+	color: $dim;
+}
+
+/* ---------- 登录方式切换 ---------- */
+.am-tabs {
+	display: flex;
+	margin-top: 36rpx;
+}
+
+.am-tab {
+	flex: 1;
+	height: 72rpx;
+	line-height: 68rpx;
+	text-align: center;
+	font-size: 24rpx;
+	color: $dim;
+	background-color: $panel2;
+	border: 4rpx solid $lineSoft;
+}
+
+.am-tab + .am-tab {
+	margin-left: -4rpx;
+}
+
+.am-tab.on {
+	position: relative;
+	z-index: 1;
+	color: $on;
+	background-color: $accent;
+	border-color: $line;
+	box-shadow: 4rpx 4rpx 0 $line;
+}
+
+/* ---------- 表单 ---------- */
+.am-form {
+	margin-top: 32rpx;
+}
+
+.am-field {
+	display: flex;
+	align-items: center;
+	height: 96rpx;
+	padding: 0 22rpx;
+	margin-bottom: 24rpx;
+	background-color: $panel;
+	border: 4rpx solid $line;
+}
+
+.am-field__ico {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex: none;
+	margin-right: 18rpx;
+	color: $ink;
+}
+
+.am-field__in {
+	flex: 1;
+	min-width: 0;
+	height: 100%;
+	padding: 0;
+	font-family: 'Zpix', sans-serif;
+	font-size: 24rpx;
+	color: $ink;
+	background-color: transparent;
+	border: 0;
+	border-radius: 0;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.am-field__in--en {
+	font-family: 'Press Start 2P', monospace;
+	font-size: 32rpx;
+	letter-spacing: 2rpx;
+}
+
+.am-eye {
+	flex: none;
+	margin-left: 14rpx;
+	padding: 0 6rpx;
+	color: $accent2;
+}
+
+.am-code {
+	flex: none;
+	margin-left: 14rpx;
+	height: 64rpx;
+	line-height: 60rpx;
+	padding: 0 16rpx;
+	font-size: 24rpx;
+	color: $ink;
+	background-color: $panel2;
+	border: 4rpx solid $line;
+}
+
+.am-code.off {
+	color: $dim;
+	border-color: $lineSoft;
+}
+
+/* 右对齐小链接行 */
+.am-row {
+	display: flex;
+	justify-content: flex-end;
+	margin: -4rpx 0 24rpx;
+	font-size: 24rpx;
+}
+
+.am-row__link {
+	color: $accent2;
+}
+
+/* ---------- 六格验证码 ---------- */
+.am-cells {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 24rpx;
+}
+
+.am-cell {
+	width: 88rpx;
+	height: 104rpx;
+	padding: 0;
+	box-sizing: border-box;
+	text-align: center;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 64rpx;
+	color: $ink;
+	background-color: $panel;
+	border: 4rpx solid $line;
+	border-radius: 0;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.am-cell.on {
+	color: $on;
+	background-color: $accent;
+	box-shadow: 6rpx 6rpx 0 $line;
+}
+
+.am-cell.dim {
+	color: $dim;
+	background-color: $panel2;
+	border-color: $lineSoft;
+}
+
+/* ---------- 密码强度 ---------- */
+.am-power {
+	display: flex;
+	align-items: center;
+	margin: -4rpx 0 24rpx;
+	font-size: 24rpx;
+	color: $dim;
+}
+
+.am-power__t {
+	margin-right: 14rpx;
+}
+
+.am-power__bars {
+	display: flex;
+	flex: 1;
+}
+
+.am-power__bar {
+	flex: 1;
+	height: 16rpx;
+	margin-right: 8rpx;
+	background-color: $panel2;
+	border: 3rpx solid $lineSoft;
+}
+
+.am-power__bar.on {
+	background-color: #92cc41;
+	border-color: $line;
+}
+
+.am-power__v {
+	width: 64rpx;
+	text-align: right;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 32rpx;
+	color: $ink;
+}
+
+/* ---------- 按钮 ---------- */
+.am-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 96rpx;
+	margin-top: 32rpx;
+	font-size: 48rpx;
+	letter-spacing: 8rpx;
+	color: $on;
+	background-color: $accent;
+	border: 4rpx solid $line;
+	box-shadow: 8rpx 8rpx 0 $line;
+}
+
+.am-btn .pxi {
+	margin-right: 14rpx;
+}
+
+.am-btn:active {
+	transform: translate(4rpx, 4rpx);
+	box-shadow: 4rpx 4rpx 0 $line;
+}
+
+.am-btn--ghost {
+	color: $ink;
+	background-color: $panel;
+}
+
+/* ---------- 页脚与协议 ---------- */
+.am-foot {
+	margin-top: 32rpx;
+	text-align: center;
+	font-size: 24rpx;
+	color: $dim;
+}
+
+.am-foot__link {
+	color: $accent2;
+	text-decoration: underline;
+}
+
+.am-agree {
+	display: flex;
+	align-items: flex-start;
+	margin-top: 28rpx;
+	font-size: 24rpx;
+	line-height: 1.7;
+	color: $dim;
+}
+
+.am-check {
+	position: relative;
+	flex: none;
+	width: 30rpx;
+	height: 30rpx;
+	margin: 4rpx 12rpx 0 0;
+	background-color: $panel;
+	border: 4rpx solid $line;
+}
+
+.am-check.on {
+	background-color: #92cc41;
+}
+
+.am-check.on::after {
+	content: '';
+	position: absolute;
+	left: 8rpx;
+	top: 2rpx;
+	width: 8rpx;
+	height: 15rpx;
+	border: solid $line;
+	border-width: 0 4rpx 4rpx 0;
+	transform: rotate(45deg);
+}
+
+.am-link {
+	color: $accent2;
+}
+
+/* ---------- 步骤条 ---------- */
+.am-steps {
+	display: flex;
+	align-items: center;
+	margin: 4rpx 0 30rpx;
+}
+
+.am-step {
+	display: flex;
+	align-items: center;
+	font-size: 24rpx;
+	color: $dim;
+}
+
+.am-step__n {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 48rpx;
+	height: 48rpx;
+	margin-right: 12rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 32rpx;
+	color: $ink;
+	background-color: $panel2;
+	border: 4rpx solid $lineSoft;
+}
+
+.am-step.on .am-step__n {
+	color: $on;
+	background-color: $accent2;
+	border-color: $line;
+}
+
+.am-step__line {
+	flex: 1;
+	height: 4rpx;
+	margin: 0 16rpx;
+	background-color: $lineSoft;
+}
+
+.am-step.on .am-step__line {
+	background-color: $line;
+}
+
+/* ---------- 占位符（uniapp 用 placeholder-style 内联声明，这里兼容 H5） ---------- */
+.am-field__in::-webkit-input-placeholder {
+	color: #82600e;
+}
+
+/* ---------- 主题皮肤（覆盖骨架） ---------- */
+.am-card {
+	border-width: 2rpx;
+	box-shadow: 0 0 40rpx rgba(255, 176, 0, .12);
+}
+
+.am-field {
+	height: 88rpx;
+	margin-bottom: 20rpx;
+	border-width: 2rpx;
+	border-color: $lineSoft;
+	border-radius: 0;
+}
+
+.am-tab {
+	border-width: 2rpx;
+	background-color: transparent;
+	color: $dim;
+}
+
+.am-tab.on {
+	color: $on;
+	background-color: $accent;
+	border-color: $accent;
+	box-shadow: none;
+}
+
+.am-btn {
+	color: $on;
+	background-color: $accent;
+	text-shadow: none;
+	box-shadow: none;
+	letter-spacing: 10rpx;
+}
+
+.am-btn:active {
+	transform: none;
+	background-color: $accent2;
+}
+
+.am-title {
+	text-shadow: 0 0 24rpx rgba(255, 176, 0, .55);
+}
+
+/* ---------- 主题装饰 ---------- */
+.am-term {
+	margin-bottom: 24rpx;
+	border: 2rpx solid $line;
+}
+
+.am-term__bar {
+	display: flex;
+	align-items: center;
+	padding: 12rpx 16rpx;
+	background-color: $panel2;
+}
+
+.am-term__dot {
+	width: 16rpx;
+	height: 16rpx;
+	margin-right: 10rpx;
+	background-color: $lineSoft;
+}
+
+.am-term__dot:first-child {
+	background-color: $accent;
+}
+
+.am-term__title {
+	flex: 1;
+	margin-left: 8rpx;
+	text-align: right;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 16rpx;
+	letter-spacing: 1rpx;
+	color: $dim;
+}
+
+.am-log {
+	margin-top: 32rpx;
+	padding: 0 4rpx;
+}
+
+.am-log__l {
+	display: block;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 16rpx;
+	line-height: 2.4;
+	letter-spacing: 1rpx;
+	color: $dim;
+}
+
+.am-caret {
+	color: $accent;
+	animation: am-blink .9s steps(1, end) infinite;
+}
+
+@keyframes am-blink {
+	0%, 49% { opacity: 1; }
+	50%, 100% { opacity: 0; }
+}

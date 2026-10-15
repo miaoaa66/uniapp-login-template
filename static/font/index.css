@@ -1,0 +1,42 @@
+/* ==============================================
+ * 字体统一管理
+ * 本目录下的字体文件在此集中声明，页面只需引用 font-family
+ * 目录文件说明：
+ *   zpix.woff2 / zpix.ttf  →  Zpix（中文像素字体，体积大，woff2 优先）
+ *   press-start-2p.woff2   →  Press Start 2P（英文像素字体，12KB）
+ *   *.OFL.txt              →  对应字体的开源许可证，需保留
+ *   zpix.bdf               →  字体源文件，仅供修改字形时使用，不参与加载
+ *
+ * 引用方式：
+ *   1) 全局生效：App.vue <style> 中 @import './static/font/index.css';
+ *   2) 单页生效：页面 <style> 中 @import '../../static/font/index.css';
+ *   3) 或直接使用工具类 class="mn-font-zpix" / class="mn-font-press-start-2p"
+ * ============================================== */
+
+/* ---------- Zpix 中文像素字体 ---------- */
+@font-face {
+	font-family: 'Zpix';
+	src: url('/static/font/zpix.woff2') format('woff2'),
+		url('/static/font/zpix.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+/* ---------- Press Start 2P 英文像素字体 ---------- */
+@font-face {
+	font-family: 'Press Start 2P';
+	src: url('/static/font/press-start-2p.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+/* ---------- 工具类 ---------- */
+.mn-font-zpix {
+	font-family: 'Zpix', monospace;
+}
+
+.mn-font-press-start-2p {
+	font-family: 'Press Start 2P', monospace;
+}

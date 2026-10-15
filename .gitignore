@@ -1,0 +1,10 @@
+
+node_modules
+unpackage
+dist
+
+# Editor directories and files
+.idea
+.vscode
+.trae
+.workbuddy
