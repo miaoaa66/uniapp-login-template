@@ -519,5 +519,10 @@ export default {
 			path: "/pages/login104/login",
 			tags: ["像素风", "积木", "登录", "注册", "密码", "验证码"]
 		},
+		{
+			cover: require('../static/cover/login105_cover.jpg'),
+			path: "/pages/login105/login",
+			tags: ["像素风", "售货机", "登录", "注册", "密码", "验证码"]
+		},
 	]
 }

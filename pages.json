@@ -840,6 +840,27 @@
 				"navigationStyle": "custom",
 				"navigationBarTitleText": "像素风找回密码 · 积木砖块"
 			}
+		},
+		{
+			"path": "pages/login105/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风登录 · 自动售货机"
+			}
+		},
+		{
+			"path": "pages/login105/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风注册 · 自动售货机"
+			}
+		},
+		{
+			"path": "pages/login105/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "像素风找回密码 · 自动售货机"
+			}
 		}
 	],
 	"globalStyle": {
