@@ -529,5 +529,15 @@ export default {
 			path: "/pages/login106/login",
 			tags: ["极简", "留白", "登录", "注册", "密码", "验证码"]
 		},
+		{
+			cover: require('../static/cover/login107_cover.jpg'),
+			path: "/pages/login107/login",
+			tags: ["报纸", "铅字", "登录", "注册", "密码", "验证码"]
+		},
+		{
+			cover: require('../static/cover/login108_cover.jpg'),
+			path: "/pages/login108/login",
+			tags: ["极光", "玻璃", "登录", "注册", "密码", "验证码"]
+		},
 	]
 }

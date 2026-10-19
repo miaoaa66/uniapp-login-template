@@ -888,6 +888,60 @@
 				"navigationBarBackgroundColor": "#FFFFFF",
 				"navigationBarTextStyle": "black"
 			}
+		},
+		{
+			"path": "pages/login107/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "晨报铅字 · 登录",
+				"navigationBarBackgroundColor": "#efeade",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/login107/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "晨报铅字 · 读者登记",
+				"navigationBarBackgroundColor": "#efeade",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/login107/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "晨报铅字 · 遗失声明",
+				"navigationBarBackgroundColor": "#efeade",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/login108/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "极光玻璃 · 登录",
+				"navigationBarBackgroundColor": "#0a1428",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/login108/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "极光玻璃 · 创建账户",
+				"navigationBarBackgroundColor": "#0a1428",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/login108/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "极光玻璃 · 重置密码",
+				"navigationBarBackgroundColor": "#0a1428",
+				"navigationBarTextStyle": "white"
+			}
 		}
 	],
 	"globalStyle": {

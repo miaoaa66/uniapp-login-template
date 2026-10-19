@@ -1,0 +1,348 @@
+/* login108 通用样式：极光玻璃 · 登录 / 注册 / 找回密码 共用 */
+
+page {
+	background-color: #070b16;
+}
+
+.page {
+	position: relative;
+	min-height: 100vh;
+	overflow: hidden;
+	padding: 0 40rpx 60rpx;
+	box-sizing: border-box;
+	background-color: #070b16;
+	background-image: linear-gradient(165deg, #0a1428 0%, #0d1030 48%, #170b2e 100%);
+	font-family: -apple-system, "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+	color: #eef2ff;
+}
+
+/* ---------- 背景极光 ---------- */
+.aurora {
+	position: absolute;
+	border-radius: 50%;
+	z-index: 0;
+}
+
+.aurora-1 {
+	top: -200rpx;
+	left: -180rpx;
+	width: 600rpx;
+	height: 600rpx;
+	background-image: radial-gradient(circle, rgba(34, 211, 238, 0.55) 0%, rgba(34, 211, 238, 0) 70%);
+}
+
+.aurora-2 {
+	top: 60rpx;
+	right: -280rpx;
+	width: 680rpx;
+	height: 680rpx;
+	background-image: radial-gradient(circle, rgba(139, 92, 246, 0.6) 0%, rgba(139, 92, 246, 0) 70%);
+}
+
+.aurora-3 {
+	bottom: -340rpx;
+	left: -120rpx;
+	width: 760rpx;
+	height: 760rpx;
+	background-image: radial-gradient(circle, rgba(236, 72, 153, 0.35) 0%, rgba(236, 72, 153, 0) 70%);
+}
+
+.content {
+	position: relative;
+	z-index: 2;
+}
+
+/* ---------- 品牌 ---------- */
+.brand {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding-top: 72rpx;
+}
+
+.logo {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 108rpx;
+	height: 108rpx;
+	border-radius: 36rpx;
+	background-color: rgba(255, 255, 255, 0.08);
+	border: 2rpx solid rgba(255, 255, 255, 0.18);
+	box-shadow: 0 16rpx 44rpx rgba(34, 211, 238, 0.18);
+}
+
+.logo-core {
+	width: 46rpx;
+	height: 46rpx;
+	border-radius: 14rpx;
+	background-image: linear-gradient(135deg, #22d3ee 0%, #8b5cf6 100%);
+	box-shadow: 0 0 24rpx rgba(103, 232, 249, 0.65);
+	transform: rotate(45deg);
+}
+
+.brand-name {
+	margin-top: 22rpx;
+	font-size: 30rpx;
+	font-weight: bold;
+	letter-spacing: 10rpx;
+	color: #f3f6ff;
+}
+
+.brand-sub {
+	margin-top: 8rpx;
+	font-size: 20rpx;
+	letter-spacing: 3rpx;
+	color: rgba(214, 224, 255, 0.45);
+}
+
+/* ---------- 标题 ---------- */
+.head {
+	margin-top: 56rpx;
+	padding-left: 6rpx;
+}
+
+.head-title {
+	font-size: 54rpx;
+	font-weight: bold;
+	line-height: 1.25;
+	letter-spacing: 1rpx;
+	background-image: linear-gradient(100deg, #ffffff 20%, #a5f3fc 70%, #c4b5fd 100%);
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: #ffffff;
+}
+
+.head-sub {
+	margin-top: 14rpx;
+	font-size: 24rpx;
+	line-height: 1.6;
+	color: rgba(214, 224, 255, 0.55);
+}
+
+/* ---------- 玻璃卡片 ---------- */
+.card {
+	margin-top: 42rpx;
+	padding: 38rpx 30rpx 30rpx;
+	border-radius: 40rpx;
+	background-color: rgba(255, 255, 255, 0.07);
+	border: 2rpx solid rgba(255, 255, 255, 0.14);
+	box-shadow: 0 24rpx 60rpx rgba(3, 6, 20, 0.45);
+	backdrop-filter: blur(24rpx);
+}
+
+.field + .field {
+	margin-top: 26rpx;
+}
+
+.field-label {
+	font-size: 22rpx;
+	letter-spacing: 1rpx;
+	color: rgba(214, 224, 255, 0.55);
+}
+
+.field-box {
+	display: flex;
+	align-items: center;
+	margin-top: 12rpx;
+	height: 96rpx;
+	padding: 0 26rpx;
+	border-radius: 24rpx;
+	background-color: rgba(255, 255, 255, 0.05);
+	border: 2rpx solid rgba(255, 255, 255, 0.1);
+	box-sizing: border-box;
+}
+
+.field-box.active {
+	border-color: rgba(103, 232, 249, 0.65);
+	background-color: rgba(103, 232, 249, 0.08);
+	box-shadow: 0 0 0 4rpx rgba(103, 232, 249, 0.12);
+}
+
+.input {
+	flex: 1;
+	height: 100%;
+	font-size: 28rpx;
+	color: #f3f6ff;
+}
+
+.ph {
+	color: rgba(214, 224, 255, 0.32);
+}
+
+.eye {
+	padding-left: 18rpx;
+	font-size: 22rpx;
+	color: #67e8f9;
+}
+
+.code-btn {
+	flex: none;
+	margin-left: 16rpx;
+	padding-left: 20rpx;
+	font-size: 22rpx;
+	color: #67e8f9;
+	border-left: 2rpx solid rgba(255, 255, 255, 0.14);
+}
+
+.code-btn.dim {
+	color: rgba(214, 224, 255, 0.35);
+}
+
+/* ---------- 辅助行 ---------- */
+.row-between {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 26rpx;
+}
+
+.remember {
+	display: flex;
+	align-items: center;
+	font-size: 22rpx;
+	color: rgba(214, 224, 255, 0.6);
+}
+
+.checkbox {
+	position: relative;
+	width: 28rpx;
+	height: 28rpx;
+	margin-right: 12rpx;
+	border-radius: 8rpx;
+	border: 2rpx solid rgba(255, 255, 255, 0.28);
+	box-sizing: border-box;
+}
+
+.checkbox.on {
+	border-color: transparent;
+	background-image: linear-gradient(135deg, #22d3ee, #8b5cf6);
+}
+
+.checkbox.on::after {
+	content: '';
+	position: absolute;
+	left: 8rpx;
+	top: 2rpx;
+	width: 9rpx;
+	height: 16rpx;
+	border-right: 3rpx solid #06111f;
+	border-bottom: 3rpx solid #06111f;
+	box-sizing: border-box;
+	transform: rotate(40deg);
+}
+
+.link {
+	font-size: 22rpx;
+	color: #7dd3fc;
+}
+
+/* ---------- 主按钮 ---------- */
+.submit {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100rpx;
+	margin-top: 34rpx;
+	border-radius: 999rpx;
+	background-image: linear-gradient(100deg, #22d3ee 0%, #6366f1 55%, #8b5cf6 100%);
+	box-shadow: 0 16rpx 40rpx rgba(99, 102, 241, 0.4);
+}
+
+.submit:active {
+	opacity: 0.86;
+	box-shadow: 0 10rpx 24rpx rgba(99, 102, 241, 0.32);
+}
+
+.submit-text {
+	font-size: 30rpx;
+	font-weight: bold;
+	letter-spacing: 8rpx;
+	color: #ffffff;
+}
+
+/* ---------- 其他方式 ---------- */
+.alt-rule {
+	display: flex;
+	align-items: center;
+	margin: 34rpx 0 24rpx;
+}
+
+.alt-rule .line {
+	flex: 1;
+	height: 2rpx;
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+.alt-rule .txt {
+	padding: 0 18rpx;
+	font-size: 20rpx;
+	letter-spacing: 1rpx;
+	color: rgba(214, 224, 255, 0.4);
+}
+
+.social-row {
+	display: flex;
+	justify-content: center;
+}
+
+.social {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 96rpx;
+	height: 96rpx;
+	margin: 0 18rpx;
+	border-radius: 50%;
+	background-color: rgba(255, 255, 255, 0.06);
+	border: 2rpx solid rgba(255, 255, 255, 0.14);
+}
+
+.social:active {
+	background-color: rgba(255, 255, 255, 0.14);
+}
+
+.social text {
+	font-size: 22rpx;
+	color: rgba(231, 238, 255, 0.85);
+}
+
+/* ---------- 页脚 ---------- */
+.foot-link {
+	margin-top: 34rpx;
+	text-align: center;
+	font-size: 24rpx;
+	color: rgba(214, 224, 255, 0.55);
+}
+
+.foot-link .link {
+	margin-left: 6rpx;
+	font-size: 24rpx;
+	font-weight: bold;
+}
+
+.agreement {
+	display: flex;
+	align-items: flex-start;
+	margin-top: 28rpx;
+	font-size: 20rpx;
+	line-height: 1.6;
+	color: rgba(214, 224, 255, 0.45);
+}
+
+.agreement .checkbox {
+	flex: none;
+	margin-top: 2rpx;
+}
+
+.agreement .link {
+	font-size: 20rpx;
+}
+
+.foot-note {
+	margin-top: 46rpx;
+	text-align: center;
+	font-size: 18rpx;
+	letter-spacing: 1rpx;
+	color: rgba(214, 224, 255, 0.25);
+}

@@ -1,0 +1,324 @@
+/* login107 通用样式：晨报铅字 · 登录 / 注册 / 找回密码 共用 */
+
+page {
+	background-color: #efeade;
+}
+
+.page {
+	position: relative;
+	min-height: 100vh;
+	padding: 28rpx 36rpx 56rpx;
+	box-sizing: border-box;
+	background-color: #efeade;
+	background-image: repeating-linear-gradient(0deg,
+		rgba(120, 104, 76, 0.05) 0rpx,
+		rgba(120, 104, 76, 0.05) 2rpx,
+		transparent 2rpx,
+		transparent 9rpx);
+	font-family: "Times New Roman", "Songti SC", "STSong", "SimSun", serif;
+	color: #1d1b16;
+}
+
+.paper {
+	position: relative;
+	padding: 26rpx 30rpx 36rpx;
+	background-color: #f9f6ec;
+	border: 2rpx solid #1d1b16;
+	box-shadow: 10rpx 10rpx 0 rgba(29, 27, 22, 0.1);
+}
+
+/* ---------- 报头 ---------- */
+.masthead-meta {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-size: 18rpx;
+	letter-spacing: 1rpx;
+	color: #5b5445;
+}
+
+.rule-double {
+	height: 10rpx;
+	margin: 10rpx 0 4rpx;
+	border-top: 5rpx solid #1d1b16;
+	border-bottom: 2rpx solid #1d1b16;
+}
+
+.brand-line {
+	padding: 12rpx 0 8rpx;
+	text-align: center;
+}
+
+.brand {
+	font-size: 74rpx;
+	font-weight: bold;
+	letter-spacing: 20rpx;
+	line-height: 1.15;
+}
+
+.brand-en {
+	display: block;
+	margin-top: 4rpx;
+	font-size: 18rpx;
+	letter-spacing: 9rpx;
+	color: #4a4438;
+}
+
+.rule-thin {
+	height: 2rpx;
+	background-color: #1d1b16;
+}
+
+/* ---------- 栏目与标题 ---------- */
+.kicker {
+	display: inline-block;
+	margin-top: 26rpx;
+	padding: 6rpx 16rpx;
+	font-size: 20rpx;
+	letter-spacing: 3rpx;
+	color: #f9f6ec;
+	background-color: #a8322a;
+}
+
+.headline {
+	margin-top: 18rpx;
+	font-size: 52rpx;
+	font-weight: bold;
+	line-height: 1.24;
+	letter-spacing: 2rpx;
+}
+
+.deck {
+	margin-top: 14rpx;
+	padding-bottom: 22rpx;
+	font-size: 24rpx;
+	line-height: 1.7;
+	color: #56503f;
+	border-bottom: 2rpx dashed rgba(29, 27, 22, 0.35);
+}
+
+/* ---------- 表单 ---------- */
+.form {
+	margin-top: 4rpx;
+}
+
+.field {
+	padding-top: 24rpx;
+}
+
+.label {
+	display: block;
+	font-size: 20rpx;
+	letter-spacing: 3rpx;
+	color: #6b6350;
+}
+
+.field-line {
+	display: flex;
+	align-items: center;
+	margin-top: 6rpx;
+	padding: 0 4rpx;
+	border-bottom: 2rpx solid #1d1b16;
+}
+
+.input {
+	flex: 1;
+	height: 82rpx;
+	font-size: 30rpx;
+	color: #1d1b16;
+	font-family: "Times New Roman", "Songti SC", "STSong", "SimSun", serif;
+}
+
+.ph {
+	font-size: 26rpx;
+	color: #a8a08d;
+}
+
+.toggle {
+	padding-left: 18rpx;
+	font-size: 22rpx;
+	letter-spacing: 2rpx;
+	color: #a8322a;
+}
+
+.code-btn {
+	flex: none;
+	margin-left: 18rpx;
+	padding-left: 20rpx;
+	font-size: 22rpx;
+	letter-spacing: 1rpx;
+	color: #a8322a;
+	border-left: 2rpx solid rgba(29, 27, 22, 0.35);
+}
+
+.code-btn.disabled {
+	color: #a8a08d;
+}
+
+/* ---------- 辅助行 ---------- */
+.row-between {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 24rpx;
+}
+
+.remember {
+	display: flex;
+	align-items: center;
+	font-size: 22rpx;
+	color: #56503f;
+}
+
+.checkbox {
+	position: relative;
+	width: 24rpx;
+	height: 24rpx;
+	margin-right: 12rpx;
+	border: 2rpx solid #1d1b16;
+	box-sizing: border-box;
+}
+
+.checkbox.on {
+	background-color: #1d1b16;
+}
+
+.checkbox.on::after {
+	content: '';
+	position: absolute;
+	left: 6rpx;
+	top: 1rpx;
+	width: 9rpx;
+	height: 15rpx;
+	border-right: 3rpx solid #f9f6ec;
+	border-bottom: 3rpx solid #f9f6ec;
+	box-sizing: border-box;
+	transform: rotate(40deg);
+}
+
+.link {
+	font-size: 22rpx;
+	color: #a8322a;
+	text-decoration: underline;
+}
+
+/* ---------- 按钮 ---------- */
+.submit {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100rpx;
+	margin-top: 34rpx;
+	background-color: #1d1b16;
+}
+
+.submit:active {
+	background-color: #3a352a;
+}
+
+.submit-text {
+	font-size: 30rpx;
+	font-weight: bold;
+	letter-spacing: 10rpx;
+	color: #f9f6ec;
+}
+
+.stamp {
+	position: absolute;
+	right: 24rpx;
+	top: 50%;
+	width: 64rpx;
+	height: 64rpx;
+	margin-top: -32rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 20rpx;
+	letter-spacing: 1rpx;
+	color: #d0533f;
+	border: 3rpx solid #d0533f;
+	border-radius: 50%;
+	transform: rotate(-14deg);
+}
+
+/* ---------- 其他方式 ---------- */
+.alt-rule {
+	display: flex;
+	align-items: center;
+	margin: 32rpx 0 22rpx;
+}
+
+.alt-rule .line {
+	flex: 1;
+	height: 2rpx;
+	background-color: rgba(29, 27, 22, 0.28);
+}
+
+.alt-rule .txt {
+	padding: 0 16rpx;
+	font-size: 20rpx;
+	letter-spacing: 3rpx;
+	color: #6b6350;
+}
+
+.alt-row {
+	display: flex;
+}
+
+.alt-btn {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 76rpx;
+	font-size: 24rpx;
+	letter-spacing: 2rpx;
+	color: #1d1b16;
+	border: 2rpx solid #1d1b16;
+}
+
+.alt-btn + .alt-btn {
+	margin-left: 20rpx;
+}
+
+.alt-btn:active {
+	background-color: #e7e1d1;
+}
+
+/* ---------- 页脚 ---------- */
+.foot-link {
+	margin-top: 30rpx;
+	text-align: center;
+	font-size: 24rpx;
+	color: #56503f;
+}
+
+.agreement {
+	display: flex;
+	align-items: flex-start;
+	margin-top: 24rpx;
+	font-size: 20rpx;
+	line-height: 1.6;
+	color: #6b6350;
+}
+
+.agreement .checkbox {
+	flex: none;
+	margin-top: 4rpx;
+}
+
+.agreement .link {
+	font-size: 20rpx;
+}
+
+.colophon {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 32rpx;
+	padding-top: 14rpx;
+	font-size: 18rpx;
+	letter-spacing: 1rpx;
+	color: #7a7260;
+	border-top: 2rpx solid rgba(29, 27, 22, 0.3);
+}
