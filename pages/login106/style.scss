@@ -1,0 +1,539 @@
+/* ==========================================================================
+ * 主题 01 · 极简留白 MINIMALISM
+ * pages/login106 —— 登录 / 注册 / 找回密码 三页共用
+ * 白底、纯文字层级、1rpx 发丝线；零阴影、零渐变、零图片
+ *
+ * 设计依据：docs/theme-styles.md 第 1 条
+ *   色板    底色 #FFFFFF / 正文 #111111 / 次级 #8A8A8A / 分割线 #E8E8E8
+ *   字体    无衬线系统栈，标题 32px·字重 500，正文 14px·字重 400，字距 +0.5px
+ *   质感    输入框仅 1rpx 下边框，聚焦后由中间向两端展开 2rpx 实线
+ *   动效    整块淡入 200ms；聚焦线条展开 200ms；按钮仅背景明度过渡 120ms
+ *
+ * 栅格约定：1px = 2rpx，纵向间距一律取 8px（16rpx）的整数倍
+ * ========================================================================== */
+
+/* ---------- 设计令牌 ---------- */
+$mn-bg: #ffffff;        // 页面底色
+$mn-ink: #111111;       // 正文 / 强调 / 按钮底
+$mn-ink-press: #333333; // 按钮按下
+$mn-ink-2: #8a8a8a;     // 次级文字 / 占位符
+$mn-ink-3: #c4c4c4;     // 序号 / 极小字
+$mn-line: #e8e8e8;      // 分割线 / 输入框下边框
+$mn-fill: #f7f7f7;      // 极浅填充（禁用、次级按钮）
+$mn-error: #d92d20;     // 错误文字（仅文字，不加底色）
+
+$mn-gutter: 48rpx;      // 左右边距 24px
+$mn-nav-h: 88rpx;       // 导航条高 44px
+$mn-tap: 96rpx;         // 可点区域 / 输入框高 48px
+$mn-ease: cubic-bezier(.2, .6, .2, 1);
+
+/* ---------- 基础 ---------- */
+.mn-page,
+.mn-page * {
+	box-sizing: border-box;
+}
+
+.mn-page {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	background-color: $mn-bg;
+	color: $mn-ink;
+	font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Source Han Sans SC',
+		'Noto Sans SC', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-size: 28rpx;
+	line-height: 1.5;
+	letter-spacing: 0.5rpx;
+	-webkit-font-smoothing: antialiased;
+	animation: mn-enter 200ms $mn-ease both;
+}
+
+@keyframes mn-enter {
+	from {
+		opacity: 0;
+		transform: translateY(16rpx);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* ---------- 自绘导航 ---------- */
+.mn-status {
+	width: 100%;
+	flex: none;
+}
+
+.mn-nav {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	height: $mn-nav-h;
+	padding: 0 $mn-gutter;
+	flex: none;
+}
+
+.mn-back {
+	position: relative;
+	width: 48rpx;
+	height: $mn-nav-h;
+}
+
+.mn-back__line {
+	position: absolute;
+	left: 4rpx;
+	top: 50%;
+	width: 40rpx;
+	height: 1rpx;
+	margin-top: -1rpx;
+	background-color: $mn-ink;
+}
+
+/* 箭头：两条短线以左端为轴张开，尖端与轴线重合 */
+.mn-back__tip {
+	position: absolute;
+	left: 4rpx;
+	top: 50%;
+	width: 13rpx;
+	height: 1rpx;
+	margin-top: -1rpx;
+	background-color: $mn-ink;
+	transform-origin: left center;
+	transform: rotate(-43deg);
+}
+
+.mn-back__tip--2 {
+	transform: rotate(43deg);
+}
+
+.mn-nav__idx {
+	font-size: 20rpx;
+	letter-spacing: 3rpx;
+	color: $mn-ink-3;
+	font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 主区 ---------- */
+.mn-main {
+	flex: 1;
+	padding: 0 $mn-gutter;
+}
+
+.mn-head {
+	padding-top: 80rpx;
+}
+
+.mn-eyebrow {
+	display: block;
+	font-size: 20rpx;
+	letter-spacing: 4rpx;
+	color: $mn-ink-2;
+}
+
+.mn-title {
+	display: block;
+	margin-top: 24rpx;
+	font-size: 64rpx;
+	font-weight: 500;
+	line-height: 1.16;
+	letter-spacing: 1rpx;
+}
+
+.mn-lead {
+	display: block;
+	margin-top: 20rpx;
+	font-size: 26rpx;
+	line-height: 1.72;
+	color: $mn-ink-2;
+	letter-spacing: 0.5rpx;
+}
+
+.mn-rule {
+	height: 1rpx;
+	background-color: $mn-line;
+	margin-top: 64rpx;
+}
+
+/* ---------- 方式切换（纯文字 Tab） ---------- */
+.mn-tabs {
+	display: flex;
+	align-items: flex-end;
+	padding-top: 56rpx;
+}
+
+.mn-tab {
+	position: relative;
+	margin-right: 56rpx;
+	padding-bottom: 16rpx;
+	font-size: 26rpx;
+	color: $mn-ink-2;
+	border-bottom: 2rpx solid transparent;
+	transition: color 160ms linear, border-color 160ms linear;
+}
+
+.mn-tab:last-child {
+	margin-right: 0;
+}
+
+.mn-tab.on {
+	color: $mn-ink;
+	border-bottom-color: $mn-ink;
+}
+
+/* ---------- 表单字段 ---------- */
+.mn-field {
+	padding-top: 48rpx;
+}
+
+.mn-field__bar {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+}
+
+.mn-label {
+	font-size: 20rpx;
+	letter-spacing: 2rpx;
+	color: $mn-ink-2;
+	transition: color 160ms linear;
+}
+
+.mn-index {
+	font-size: 20rpx;
+	letter-spacing: 1rpx;
+	color: $mn-ink-3;
+	font-variant-numeric: tabular-nums;
+}
+
+.mn-control {
+	position: relative;
+	display: flex;
+	align-items: center;
+	height: $mn-tap;
+	border-bottom: 1rpx solid $mn-line;
+}
+
+/* 聚焦：2rpx 实线由中间向两端展开 */
+.mn-control::after {
+	content: '';
+	position: absolute;
+	left: 50%;
+	bottom: -1rpx;
+	width: 100%;
+	height: 2rpx;
+	background-color: $mn-ink;
+	transform: translateX(-50%) scaleX(0);
+	transition: transform 200ms $mn-ease;
+}
+
+.mn-control.is-focus::after {
+	transform: translateX(-50%) scaleX(1);
+}
+
+.mn-control.is-focus .mn-label {
+	color: $mn-ink;
+}
+
+.mn-control.is-error {
+	border-bottom-color: $mn-error;
+}
+
+.mn-control.is-error::after {
+	background-color: $mn-error;
+}
+
+.mn-input {
+	flex: 1;
+	width: 100%;
+	height: $mn-tap;
+	font-size: 30rpx;
+	color: $mn-ink;
+	letter-spacing: 0.5rpx;
+	background-color: transparent;
+}
+
+.mn-input--num {
+	font-variant-numeric: tabular-nums;
+	letter-spacing: 2rpx;
+}
+
+.mn-suffix {
+	flex: none;
+	padding-left: 24rpx;
+	font-size: 22rpx;
+	color: $mn-ink-2;
+	letter-spacing: 1rpx;
+	transition: color 160ms linear;
+}
+
+.mn-suffix.on {
+	color: $mn-ink;
+}
+
+.mn-code {
+	flex: none;
+	padding-left: 32rpx;
+	font-size: 22rpx;
+	color: $mn-ink;
+	letter-spacing: 1rpx;
+	border-bottom: 1rpx solid $mn-ink;
+	line-height: 1.5;
+}
+
+.mn-code.off {
+	color: $mn-ink-3;
+	border-bottom-color: transparent;
+	font-variant-numeric: tabular-nums;
+}
+
+.mn-err {
+	display: block;
+	margin-top: 12rpx;
+	font-size: 20rpx;
+	letter-spacing: 0.5rpx;
+	color: $mn-error;
+}
+
+.mn-tip {
+	display: block;
+	margin-top: 12rpx;
+	font-size: 20rpx;
+	letter-spacing: 0.5rpx;
+	color: $mn-ink-3;
+}
+
+/* ---------- 行内操作 ---------- */
+.mn-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding-top: 32rpx;
+}
+
+.mn-row--end {
+	justify-content: flex-end;
+}
+
+.mn-link {
+	font-size: 22rpx;
+	color: $mn-ink;
+	padding-bottom: 2rpx;
+	border-bottom: 1rpx solid $mn-ink;
+}
+
+.mn-link--soft {
+	color: $mn-ink-2;
+	border-bottom-color: $mn-line;
+}
+
+/* ---------- 勾选 ---------- */
+.mn-check {
+	display: flex;
+	align-items: center;
+	padding-top: 32rpx;
+}
+
+.mn-check--inline {
+	padding-top: 0;
+}
+
+.mn-check--inline .mn-check__txt {
+	flex: none;
+	font-size: 22rpx;
+}
+
+.mn-check__box {
+	position: relative;
+	width: 26rpx;
+	height: 26rpx;
+	flex: none;
+	margin-right: 16rpx;
+	border: 1rpx solid $mn-ink-3;
+	transition: background-color 160ms linear, border-color 160ms linear;
+}
+
+.mn-check__box.on {
+	background-color: $mn-ink;
+	border-color: $mn-ink;
+}
+
+/* 勾选标记用实体元素绘制，避免小程序端伪元素差异 */
+.mn-check__tick {
+	position: absolute;
+	left: 50%;
+	top: 44%;
+	width: 7rpx;
+	height: 13rpx;
+	border-right: 2rpx solid #ffffff;
+	border-bottom: 2rpx solid #ffffff;
+	transform: translate(-50%, -50%) rotate(43deg) scale(0.6);
+	opacity: 0;
+	transition: opacity 120ms linear, transform 120ms $mn-ease;
+}
+
+.mn-check__box.on .mn-check__tick {
+	opacity: 1;
+	transform: translate(-50%, -50%) rotate(43deg) scale(1);
+}
+
+.mn-check__txt {
+	flex: 1;
+	font-size: 22rpx;
+	line-height: 1.6;
+	color: $mn-ink-2;
+	letter-spacing: 0.5rpx;
+}
+
+.mn-check__link {
+	color: $mn-ink;
+}
+
+/* ---------- 按钮 ---------- */
+.mn-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: $mn-tap;
+	margin-top: 48rpx;
+	background-color: $mn-ink;
+	color: #ffffff;
+	font-size: 26rpx;
+	letter-spacing: 8rpx;
+	text-indent: 8rpx;
+	transition: background-color 120ms linear;
+}
+
+.mn-btn:active {
+	background-color: $mn-ink-press;
+}
+
+.mn-btn.is-busy {
+	background-color: $mn-ink-press;
+}
+
+.mn-btn--ghost {
+	margin-top: 24rpx;
+	background-color: $mn-bg;
+	color: $mn-ink;
+	border: 1rpx solid $mn-line;
+	letter-spacing: 2rpx;
+	text-indent: 2rpx;
+}
+
+.mn-btn--ghost:active {
+	background-color: $mn-fill;
+}
+
+/* ---------- 其他登录方式（发丝三列） ---------- */
+.mn-alt {
+	display: flex;
+	margin-top: 40rpx;
+	border-top: 1rpx solid $mn-line;
+	border-bottom: 1rpx solid $mn-line;
+}
+
+.mn-alt__i {
+	flex: 1;
+	height: 88rpx;
+	line-height: 88rpx;
+	text-align: center;
+	font-size: 22rpx;
+	color: $mn-ink;
+	letter-spacing: 1rpx;
+	border-right: 1rpx solid $mn-line;
+}
+
+.mn-alt__i:last-child {
+	border-right: 0;
+}
+
+.mn-alt__i:active {
+	background-color: $mn-fill;
+}
+
+/* ---------- 页脚 ---------- */
+.mn-foot {
+	padding: 48rpx $mn-gutter 0;
+	padding-bottom: calc(40rpx + constant(safe-area-inset-bottom));
+	padding-bottom: calc(40rpx + env(safe-area-inset-bottom));
+	flex: none;
+}
+
+.mn-foot__row {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+}
+
+.mn-foot__txt {
+	font-size: 22rpx;
+	color: $mn-ink-2;
+	letter-spacing: 0.5rpx;
+}
+
+.mn-copy {
+	display: block;
+	margin-top: 56rpx;
+	font-size: 18rpx;
+	letter-spacing: 2rpx;
+	color: $mn-ink-3;
+	text-align: center;
+	font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 服务条款 ---------- */
+.mn-terms {
+	display: block;
+	margin-top: 8rpx;
+	font-size: 22rpx;
+	line-height: 1.9;
+	color: $mn-ink-2;
+	letter-spacing: 0.5rpx;
+}
+
+.mn-terms__h {
+	display: block;
+	margin-top: 40rpx;
+	font-size: 22rpx;
+	color: $mn-ink;
+	letter-spacing: 1rpx;
+}
+
+/* ---------- 步骤（找回密码） ---------- */
+.mn-steps {
+	display: flex;
+	align-items: center;
+	padding-top: 48rpx;
+}
+
+.mn-step {
+	display: flex;
+	align-items: center;
+	font-size: 20rpx;
+	letter-spacing: 2rpx;
+	color: $mn-ink-3;
+}
+
+.mn-step.on {
+	color: $mn-ink;
+}
+
+.mn-step__dot {
+	width: 8rpx;
+	height: 8rpx;
+	margin-right: 12rpx;
+	background-color: $mn-ink-3;
+}
+
+.mn-step.on .mn-step__dot {
+	background-color: $mn-ink;
+}
+
+.mn-step__line {
+	width: 48rpx;
+	height: 1rpx;
+	margin: 0 16rpx;
+	background-color: $mn-line;
+}

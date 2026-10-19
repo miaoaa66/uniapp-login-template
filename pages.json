@@ -861,6 +861,33 @@
 				"navigationStyle": "custom",
 				"navigationBarTitleText": "像素风找回密码 · 自动售货机"
 			}
+		},
+		{
+			"path": "pages/login106/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "极简登录 · 留白",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/login106/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "极简注册 · 留白",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/login106/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "极简找回密码 · 留白",
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTextStyle": "black"
+			}
 		}
 	],
 	"globalStyle": {
