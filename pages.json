@@ -942,6 +942,51 @@
 				"navigationBarBackgroundColor": "#0a1428",
 				"navigationBarTextStyle": "white"
 			}
+		},
+		{
+			"path": "pages/login109/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "粘土拟态 · 登录",
+				"navigationBarBackgroundColor": "#fff5f0",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/login109/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "粘土拟态 · 注册",
+				"navigationBarBackgroundColor": "#fff5f0",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/login109/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "粘土拟态 · 找回密码",
+				"navigationBarBackgroundColor": "#fff5f0",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/login109/phone-login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "粘土拟态 · 手机号登录",
+				"navigationBarBackgroundColor": "#fff5f0",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/login109/email-login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "粘土拟态 · 邮箱登录",
+				"navigationBarBackgroundColor": "#fff5f0",
+				"navigationBarTextStyle": "black"
+			}
 		}
 	],
 	"globalStyle": {

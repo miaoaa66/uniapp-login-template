@@ -539,5 +539,10 @@ export default {
 			path: "/pages/login108/login",
 			tags: ["极光", "玻璃", "登录", "注册", "密码", "验证码"]
 		},
+		{
+			cover: require('../static/cover/login109_cover.jpg'),
+			path: "/pages/login109/login",
+			tags: ["粘土拟态", "登录", "注册", "密码", "验证码", "手机号", "邮箱"]
+		},
 	]
 }

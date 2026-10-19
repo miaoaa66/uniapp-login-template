@@ -1,0 +1,477 @@
+/* ==========================================================================
+ * 主题 06 · 粘土拟态 CLAYMORPHISM
+ * pages/login109 —— 登录 / 注册 / 找回密码 / 手机号验证码登录 / 邮箱验证码登录 五页共用
+ * 厚实橡皮泥块：超大圆角 + 内外双层阴影 + 糖果色
+ *
+ * 设计依据：docs/theme-styles.md 第 6 条
+ *   色板    底 #FFF5F0 / 主块 #FF7B54 / 辅块 #6C63FF / 正文 #3D2C29 / 高光 #FFFFFF
+ *   字体    圆体无衬线，标题 28px·字重 800，正文 15px·字重 500，行高 1.6
+ *   质感    圆角 28–32px；inset 双层阴影 + 同色外投影；色块之间留 16px 缝
+ *   动效    色块按 80ms 间隔逐个「弹入」(scale 0.8→1.06→1)；聚焦：输入块轻微鼓起；
+ *           按钮：按下时下沉并加深内阴影
+ *
+ * 性能约定：内阴影层数多，低端安卓滚动可能掉帧 —— 同时动画元素限制在 6 个以内
+ * 栅格约定：1px = 2rpx，纵向间距一律取 8px（16rpx）的整数倍
+ * ========================================================================== */
+
+page {
+	background-color: #fff5f0;
+}
+
+.page {
+	position: relative;
+	min-height: 100vh;
+	overflow: hidden;
+	padding: 0 40rpx 32rpx;
+	box-sizing: border-box;
+	background-color: #fff5f0;
+	background-image:
+		radial-gradient(circle at 12% 4%, rgba(255, 123, 84, 0.20) 0%, rgba(255, 123, 84, 0) 42%),
+		radial-gradient(circle at 90% 20%, rgba(108, 99, 255, 0.14) 0%, rgba(108, 99, 255, 0) 40%),
+		radial-gradient(circle at 16% 94%, rgba(255, 209, 102, 0.20) 0%, rgba(255, 209, 102, 0) 42%);
+	font-family: "Baloo 2", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+	color: #3d2c29;
+}
+
+/* ---------- 背景粘土装饰（纯 CSS，0 图片） ---------- */
+.blob {
+	position: absolute;
+	z-index: 0;
+	pointer-events: none;
+}
+
+.blob-1 {
+	top: -120rpx;
+	right: -110rpx;
+	width: 320rpx;
+	height: 320rpx;
+	border-radius: 44% 56% 52% 48% / 50% 46% 54% 50%;
+	background-color: rgba(255, 123, 84, 0.28);
+	box-shadow: inset -12rpx -12rpx 24rpx rgba(0, 0, 0, 0.06),
+		inset 12rpx 12rpx 24rpx rgba(255, 255, 255, 0.35);
+}
+
+.blob-2 {
+	top: 520rpx;
+	left: -140rpx;
+	width: 260rpx;
+	height: 260rpx;
+	border-radius: 54% 46% 48% 52% / 46% 54% 46% 54%;
+	background-color: rgba(108, 99, 255, 0.18);
+	box-shadow: inset -12rpx -12rpx 22rpx rgba(0, 0, 0, 0.06),
+		inset 12rpx 12rpx 22rpx rgba(255, 255, 255, 0.4);
+}
+
+.blob-3 {
+	bottom: -160rpx;
+	right: -80rpx;
+	width: 380rpx;
+	height: 380rpx;
+	border-radius: 48% 52% 46% 54% / 52% 48% 52% 48%;
+	background-color: rgba(255, 209, 102, 0.26);
+	box-shadow: inset -12rpx -12rpx 24rpx rgba(0, 0, 0, 0.05),
+		inset 12rpx 12rpx 24rpx rgba(255, 255, 255, 0.4);
+}
+
+.content {
+	position: relative;
+	z-index: 2;
+}
+
+/* ---------- 粘土通用块 ---------- */
+.clay-raised {
+	box-shadow: inset -12rpx -12rpx 24rpx rgba(0, 0, 0, 0.16),
+		inset 12rpx 12rpx 24rpx rgba(255, 255, 255, 0.45),
+		0 24rpx 48rpx rgba(255, 123, 84, 0.22);
+}
+
+.clay-pressed {
+	box-shadow: inset -8rpx -8rpx 16rpx rgba(0, 0, 0, 0.14),
+		inset 8rpx 8rpx 16rpx rgba(255, 255, 255, 0.75);
+}
+
+/* ---------- 品牌 ---------- */
+.brand {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding-top: 40rpx;
+}
+
+.logo {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 128rpx;
+	height: 128rpx;
+	border-radius: 44rpx;
+	background-color: #ff7b54;
+	box-shadow: inset -12rpx -12rpx 24rpx rgba(0, 0, 0, 0.16),
+		inset 12rpx 12rpx 24rpx rgba(255, 255, 255, 0.45),
+		0 24rpx 44rpx rgba(255, 123, 84, 0.32);
+}
+
+.logo-core {
+	width: 54rpx;
+	height: 54rpx;
+	border-radius: 20rpx;
+	background-color: #ffffff;
+	box-shadow: inset 0 0 0 6rpx rgba(61, 44, 41, 0.92);
+	transform: rotate(45deg);
+}
+
+.brand-name {
+	margin-top: 18rpx;
+	font-size: 32rpx;
+	font-weight: 800;
+	letter-spacing: 6rpx;
+	color: #3d2c29;
+}
+
+.brand-sub {
+	margin-top: 6rpx;
+	font-size: 20rpx;
+	letter-spacing: 3rpx;
+	color: rgba(61, 44, 41, 0.42);
+}
+
+/* ---------- 标题 ---------- */
+.head {
+	margin-top: 28rpx;
+	padding-left: 8rpx;
+}
+
+.head-title {
+	font-size: 56rpx;
+	font-weight: 800;
+	line-height: 1.25;
+	letter-spacing: 2rpx;
+	color: #3d2c29;
+}
+
+.head-sub {
+	margin-top: 12rpx;
+	font-size: 24rpx;
+	line-height: 1.6;
+	color: rgba(61, 44, 41, 0.52);
+}
+
+/* ---------- 粘土卡片 ---------- */
+.card {
+	margin-top: 28rpx;
+	padding: 30rpx 30rpx 26rpx;
+	border-radius: 64rpx;
+	background-color: #fffaf6;
+	box-shadow: inset -14rpx -14rpx 28rpx rgba(0, 0, 0, 0.10),
+		inset 14rpx 14rpx 28rpx rgba(255, 255, 255, 0.9),
+		0 28rpx 56rpx rgba(255, 123, 84, 0.20);
+}
+
+.field + .field {
+	margin-top: 20rpx;
+}
+
+.field-label {
+	font-size: 22rpx;
+	font-weight: 500;
+	letter-spacing: 1rpx;
+	color: rgba(61, 44, 41, 0.55);
+}
+
+/* 输入坑：与背景同色，靠 inset 阴影「压」进去 */
+.field-box {
+	display: flex;
+	align-items: center;
+	margin-top: 12rpx;
+	height: 100rpx;
+	padding: 0 28rpx;
+	border-radius: 40rpx;
+	background-color: #fff5f0;
+	box-shadow: inset -10rpx -10rpx 20rpx rgba(0, 0, 0, 0.10),
+		inset 10rpx 10rpx 20rpx rgba(255, 255, 255, 0.95);
+	box-sizing: border-box;
+	transition: transform 160ms ease-out;
+}
+
+/* 聚焦：输入块轻微鼓起 */
+.field-box.active {
+	background-color: #ffffff;
+	box-shadow: inset -8rpx -8rpx 16rpx rgba(0, 0, 0, 0.08),
+		inset 8rpx 8rpx 16rpx rgba(255, 255, 255, 1),
+		0 0 0 6rpx rgba(255, 123, 84, 0.18);
+	transform: scale(1.015);
+}
+
+.field-prefix {
+	flex: none;
+	margin-right: 18rpx;
+	padding-right: 18rpx;
+	font-size: 26rpx;
+	font-weight: 800;
+	color: #6c63ff;
+	border-right: 2rpx solid rgba(108, 99, 255, 0.24);
+}
+
+.input {
+	flex: 1;
+	height: 100%;
+	font-size: 28rpx;
+	font-weight: 500;
+	color: #3d2c29;
+}
+
+.ph {
+	color: rgba(61, 44, 41, 0.3);
+}
+
+.eye {
+	flex: none;
+	padding-left: 20rpx;
+	font-size: 22rpx;
+	font-weight: 800;
+	color: #ff7b54;
+}
+
+.code-btn {
+	flex: none;
+	margin-left: 16rpx;
+	padding: 12rpx 24rpx;
+	border-radius: 999rpx;
+	font-size: 22rpx;
+	font-weight: 800;
+	color: #ffffff;
+	background-color: #ff7b54;
+	box-shadow: inset -6rpx -6rpx 12rpx rgba(0, 0, 0, 0.16),
+		inset 6rpx 6rpx 12rpx rgba(255, 255, 255, 0.35),
+		0 10rpx 20rpx rgba(255, 123, 84, 0.32);
+}
+
+.code-btn.dim {
+	color: rgba(61, 44, 41, 0.4);
+	background-color: #fff5f0;
+	box-shadow: inset -8rpx -8rpx 16rpx rgba(0, 0, 0, 0.10),
+		inset 8rpx 8rpx 16rpx rgba(255, 255, 255, 0.9);
+}
+
+/* ---------- 辅助行 ---------- */
+.row-between {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 22rpx;
+}
+
+.remember {
+	display: flex;
+	align-items: center;
+	font-size: 22rpx;
+	color: rgba(61, 44, 41, 0.6);
+}
+
+.checkbox {
+	position: relative;
+	width: 32rpx;
+	height: 32rpx;
+	margin-right: 12rpx;
+	border-radius: 12rpx;
+	background-color: #fff5f0;
+	box-shadow: inset -6rpx -6rpx 12rpx rgba(0, 0, 0, 0.12),
+		inset 6rpx 6rpx 12rpx rgba(255, 255, 255, 0.95);
+	box-sizing: border-box;
+}
+
+.checkbox.on {
+	background-color: #6c63ff;
+	box-shadow: inset -6rpx -6rpx 12rpx rgba(0, 0, 0, 0.18),
+		inset 6rpx 6rpx 12rpx rgba(255, 255, 255, 0.3);
+}
+
+.checkbox.on::after {
+	content: '';
+	position: absolute;
+	left: 10rpx;
+	top: 3rpx;
+	width: 10rpx;
+	height: 18rpx;
+	border-right: 4rpx solid #ffffff;
+	border-bottom: 4rpx solid #ffffff;
+	box-sizing: border-box;
+	transform: rotate(40deg);
+}
+
+.link {
+	font-size: 22rpx;
+	font-weight: 800;
+	color: #6c63ff;
+}
+
+/* ---------- 主按钮 ---------- */
+.submit {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100rpx;
+	margin-top: 26rpx;
+	border-radius: 999rpx;
+	background-color: #ff7b54;
+	box-shadow: inset -10rpx -10rpx 22rpx rgba(0, 0, 0, 0.18),
+		inset 10rpx 10rpx 22rpx rgba(255, 255, 255, 0.35),
+		0 20rpx 36rpx rgba(255, 123, 84, 0.36);
+}
+
+/* 按下：下沉 + 加深内阴影 */
+.submit:active {
+	transform: translateY(6rpx);
+	box-shadow: inset -6rpx -6rpx 14rpx rgba(0, 0, 0, 0.26),
+		inset 6rpx 6rpx 14rpx rgba(255, 255, 255, 0.22),
+		0 8rpx 16rpx rgba(255, 123, 84, 0.30);
+}
+
+.submit-text {
+	font-size: 32rpx;
+	font-weight: 800;
+	letter-spacing: 8rpx;
+	color: #ffffff;
+}
+
+.submit.plain {
+	background-color: #ffffff;
+	box-shadow: inset -10rpx -10rpx 22rpx rgba(0, 0, 0, 0.10),
+		inset 10rpx 10rpx 22rpx rgba(255, 255, 255, 0.95),
+		0 16rpx 30rpx rgba(108, 99, 255, 0.20);
+}
+
+.submit.plain .submit-text {
+	font-size: 26rpx;
+	letter-spacing: 2rpx;
+	color: #6c63ff;
+}
+
+/* ---------- 其他方式 ---------- */
+.alt-rule {
+	display: flex;
+	align-items: center;
+	margin: 26rpx 0 20rpx;
+}
+
+.alt-rule .line {
+	flex: 1;
+	height: 6rpx;
+	border-radius: 999rpx;
+	background-color: rgba(61, 44, 41, 0.08);
+	box-shadow: inset 0 2rpx 4rpx rgba(0, 0, 0, 0.08);
+}
+
+.alt-rule .txt {
+	padding: 0 20rpx;
+	font-size: 20rpx;
+	font-weight: 500;
+	letter-spacing: 1rpx;
+	color: rgba(61, 44, 41, 0.4);
+}
+
+.social-row {
+	display: flex;
+	justify-content: center;
+}
+
+.social {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 96rpx;
+	height: 96rpx;
+	margin: 0 18rpx;
+	border-radius: 34rpx;
+	background-color: #fff5f0;
+	box-shadow: inset -8rpx -8rpx 16rpx rgba(0, 0, 0, 0.10),
+		inset 8rpx 8rpx 16rpx rgba(255, 255, 255, 0.95),
+		0 14rpx 26rpx rgba(61, 44, 41, 0.08);
+}
+
+.social:active {
+	transform: translateY(4rpx);
+	box-shadow: inset -6rpx -6rpx 12rpx rgba(0, 0, 0, 0.16),
+		inset 6rpx 6rpx 12rpx rgba(255, 255, 255, 0.6);
+}
+
+.social text {
+	font-size: 22rpx;
+	font-weight: 800;
+	color: #6c63ff;
+}
+
+/* ---------- 页脚 ---------- */
+.foot-link {
+	margin-top: 24rpx;
+	text-align: center;
+	font-size: 24rpx;
+	color: rgba(61, 44, 41, 0.55);
+}
+
+.foot-link .link {
+	margin-left: 8rpx;
+	font-size: 24rpx;
+}
+
+.agreement {
+	display: flex;
+	align-items: flex-start;
+	margin-top: 22rpx;
+	font-size: 20rpx;
+	line-height: 1.6;
+	color: rgba(61, 44, 41, 0.5);
+}
+
+.agreement .checkbox {
+	flex: none;
+	margin-top: 0;
+}
+
+.agreement .link {
+	font-size: 20rpx;
+}
+
+.foot-note {
+	margin-top: 18rpx;
+	text-align: center;
+	font-size: 18rpx;
+	letter-spacing: 1rpx;
+	color: rgba(61, 44, 41, 0.28);
+}
+
+/* ---------- 弹入动效（限制在 6 个元素以内） ---------- */
+@keyframes clay-pop {
+	0% {
+		opacity: 0;
+		transform: scale(0.8);
+	}
+	70% {
+		opacity: 1;
+		transform: scale(1.06);
+	}
+	100% {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+.pop {
+	animation: clay-pop 420ms cubic-bezier(0.34, 1.4, 0.64, 1) both;
+}
+
+.pop-1 {
+	animation-delay: 0ms;
+}
+
+.pop-2 {
+	animation-delay: 80ms;
+}
+
+.pop-3 {
+	animation-delay: 160ms;
+}
+
+.pop-4 {
+	animation-delay: 240ms;
+}
