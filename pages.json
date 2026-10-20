@@ -987,6 +987,51 @@
 				"navigationBarBackgroundColor": "#fff5f0",
 				"navigationBarTextStyle": "black"
 			}
+		},
+		{
+			"path": "pages/login110/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "孟菲斯 · 登录",
+				"navigationBarBackgroundColor": "#fff9ec",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/login110/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "孟菲斯 · 注册",
+				"navigationBarBackgroundColor": "#fff9ec",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/login110/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "孟菲斯 · 找回密码",
+				"navigationBarBackgroundColor": "#fff9ec",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/login110/phone-login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "孟菲斯 · 手机号登录",
+				"navigationBarBackgroundColor": "#fff9ec",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/login110/email-login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "孟菲斯 · 邮箱登录",
+				"navigationBarBackgroundColor": "#fff9ec",
+				"navigationBarTextStyle": "black"
+			}
 		}
 	],
 	"globalStyle": {

@@ -544,5 +544,10 @@ export default {
 			path: "/pages/login109/login",
 			tags: ["粘土拟态", "登录", "注册", "密码", "验证码", "手机号", "邮箱"]
 		},
+		{
+			cover: require('../static/cover/login110_cover.jpg'),
+			path: "/pages/login110/login",
+			tags: ["孟菲斯", "几何", "登录", "注册", "密码", "验证码", "手机号", "邮箱"]
+		},
 	]
 }

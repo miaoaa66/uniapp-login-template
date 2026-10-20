@@ -1,0 +1,502 @@
+/* ==========================================================================
+ * 主题 09 · 孟菲斯 MEMPHIS
+ * pages/login110 —— 登录 / 注册 / 找回密码 / 手机号验证码登录 / 邮箱验证码登录 五页共用
+ * 高饱和几何拼贴 + 黑色描边 + 波点波浪，刻意制造「不规整」的活泼感
+ *
+ * 设计依据：docs/theme-styles.md 第 9 条
+ *   色板    底 #FFF9EC / 红 #FF5F5F / 黄 #FFD166 / 蓝 #4CC9F0 / 紫 #8338EC / 描边 #141414
+ *   字体    无衬线粗体，标题 30px·字重 800，正文 14px·字重 500
+ *   质感    2px 黑描边 + 4px 硬阴影；圆角 12px；背景散落波点、折线、半圆、十字等几何装饰
+ *   动效    入场：装饰元素带 6°–12° 初始旋转各就位（300ms 交错）；
+ *           聚焦：输入框描边闪一下黄色；按钮：按下时整体旋转 −2°
+ *
+ * 落地约定：装饰层统一 pointer-events: none，z-index 低于表单 1 层，绝不允许压在输入框上
+ * 栅格约定：1px = 2rpx
+ * ========================================================================== */
+
+page {
+	background-color: #fff9ec;
+}
+
+.page {
+	position: relative;
+	min-height: 100vh;
+	overflow: hidden;
+	padding: 0 40rpx 40rpx;
+	box-sizing: border-box;
+	background-color: #fff9ec;
+	/* 波点背景：纯 CSS 重复径向渐变，0 图片 */
+	background-image: radial-gradient(rgba(20, 20, 20, 0.10) 3rpx, transparent 3rpx);
+	background-size: 44rpx 44rpx;
+	font-family: "Poppins", "Alibaba PuHuiTi", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+	color: #141414;
+}
+
+/* ---------- 几何装饰层（纯 CSS，0 图片） ---------- */
+.deco {
+	position: absolute;
+	z-index: 1;
+	pointer-events: none;
+}
+
+/* 半圆：蓝底黑边（左上角） */
+.deco-half {
+	top: 24rpx;
+	left: -72rpx;
+	width: 180rpx;
+	height: 90rpx;
+	border-radius: 90rpx 90rpx 0 0;
+	background-color: #4cc9f0;
+	border: 4rpx solid #141414;
+	box-shadow: 8rpx 8rpx 0 #141414;
+	transform: rotate(-12deg);
+}
+
+/* 圆圈：黄底黑边（右上角） */
+.deco-ring {
+	top: -48rpx;
+	right: 32rpx;
+	width: 120rpx;
+	height: 120rpx;
+	border-radius: 50%;
+	background-color: #ffd166;
+	border: 4rpx solid #141414;
+	box-shadow: 8rpx 8rpx 0 #141414;
+	transform: rotate(8deg);
+}
+
+/* 十字：紫色（右下角） */
+.deco-cross {
+	bottom: 52rpx;
+	right: 28rpx;
+	width: 72rpx;
+	height: 72rpx;
+	transform: rotate(9deg);
+}
+
+.deco-cross::before,
+.deco-cross::after {
+	content: '';
+	position: absolute;
+	box-sizing: border-box;
+	background-color: #8338ec;
+	border: 4rpx solid #141414;
+}
+
+.deco-cross::before {
+	left: 0;
+	top: 26rpx;
+	width: 72rpx;
+	height: 20rpx;
+}
+
+.deco-cross::after {
+	left: 26rpx;
+	top: 0;
+	width: 20rpx;
+	height: 72rpx;
+}
+
+/* 三角：红底，drop-shadow 硬投影（左下角） */
+.deco-tri {
+	bottom: 4rpx;
+	left: 44rpx;
+	width: 0;
+	height: 0;
+	border-left: 44rpx solid transparent;
+	border-right: 44rpx solid transparent;
+	border-bottom: 76rpx solid #ff5f5f;
+	filter: drop-shadow(8rpx 8rpx 0 #141414);
+	transform: rotate(6deg);
+}
+
+/* 波浪：重复径向渐变拼出的小弧线（左上，衬在半圆下方） */
+.deco-wave {
+	top: 136rpx;
+	left: -28rpx;
+	width: 240rpx;
+	height: 40rpx;
+	background-image: radial-gradient(circle at 24rpx 40rpx, transparent 20rpx, #8338ec 20rpx, #8338ec 24rpx, transparent 24rpx),
+		radial-gradient(circle at 24rpx 40rpx, transparent 20rpx, #141414 20rpx, #141414 24rpx, transparent 24rpx);
+	background-size: 48rpx 40rpx;
+	background-position: 0 0, 4rpx 4rpx;
+	background-repeat: repeat-x;
+	transform: rotate(-6deg);
+	opacity: 0.9;
+}
+
+.content {
+	position: relative;
+	z-index: 2;
+}
+
+/* ---------- 品牌 ---------- */
+.brand {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding-top: 28rpx;
+}
+
+.logo {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 132rpx;
+	height: 132rpx;
+	border-radius: 30rpx;
+	background-color: #ffd166;
+	border: 4rpx solid #141414;
+	box-shadow: 8rpx 8rpx 0 #141414;
+	transform: rotate(-6deg);
+}
+
+.logo-core {
+	width: 56rpx;
+	height: 56rpx;
+	border-radius: 50%;
+	background-color: #ff5f5f;
+	border: 4rpx solid #141414;
+}
+
+.brand-name {
+	margin-top: 22rpx;
+	font-size: 34rpx;
+	font-weight: 800;
+	letter-spacing: 4rpx;
+	color: #141414;
+}
+
+.brand-sub {
+	margin-top: 8rpx;
+	font-size: 20rpx;
+	font-weight: 500;
+	letter-spacing: 4rpx;
+	color: rgba(20, 20, 20, 0.5);
+}
+
+/* ---------- 标题 ---------- */
+.head {
+	margin-top: 20rpx;
+	padding-left: 6rpx;
+}
+
+.head-title {
+	display: inline-block;
+	padding: 0 6rpx;
+	font-size: 60rpx;
+	font-weight: 800;
+	line-height: 1.2;
+	letter-spacing: 1rpx;
+	color: #141414;
+	/* 荧光笔标记：画在文字下缘，不越出标题盒，避免压到副标题 */
+	background-image: linear-gradient(transparent 60%, #ffd166 60%, #ffd166 92%, transparent 92%);
+}
+
+.head-sub {
+	margin-top: 18rpx;
+	font-size: 24rpx;
+	line-height: 1.6;
+	color: rgba(20, 20, 20, 0.6);
+}
+
+/* ---------- 拼贴卡片 ---------- */
+.card {
+	position: relative;
+	margin-top: 22rpx;
+	padding: 26rpx 28rpx 24rpx;
+	border-radius: 24rpx;
+	background-color: #fffdf5;
+	border: 4rpx solid #141414;
+	box-shadow: 8rpx 8rpx 0 #141414;
+}
+
+.field + .field {
+	margin-top: 18rpx;
+}
+
+.field-label {
+	font-size: 22rpx;
+	font-weight: 800;
+	letter-spacing: 2rpx;
+	color: #141414;
+}
+
+.field-box {
+	display: flex;
+	align-items: center;
+	margin-top: 12rpx;
+	height: 94rpx;
+	padding: 0 24rpx;
+	border-radius: 20rpx;
+	background-color: #fbf3e0;
+	border: 4rpx solid #141414;
+	box-sizing: border-box;
+	transition: box-shadow 120ms ease-out, background-color 120ms ease-out;
+}
+
+/* 聚焦：描边闪一下黄色 */
+.field-box.active {
+	background-color: #ffffff;
+	box-shadow: 0 0 0 6rpx #ffd166;
+}
+
+.field-prefix {
+	flex: none;
+	margin-right: 18rpx;
+	padding-right: 18rpx;
+	font-size: 26rpx;
+	font-weight: 800;
+	color: #8338ec;
+	border-right: 4rpx solid #141414;
+}
+
+.input {
+	flex: 1;
+	height: 100%;
+	font-size: 28rpx;
+	font-weight: 500;
+	color: #141414;
+}
+
+.ph {
+	color: rgba(20, 20, 20, 0.35);
+}
+
+.eye {
+	flex: none;
+	padding-left: 20rpx;
+	font-size: 22rpx;
+	font-weight: 800;
+	color: #ff5f5f;
+}
+
+.code-btn {
+	flex: none;
+	margin-left: 16rpx;
+	padding: 12rpx 22rpx;
+	border-radius: 14rpx;
+	font-size: 22rpx;
+	font-weight: 800;
+	color: #141414;
+	background-color: #4cc9f0;
+	border: 4rpx solid #141414;
+	box-shadow: 4rpx 4rpx 0 #141414;
+}
+
+.code-btn.dim {
+	color: rgba(20, 20, 20, 0.45);
+	background-color: #fbf3e0;
+	box-shadow: none;
+}
+
+/* ---------- 辅助行 ---------- */
+.row-between {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 22rpx;
+}
+
+.remember {
+	display: flex;
+	align-items: center;
+	font-size: 22rpx;
+	font-weight: 500;
+	color: rgba(20, 20, 20, 0.65);
+}
+
+.checkbox {
+	position: relative;
+	width: 34rpx;
+	height: 34rpx;
+	margin-right: 12rpx;
+	border-radius: 8rpx;
+	background-color: #fffdf5;
+	border: 4rpx solid #141414;
+	box-sizing: border-box;
+}
+
+.checkbox.on {
+	background-color: #8338ec;
+}
+
+.checkbox.on::after {
+	content: '';
+	position: absolute;
+	left: 10rpx;
+	top: 3rpx;
+	width: 10rpx;
+	height: 18rpx;
+	border-right: 4rpx solid #ffffff;
+	border-bottom: 4rpx solid #ffffff;
+	box-sizing: border-box;
+	transform: rotate(40deg);
+}
+
+.link {
+	font-size: 22rpx;
+	font-weight: 800;
+	color: #8338ec;
+}
+
+/* ---------- 主按钮 ---------- */
+.submit {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100rpx;
+	margin-top: 24rpx;
+	border-radius: 24rpx;
+	background-color: #ff5f5f;
+	border: 4rpx solid #141414;
+	box-shadow: 8rpx 8rpx 0 #141414;
+	transition: transform 140ms ease-out, box-shadow 140ms ease-out;
+}
+
+/* 按下：位移 4rpx 并整体旋转 −2° */
+.submit:active {
+	transform: translate(4rpx, 4rpx) rotate(-2deg);
+	box-shadow: 4rpx 4rpx 0 #141414;
+}
+
+.submit-text {
+	font-size: 32rpx;
+	font-weight: 800;
+	letter-spacing: 6rpx;
+	color: #141414;
+}
+
+.submit.plain {
+	background-color: #4cc9f0;
+	box-shadow: 6rpx 6rpx 0 #141414;
+}
+
+.submit.plain .submit-text {
+	font-size: 26rpx;
+	letter-spacing: 2rpx;
+}
+
+/* ---------- 其他方式 ---------- */
+.alt-rule {
+	display: flex;
+	align-items: center;
+	margin: 24rpx 0 18rpx;
+}
+
+.alt-rule .line {
+	flex: 1;
+	height: 4rpx;
+	background-color: #141414;
+}
+
+.alt-rule .txt {
+	padding: 0 20rpx;
+	font-size: 20rpx;
+	font-weight: 800;
+	letter-spacing: 2rpx;
+	color: #141414;
+}
+
+.social-row {
+	display: flex;
+	justify-content: center;
+}
+
+.social {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 84rpx;
+	padding: 0 26rpx;
+	margin: 0 12rpx;
+	border-radius: 18rpx;
+	background-color: #fffdf5;
+	border: 4rpx solid #141414;
+	box-shadow: 6rpx 6rpx 0 #141414;
+}
+
+.social:active {
+	transform: translate(3rpx, 3rpx);
+	box-shadow: 3rpx 3rpx 0 #141414;
+}
+
+.social text {
+	font-size: 24rpx;
+	font-weight: 800;
+	color: #141414;
+}
+
+/* ---------- 页脚 ---------- */
+.foot-link {
+	margin-top: 20rpx;
+	text-align: center;
+	font-size: 24rpx;
+	font-weight: 500;
+	color: rgba(20, 20, 20, 0.6);
+}
+
+.foot-link .link {
+	margin-left: 8rpx;
+	font-size: 24rpx;
+}
+
+.agreement {
+	display: flex;
+	align-items: flex-start;
+	margin-top: 18rpx;
+	font-size: 20rpx;
+	line-height: 1.6;
+	color: rgba(20, 20, 20, 0.6);
+}
+
+.agreement .checkbox {
+	flex: none;
+	margin-top: 2rpx;
+}
+
+.agreement .link {
+	font-size: 20rpx;
+}
+
+.foot-note {
+	margin-top: 14rpx;
+	text-align: center;
+	font-size: 18rpx;
+	font-weight: 500;
+	letter-spacing: 2rpx;
+	color: rgba(20, 20, 20, 0.35);
+}
+
+/* ---------- 入场动效：几何元素带旋转各就位 ---------- */
+@keyframes mem-pop {
+	0% {
+		opacity: 0;
+		transform: translateY(16rpx) scale(0.94) rotate(-6deg);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0) scale(1) rotate(0deg);
+	}
+}
+
+.pop {
+	animation: mem-pop 320ms cubic-bezier(0.34, 1.36, 0.64, 1) both;
+}
+
+.pop-1 {
+	animation-delay: 0ms;
+}
+
+.pop-2 {
+	animation-delay: 90ms;
+}
+
+.pop-3 {
+	animation-delay: 180ms;
+}
+
+.pop-4 {
+	animation-delay: 270ms;
+}
