@@ -1032,6 +1032,321 @@
 				"navigationBarBackgroundColor": "#fff9ec",
 				"navigationBarTextStyle": "black"
 			}
+		},
+		{
+			"path": "pages/login111/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "纯黑工坊 · 登录"
+			}
+		},
+		{
+			"path": "pages/login111/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "纯黑工坊 · 注册"
+			}
+		},
+		{
+			"path": "pages/login111/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "纯黑工坊 · 找回密码"
+			}
+		},
+		{
+			"path": "pages/login112/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "霓虹终端 · 登录"
+			}
+		},
+		{
+			"path": "pages/login112/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "霓虹终端 · 注册"
+			}
+		},
+		{
+			"path": "pages/login112/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "霓虹终端 · 找回密码"
+			}
+		},
+		{
+			"path": "pages/login113/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "柔光工作台 · 登录"
+			}
+		},
+		{
+			"path": "pages/login113/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "柔光工作台 · 注册"
+			}
+		},
+		{
+			"path": "pages/login113/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "柔光工作台 · 找回密码"
+			}
+		},
+		{
+			"path": "pages/login114/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "蒸汽浪潮 · 登录"
+			}
+		},
+		{
+			"path": "pages/login114/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "蒸汽浪潮 · 注册"
+			}
+		},
+		{
+			"path": "pages/login114/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "蒸汽浪潮 · 找回密码"
+			}
+		},
+		{
+			"path": "pages/login115/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "轨道控制台 · 登录"
+			}
+		},
+		{
+			"path": "pages/login115/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "轨道控制台 · 注册"
+			}
+		},
+		{
+			"path": "pages/login115/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "轨道控制台 · 找回密码"
+			}
+		},
+		{
+			"path": "pages/login116/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "粗野俱乐部 · 登录"
+			}
+		},
+		{
+			"path": "pages/login116/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "粗野俱乐部 · 注册"
+			}
+		},
+		{
+			"path": "pages/login116/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "粗野俱乐部 · 找回密码"
+			}
+		},
+		{
+			"path": "pages/login117/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "构成学社 · 登录"
+			}
+		},
+		{
+			"path": "pages/login117/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "构成学社 · 注册"
+			}
+		},
+		{
+			"path": "pages/login117/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "构成学社 · 找回密码"
+			}
+		},
+		{
+			"path": "pages/login118/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "随手涂鸦 · 登录"
+			}
+		},
+		{
+			"path": "pages/login118/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "随手涂鸦 · 注册"
+			}
+		},
+		{
+			"path": "pages/login118/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "随手涂鸦 · 找回密码"
+			}
+		},
+		{
+			"path": "pages/login119/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "纸间票务 · 登录"
+			}
+		},
+		{
+			"path": "pages/login119/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "纸间票务 · 注册"
+			}
+		},
+		{
+			"path": "pages/login119/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "纸间票务 · 找回密码"
+			}
+		},
+		{
+			"path": "pages/login120/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "墨白山房 · 登录"
+			}
+		},
+		{
+			"path": "pages/login120/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "墨白山房 · 注册"
+			}
+		},
+		{
+			"path": "pages/login120/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "墨白山房 · 找回密码"
+			}
+		},
+		{
+			"path": "pages/login121/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "涂鸦手账 · 登录"
+			}
+		},
+		{
+			"path": "pages/login121/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "涂鸦手账 · 注册"
+			}
+		},
+		{
+			"path": "pages/login121/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "涂鸦手账 · 找回密码"
+			}
+		},
+		{
+			"path": "pages/login122/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "有机绿洲 · 登录"
+			}
+		},
+		{
+			"path": "pages/login122/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "有机绿洲 · 注册"
+			}
+		},
+		{
+			"path": "pages/login122/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "有机绿洲 · 找回密码"
+			}
+		},
+		{
+			"path": "pages/login123/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "千禧铬银 · 登录"
+			}
+		},
+		{
+			"path": "pages/login123/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "千禧铬银 · 注册"
+			}
+		},
+		{
+			"path": "pages/login123/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "千禧铬银 · 找回密码"
+			}
+		},
+		{
+			"path": "pages/login124/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "蒸汽波电台 · 登录"
+			}
+		},
+		{
+			"path": "pages/login124/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "蒸汽波电台 · 注册"
+			}
+		},
+		{
+			"path": "pages/login124/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "蒸汽波电台 · 找回密码"
+			}
+		},
+		{
+			"path": "pages/login125/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "重型操作台 · 登录"
+			}
+		},
+		{
+			"path": "pages/login125/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "重型操作台 · 注册"
+			}
+		},
+		{
+			"path": "pages/login125/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "重型操作台 · 找回密码"
+			}
 		}
 	],
 	"globalStyle": {

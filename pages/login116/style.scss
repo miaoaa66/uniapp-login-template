@@ -1,0 +1,727 @@
+/* ==========================================================================
+ * 主题 08 · 粗野主义
+ * pages/login116 —— 登录 / 注册 / 找回密码 三页共用
+ * 粗野主义：令牌 + 共享骨架 + 主题装饰 + 皮肤覆盖
+ *
+ * 设计依据：docs/theme-styles.md 第 8 条
+ *   色板    $bg: #fffdf4; / $ink: #000000; / $accent: #ff4d00; / $accent-2: #00e0c6;
+ *   栅格    1px = 2rpx，纵向间距取 8rpx 的整数倍
+ *   落地    3rpx 黑边 + 16rpx 硬阴影（无模糊），零圆角，纯 CSS 全端一致。
+ *           按钮按下位移 + 阴影归零，无过渡曲线，呼应「硬切」气质。
+ *           落地风险：粗边在小屏挤压内容，页面两侧 gutter 保持 ≥ 48rpx。
+ * ========================================================================== */
+
+/* ---------- 设计令牌 ---------- */
+$bg: #fffdf4;              // 米白纸底
+$panel: #ffffff;
+$ink: #000000;             // 纯黑正文
+$dim: #555555;
+$dim-2: #8f8f8f;
+$line: #000000;            // 结构线即黑边
+$accent: #ff4d00;          // 荧光橙
+$accent-2: #00e0c6;        // 辅青
+$on-accent: #fffdf4;
+$err: #d63a2f;
+
+$field-bg: #ffffff;
+$field-line: #000000;
+$btn-bg: #ff4d00;
+$btn-ink: #fffdf4;
+$btn-border: #000000;
+$shadow-card: 16rpx 16rpx 0 #000000;
+$shadow-btn: 8rpx 8rpx 0 #000000;
+$focus-shadow: 0 0 0 4rpx #ff4d00;
+
+$radius: 0;
+$radius-sm: 0;
+$radius-btn: 0;
+$radius-tick: 0;
+$gutter: 48rpx;
+
+$font: 'PingFang SC', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+$mono: 'Space Mono', 'SFMono-Regular', Consolas, 'Noto Sans SC', monospace;
+$ls: 0;
+$label-ls: 2rpx;
+$title-size: 80rpx;
+$title-weight: 900;
+$title-ls: -4rpx;
+$enter-ms: 120ms;
+/* ---------- 结构常量 ---------- */
+$tap: 96rpx;                                  // 输入框 / 按钮高 48px
+$ease: cubic-bezier(.2, .6, .2, 1);
+
+/* ---------- 基础 ---------- */
+.page,
+.page * {
+	box-sizing: border-box;
+}
+
+page {
+	background-color: $bg;
+}
+
+.page {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	overflow: hidden;
+	padding: 0 $gutter;
+	background-color: $bg;
+	color: $ink;
+	font-family: $font;
+	font-size: 28rpx;
+	line-height: 1.5;
+	letter-spacing: $ls;
+	-webkit-font-smoothing: antialiased;
+	animation: mn-in $enter-ms $ease both;
+}
+
+@keyframes mn-in {
+	from {
+		opacity: 0;
+		transform: translateY(16rpx);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* 装饰层纪律：不吃指针事件、层级低于内容一层 */
+.deco {
+	position: absolute;
+	z-index: 1;
+	pointer-events: none;
+}
+
+/* ---------- 自绘导航 ---------- */
+.status {
+	width: 100%;
+	flex: none;
+}
+
+.nav {
+	position: relative;
+	z-index: 3;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	height: 88rpx;
+	flex: none;
+}
+
+.back {
+	position: relative;
+	width: 48rpx;
+	height: 88rpx;
+}
+
+.back-line {
+	position: absolute;
+	left: 4rpx;
+	top: 50%;
+	width: 40rpx;
+	height: 2rpx;
+	margin-top: -1rpx;
+	background-color: $ink;
+}
+
+/* 箭头：两条短线以左端为轴张开，尖端与轴线重合 */
+.back-tip {
+	position: absolute;
+	left: 4rpx;
+	top: 50%;
+	width: 14rpx;
+	height: 2rpx;
+	margin-top: -1rpx;
+	background-color: $ink;
+	transform-origin: left center;
+	transform: rotate(-43deg);
+}
+
+.back-tip-2 {
+	transform: rotate(43deg);
+}
+
+.nav-idx {
+	font-size: 20rpx;
+	letter-spacing: 3rpx;
+	color: $dim-2;
+	font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 内容区 ---------- */
+.content {
+	position: relative;
+	z-index: 2;
+	flex: 1;
+	padding-bottom: 24rpx;
+}
+
+/* ---------- 品牌 ---------- */
+.brand {
+	display: flex;
+	align-items: center;
+	padding-top: 24rpx;
+}
+
+.logo {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 64rpx;
+	height: 64rpx;
+	flex: none;
+	border: 2rpx solid $line;
+	border-radius: $radius-sm;
+}
+
+.logo-core {
+	width: 20rpx;
+	height: 20rpx;
+	background-color: $accent;
+}
+
+.brand-txt {
+	padding-left: 20rpx;
+}
+
+.brand-name {
+	display: block;
+	font-size: 28rpx;
+	font-weight: 600;
+	letter-spacing: 1rpx;
+}
+
+.brand-sub {
+	display: block;
+	margin-top: 4rpx;
+	font-size: 18rpx;
+	letter-spacing: 3rpx;
+	color: $dim;
+}
+
+/* ---------- 标题区 ---------- */
+.head {
+	padding-top: 56rpx;
+}
+
+.eyebrow {
+	display: block;
+	font-size: 20rpx;
+	letter-spacing: 4rpx;
+	color: $dim;
+}
+
+.title {
+	display: block;
+	margin-top: 20rpx;
+	font-size: $title-size;
+	font-weight: $title-weight;
+	line-height: 1.2;
+	letter-spacing: $title-ls;
+}
+
+.lead {
+	display: block;
+	margin-top: 16rpx;
+	font-size: 24rpx;
+	line-height: 1.72;
+	color: $dim;
+}
+
+/* ---------- 登录方式 ---------- */
+.tabs {
+	display: flex;
+	align-items: flex-end;
+	margin-top: 48rpx;
+}
+
+.tab {
+	position: relative;
+	margin-right: 48rpx;
+	padding-bottom: 14rpx;
+	font-size: 26rpx;
+	color: $dim;
+	border-bottom: 2rpx solid transparent;
+	transition: color 160ms linear, border-color 160ms linear;
+}
+
+.tab:last-child {
+	margin-right: 0;
+}
+
+.tab.on {
+	color: $ink;
+	border-bottom-color: $accent;
+}
+
+/* ---------- 卡片 ---------- */
+.card {
+	position: relative;
+	margin-top: 32rpx;
+	padding: 40rpx 32rpx 36rpx;
+	background-color: $panel;
+	border: 1rpx solid $line;
+	border-radius: $radius;
+	box-shadow: $shadow-card;
+}
+
+/* ---------- 字段 ---------- */
+.field {
+	margin-top: 28rpx;
+}
+
+.card > .field:first-child {
+	margin-top: 0;
+}
+
+.field-label {
+	display: block;
+	margin-bottom: 12rpx;
+	font-size: 20rpx;
+	letter-spacing: $label-ls;
+	color: $dim;
+}
+
+.field-box {
+	display: flex;
+	align-items: center;
+	height: $tap;
+	padding: 0 24rpx;
+	background-color: $field-bg;
+	border: 1rpx solid $field-line;
+	border-radius: $radius-sm;
+	transition: border-color 180ms linear, box-shadow 180ms linear;
+}
+
+.field-box.active {
+	border-color: $accent;
+	box-shadow: $focus-shadow;
+}
+
+.field-box.error {
+	border-color: $err;
+}
+
+/* input 一律显式重置，避免各端默认样式渗入 */
+.input {
+	flex: 1;
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	background-color: transparent;
+	border-width: 0;
+	border-radius: 0;
+	appearance: none;
+	font-size: 28rpx;
+	color: $ink;
+	letter-spacing: $ls;
+}
+
+.input-num {
+	font-variant-numeric: tabular-nums;
+	letter-spacing: 2rpx;
+}
+
+.eye {
+	flex: none;
+	padding-left: 20rpx;
+	font-size: 22rpx;
+	color: $dim;
+}
+
+.eye.on {
+	color: $accent;
+}
+
+.code {
+	flex: none;
+	padding-left: 24rpx;
+	font-size: 22rpx;
+	color: $accent;
+}
+
+.code.off {
+	color: $dim-2;
+	font-variant-numeric: tabular-nums;
+}
+
+.err {
+	display: block;
+	margin-top: 12rpx;
+	font-size: 20rpx;
+	color: $err;
+}
+
+.tip {
+	display: block;
+	margin-top: 12rpx;
+	font-size: 20rpx;
+	color: $dim-2;
+}
+
+/* ---------- 行内操作 ---------- */
+.row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: 32rpx;
+}
+
+.row-end {
+	justify-content: flex-end;
+}
+
+.link {
+	font-size: 22rpx;
+	color: $accent;
+}
+
+.link-soft {
+	color: $dim;
+}
+
+/* ---------- 勾选 ---------- */
+.check {
+	display: flex;
+	align-items: flex-start;
+	margin-top: 28rpx;
+}
+
+.check-inline {
+	align-items: center;
+	margin-top: 0;
+}
+
+.check-inline .check-txt {
+	flex: none;
+}
+
+.check-box {
+	position: relative;
+	width: 28rpx;
+	height: 28rpx;
+	flex: none;
+	margin-right: 14rpx;
+	background-color: transparent;
+	border: 2rpx solid $line;
+	border-radius: $radius-tick;
+	transition: background-color 160ms linear, border-color 160ms linear;
+}
+
+.check-box.on {
+	background-color: $accent;
+	border-color: $accent;
+}
+
+/* 勾选用实体元素绘制，规避小程序端伪元素差异 */
+.check-tick {
+	position: absolute;
+	left: 50%;
+	top: 44%;
+	width: 7rpx;
+	height: 13rpx;
+	border-right: 2rpx solid $on-accent;
+	border-bottom: 2rpx solid $on-accent;
+	transform: translate(-50%, -50%) rotate(43deg) scale(0.6);
+	opacity: 0;
+	transition: opacity 120ms linear, transform 120ms $ease;
+}
+
+.check-box.on .check-tick {
+	opacity: 1;
+	transform: translate(-50%, -50%) rotate(43deg) scale(1);
+}
+
+.check-txt {
+	flex: 1;
+	font-size: 22rpx;
+	line-height: 1.6;
+	color: $dim;
+}
+
+.check-link {
+	color: $accent;
+}
+
+/* ---------- 主按钮 ---------- */
+.btn {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: $tap;
+	margin-top: 40rpx;
+	background-color: $btn-bg;
+	color: $btn-ink;
+	border: 1rpx solid $btn-border;
+	border-radius: $radius-btn;
+	font-size: 28rpx;
+	letter-spacing: 8rpx;
+	text-indent: 8rpx;
+	box-shadow: $shadow-btn;
+}
+
+.btn:active {
+	opacity: 0.88;
+}
+
+.btn.is-busy {
+	opacity: 0.6;
+}
+
+.btn-ghost {
+	margin-top: 20rpx;
+	background-color: transparent;
+	color: $dim;
+	border-color: $line;
+	box-shadow: none;
+	letter-spacing: 4rpx;
+	text-indent: 4rpx;
+}
+
+/* ---------- 其他入口 ---------- */
+.alt {
+	display: flex;
+	margin-top: 32rpx;
+	border-top: 1rpx solid $line;
+}
+
+.alt-i {
+	flex: 1;
+	height: 84rpx;
+	line-height: 84rpx;
+	text-align: center;
+	font-size: 22rpx;
+	color: $dim;
+	border-right: 1rpx solid $line;
+}
+
+.alt-i:last-child {
+	border-right: 0;
+}
+
+/* ---------- 页脚 ---------- */
+.foot {
+	position: relative;
+	z-index: 2;
+	flex: none;
+	padding-top: 40rpx;
+	padding-bottom: 40rpx;
+	padding-bottom: calc(40rpx + constant(safe-area-inset-bottom));
+	padding-bottom: calc(40rpx + env(safe-area-inset-bottom));
+}
+
+.foot-row {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+}
+
+.foot-txt {
+	font-size: 22rpx;
+	color: $dim;
+}
+
+.copy {
+	display: block;
+	margin-top: 40rpx;
+	font-size: 18rpx;
+	letter-spacing: 2rpx;
+	color: $dim-2;
+	text-align: center;
+}
+
+/* ---------- 步骤 ---------- */
+.steps {
+	display: flex;
+	align-items: center;
+	margin-top: 40rpx;
+}
+
+.step {
+	display: flex;
+	align-items: center;
+	font-size: 20rpx;
+	letter-spacing: 2rpx;
+	color: $dim-2;
+}
+
+.step.on {
+	color: $accent;
+}
+
+.step-dot {
+	width: 12rpx;
+	height: 12rpx;
+	margin-right: 12rpx;
+	background-color: $dim-2;
+}
+
+.step.on .step-dot {
+	background-color: $accent;
+}
+
+.step-line {
+	flex: none;
+	width: 48rpx;
+	height: 1rpx;
+	margin: 0 16rpx;
+	background-color: $line;
+}
+
+/* ---------- 安全提示 ---------- */
+.terms {
+	display: block;
+	margin-top: 40rpx;
+	font-size: 22rpx;
+	line-height: 1.9;
+	color: $dim;
+}
+
+.terms-h {
+	display: block;
+	margin-top: 40rpx;
+	margin-bottom: 12rpx;
+	font-size: 22rpx;
+	letter-spacing: 1rpx;
+	color: $ink;
+}
+
+/* ---------- 装饰层（纯 CSS，0 图片） ---------- */
+/* 顶部警示条纹：-45° 黑橙重复渐变，压成 16rpx 信号条 */
+.deco-stripe {
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 16rpx;
+	background-image: repeating-linear-gradient(-45deg, #111111 0, #111111 16rpx, $accent 16rpx, $accent 32rpx);
+}
+
+/* 右上辅青色块：半出画面 + 低透明度，不与文字抢对比度 */
+.deco-block {
+	top: -96rpx;
+	right: -96rpx;
+	width: 240rpx;
+	height: 240rpx;
+	background-color: $accent-2;
+	opacity: 0.5;
+}
+
+/* 背景裸表格线：可见的栅格结构，刻意不精致 */
+.deco-rows {
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-image: repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.05) 0, rgba(0, 0, 0, 0.05) 1rpx, rgba(0, 0, 0, 0) 1rpx, rgba(0, 0, 0, 0) 160rpx);
+}
+
+/* 左下角十字标记：两根细黑线拼出 */
+.deco-cross {
+	bottom: 96rpx;
+	left: 16rpx;
+	width: 24rpx;
+	height: 24rpx;
+	background-image:
+		linear-gradient(#000000, #000000),
+		linear-gradient(#000000, #000000);
+	background-size: 100% 2rpx, 2rpx 100%;
+	background-position: center, center;
+	background-repeat: no-repeat;
+}
+/* ---------- 皮肤覆盖 ---------- */
+/* 标题：几何超粗黑体 + 收紧字距 */
+.title {
+	font-family: 'Archivo Black', 'Arial Black', 'PingFang SC', sans-serif;
+	text-transform: uppercase;
+}
+
+.eyebrow {
+	color: $accent;
+	font-family: $mono;
+	font-weight: 700;
+}
+
+/* 面板：6rpx 黑边 + 16rpx 硬阴影，零圆角 */
+.card {
+	border: 6rpx solid #000000;
+	box-shadow: $shadow-card;
+}
+
+/* 输入框：3rpx 黑边，聚焦转橙并加 4rpx 外环（模拟加粗到 5px） */
+.field-box {
+	border: 3rpx solid #000000;
+	transition: border-color 120ms linear, box-shadow 120ms linear;
+}
+
+.field-box.active {
+	border-color: $accent;
+	box-shadow: $focus-shadow;
+}
+
+.field-label {
+	font-family: $mono;
+	font-weight: 700;
+	text-transform: uppercase;
+}
+
+/* Tab：选中项直接给橙底黑字色块，不做下划线 */
+.tab.on {
+	color: $on-accent;
+	background-color: $accent;
+	border-bottom: 0;
+	padding: 6rpx 16rpx;
+}
+
+/* 按钮：按下位移 8rpx 且阴影归零，无过渡曲线 */
+.btn {
+	font-family: $mono;
+	font-weight: 700;
+	transition: none;
+}
+
+.btn:active {
+	transform: translate(8rpx, 8rpx);
+	box-shadow: 0 0 0 #000000;
+}
+
+/* 勾选：方形黑框，选中填橙 */
+.check-box {
+	border: 3rpx solid #000000;
+}
+
+.check-box.on {
+	background-color: $accent;
+	border-color: #000000;
+}
+
+/* 其他入口：等宽粗体小方块，按下垫辅青 */
+.alt-i {
+	font-family: $mono;
+	font-weight: 700;
+}
+
+.alt-i:active {
+	background-color: $accent-2;
+	color: #000000;
+}
+
+/* 入场：120ms 硬切淡入，呼应「无缓动」 */
+@keyframes brut-in {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+.card {
+	animation: brut-in 120ms linear both;
+}

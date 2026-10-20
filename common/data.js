@@ -549,5 +549,80 @@ export default {
 			path: "/pages/login110/login",
 			tags: ["孟菲斯", "几何", "登录", "注册", "密码", "验证码", "手机号", "邮箱"]
 		},
+		{
+			cover: require('../static/cover/login111_cover.jpg'),
+			path: "/pages/login111/login",
+			tags: ["OLED", "纯黑", "登录", "注册", "密码", "验证码"]
+		},
+		{
+			cover: require('../static/cover/login112_cover.jpg'),
+			path: "/pages/login112/login",
+			tags: ["赛博", "霓虹", "登录", "注册", "密码", "验证码"]
+		},
+		{
+			cover: require('../static/cover/login113_cover.jpg'),
+			path: "/pages/login113/login",
+			tags: ["新拟态", "柔光", "登录", "注册", "密码", "验证码"]
+		},
+		{
+			cover: require('../static/cover/login114_cover.jpg'),
+			path: "/pages/login114/login",
+			tags: ["蒸汽波", "复古", "登录", "注册", "密码", "验证码"]
+		},
+		{
+			cover: require('../static/cover/login115_cover.jpg'),
+			path: "/pages/login115/login",
+			tags: ["HUD", "科技", "登录", "注册", "密码", "验证码"]
+		},
+		{
+			cover: require('../static/cover/login116_cover.jpg'),
+			path: "/pages/login116/login",
+			tags: ["粗野", "硬核", "登录", "注册", "密码", "验证码"]
+		},
+		{
+			cover: require('../static/cover/login117_cover.jpg'),
+			path: "/pages/login117/login",
+			tags: ["包豪斯", "几何", "登录", "注册", "密码", "验证码"]
+		},
+		{
+			cover: require('../static/cover/login118_cover.jpg'),
+			path: "/pages/login118/login",
+			tags: ["涂鸦", "手账", "登录", "注册", "密码", "验证码"]
+		},
+		{
+			cover: require('../static/cover/login119_cover.jpg'),
+			path: "/pages/login119/login",
+			tags: ["票据", "纸质", "登录", "注册", "密码", "验证码"]
+		},
+		{
+			cover: require('../static/cover/login120_cover.jpg'),
+			path: "/pages/login120/login",
+			tags: ["新中式", "国风", "登录", "注册", "密码", "验证码"]
+		},
+		{
+			cover: require('../static/cover/login121_cover.jpg'),
+			path: "/pages/login121/login",
+			tags: ["手绘", "涂鸦", "登录", "注册", "密码", "验证码"]
+		},
+		{
+			cover: require('../static/cover/login122_cover.jpg'),
+			path: "/pages/login122/login",
+			tags: ["有机", "自然", "登录", "注册", "密码", "验证码"]
+		},
+		{
+			cover: require('../static/cover/login123_cover.jpg'),
+			path: "/pages/login123/login",
+			tags: ["Y2K", "铬银", "登录", "注册", "密码", "验证码"]
+		},
+		{
+			cover: require('../static/cover/login124_cover.jpg'),
+			path: "/pages/login124/login",
+			tags: ["蒸汽波", "复古", "登录", "注册", "密码", "验证码"]
+		},
+		{
+			cover: require('../static/cover/login125_cover.jpg'),
+			path: "/pages/login125/login",
+			tags: ["工业", "机械", "登录", "注册", "密码", "验证码"]
+		},
 	]
 }

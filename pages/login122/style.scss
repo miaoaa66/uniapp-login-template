@@ -1,0 +1,513 @@
+/* ==========================================================================
+ * 主题 7 · 有机自然 Organic（重制版）
+ * pages/login122 —— 登录 / 注册 / 找回密码 三页共用
+ *
+ * 设计依据：docs/theme-styles.md 第 7 条
+ *   色板    $bg #F7F4EC / $green #6B8F71 / $deep #3F5D45 / $ink #2F3A2E / $dim #8A9683
+ *   布局    顶部绿色弧形树冠（不对称 border-radius 收底）承担标题区，奶油白卡片
+ *           负 margin 压弧而出；底部再铺一层反向弧形草坡收尾——上下两道曲线
+ *           包住整页，打破 106~120 系列的直壁骨架。
+ *   交互    浮动标签：label 默认坐在输入框里，聚焦或有值时升到框沿缩小变色；
+ *           登录方式是叶形分段器（左右叶尖不对称）；主按钮为叶形圆角，
+ *           按下轻微塌陷；找回密码步骤是「藤蔓上的两颗种子」，验证通过藤蔓实线。
+ *   兼容    曲线全部用 border-radius 百分比实现，无 SVG、无 filter，全端安全。
+ * ========================================================================== */
+
+/* ---------- 设计令牌 ---------- */
+$bg: #f7f4ec;
+$card: #fdfcf7;
+$green: #6b8f71;
+$deep: #3f5d45;
+$ink: #2f3a2e;
+$dim: #8a9683;
+$line: #dde5d5;
+$field: #f1f0e2;
+$err: #c0564a;
+
+/* ---------- 页面骨架 ---------- */
+.og-page {
+	min-height: 100vh;
+	box-sizing: border-box;
+	background: $bg;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+/* ---------- 顶部弧形树冠 ---------- */
+.og-crown {
+	position: relative;
+	flex: none;
+	background: linear-gradient(165deg, #75a07c 0%, $green 46%, $deep 100%);
+	border-radius: 0 0 46% 54% / 0 0 110rpx 150rpx;
+	padding-bottom: 150rpx;
+	overflow: hidden;
+}
+.og-crown__leaf {
+	position: absolute;
+	border: 2rpx solid rgba(255, 255, 255, 0.3);
+	border-radius: 0 100% 0 100%;
+	pointer-events: none;
+}
+.og-crown__leaf--l {
+	left: -36rpx;
+	top: 190rpx;
+	width: 150rpx;
+	height: 150rpx;
+	transform: rotate(-16deg);
+	animation: og-sway 6s ease-in-out infinite alternate;
+}
+.og-crown__leaf--r {
+	right: -30rpx;
+	top: 90rpx;
+	width: 190rpx;
+	height: 190rpx;
+	transform: rotate(14deg);
+	border-radius: 100% 0 100% 0;
+	animation: og-sway 7s ease-in-out infinite alternate-reverse;
+}
+@keyframes og-sway {
+	from {
+		opacity: 0.55;
+	}
+	to {
+		opacity: 0.9;
+	}
+}
+
+.og-status {
+	flex: none;
+}
+.og-nav {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 16rpx 32rpx 8rpx;
+}
+.og-back {
+	position: relative;
+	width: 64rpx;
+	height: 48rpx;
+}
+.og-back__line {
+	position: absolute;
+	left: 0;
+	top: 22rpx;
+	width: 44rpx;
+	height: 4rpx;
+	border-radius: 4rpx;
+	background: #ffffff;
+}
+.og-back__tip {
+	position: absolute;
+	left: 2rpx;
+	top: 6rpx;
+	width: 26rpx;
+	height: 4rpx;
+	border-radius: 4rpx;
+	background: #ffffff;
+	transform: rotate(32deg);
+	transform-origin: left bottom;
+}
+.og-back__tip--2 {
+	top: 38rpx;
+	transform: rotate(-32deg);
+}
+.og-nav__idx {
+	font-size: 22rpx;
+	color: rgba(255, 255, 255, 0.6);
+	letter-spacing: 2rpx;
+}
+.og-crown__body {
+	position: relative;
+	padding: 32rpx 48rpx 0;
+}
+.og-eyebrow {
+	display: block;
+	font-size: 22rpx;
+	color: rgba(255, 255, 255, 0.62);
+	letter-spacing: 3rpx;
+	margin-bottom: 14rpx;
+}
+.og-title {
+	display: block;
+	font-size: 52rpx;
+	font-weight: 600;
+	color: #ffffff;
+	line-height: 1.3;
+	margin-bottom: 12rpx;
+}
+.og-lead {
+	display: block;
+	font-size: 25rpx;
+	line-height: 1.7;
+	color: rgba(255, 255, 255, 0.75);
+	max-width: 520rpx;
+}
+
+/* ---------- 主体与悬浮卡片 ---------- */
+.og-main {
+	position: relative;
+	z-index: 2;
+	flex: 1;
+	padding: 0 40rpx;
+	margin-top: -112rpx;
+}
+.og-card {
+	background: $card;
+	border-radius: 32rpx;
+	box-shadow: 0 20rpx 48rpx rgba(63, 93, 69, 0.14);
+	padding: 40rpx 32rpx 44rpx;
+	animation: og-rise 420ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes og-rise {
+	from {
+		opacity: 0;
+		transform: translateY(28rpx);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* ---------- 叶形分段器 ---------- */
+.og-leaves {
+	display: flex;
+	gap: 8rpx;
+	background: rgba(107, 143, 113, 0.12);
+	padding: 8rpx;
+	border-radius: 24rpx 8rpx 24rpx 8rpx;
+	margin-bottom: 16rpx;
+}
+.og-leaf {
+	flex: 1;
+	text-align: center;
+	font-size: 26rpx;
+	color: $deep;
+	padding: 16rpx 0;
+	border-radius: 0 20rpx 0 20rpx;
+	transition: background 160ms ease-out, color 160ms ease-out, box-shadow 160ms ease-out;
+}
+.og-leaf:nth-child(2) {
+	border-radius: 20rpx 0 20rpx 0;
+}
+.og-leaf.on {
+	background: $green;
+	color: #ffffff;
+	font-weight: 600;
+	box-shadow: 0 8rpx 16rpx rgba(63, 93, 69, 0.28);
+}
+
+/* ---------- 表单与浮动标签 ---------- */
+.og-form {
+	display: block;
+}
+.og-field {
+	position: relative;
+	margin-top: 56rpx;
+}
+.og-label {
+	position: absolute;
+	left: 28rpx;
+	top: 48rpx;
+	transform: translateY(-50%);
+	font-size: 26rpx;
+	color: $dim;
+	pointer-events: none;
+	transition: top 180ms cubic-bezier(0.2, 0.7, 0.2, 1), font-size 180ms ease-out, color 180ms ease-out;
+}
+.og-field.is-float .og-label {
+	top: -26rpx;
+	transform: none;
+	font-size: 22rpx;
+	color: $deep;
+	font-weight: 600;
+}
+.og-input,
+.og-inputrow {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	height: 96rpx;
+	box-sizing: border-box;
+	background: $field;
+	border: 2rpx solid transparent;
+	border-radius: 20rpx;
+	padding: 0 28rpx;
+	transition: background 160ms ease-out, border-color 160ms ease-out, box-shadow 160ms ease-out;
+}
+.og-inputrow .og-input {
+	width: auto;
+	flex: 1;
+	border: none;
+	padding: 0;
+	background: transparent;
+	height: 100%;
+}
+.og-input {
+	font-size: 28rpx;
+	color: $ink;
+	background-color: $field;
+	background-image: none;
+	border-radius: 20rpx;
+	margin: 0;
+	appearance: none;
+}
+.og-field .og-input {
+	background-color: $field;
+}
+.og-field.is-float .og-input,
+.og-field.is-float .og-inputrow {
+	background: #ffffff;
+	border-color: $green;
+	box-shadow: 0 4rpx 16rpx rgba(63, 93, 69, 0.08);
+}
+.og-field.is-error .og-input,
+.og-field.is-error .og-inputrow {
+	border-color: $err;
+}
+.og-input--num {
+	font-family: 'Courier New', Consolas, monospace;
+	letter-spacing: 2rpx;
+}
+.og-suffix {
+	flex: none;
+	font-size: 24rpx;
+	color: $deep;
+	padding: 8rpx 0 8rpx 20rpx;
+	border-left: 2rpx solid rgba(107, 143, 113, 0.25);
+	margin-left: 20rpx;
+}
+.og-suffix.on {
+	font-weight: 600;
+}
+.og-suffix--code.off {
+	color: $dim;
+	opacity: 0.55;
+}
+.og-err {
+	display: block;
+	font-size: 22rpx;
+	color: $err;
+	margin: 10rpx 0 0 28rpx;
+}
+.og-tip {
+	display: block;
+	font-size: 22rpx;
+	color: $dim;
+	margin: 10rpx 0 0 28rpx;
+}
+.og-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin: 32rpx 0 36rpx;
+}
+
+/* ---------- 勾选 ---------- */
+.og-check {
+	display: flex;
+	align-items: flex-start;
+	margin-top: 24rpx;
+}
+.og-check--inline {
+	margin-top: 0;
+}
+.og-check__box {
+	flex: none;
+	width: 32rpx;
+	height: 32rpx;
+	border: 2rpx solid #b9c4ae;
+	border-radius: 10rpx 4rpx 10rpx 4rpx;
+	margin-right: 14rpx;
+	margin-top: 2rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background 140ms ease-out, border-color 140ms ease-out;
+}
+.og-check__box.on {
+	background: $green;
+	border-color: $green;
+}
+.og-check__tick {
+	width: 14rpx;
+	height: 20rpx;
+	border-right: 4rpx solid #ffffff;
+	border-bottom: 4rpx solid #ffffff;
+	transform: rotate(45deg) scale(0);
+	margin-top: -6rpx;
+	transition: transform 140ms ease-out;
+}
+.og-check__box.on .og-check__tick {
+	transform: rotate(45deg) scale(1);
+}
+.og-check__txt {
+	font-size: 24rpx;
+	color: $dim;
+	line-height: 1.6;
+}
+.og-check__link {
+	color: $deep;
+}
+.og-link {
+	font-size: 25rpx;
+	color: $deep;
+	font-weight: 600;
+}
+.og-link--soft {
+	color: $dim;
+	font-weight: 400;
+}
+
+/* ---------- 叶形按钮 ---------- */
+.og-btn {
+	margin-top: 40rpx;
+	font-size: 30rpx;
+	font-weight: 600;
+	letter-spacing: 6rpx;
+	color: #ffffff;
+	background: linear-gradient(135deg, $green 0%, $deep 100%);
+	border-radius: 56rpx 16rpx 56rpx 16rpx;
+	box-shadow: 0 12rpx 24rpx rgba(63, 93, 69, 0.28);
+	padding: 28rpx 0;
+	text-align: center;
+	transition: transform 120ms ease-out, box-shadow 120ms ease-out, opacity 120ms ease-out;
+}
+.og-btn:active {
+	transform: scale(0.97);
+	box-shadow: 0 6rpx 12rpx rgba(63, 93, 69, 0.24);
+}
+.og-btn.is-busy {
+	opacity: 0.6;
+}
+.og-btn--ghost {
+	margin-top: 24rpx;
+	background: transparent;
+	color: $deep;
+	border: 2rpx solid rgba(107, 143, 113, 0.5);
+	box-shadow: none;
+}
+
+/* ---------- 第三方登录 ---------- */
+.og-alt {
+	margin-top: 44rpx;
+}
+.og-alt__hint {
+	display: block;
+	text-align: center;
+	font-size: 22rpx;
+	color: $dim;
+	margin-bottom: 20rpx;
+}
+.og-alt__row {
+	display: flex;
+	justify-content: center;
+	gap: 40rpx;
+}
+.og-alt__i {
+	font-size: 24rpx;
+	color: $deep;
+	padding: 14rpx 36rpx;
+	background: rgba(107, 143, 113, 0.1);
+	border-radius: 32rpx 12rpx 32rpx 12rpx;
+}
+.og-alt__i:active {
+	transform: scale(0.95);
+}
+
+/* ---------- 藤蔓步骤 ---------- */
+.og-vine {
+	display: flex;
+	align-items: center;
+	margin-bottom: 16rpx;
+}
+.og-vine__seed {
+	display: flex;
+	align-items: center;
+}
+.og-vine__dot {
+	width: 32rpx;
+	height: 32rpx;
+	border: 2rpx solid rgba(107, 143, 113, 0.5);
+	border-radius: 50% 50% 50% 4rpx;
+	margin-right: 10rpx;
+	transition: background 200ms ease-out, border-color 200ms ease-out;
+}
+.og-vine__seed.done .og-vine__dot {
+	background: $green;
+	border-color: $green;
+}
+.og-vine__seed.on .og-vine__dot {
+	background: #cfe0c6;
+	border-color: $green;
+}
+.og-vine__txt {
+	font-size: 24rpx;
+	color: $dim;
+}
+.og-vine__seed.on .og-vine__txt {
+	color: $deep;
+	font-weight: 600;
+}
+.og-vine__stem {
+	flex: 1;
+	height: 0;
+	border-top: 3rpx dashed #b9c4ae;
+	margin: 0 20rpx;
+	transition: border-color 240ms ease-out;
+}
+.og-vine__stem.grow {
+	border-top-style: solid;
+	border-color: $green;
+}
+
+/* ---------- 安全提示 ---------- */
+.og-note {
+	margin-top: 44rpx;
+	background: rgba(107, 143, 113, 0.1);
+	border-radius: 20rpx;
+	padding: 26rpx 28rpx;
+}
+.og-note__h {
+	display: block;
+	font-size: 24rpx;
+	font-weight: 600;
+	color: $deep;
+	margin-bottom: 8rpx;
+}
+.og-note__txt {
+	display: block;
+	font-size: 22rpx;
+	line-height: 1.7;
+	color: $dim;
+}
+
+/* ---------- 底部草坡 ---------- */
+.og-foot {
+	flex: none;
+	margin-top: 56rpx;
+}
+.og-foot__hill {
+	background: #e9efdf;
+	border-radius: 60% 40% 0 0 / 56rpx 44rpx 0 0;
+	padding: 44rpx 48rpx 36rpx;
+}
+.og-foot__row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 12rpx;
+}
+.og-foot__txt {
+	font-size: 24rpx;
+	color: $dim;
+}
+.og-copy {
+	display: block;
+	font-size: 20rpx;
+	color: #a8b3a0;
+	letter-spacing: 1rpx;
+}

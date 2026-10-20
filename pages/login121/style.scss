@@ -1,0 +1,663 @@
+/* ==========================================================================
+ * 主题 16 · 手绘涂鸦 Doodle（重制版）
+ * pages/login121 —— 登录 / 注册 / 找回密码 三页共用
+ *
+ * 设计依据：docs/theme-styles.md 第 16 条
+ *   色板    $bg #FFFDF7 / $ink #2B2B2B / $acc #FF6B6B / 便签黄 #FFE66D / 便签蓝 #A8DADC
+ *   布局    横线手账纸（repeating-linear-gradient 横格 + 左侧红色装订线 + 打孔），
+ *           表单住在一张微微歪斜、胶带固定的白色便签卡上；登录方式是三张
+ *           歪斜彩签贴纸，选中回正；按钮是「盖章」——按下位移 + 阴影归零。
+ *   交互    聚焦时输入框下方长出手绘波浪线；贴纸 Tab 各自带随机初始旋转；
+ *           盖章按钮 active 位移旋转；勾选框是手绘圆圈 + 潦草对勾。
+ *   兼容    纯 CSS，无图片、无 filter、无 backdrop-filter，全端安全。
+ * ========================================================================== */
+
+/* ---------- 设计令牌 ---------- */
+$bg: #fffdf7;
+$paper-line: #f1e9d7;
+$ink: #2b2b2b;
+$dim: #8c8478;
+$dim-2: #b9af9e;
+$acc: #ff6b6b;
+$yellow: #ffe66d;
+$blue: #a8dadc;
+$line: #e4dac6;
+$hand: 'Kaiti SC', 'STKaiti', 'KaiTi', '楷体', 'Yuanti SC', sans-serif;
+
+/* ---------- 纸面 ---------- */
+.dd-page {
+	position: relative;
+	min-height: 100vh;
+	box-sizing: border-box;
+	background-color: $bg;
+	background-image: repeating-linear-gradient(
+		to bottom,
+		transparent 0,
+		transparent 55rpx,
+		$paper-line 55rpx,
+		$paper-line 56rpx
+	);
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+}
+
+/* 红色装订线 */
+.dd-margin {
+	position: absolute;
+	z-index: 1;
+	left: 88rpx;
+	top: 0;
+	bottom: 0;
+	width: 2rpx;
+	background: rgba(255, 107, 107, 0.35);
+	pointer-events: none;
+}
+
+/* 打孔 */
+.dd-holes {
+	position: absolute;
+	z-index: 1;
+	left: 28rpx;
+	top: 220rpx;
+	bottom: 220rpx;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	pointer-events: none;
+}
+.dd-hole {
+	width: 28rpx;
+	height: 28rpx;
+	border-radius: 50%;
+	background: #f0e6d2;
+	box-shadow: inset 2rpx 2rpx 4rpx rgba(0, 0, 0, 0.12), 0 1rpx 0 #ffffff;
+}
+
+/* ---------- 涂鸦装饰（不压正文） ---------- */
+.dd-deco {
+	position: absolute;
+	z-index: 1;
+	pointer-events: none;
+}
+.dd-deco--star {
+	top: 180rpx;
+	right: 56rpx;
+	width: 72rpx;
+	height: 72rpx;
+	background: rgba(255, 230, 109, 0.75);
+	clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+	transform: rotate(14deg);
+}
+.dd-deco--wave {
+	top: 300rpx;
+	right: 140rpx;
+	width: 176rpx;
+	height: 24rpx;
+	background-image: radial-gradient(circle at 12rpx 22rpx, transparent 9rpx, rgba(168, 218, 220, 0.9) 9rpx 11rpx, transparent 11rpx);
+	background-size: 24rpx 24rpx;
+	background-repeat: repeat-x;
+	transform: rotate(-4deg);
+}
+.dd-deco--cross {
+	bottom: 260rpx;
+	left: 150rpx;
+	width: 36rpx;
+	height: 36rpx;
+	opacity: 0.55;
+}
+.dd-deco--cross::before,
+.dd-deco--cross::after {
+	content: '';
+	position: absolute;
+	left: 50%;
+	top: 0;
+	width: 4rpx;
+	height: 100%;
+	margin-left: -2rpx;
+	border-radius: 4rpx;
+	background: $acc;
+}
+.dd-deco--cross::before {
+	transform: rotate(45deg);
+}
+.dd-deco--cross::after {
+	transform: rotate(-45deg);
+}
+
+/* ---------- 状态栏 / 导航 ---------- */
+.dd-status {
+	flex: none;
+}
+.dd-nav {
+	flex: none;
+	position: relative;
+	z-index: 2;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 16rpx 32rpx 8rpx 48rpx;
+}
+.dd-back {
+	position: relative;
+	width: 64rpx;
+	height: 48rpx;
+	transform: rotate(-2deg);
+}
+.dd-back__line {
+	position: absolute;
+	left: 0;
+	top: 22rpx;
+	width: 44rpx;
+	height: 4rpx;
+	border-radius: 4rpx;
+	background: $ink;
+}
+.dd-back__tip {
+	position: absolute;
+	left: 2rpx;
+	top: 6rpx;
+	width: 26rpx;
+	height: 4rpx;
+	border-radius: 4rpx;
+	background: $ink;
+	transform: rotate(32deg);
+	transform-origin: left bottom;
+}
+.dd-back__tip--2 {
+	top: 38rpx;
+	transform: rotate(-32deg);
+}
+.dd-nav__idx {
+	font-family: $hand;
+	font-size: 24rpx;
+	color: $dim;
+	transform: rotate(-1deg);
+}
+
+/* ---------- 主体 ---------- */
+.dd-main {
+	position: relative;
+	z-index: 2;
+	flex: 1;
+	padding: 16rpx 48rpx 32rpx 112rpx;
+	display: flex;
+	flex-direction: column;
+}
+.dd-head {
+	margin-bottom: 40rpx;
+}
+.dd-eyebrow {
+	display: block;
+	font-family: $hand;
+	font-size: 24rpx;
+	color: $dim;
+	letter-spacing: 2rpx;
+	transform: rotate(-1.2deg);
+	margin-bottom: 12rpx;
+}
+.dd-title {
+	display: inline-block;
+	font-family: $hand;
+	font-size: 64rpx;
+	font-weight: 700;
+	color: $ink;
+	letter-spacing: 4rpx;
+	transform: rotate(-2deg);
+	position: relative;
+	margin-bottom: 16rpx;
+}
+.dd-title::after {
+	content: '';
+	position: absolute;
+	left: 4rpx;
+	right: -8rpx;
+	bottom: -6rpx;
+	height: 16rpx;
+	background-image: radial-gradient(circle at 10rpx 0rpx, transparent 7rpx, rgba(255, 107, 107, 0.55) 7rpx 9rpx, transparent 9rpx);
+	background-size: 20rpx 16rpx;
+	background-repeat: repeat-x;
+}
+.dd-lead {
+	display: block;
+	font-family: $hand;
+	font-size: 26rpx;
+	line-height: 1.7;
+	color: $dim;
+	transform: rotate(-0.6deg);
+}
+
+/* ---------- 便签卡 ---------- */
+.dd-note {
+	position: relative;
+	background: #ffffff;
+	border: 3rpx solid $ink;
+	border-radius: 8rpx;
+	box-shadow: 8rpx 10rpx 0 rgba(43, 43, 43, 0.1);
+	transform: rotate(-1.2deg);
+	padding: 48rpx 32rpx 32rpx;
+	margin-top: 8rpx;
+	animation: dd-drop 360ms ease-out both;
+}
+@keyframes dd-drop {
+	from {
+		opacity: 0;
+		transform: rotate(-3.5deg) translateY(-16rpx) scale(0.96);
+	}
+	to {
+		opacity: 1;
+		transform: rotate(-1.2deg) translateY(0) scale(1);
+	}
+}
+.dd-note__tape {
+	position: absolute;
+	top: -16rpx;
+	width: 120rpx;
+	height: 36rpx;
+	background: rgba(255, 230, 109, 0.78);
+	box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.06);
+}
+.dd-note__tape--l {
+	left: 56rpx;
+	transform: rotate(-6deg);
+}
+.dd-note__tape--r {
+	right: 56rpx;
+	transform: rotate(5deg);
+}
+
+/* ---------- 贴纸 Tab ---------- */
+.dd-stickers {
+	display: flex;
+	align-items: flex-end;
+	gap: 16rpx;
+	margin-bottom: 40rpx;
+}
+.dd-sticker {
+	font-family: $hand;
+	font-size: 28rpx;
+	font-weight: 700;
+	color: $ink;
+	padding: 12rpx 28rpx;
+	border: 2rpx solid $ink;
+	border-radius: 4rpx;
+	background: #fff;
+	transition: transform 160ms ease-out, box-shadow 160ms ease-out;
+}
+.dd-sticker--0 {
+	background: $yellow;
+	transform: rotate(-3deg);
+}
+.dd-sticker--1 {
+	background: $blue;
+	transform: rotate(2deg);
+}
+.dd-sticker--2 {
+	background: rgba(255, 107, 107, 0.28);
+	transform: rotate(-1.5deg);
+}
+.dd-sticker.on {
+	transform: rotate(0deg) translateY(-6rpx);
+	box-shadow: 4rpx 4rpx 0 $ink;
+}
+
+/* ---------- 表单 ---------- */
+.dd-form {
+	display: block;
+}
+.dd-field {
+	margin-bottom: 36rpx;
+}
+.dd-label {
+	display: inline-block;
+	font-family: $hand;
+	font-size: 26rpx;
+	font-weight: 700;
+	color: $ink;
+	margin-bottom: 4rpx;
+	transform: rotate(-0.8deg);
+	position: relative;
+	padding-left: 24rpx;
+}
+.dd-label::before {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 50%;
+	margin-top: -7rpx;
+	width: 14rpx;
+	height: 14rpx;
+	border-radius: 50%;
+	background: $acc;
+}
+.dd-control {
+	position: relative;
+	display: flex;
+	align-items: center;
+	border-bottom: 2rpx dashed #cfc5ac;
+	padding: 16rpx 4rpx 14rpx;
+	transition: border-color 160ms ease-out;
+}
+.dd-control.is-focus {
+	border-bottom: 2rpx solid $ink;
+}
+.dd-control.is-focus::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: -10rpx;
+	height: 12rpx;
+	background-image: radial-gradient(circle at 8rpx 0rpx, transparent 5rpx, rgba(255, 107, 107, 0.6) 5rpx 7rpx, transparent 7rpx);
+	background-size: 16rpx 12rpx;
+	background-repeat: repeat-x;
+}
+.dd-control.is-error {
+	border-bottom-color: $acc;
+}
+.dd-input {
+	flex: 1;
+	min-width: 0;
+	height: 48rpx;
+	font-size: 28rpx;
+	color: $ink;
+	background-color: transparent;
+	background-image: none;
+	border: none;
+	border-radius: 0;
+	padding: 0;
+	margin: 0;
+	appearance: none;
+	box-sizing: border-box;
+}
+.dd-input--num {
+	font-family: 'Courier New', Consolas, monospace;
+	letter-spacing: 2rpx;
+}
+.dd-chip {
+	flex: none;
+	font-family: $hand;
+	font-size: 24rpx;
+	color: $acc;
+	padding: 6rpx 16rpx;
+	margin-left: 16rpx;
+	border: 2rpx solid rgba(255, 107, 107, 0.5);
+	border-radius: 20rpx;
+	transform: rotate(2deg);
+}
+.dd-chip.on {
+	background: rgba(255, 230, 109, 0.5);
+	border-color: $ink;
+	color: $ink;
+}
+.dd-chip.off {
+	opacity: 0.45;
+}
+.dd-err {
+	display: block;
+	font-family: $hand;
+	font-size: 24rpx;
+	color: $acc;
+	margin-top: 10rpx;
+	transform: rotate(-1deg);
+}
+.dd-tip {
+	display: block;
+	font-family: $hand;
+	font-size: 22rpx;
+	color: $dim-2;
+	margin-top: 10rpx;
+}
+.dd-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin: 8rpx 0 32rpx;
+}
+
+/* ---------- 手绘勾选框 ---------- */
+.dd-check {
+	display: flex;
+	align-items: center;
+	margin-top: 24rpx;
+}
+.dd-check--inline {
+	margin-top: 0;
+}
+.dd-check__circle {
+	flex: none;
+	width: 34rpx;
+	height: 34rpx;
+	border: 2rpx solid $ink;
+	border-radius: 50% 46% 52% 48%;
+	margin-right: 14rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: transparent;
+	transition: background 140ms ease-out;
+}
+.dd-check__circle.on {
+	background: $yellow;
+}
+.dd-check__tick {
+	width: 14rpx;
+	height: 22rpx;
+	border-right: 4rpx solid $ink;
+	border-bottom: 4rpx solid $ink;
+	transform: rotate(45deg) scale(0);
+	margin-top: -6rpx;
+	transition: transform 140ms ease-out;
+}
+.dd-check__circle.on .dd-check__tick {
+	transform: rotate(45deg) scale(1);
+}
+.dd-check__txt {
+	font-family: $hand;
+	font-size: 24rpx;
+	color: $dim;
+	line-height: 1.6;
+}
+.dd-check__link {
+	color: $acc;
+}
+.dd-link {
+	font-family: $hand;
+	font-size: 26rpx;
+	color: $acc;
+	font-weight: 700;
+}
+.dd-link--soft {
+	color: $dim;
+	font-weight: 400;
+}
+
+/* ---------- 盖章按钮 ---------- */
+.dd-stamp {
+	font-family: $hand;
+	font-size: 34rpx;
+	font-weight: 700;
+	letter-spacing: 6rpx;
+	color: #ffffff;
+	background: $acc;
+	border: 3rpx solid $ink;
+	border-radius: 6rpx;
+	box-shadow: 6rpx 6rpx 0 $ink;
+	padding: 24rpx 0;
+	text-align: center;
+	margin-top: 16rpx;
+	transform: rotate(-0.8deg);
+	transition: transform 90ms ease-out, box-shadow 90ms ease-out, opacity 120ms ease-out;
+}
+.dd-stamp:active {
+	transform: rotate(1deg) translate(6rpx, 6rpx);
+	box-shadow: 0 0 0 $ink;
+}
+.dd-stamp.is-busy {
+	opacity: 0.6;
+}
+.dd-stamp--ghost {
+	background: #ffffff;
+	color: $ink;
+	margin-top: 24rpx;
+	box-shadow: 6rpx 6rpx 0 rgba(43, 43, 43, 0.25);
+}
+
+/* ---------- 第三方登录：手绘圆圈 ---------- */
+.dd-doodle-alt {
+	margin-top: 40rpx;
+}
+.dd-doodle-alt__hint {
+	display: block;
+	text-align: center;
+	font-family: $hand;
+	font-size: 22rpx;
+	color: $dim-2;
+	margin-bottom: 20rpx;
+}
+.dd-doodle-alt__row {
+	display: flex;
+	justify-content: center;
+	gap: 48rpx;
+}
+.dd-doodle-alt__i {
+	font-family: $hand;
+	font-size: 26rpx;
+	font-weight: 700;
+	color: $ink;
+	width: 112rpx;
+	height: 112rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 2rpx solid $ink;
+	background: #fff;
+}
+.dd-doodle-alt__i--a {
+	border-radius: 48% 52% 50% 50%;
+	transform: rotate(-2deg);
+}
+.dd-doodle-alt__i--b {
+	border-radius: 52% 48% 46% 54%;
+	transform: rotate(1.5deg);
+}
+.dd-doodle-alt__i--c {
+	border-radius: 50% 50% 52% 48%;
+	transform: rotate(-1deg);
+}
+.dd-doodle-alt__i:active {
+	transform: scale(0.94) rotate(0deg);
+}
+
+/* ---------- 步骤（找回密码） ---------- */
+.dd-steps {
+	display: flex;
+	align-items: center;
+	margin-bottom: 36rpx;
+}
+.dd-step {
+	display: flex;
+	align-items: center;
+}
+.dd-step__dot {
+	width: 40rpx;
+	height: 40rpx;
+	border: 2rpx solid $ink;
+	border-radius: 50% 46% 52% 48%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: #fff;
+	margin-right: 10rpx;
+}
+.dd-step.on .dd-step__dot {
+	background: $yellow;
+	box-shadow: 3rpx 3rpx 0 rgba(43, 43, 43, 0.3);
+}
+.dd-step__done {
+	font-size: 24rpx;
+	color: $ink;
+	font-weight: 700;
+}
+.dd-step__txt {
+	font-family: $hand;
+	font-size: 24rpx;
+	color: $dim;
+}
+.dd-step.on .dd-step__txt {
+	color: $ink;
+	font-weight: 700;
+}
+.dd-step__path {
+	flex: 1;
+	height: 0;
+	border-top: 3rpx dashed #cfc5ac;
+	margin: 0 16rpx;
+}
+
+/* ---------- 便利贴（安全提示） ---------- */
+.dd-sticky {
+	position: relative;
+	background: rgba(255, 230, 109, 0.55);
+	border-radius: 4rpx;
+	padding: 28rpx 24rpx 24rpx;
+	margin-top: 40rpx;
+	transform: rotate(1deg);
+}
+.dd-sticky__tape {
+	position: absolute;
+	top: -14rpx;
+	left: 50%;
+	margin-left: -60rpx;
+	width: 120rpx;
+	height: 30rpx;
+	background: rgba(168, 218, 220, 0.8);
+	transform: rotate(-3deg);
+}
+.dd-sticky__h {
+	display: block;
+	font-family: $hand;
+	font-size: 26rpx;
+	font-weight: 700;
+	color: $ink;
+	margin-bottom: 8rpx;
+}
+.dd-sticky__txt {
+	display: block;
+	font-family: $hand;
+	font-size: 22rpx;
+	line-height: 1.7;
+	color: #7a7261;
+}
+
+/* ---------- 页脚 ---------- */
+.dd-foot {
+	position: relative;
+	z-index: 2;
+	padding: 0 48rpx 40rpx 112rpx;
+}
+.dd-foot__wave {
+	height: 16rpx;
+	margin-bottom: 24rpx;
+	background-image: radial-gradient(circle at 12rpx 0rpx, transparent 7rpx, rgba(168, 218, 220, 0.8) 7rpx 9rpx, transparent 9rpx);
+	background-size: 24rpx 16rpx;
+	background-repeat: repeat-x;
+}
+.dd-foot__row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 12rpx;
+}
+.dd-foot__txt {
+	font-family: $hand;
+	font-size: 24rpx;
+	color: $dim;
+}
+.dd-copy {
+	display: block;
+	font-family: $hand;
+	font-size: 20rpx;
+	color: $dim-2;
+	letter-spacing: 1rpx;
+}

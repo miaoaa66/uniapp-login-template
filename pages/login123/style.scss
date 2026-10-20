@@ -1,0 +1,620 @@
+/* ==========================================================================
+ * 主题 14 · Y2K 千禧铬银（重制版）
+ * pages/login123 —— 登录 / 注册 / 找回密码 三页共用
+ *
+ * 设计依据：docs/theme-styles.md 第 14 条
+ *   色板    银灰渐变底 #C9D6E3→#F0F4F8 / 铬面三段 #E8EFF5→#FFF→#8A9BA8 /
+ *           正文 #1B2A38 / 荧光蓝 #7BE0FF / 荧光粉 #FF9EE6
+ *   布局    居中悬浮铬卡：三段式 linear-gradient 模拟反光 + 白色内描边 +
+ *           投影，浮在银色渐变天空上；背景散布泡泡（径向渐变圆）与四芒星
+ *           （十字渐变条），右侧一道竖排 Y2K 铭文——不再是 106~120 的满屏骨架。
+ *   交互    登录方式是「铬合金胶囊滑块」，银色滑块随 tab 平移；输入聚焦时
+ *           荧光蓝描边呼吸发光；主按钮为金属面，按下时一道高光斜扫而过；
+ *           星芒 twinkle 闪烁；找回密码步骤是「金属轨道 + 通电导线」。
+ *   兼容    金属感全部用渐变 + 阴影实现，无图片、无 backdrop-filter；文字
+ *           容器均为浅色底深字，对比度 ≥ 4.5:1。
+ * ========================================================================== */
+
+/* ---------- 设计令牌 ---------- */
+$ink: #1b2a38;
+$dim: #64798c;
+$dim-2: #8fa2b2;
+$chrome-hi: #f2f6fa;
+$chrome-mid: #d7e1ea;
+$chrome-lo: #9fafbd;
+$track: #aebecb;
+$blue: #7be0ff;
+$pink: #ff9ee6;
+$err: #d94f7a;
+
+/* ---------- 页面：银色天空 ---------- */
+.yk-page {
+	position: relative;
+	min-height: 100vh;
+	box-sizing: border-box;
+	background: linear-gradient(168deg, #c9d6e3 0%, #e9eff5 38%, #dbe5ee 68%, #c2d1df 100%);
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+/* 泡泡 */
+.yk-bubble {
+	position: absolute;
+	border-radius: 50%;
+	background: radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.4) 42%, rgba(255, 255, 255, 0.06) 70%);
+	pointer-events: none;
+	z-index: 1;
+}
+.yk-bubble--1 {
+	left: -80rpx;
+	top: 180rpx;
+	width: 280rpx;
+	height: 280rpx;
+}
+.yk-bubble--2 {
+	right: -60rpx;
+	top: 420rpx;
+	width: 200rpx;
+	height: 200rpx;
+	opacity: 0.7;
+}
+.yk-bubble--3 {
+	left: 60rpx;
+	bottom: 140rpx;
+	width: 120rpx;
+	height: 120rpx;
+	opacity: 0.5;
+}
+
+/* 四芒星：两根交叉渐变条 */
+.yk-spark {
+	position: absolute;
+	width: 40rpx;
+	height: 40rpx;
+	pointer-events: none;
+	z-index: 1;
+	animation: yk-twinkle 2.4s ease-in-out infinite;
+}
+.yk-spark::before,
+.yk-spark::after {
+	content: '';
+	position: absolute;
+	left: 50%;
+	top: 0;
+	width: 6rpx;
+	height: 100%;
+	margin-left: -3rpx;
+	border-radius: 6rpx;
+	background: linear-gradient(to bottom, rgba(255, 158, 230, 0), #ff9ee6 50%, rgba(255, 158, 230, 0));
+}
+.yk-spark::after {
+	transform: rotate(90deg);
+	background: linear-gradient(to right, rgba(123, 224, 255, 0), #7be0ff 50%, rgba(123, 224, 255, 0));
+}
+.yk-spark--1 {
+	right: 64rpx;
+	top: 200rpx;
+}
+.yk-spark--2 {
+	left: 72rpx;
+	top: 560rpx;
+	transform: scale(0.7);
+	animation-delay: 0.8s;
+}
+.yk-spark--3 {
+	right: 140rpx;
+	bottom: 220rpx;
+	transform: scale(0.85);
+	animation-delay: 1.5s;
+}
+@keyframes yk-twinkle {
+	0%,
+	100% {
+		opacity: 0.35;
+	}
+	50% {
+		opacity: 1;
+	}
+}
+
+/* 侧边竖排铭文 */
+.yk-side {
+	position: absolute;
+	z-index: 1;
+	right: -74rpx;
+	top: 300rpx;
+	font-size: 20rpx;
+	letter-spacing: 6rpx;
+	color: rgba(27, 42, 56, 0.28);
+	transform: rotate(90deg);
+	transform-origin: center;
+	white-space: nowrap;
+	pointer-events: none;
+}
+
+/* ---------- 导航 ---------- */
+.yk-status {
+	flex: none;
+}
+.yk-nav {
+	position: relative;
+	z-index: 2;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 16rpx 32rpx 8rpx;
+}
+.yk-back {
+	position: relative;
+	width: 64rpx;
+	height: 48rpx;
+	background: rgba(255, 255, 255, 0.6);
+	border: 2rpx solid rgba(255, 255, 255, 0.9);
+	border-radius: 999rpx;
+	box-shadow: 0 4rpx 10rpx rgba(27, 42, 56, 0.12);
+}
+.yk-back__line {
+	position: absolute;
+	left: 14rpx;
+	top: 22rpx;
+	width: 34rpx;
+	height: 4rpx;
+	border-radius: 4rpx;
+	background: $ink;
+}
+.yk-back__tip {
+	position: absolute;
+	left: 16rpx;
+	top: 8rpx;
+	width: 22rpx;
+	height: 4rpx;
+	border-radius: 4rpx;
+	background: $ink;
+	transform: rotate(34deg);
+	transform-origin: left bottom;
+}
+.yk-back__tip--2 {
+	top: 36rpx;
+	transform: rotate(-34deg);
+}
+.yk-nav__idx {
+	font-size: 22rpx;
+	color: $dim-2;
+	letter-spacing: 2rpx;
+}
+
+/* ---------- 悬浮铬卡 ---------- */
+.yk-main {
+	position: relative;
+	z-index: 2;
+	flex: 1;
+	padding: 24rpx 36rpx 0;
+}
+.yk-card {
+	background: linear-gradient(180deg, $chrome-hi 0%, #ffffff 40%, #c3d0dc 100%);
+	border: 2rpx solid rgba(255, 255, 255, 0.95);
+	border-radius: 40rpx;
+	box-shadow: 0 24rpx 48rpx rgba(27, 42, 56, 0.22),
+		inset 0 0 0 6rpx rgba(255, 255, 255, 0.6),
+		inset 0 -10rpx 20rpx rgba(138, 155, 168, 0.3);
+	padding: 44rpx 36rpx 40rpx;
+	animation: yk-float-in 380ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes yk-float-in {
+	from {
+		opacity: 0;
+		transform: translateY(24rpx) scale(0.97);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+}
+.yk-brand {
+	display: flex;
+	align-items: center;
+	margin-bottom: 10rpx;
+}
+.yk-brand__dot {
+	width: 14rpx;
+	height: 14rpx;
+	border-radius: 50%;
+	background: radial-gradient(circle at 34% 30%, #ffffff, #8fdcff 60%, #2fa8d8);
+	box-shadow: 0 0 10rpx rgba(123, 224, 255, 0.8);
+	margin-right: 12rpx;
+}
+.yk-brand__txt {
+	font-size: 20rpx;
+	letter-spacing: 3rpx;
+	color: $dim;
+}
+.yk-title {
+	display: block;
+	font-size: 44rpx;
+	font-weight: 700;
+	color: $ink;
+	letter-spacing: 2rpx;
+	margin-bottom: 32rpx;
+	text-shadow: 0 2rpx 0 #ffffff;
+}
+
+/* ---------- 铬合金胶囊滑块 ---------- */
+.yk-tabs {
+	position: relative;
+	display: flex;
+	background: linear-gradient(180deg, $track 0%, #8fa2b2 100%);
+	border-radius: 999rpx;
+	padding: 6rpx;
+	box-shadow: inset 0 4rpx 10rpx rgba(27, 42, 56, 0.3);
+	margin-bottom: 36rpx;
+}
+.yk-thumb {
+	position: absolute;
+	top: 6rpx;
+	bottom: 6rpx;
+	left: 6rpx;
+	width: calc((100% - 12rpx) / 3);
+	background: linear-gradient(180deg, #ffffff 0%, $chrome-mid 55%, #b4c2cf 100%);
+	border-radius: 999rpx;
+	box-shadow: 0 4rpx 10rpx rgba(27, 42, 56, 0.28), inset 0 2rpx 0 #ffffff;
+	transition: transform 220ms cubic-bezier(0.3, 0.8, 0.3, 1);
+}
+.yk-tab {
+	position: relative;
+	z-index: 1;
+	flex: 1;
+	text-align: center;
+	font-size: 26rpx;
+	color: #42566a;
+	padding: 18rpx 0;
+	transition: color 160ms ease-out;
+}
+.yk-tab.on {
+	color: $ink;
+	font-weight: 700;
+	text-shadow: 0 1rpx 0 #ffffff;
+}
+
+/* ---------- 表单 ---------- */
+.yk-form {
+	display: block;
+}
+.yk-field {
+	margin-bottom: 32rpx;
+}
+.yk-label {
+	display: flex;
+	align-items: center;
+	font-size: 22rpx;
+	letter-spacing: 2rpx;
+	color: $dim;
+	margin-bottom: 14rpx;
+}
+.yk-label__dot {
+	width: 12rpx;
+	height: 12rpx;
+	border-radius: 50%;
+	background: $blue;
+	box-shadow: 0 0 8rpx rgba(123, 224, 255, 0.7);
+	margin-right: 10rpx;
+}
+.yk-label__dot--pink {
+	background: $pink;
+	box-shadow: 0 0 8rpx rgba(255, 158, 230, 0.7);
+}
+.yk-control {
+	display: flex;
+	align-items: center;
+	height: 92rpx;
+	box-sizing: border-box;
+	background: rgba(255, 255, 255, 0.78);
+	border: 2rpx solid rgba(255, 255, 255, 0.95);
+	border-radius: 999rpx;
+	box-shadow: inset 0 -4rpx 8rpx rgba(138, 155, 168, 0.25);
+	padding: 0 32rpx;
+	transition: border-color 160ms ease-out, box-shadow 160ms ease-out;
+}
+.yk-control.is-focus {
+	border-color: $blue;
+	box-shadow: 0 0 0 4rpx rgba(123, 224, 255, 0.18), 0 0 18rpx rgba(123, 224, 255, 0.45);
+	animation: yk-breath 1.8s ease-in-out infinite alternate;
+}
+@keyframes yk-breath {
+	from {
+		box-shadow: 0 0 0 4rpx rgba(123, 224, 255, 0.14), 0 0 12rpx rgba(123, 224, 255, 0.35);
+	}
+	to {
+		box-shadow: 0 0 0 4rpx rgba(123, 224, 255, 0.24), 0 0 24rpx rgba(123, 224, 255, 0.55);
+	}
+}
+.yk-control.is-error {
+	border-color: $err;
+	box-shadow: 0 0 0 4rpx rgba(217, 79, 122, 0.14);
+}
+.yk-input {
+	flex: 1;
+	min-width: 0;
+	height: 100%;
+	font-size: 28rpx;
+	color: $ink;
+	background-color: transparent;
+	background-image: none;
+	border: none;
+	border-radius: 0;
+	padding: 0;
+	margin: 0;
+	appearance: none;
+	box-sizing: border-box;
+}
+.yk-input--num {
+	font-family: 'Courier New', Consolas, monospace;
+	letter-spacing: 2rpx;
+}
+.yk-suffix {
+	flex: none;
+	font-size: 24rpx;
+	color: #2c8db3;
+	padding-left: 20rpx;
+	margin-left: 16rpx;
+	border-left: 2rpx solid rgba(143, 162, 178, 0.35);
+}
+.yk-suffix.on {
+	font-weight: 700;
+}
+.yk-suffix--code.off {
+	color: $dim-2;
+	opacity: 0.55;
+}
+.yk-err {
+	display: block;
+	font-size: 22rpx;
+	color: $err;
+	margin: 10rpx 0 0 28rpx;
+}
+.yk-tip {
+	display: block;
+	font-size: 22rpx;
+	color: $dim-2;
+	margin: 10rpx 0 0 28rpx;
+}
+.yk-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin: 4rpx 0 32rpx;
+}
+
+/* ---------- 勾选 ---------- */
+.yk-check {
+	display: flex;
+	align-items: flex-start;
+	margin-top: 24rpx;
+}
+.yk-check--inline {
+	margin-top: 0;
+}
+.yk-check__box {
+	flex: none;
+	width: 32rpx;
+	height: 32rpx;
+	border: 2rpx solid $dim-2;
+	border-radius: 10rpx;
+	background: rgba(255, 255, 255, 0.8);
+	box-sizing: border-box;
+	margin-right: 14rpx;
+	margin-top: 2rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background 140ms ease-out, border-color 140ms ease-out, box-shadow 140ms ease-out;
+}
+.yk-check__box.on {
+	background: #eafaff;
+	border-color: $blue;
+	box-shadow: 0 0 10rpx rgba(123, 224, 255, 0.5);
+}
+.yk-check__tick {
+	width: 14rpx;
+	height: 20rpx;
+	border-right: 4rpx solid #2c8db3;
+	border-bottom: 4rpx solid #2c8db3;
+	transform: rotate(45deg) scale(0);
+	margin-top: -6rpx;
+	transition: transform 140ms ease-out;
+}
+.yk-check__box.on .yk-check__tick {
+	transform: rotate(45deg) scale(1);
+}
+.yk-check__txt {
+	font-size: 24rpx;
+	color: $dim;
+	line-height: 1.6;
+}
+.yk-check__link {
+	color: #2c8db3;
+}
+.yk-link {
+	font-size: 25rpx;
+	color: #2c8db3;
+	font-weight: 600;
+}
+.yk-link--soft {
+	color: $dim;
+	font-weight: 400;
+}
+
+/* ---------- 金属扫光按钮 ---------- */
+.yk-btn {
+	position: relative;
+	overflow: hidden;
+	margin-top: 8rpx;
+	font-size: 30rpx;
+	font-weight: 700;
+	letter-spacing: 4rpx;
+	color: $ink;
+	background: linear-gradient(180deg, #f6f9fb 0%, $chrome-mid 45%, $chrome-lo 100%);
+	border: 2rpx solid #ffffff;
+	border-radius: 999rpx;
+	box-shadow: 0 12rpx 24rpx rgba(27, 42, 56, 0.26), inset 0 2rpx 0 #ffffff;
+	padding: 28rpx 0;
+	text-align: center;
+	transition: transform 100ms ease-out, box-shadow 100ms ease-out, opacity 120ms ease-out;
+}
+.yk-btn::after {
+	content: '';
+	position: absolute;
+	top: -10rpx;
+	bottom: -10rpx;
+	left: -55%;
+	width: 44%;
+	background: linear-gradient(105deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.85) 50%, rgba(255, 255, 255, 0) 100%);
+	transform: skewX(-18deg);
+}
+.yk-btn:active {
+	transform: translateY(4rpx);
+	box-shadow: 0 6rpx 12rpx rgba(27, 42, 56, 0.24), inset 0 2rpx 0 #ffffff;
+}
+.yk-btn:active::after {
+	animation: yk-shine 520ms ease-out;
+}
+@keyframes yk-shine {
+	from {
+		left: -55%;
+	}
+	to {
+		left: 115%;
+	}
+}
+.yk-btn.is-busy {
+	opacity: 0.6;
+}
+.yk-btn--ghost {
+	margin-top: 24rpx;
+	background: transparent;
+	border-color: rgba(143, 162, 178, 0.5);
+	box-shadow: none;
+	color: $dim;
+}
+.yk-btn--ghost::after {
+	display: none;
+}
+
+/* ---------- 第三方登录 ---------- */
+.yk-alt {
+	display: flex;
+	justify-content: center;
+	gap: 28rpx;
+	margin-top: 40rpx;
+}
+.yk-alt__i {
+	font-size: 24rpx;
+	color: $dim;
+	background: linear-gradient(180deg, #ffffff 0%, $chrome-mid 100%);
+	border: 2rpx solid rgba(255, 255, 255, 0.9);
+	border-radius: 999rpx;
+	padding: 14rpx 40rpx;
+	box-shadow: 0 6rpx 12rpx rgba(27, 42, 56, 0.12);
+}
+.yk-alt__i:active {
+	transform: scale(0.95);
+}
+
+/* ---------- 金属轨道步骤 ---------- */
+.yk-track {
+	display: flex;
+	align-items: center;
+	margin-bottom: 10rpx;
+}
+.yk-track__node {
+	width: 56rpx;
+	height: 56rpx;
+	border-radius: 50%;
+	background: linear-gradient(180deg, #e9eff5, $chrome-lo);
+	border: 2rpx solid #ffffff;
+	box-shadow: 0 4rpx 10rpx rgba(27, 42, 56, 0.2);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.yk-track__node.on {
+	background: linear-gradient(180deg, #ffffff, #c9f2ff);
+	border-color: $blue;
+	box-shadow: 0 0 14rpx rgba(123, 224, 255, 0.5);
+}
+.yk-track__node.done {
+	background: linear-gradient(180deg, #eafaff, #aee6f7);
+}
+.yk-track__num {
+	font-size: 22rpx;
+	font-weight: 700;
+	color: $dim;
+}
+.yk-track__node.on .yk-track__num,
+.yk-track__node.done .yk-track__num {
+	color: #1f7ea3;
+}
+.yk-track__wire {
+	flex: 1;
+	height: 6rpx;
+	margin: 0 16rpx;
+	border-radius: 6rpx;
+	background: linear-gradient(90deg, $track, #cfd9e2);
+}
+.yk-track__wire.live {
+	background: linear-gradient(90deg, $blue, #d9a8ef);
+	box-shadow: 0 0 8rpx rgba(123, 224, 255, 0.6);
+}
+.yk-track__legend {
+	display: flex;
+	justify-content: space-between;
+	font-size: 22rpx;
+	color: $dim;
+	margin-bottom: 28rpx;
+	padding: 0 6rpx;
+}
+
+/* ---------- 安全提示 ---------- */
+.yk-note {
+	margin-top: 40rpx;
+	background: rgba(255, 255, 255, 0.6);
+	border: 2rpx solid rgba(255, 255, 255, 0.9);
+	border-radius: 24rpx;
+	padding: 24rpx 28rpx;
+}
+.yk-note__h {
+	display: block;
+	font-size: 24rpx;
+	font-weight: 700;
+	color: $ink;
+	margin-bottom: 8rpx;
+}
+.yk-note__txt {
+	display: block;
+	font-size: 22rpx;
+	line-height: 1.7;
+	color: $dim;
+}
+
+/* ---------- 页脚 ---------- */
+.yk-foot {
+	position: relative;
+	z-index: 2;
+	padding: 32rpx 48rpx 40rpx;
+}
+.yk-foot__row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 12rpx;
+}
+.yk-foot__txt {
+	font-size: 24rpx;
+	color: $dim;
+}
+.yk-copy {
+	display: block;
+	font-size: 20rpx;
+	color: rgba(27, 42, 56, 0.35);
+	letter-spacing: 1rpx;
+}

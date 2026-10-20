@@ -1,0 +1,667 @@
+/* ==========================================================================
+ * 主题 19 · 工业机械 Industrial（重制版）
+ * pages/login125 —— 登录 / 注册 / 找回密码 三页共用
+ *
+ * 设计依据：docs/theme-styles.md 第 19 条
+ *   色板    底 #2B2E31 / 面板 #3A3E42 / 正文 #E8E8E8 / 警示黄 #F5C518 /
+ *           金属亮边 #6B7075 / 危险红 #D63A2F
+ *   布局    「设备操作台」：顶部是带四角铆钉的设备铭牌（型号 + 蚀刻标题），
+ *           铭牌下压一条细警示带；主体是金属厚度的控制柜（内高光 + 内暗边），
+ *           柜体右上角一列状态灯（PWR / ACT / ERR），底部刻度尺 + 宽警示带
+ *           收尾——整个页面像在操作一台机器，而非摆一张卡片。
+ *   交互    登录方式是「档位开关」：金属滑块沿三档轨道平移；输入框是凹槽
+ *           插槽（inset 阴影），聚焦时槽位亮起警示黄；主按钮是急停式大红
+ *           按钮，按下下沉 8rpx、底座阴影塌缩；提交时 ACT 灯闪烁、出错时
+ *           ERR 灯亮起；控制柜入场带一次机械「哐当」就位。
+ *   兼容    全部纯 CSS（渐变 + 阴影），无图片、无 filter；深灰底浅字对比度
+ *           约 8:1，安全。
+ * ========================================================================== */
+
+/* ---------- 设计令牌 ---------- */
+$bg: #2b2e31;
+$steel: #3a3e42;
+$slot: #2f3336;
+$ink: #e8e8e8;
+$dim: #9aa0a6;
+$dim-2: #5e646b;
+$metal: #6b7075;
+$dark: #1f2224;
+$yellow: #f5c518;
+$red: #d63a2f;
+$green: #58c06a;
+$mono: 'Courier New', Consolas, 'Roboto Mono', monospace;
+
+/* ---------- 页面：车间墙面 ---------- */
+.in-page {
+	position: relative;
+	min-height: 100vh;
+	box-sizing: border-box;
+	background-color: $bg;
+	background-image: repeating-linear-gradient(
+		45deg,
+		rgba(255, 255, 255, 0.012) 0,
+		rgba(255, 255, 255, 0.012) 2rpx,
+		transparent 2rpx,
+		transparent 8rpx
+	);
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+/* ---------- 导航 ---------- */
+.in-status {
+	flex: none;
+}
+.in-nav {
+	flex: none;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 16rpx 32rpx 8rpx;
+}
+.in-back {
+	position: relative;
+	width: 64rpx;
+	height: 48rpx;
+	background: $steel;
+	border: 1rpx solid $metal;
+	border-radius: 6rpx;
+	box-shadow: inset 0 2rpx 0 rgba(255, 255, 255, 0.08);
+}
+.in-back__line {
+	position: absolute;
+	left: 14rpx;
+	top: 22rpx;
+	width: 34rpx;
+	height: 4rpx;
+	border-radius: 2rpx;
+	background: $ink;
+}
+.in-back__tip {
+	position: absolute;
+	left: 16rpx;
+	top: 8rpx;
+	width: 22rpx;
+	height: 4rpx;
+	border-radius: 2rpx;
+	background: $ink;
+	transform: rotate(34deg);
+	transform-origin: left bottom;
+}
+.in-back__tip--2 {
+	top: 36rpx;
+	transform: rotate(-34deg);
+}
+.in-nav__idx {
+	font-family: $mono;
+	font-size: 22rpx;
+	color: $dim-2;
+	letter-spacing: 2rpx;
+}
+
+/* ---------- 设备铭牌 ---------- */
+.in-plate {
+	position: relative;
+	margin: 16rpx 40rpx 0;
+	background: linear-gradient(180deg, #33373b 0%, #26292d 100%);
+	border: 1rpx solid #55595e;
+	border-radius: 6rpx;
+	box-shadow: inset 0 2rpx 0 rgba(255, 255, 255, 0.07), inset 0 -4rpx 8rpx rgba(0, 0, 0, 0.4), 0 10rpx 24rpx rgba(0, 0, 0, 0.35);
+	padding: 32rpx 36rpx 30rpx;
+}
+.in-rivet {
+	position: absolute;
+	width: 16rpx;
+	height: 16rpx;
+	border-radius: 50%;
+	background: radial-gradient(circle at 34% 30%, #8d939a 0%, #4a4e53 55%, #232629 100%);
+	box-shadow: 0 1rpx 2rpx rgba(0, 0, 0, 0.6);
+}
+.in-rivet--tl {
+	left: 14rpx;
+	top: 14rpx;
+}
+.in-rivet--tr {
+	right: 14rpx;
+	top: 14rpx;
+}
+.in-rivet--bl {
+	left: 14rpx;
+	bottom: 14rpx;
+}
+.in-rivet--br {
+	right: 14rpx;
+	bottom: 14rpx;
+}
+.in-plate__code {
+	display: block;
+	font-family: $mono;
+	font-size: 20rpx;
+	letter-spacing: 3rpx;
+	color: $yellow;
+	margin-bottom: 12rpx;
+}
+.in-plate__title {
+	display: block;
+	font-family: $mono;
+	font-size: 46rpx;
+	font-weight: 700;
+	letter-spacing: 4rpx;
+	color: $ink;
+	text-shadow: 0 3rpx 0 rgba(0, 0, 0, 0.55), 0 -1rpx 0 rgba(255, 255, 255, 0.06);
+	margin-bottom: 12rpx;
+}
+.in-plate__sub {
+	display: block;
+	font-size: 24rpx;
+	line-height: 1.7;
+	color: $dim;
+}
+
+/* 警示带：细条 / 宽条 */
+.in-hazard {
+	flex: none;
+	background: repeating-linear-gradient(45deg, $yellow 0 18rpx, $dark 18rpx 36rpx);
+	border-top: 1rpx solid rgba(0, 0, 0, 0.5);
+	border-bottom: 1rpx solid rgba(0, 0, 0, 0.5);
+}
+.in-hazard--thin {
+	height: 10rpx;
+	margin: 18rpx 40rpx 0;
+	border-radius: 3rpx;
+}
+.in-hazard--band {
+	height: 26rpx;
+	margin: 40rpx 0 0;
+	opacity: 0.85;
+}
+
+/* ---------- 控制柜 ---------- */
+.in-cabinet {
+	position: relative;
+	margin: 32rpx 40rpx 0;
+	background: $steel;
+	border: 1rpx solid #23262a;
+	border-radius: 8rpx;
+	box-shadow: inset 0 2rpx 0 rgba(255, 255, 255, 0.08), inset 0 -4rpx 0 rgba(0, 0, 0, 0.35),
+		inset 3rpx 0 0 rgba(255, 255, 255, 0.04), inset -3rpx 0 0 rgba(0, 0, 0, 0.2),
+		0 14rpx 32rpx rgba(0, 0, 0, 0.4);
+	padding: 36rpx 30rpx 34rpx;
+	animation: in-clunk 320ms cubic-bezier(0.2, 0.9, 0.2, 1) both;
+}
+@keyframes in-clunk {
+	0% {
+		opacity: 0;
+		transform: translateY(-14rpx) rotate(0.4deg);
+	}
+	55% {
+		opacity: 1;
+		transform: translateY(3rpx) rotate(-0.2deg);
+	}
+	75% {
+		transform: translateY(-1rpx) rotate(0deg);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0) rotate(0deg);
+	}
+}
+
+/* 状态灯列 */
+.in-lamps {
+	position: absolute;
+	right: 24rpx;
+	top: 26rpx;
+	display: flex;
+	flex-direction: column;
+	gap: 16rpx;
+}
+.in-lamp {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.in-lamp__bulb {
+	width: 20rpx;
+	height: 20rpx;
+	border-radius: 50%;
+	background: #17191b;
+	border: 1rpx solid rgba(0, 0, 0, 0.6);
+	box-shadow: inset 0 2rpx 3rpx rgba(0, 0, 0, 0.6);
+	transition: background 160ms ease-out, box-shadow 160ms ease-out;
+}
+.in-lamp__bulb--pwr.on {
+	background: radial-gradient(circle at 34% 30%, #b9f2c4, $green 70%);
+	box-shadow: 0 0 10rpx rgba(88, 192, 106, 0.7);
+}
+.in-lamp__bulb--act.on {
+	background: radial-gradient(circle at 34% 30%, #ffe9a0, $yellow 70%);
+	box-shadow: 0 0 10rpx rgba(245, 197, 24, 0.8);
+	animation: in-blink 480ms step-end infinite alternate;
+}
+.in-lamp__bulb--err.on {
+	background: radial-gradient(circle at 34% 30%, #ffb3ab, $red 70%);
+	box-shadow: 0 0 10rpx rgba(214, 58, 47, 0.8);
+}
+@keyframes in-blink {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0.35;
+	}
+}
+.in-lamp__txt {
+	font-family: $mono;
+	font-size: 16rpx;
+	color: $dim-2;
+	letter-spacing: 1rpx;
+	margin-top: 4rpx;
+}
+
+/* ---------- 档位开关 ---------- */
+.in-gear {
+	position: relative;
+	display: flex;
+	background: $dark;
+	border: 1rpx solid #17191b;
+	border-radius: 6rpx;
+	box-shadow: inset 0 4rpx 10rpx rgba(0, 0, 0, 0.55);
+	padding: 6rpx;
+	margin-bottom: 36rpx;
+	margin-right: 96rpx;
+}
+.in-gear__knob {
+	position: absolute;
+	top: 6rpx;
+	bottom: 6rpx;
+	left: 6rpx;
+	width: calc((100% - 12rpx) / 3);
+	background: linear-gradient(180deg, #7b8188 0%, #565c62 50%, #43484d 100%);
+	border: 1rpx solid $metal;
+	border-radius: 5rpx;
+	box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.45), inset 0 2rpx 0 rgba(255, 255, 255, 0.18);
+	background-image: repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.18) 0 2rpx, transparent 2rpx 10rpx),
+		linear-gradient(180deg, #7b8188 0%, #565c62 50%, #43484d 100%);
+	transition: transform 200ms cubic-bezier(0.3, 0.8, 0.3, 1);
+}
+.in-gear__pos {
+	position: relative;
+	z-index: 1;
+	flex: 1;
+	text-align: center;
+	font-size: 25rpx;
+	color: $dim-2;
+	padding: 16rpx 0;
+	letter-spacing: 2rpx;
+	transition: color 160ms ease-out;
+}
+.in-gear__pos.on {
+	color: $yellow;
+	font-weight: 700;
+	text-shadow: 0 0 10rpx rgba(245, 197, 24, 0.4);
+}
+
+/* ---------- 表单：凹槽插槽 ---------- */
+.in-form {
+	display: block;
+}
+.in-field {
+	margin-bottom: 32rpx;
+}
+.in-field__bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 12rpx;
+	padding-right: 88rpx;
+}
+.in-label {
+	font-family: $mono;
+	font-size: 21rpx;
+	letter-spacing: 2rpx;
+	color: $dim;
+}
+.in-code {
+	font-family: $mono;
+	font-size: 18rpx;
+	color: $dim-2;
+	border: 1rpx solid $dim-2;
+	border-radius: 3rpx;
+	padding: 2rpx 8rpx;
+}
+.in-slot {
+	display: flex;
+	align-items: center;
+	height: 92rpx;
+	box-sizing: border-box;
+	background: $slot;
+	border: 1rpx solid #1a1d20;
+	border-radius: 4rpx;
+	box-shadow: inset 0 4rpx 10rpx rgba(0, 0, 0, 0.5), inset 0 -1rpx 0 rgba(255, 255, 255, 0.04);
+	padding: 0 28rpx;
+	transition: border-color 160ms ease-out, box-shadow 160ms ease-out;
+}
+.in-slot.is-focus {
+	border-color: $yellow;
+	box-shadow: inset 0 4rpx 10rpx rgba(0, 0, 0, 0.5), 0 0 0 3rpx rgba(245, 197, 24, 0.12), 0 0 14rpx rgba(245, 197, 24, 0.25);
+}
+.in-slot.is-error {
+	border-color: $red;
+	box-shadow: inset 0 4rpx 10rpx rgba(0, 0, 0, 0.5), 0 0 12rpx rgba(214, 58, 47, 0.3);
+}
+.in-input {
+	flex: 1;
+	min-width: 0;
+	height: 100%;
+	font-size: 28rpx;
+	color: $ink;
+	background-color: transparent;
+	background-image: none;
+	border: none;
+	border-radius: 0;
+	padding: 0;
+	margin: 0;
+	appearance: none;
+	box-sizing: border-box;
+}
+.in-input--num {
+	font-family: $mono;
+	letter-spacing: 3rpx;
+}
+.in-suffix {
+	flex: none;
+	font-family: $mono;
+	font-size: 23rpx;
+	color: $yellow;
+	padding-left: 20rpx;
+	margin-left: 16rpx;
+	border-left: 1rpx solid rgba(107, 112, 117, 0.4);
+}
+.in-suffix.on {
+	color: #ffffff;
+}
+.in-suffix--code.off {
+	color: $dim-2;
+	opacity: 0.6;
+}
+.in-err {
+	display: block;
+	font-family: $mono;
+	font-size: 22rpx;
+	color: #ff8d80;
+	margin: 10rpx 0 0 4rpx;
+}
+.in-tip {
+	display: block;
+	font-size: 22rpx;
+	color: $dim-2;
+	margin: 10rpx 0 0 4rpx;
+}
+.in-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin: 4rpx 0 32rpx;
+}
+
+/* ---------- 勾选 ---------- */
+.in-check {
+	display: flex;
+	align-items: flex-start;
+	margin-top: 24rpx;
+}
+.in-check--inline {
+	margin-top: 0;
+}
+.in-check__box {
+	flex: none;
+	width: 30rpx;
+	height: 30rpx;
+	border: 1rpx solid $metal;
+	border-radius: 3rpx;
+	background: $slot;
+	box-shadow: inset 0 2rpx 4rpx rgba(0, 0, 0, 0.45);
+	box-sizing: border-box;
+	margin-right: 14rpx;
+	margin-top: 2rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: border-color 140ms ease-out, box-shadow 140ms ease-out;
+}
+.in-check__box.on {
+	border-color: $yellow;
+	box-shadow: inset 0 2rpx 4rpx rgba(0, 0, 0, 0.45), 0 0 8rpx rgba(245, 197, 24, 0.35);
+}
+.in-check__tick {
+	width: 13rpx;
+	height: 19rpx;
+	border-right: 3rpx solid $yellow;
+	border-bottom: 3rpx solid $yellow;
+	transform: rotate(45deg) scale(0);
+	margin-top: -5rpx;
+	transition: transform 140ms ease-out;
+}
+.in-check__box.on .in-check__tick {
+	transform: rotate(45deg) scale(1);
+}
+.in-check__txt {
+	font-size: 24rpx;
+	color: $dim;
+	line-height: 1.6;
+}
+.in-check__link {
+	color: $yellow;
+}
+.in-link {
+	font-family: $mono;
+	font-size: 24rpx;
+	color: $yellow;
+}
+.in-link--soft {
+	color: $dim;
+}
+
+/* ---------- 急停式按钮 ---------- */
+.in-eStop {
+	font-family: $mono;
+	font-size: 30rpx;
+	font-weight: 700;
+	letter-spacing: 6rpx;
+	color: #ffffff;
+	text-shadow: 0 2rpx 3rpx rgba(0, 0, 0, 0.4);
+	background: linear-gradient(180deg, #e2493b 0%, $red 60%, #b52c21 100%);
+	border: 1rpx solid #8e241b;
+	border-radius: 8rpx;
+	box-shadow: 0 10rpx 0 #7e1f14, inset 0 2rpx 0 rgba(255, 255, 255, 0.25);
+	padding: 28rpx 0;
+	text-align: center;
+	margin-top: 8rpx;
+	transition: transform 80ms ease-out, box-shadow 80ms ease-out, opacity 120ms ease-out;
+}
+.in-eStop:active {
+	transform: translateY(8rpx);
+	box-shadow: 0 2rpx 0 #7e1f14, inset 0 2rpx 0 rgba(255, 255, 255, 0.2), inset 0 4rpx 10rpx rgba(0, 0, 0, 0.3);
+}
+.in-eStop.is-busy {
+	opacity: 0.65;
+}
+.in-eStop--go {
+	background: linear-gradient(180deg, #f7d45c 0%, $yellow 60%, #d1a50e 100%);
+	border-color: #a8830a;
+	box-shadow: 0 10rpx 0 #8a6b06, inset 0 2rpx 0 rgba(255, 255, 255, 0.35);
+	color: #2b2413;
+	text-shadow: none;
+}
+.in-eStop--go:active {
+	box-shadow: 0 2rpx 0 #8a6b06, inset 0 4rpx 10rpx rgba(0, 0, 0, 0.25);
+}
+.in-eStop--ghost {
+	margin-top: 24rpx;
+	background: $slot;
+	border-color: $metal;
+	box-shadow: 0 6rpx 0 #23262a, inset 0 2rpx 0 rgba(255, 255, 255, 0.06);
+	color: $dim;
+	letter-spacing: 2rpx;
+}
+.in-eStop--ghost:active {
+	box-shadow: 0 2rpx 0 #23262a, inset 0 4rpx 10rpx rgba(0, 0, 0, 0.3);
+}
+
+/* ---------- 刻度尺 ---------- */
+.in-ruler {
+	height: 18rpx;
+	margin: 40rpx 0 8rpx;
+	background: repeating-linear-gradient(
+		to right,
+		$metal 0 2rpx,
+		transparent 2rpx 24rpx
+	);
+	position: relative;
+	opacity: 0.5;
+}
+.in-ruler::before {
+	content: '';
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	height: 9rpx;
+	background: repeating-linear-gradient(
+		to right,
+		$metal 0 2rpx,
+		transparent 2rpx 96rpx
+	);
+}
+
+/* ---------- 第三方登录 ---------- */
+.in-alt {
+	display: flex;
+	justify-content: center;
+	gap: 24rpx;
+	margin-top: 28rpx;
+}
+.in-alt__i {
+	font-family: $mono;
+	font-size: 23rpx;
+	color: $dim;
+	background: $slot;
+	border: 1rpx solid $metal;
+	border-radius: 4rpx;
+	padding: 14rpx 36rpx;
+	box-shadow: inset 0 2rpx 0 rgba(255, 255, 255, 0.05), 0 4rpx 8rpx rgba(0, 0, 0, 0.3);
+}
+.in-alt__i:active {
+	transform: translateY(3rpx);
+	color: $yellow;
+}
+
+/* ---------- 管线步骤 ---------- */
+.in-pipe {
+	display: flex;
+	align-items: center;
+	margin-bottom: 10rpx;
+	margin-right: 96rpx;
+}
+.in-pipe__node {
+	width: 52rpx;
+	height: 52rpx;
+	border-radius: 6rpx;
+	background: $slot;
+	border: 1rpx solid $metal;
+	box-shadow: inset 0 2rpx 4rpx rgba(0, 0, 0, 0.4);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: border-color 200ms ease-out, box-shadow 200ms ease-out;
+}
+.in-pipe__node.on {
+	border-color: $yellow;
+	box-shadow: inset 0 2rpx 4rpx rgba(0, 0, 0, 0.4), 0 0 12rpx rgba(245, 197, 24, 0.35);
+}
+.in-pipe__node.done {
+	border-color: $green;
+	box-shadow: inset 0 2rpx 4rpx rgba(0, 0, 0, 0.4), 0 0 12rpx rgba(88, 192, 106, 0.4);
+}
+.in-pipe__num {
+	font-family: $mono;
+	font-size: 20rpx;
+	color: $dim-2;
+}
+.in-pipe__node.on .in-pipe__num {
+	color: $yellow;
+}
+.in-pipe__node.done .in-pipe__num {
+	color: $green;
+}
+.in-pipe__wire {
+	flex: 1;
+	height: 8rpx;
+	margin: 0 18rpx;
+	border-radius: 4rpx;
+	background: $dark;
+	box-shadow: inset 0 2rpx 4rpx rgba(0, 0, 0, 0.5);
+}
+.in-pipe__wire.live {
+	background: linear-gradient(90deg, $yellow, #ffd968);
+	box-shadow: 0 0 10rpx rgba(245, 197, 24, 0.5);
+}
+.in-pipe__legend {
+	display: flex;
+	justify-content: space-between;
+	font-family: $mono;
+	font-size: 21rpx;
+	color: $dim-2;
+	margin-bottom: 28rpx;
+	margin-right: 96rpx;
+	padding: 0 4rpx;
+}
+
+/* ---------- 检修手册 ---------- */
+.in-manual {
+	margin-top: 40rpx;
+	background: $slot;
+	border: 1rpx solid #23262a;
+	border-left: 6rpx solid $yellow;
+	border-radius: 4rpx;
+	padding: 24rpx 26rpx;
+}
+.in-manual__h {
+	display: block;
+	font-family: $mono;
+	font-size: 22rpx;
+	letter-spacing: 2rpx;
+	color: $yellow;
+	margin-bottom: 8rpx;
+}
+.in-manual__txt {
+	display: block;
+	font-size: 22rpx;
+	line-height: 1.7;
+	color: $dim;
+}
+
+/* ---------- 页脚 ---------- */
+.in-foot {
+	flex: none;
+	padding: 0 48rpx 40rpx;
+}
+.in-foot__row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 12rpx;
+}
+.in-foot__txt {
+	font-size: 24rpx;
+	color: $dim;
+}
+.in-copy {
+	display: block;
+	font-family: $mono;
+	font-size: 19rpx;
+	color: $dim-2;
+	letter-spacing: 1rpx;
+}

@@ -1,0 +1,604 @@
+/* ==========================================================================
+ * 主题 13 · 蒸汽波 Vaporwave（重制版）
+ * pages/login124 —— 登录 / 注册 / 找回密码 三页共用
+ *
+ * 设计依据：docs/theme-styles.md 第 13 条
+ *   色板    底 #1A0B2E / 粉 #FF6AD5 / 紫 #C774E8 / 蓝紫 #8795E8 / 亮蓝 #94D0FF
+ *   布局    「天地分屏」：上 44% 是四段渐变天空 + 左侧半出画面的条纹落日
+ *           （opacity .5，绝不压正文），下 56% 是 perspective + rotateX 的
+ *           透视网格并缓慢向下流动；表单面板骑在天与地的分界线上，深色
+ *           半透明底 + 霓虹描边保证可读——与 106~120 的满屏卡片完全不同。
+ *   交互    标题双色差（品红/青双 text-shadow）；登录方式是霓虹 chip，选中
+ *           外发光；输入聚焦青蓝描边 + 光晕；找回密码步骤是霓虹菱形节点 +
+ *           「通电导线」；叠加极淡扫描线（opacity .035）。
+ *   兼容    网格用 repeating-linear-gradient + 3D transform，无图片、无
+ *           filter、无 backdrop-filter；唯一动画是网格 background-position，
+ *           单元素低频，低端机可接受。
+ * ========================================================================== */
+
+/* ---------- 设计令牌 ---------- */
+$bg: #1a0b2e;
+$panel: rgba(20, 8, 38, 0.82);
+$ink: #e8ecff;
+$dim: rgba(232, 236, 255, 0.55);
+$pink: #ff6ad5;
+$purple: #c774e8;
+$bluev: #8795e8;
+$cyan: #94d0ff;
+$err: #ff8fb8;
+
+/* ---------- 页面骨架 ---------- */
+.vp-page {
+	position: relative;
+	min-height: 100vh;
+	box-sizing: border-box;
+	background: $bg;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+/* ---------- 天空 ---------- */
+.vp-sky {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	height: 44%;
+	background: linear-gradient(180deg, #2b1055 0%, #5b2a9d 38%, #b14fd8 76%, #ff6ad5 100%);
+	overflow: hidden;
+	z-index: 0;
+}
+.vp-sun {
+	position: absolute;
+	left: -110rpx;
+	top: 110rpx;
+	width: 360rpx;
+	height: 360rpx;
+	border-radius: 50%;
+	background: linear-gradient(180deg, #ffd3e8 0%, #ff6ad5 46%, #ffb86b 100%);
+	opacity: 0.5;
+}
+.vp-sun::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	border-radius: 50%;
+	background: repeating-linear-gradient(
+		to bottom,
+		rgba(26, 11, 46, 0) 0,
+		rgba(26, 11, 46, 0) 26rpx,
+		rgba(26, 11, 46, 0.55) 26rpx,
+		rgba(26, 11, 46, 0.55) 38rpx
+	);
+}
+.vp-star {
+	position: absolute;
+	width: 6rpx;
+	height: 6rpx;
+	border-radius: 50%;
+	background: #ffffff;
+	opacity: 0.7;
+	animation: vp-twinkle 2.8s ease-in-out infinite;
+}
+.vp-star--1 {
+	left: 52%;
+	top: 18%;
+}
+.vp-star--2 {
+	left: 72%;
+	top: 32%;
+	transform: scale(0.7);
+	animation-delay: 0.9s;
+}
+.vp-star--3 {
+	left: 34%;
+	top: 40%;
+	transform: scale(0.85);
+	animation-delay: 1.6s;
+}
+@keyframes vp-twinkle {
+	0%,
+	100% {
+		opacity: 0.25;
+	}
+	50% {
+		opacity: 0.9;
+	}
+}
+.vp-kana {
+	position: absolute;
+	right: 32rpx;
+	top: 96rpx;
+	font-size: 20rpx;
+	letter-spacing: 4rpx;
+	color: rgba(255, 255, 255, 0.4);
+}
+
+/* 地平线辉光 */
+.vp-horizon {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 44%;
+	height: 4rpx;
+	background: linear-gradient(90deg, rgba(255, 255, 255, 0), $cyan 30%, $pink 70%, rgba(255, 255, 255, 0));
+	box-shadow: 0 0 24rpx rgba(255, 106, 213, 0.8);
+	z-index: 0;
+}
+
+/* ---------- 透视网格大地 ---------- */
+.vp-grid {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 44%;
+	bottom: 0;
+	overflow: hidden;
+	z-index: 0;
+}
+.vp-grid__mesh {
+	position: absolute;
+	left: -50%;
+	right: -50%;
+	top: -10%;
+	height: 220%;
+	background-image: repeating-linear-gradient(to right, rgba(135, 149, 232, 0.35) 0 2rpx, transparent 2rpx 88rpx),
+		repeating-linear-gradient(to bottom, rgba(135, 149, 232, 0.3) 0 2rpx, transparent 2rpx 88rpx);
+	transform: perspective(560rpx) rotateX(56deg);
+	transform-origin: 50% 0;
+	animation: vp-flow 7s linear infinite;
+}
+@keyframes vp-flow {
+	from {
+		background-position: 0 0, 0 0;
+	}
+	to {
+		background-position: 0 0, 0 88rpx;
+	}
+}
+
+/* 扫描线（极淡） */
+.vp-scan {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	background: repeating-linear-gradient(
+		to bottom,
+		rgba(255, 255, 255, 0.035) 0 2rpx,
+		transparent 2rpx 6rpx
+	);
+	z-index: 3;
+	pointer-events: none;
+}
+
+/* ---------- 导航 ---------- */
+.vp-status {
+	position: relative;
+	z-index: 2;
+	flex: none;
+}
+.vp-nav {
+	position: relative;
+	z-index: 2;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 16rpx 32rpx 8rpx;
+}
+.vp-back {
+	position: relative;
+	width: 64rpx;
+	height: 48rpx;
+}
+.vp-back__line {
+	position: absolute;
+	left: 0;
+	top: 22rpx;
+	width: 44rpx;
+	height: 3rpx;
+	background: rgba(232, 236, 255, 0.9);
+	box-shadow: 0 0 8rpx rgba(148, 208, 255, 0.7);
+}
+.vp-back__tip {
+	position: absolute;
+	left: 2rpx;
+	top: 7rpx;
+	width: 24rpx;
+	height: 3rpx;
+	background: rgba(232, 236, 255, 0.9);
+	transform: rotate(32deg);
+	transform-origin: left bottom;
+}
+.vp-back__tip--2 {
+	top: 37rpx;
+	transform: rotate(-32deg);
+}
+.vp-nav__idx {
+	font-size: 22rpx;
+	color: rgba(232, 236, 255, 0.5);
+	letter-spacing: 2rpx;
+}
+
+/* ---------- 跨界面板 ---------- */
+.vp-panel {
+	position: relative;
+	z-index: 2;
+	width: 86%;
+	margin: 150rpx auto 0;
+	background: $panel;
+	border: 1rpx solid rgba(255, 106, 213, 0.45);
+	border-radius: 12rpx;
+	box-shadow: 0 0 0 1rpx rgba(148, 208, 255, 0.12), 0 24rpx 48rpx rgba(0, 0, 0, 0.45);
+	padding: 40rpx 32rpx 36rpx;
+	animation: vp-materialize 420ms ease-out both;
+}
+@keyframes vp-materialize {
+	from {
+		opacity: 0;
+		transform: translateY(20rpx);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+.vp-head {
+	margin-bottom: 32rpx;
+}
+.vp-eyebrow {
+	display: block;
+	font-size: 20rpx;
+	letter-spacing: 3rpx;
+	color: rgba(148, 208, 255, 0.65);
+	margin-bottom: 12rpx;
+}
+.vp-title {
+	display: block;
+	font-size: 48rpx;
+	font-weight: 700;
+	letter-spacing: 4rpx;
+	color: #ffffff;
+	text-shadow: 3rpx 0 rgba(255, 106, 213, 0.85), -3rpx 0 rgba(148, 208, 255, 0.85);
+	margin-bottom: 12rpx;
+}
+.vp-lead {
+	display: block;
+	font-size: 24rpx;
+	line-height: 1.7;
+	color: $dim;
+}
+
+/* ---------- 霓虹 chip ---------- */
+.vp-chips {
+	display: flex;
+	gap: 16rpx;
+	margin-bottom: 32rpx;
+}
+.vp-chip {
+	font-size: 25rpx;
+	letter-spacing: 2rpx;
+	color: $dim;
+	border: 1rpx solid rgba(255, 106, 213, 0.35);
+	border-radius: 6rpx;
+	padding: 12rpx 32rpx;
+	transition: color 160ms ease-out, border-color 160ms ease-out, box-shadow 160ms ease-out;
+}
+.vp-chip.on {
+	color: $pink;
+	border-color: $pink;
+	background: rgba(255, 106, 213, 0.08);
+	box-shadow: 0 0 12rpx rgba(255, 106, 213, 0.4), inset 0 0 10rpx rgba(255, 106, 213, 0.14);
+	text-shadow: 0 0 8rpx rgba(255, 106, 213, 0.6);
+}
+
+/* ---------- 表单 ---------- */
+.vp-form {
+	display: block;
+}
+.vp-field {
+	margin-bottom: 30rpx;
+}
+.vp-label {
+	display: flex;
+	align-items: center;
+	font-size: 20rpx;
+	letter-spacing: 3rpx;
+	color: rgba(148, 208, 255, 0.75);
+	margin-bottom: 12rpx;
+}
+.vp-label::before {
+	content: '';
+	width: 10rpx;
+	height: 10rpx;
+	background: $cyan;
+	box-shadow: 0 0 8rpx rgba(148, 208, 255, 0.8);
+	margin-right: 12rpx;
+}
+.vp-control {
+	display: flex;
+	align-items: center;
+	height: 92rpx;
+	box-sizing: border-box;
+	background: rgba(148, 208, 255, 0.06);
+	border: 1rpx solid rgba(135, 149, 232, 0.35);
+	border-radius: 8rpx;
+	padding: 0 28rpx;
+	transition: border-color 160ms ease-out, box-shadow 160ms ease-out, background 160ms ease-out;
+}
+.vp-control.is-focus {
+	border-color: rgba(148, 208, 255, 0.85);
+	background: rgba(148, 208, 255, 0.1);
+	box-shadow: 0 0 18rpx rgba(148, 208, 255, 0.28);
+}
+.vp-control.is-error {
+	border-color: $err;
+	box-shadow: 0 0 14rpx rgba(255, 143, 184, 0.3);
+}
+.vp-input {
+	flex: 1;
+	min-width: 0;
+	height: 100%;
+	font-size: 28rpx;
+	color: $ink;
+	background-color: transparent;
+	background-image: none;
+	border: none;
+	border-radius: 0;
+	padding: 0;
+	margin: 0;
+	appearance: none;
+	box-sizing: border-box;
+}
+.vp-input--num {
+	font-family: 'Courier New', Consolas, monospace;
+	letter-spacing: 2rpx;
+}
+.vp-suffix {
+	flex: none;
+	font-size: 24rpx;
+	color: $cyan;
+	padding-left: 20rpx;
+	margin-left: 16rpx;
+	border-left: 1rpx solid rgba(135, 149, 232, 0.4);
+	text-shadow: 0 0 8rpx rgba(148, 208, 255, 0.5);
+}
+.vp-suffix.on {
+	color: $pink;
+	text-shadow: 0 0 8rpx rgba(255, 106, 213, 0.5);
+}
+.vp-suffix--code.off {
+	opacity: 0.45;
+}
+.vp-err {
+	display: block;
+	font-size: 22rpx;
+	color: $err;
+	margin: 10rpx 0 0 6rpx;
+}
+.vp-tip {
+	display: block;
+	font-size: 22rpx;
+	color: $dim;
+	margin: 10rpx 0 0 6rpx;
+}
+.vp-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin: 4rpx 0 30rpx;
+}
+
+/* ---------- 勾选 ---------- */
+.vp-check {
+	display: flex;
+	align-items: flex-start;
+	margin-top: 24rpx;
+}
+.vp-check--inline {
+	margin-top: 0;
+}
+.vp-check__box {
+	flex: none;
+	width: 30rpx;
+	height: 30rpx;
+	border: 1rpx solid rgba(135, 149, 232, 0.55);
+	border-radius: 4rpx;
+	box-sizing: border-box;
+	margin-right: 14rpx;
+	margin-top: 2rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(148, 208, 255, 0.05);
+	transition: border-color 140ms ease-out, box-shadow 140ms ease-out;
+}
+.vp-check__box.on {
+	border-color: $pink;
+	box-shadow: 0 0 10rpx rgba(255, 106, 213, 0.45);
+}
+.vp-check__tick {
+	width: 13rpx;
+	height: 19rpx;
+	border-right: 3rpx solid $pink;
+	border-bottom: 3rpx solid $pink;
+	transform: rotate(45deg) scale(0);
+	margin-top: -5rpx;
+	transition: transform 140ms ease-out;
+}
+.vp-check__box.on .vp-check__tick {
+	transform: rotate(45deg) scale(1);
+}
+.vp-check__txt {
+	font-size: 24rpx;
+	color: $dim;
+	line-height: 1.6;
+}
+.vp-check__link {
+	color: $cyan;
+}
+.vp-link {
+	font-size: 25rpx;
+	color: $pink;
+	text-shadow: 0 0 8rpx rgba(255, 106, 213, 0.4);
+}
+.vp-link--soft {
+	color: $dim;
+	text-shadow: none;
+}
+
+/* ---------- 粉紫渐变按钮 ---------- */
+.vp-btn {
+	font-size: 30rpx;
+	font-weight: 700;
+	letter-spacing: 6rpx;
+	color: #ffffff;
+	background: linear-gradient(90deg, $pink 0%, $purple 100%);
+	border-radius: 8rpx;
+	box-shadow: 0 0 24rpx rgba(255, 106, 213, 0.35);
+	padding: 28rpx 0;
+	text-align: center;
+	margin-top: 8rpx;
+	transition: transform 100ms ease-out, box-shadow 100ms ease-out, opacity 120ms ease-out;
+}
+.vp-btn:active {
+	transform: translateY(4rpx);
+	box-shadow: 0 0 12rpx rgba(255, 106, 213, 0.3);
+}
+.vp-btn.is-busy {
+	opacity: 0.6;
+}
+.vp-btn--ghost {
+	margin-top: 24rpx;
+	background: transparent;
+	border: 1rpx solid rgba(135, 149, 232, 0.5);
+	box-shadow: none;
+	color: $dim;
+	letter-spacing: 2rpx;
+}
+
+/* ---------- 第三方登录 ---------- */
+.vp-alt {
+	display: flex;
+	justify-content: center;
+	gap: 24rpx;
+	margin-top: 36rpx;
+}
+.vp-alt__i {
+	font-size: 24rpx;
+	color: $dim;
+	border: 1rpx solid rgba(135, 149, 232, 0.4);
+	border-radius: 999rpx;
+	padding: 12rpx 36rpx;
+}
+.vp-alt__i:active {
+	transform: scale(0.95);
+	color: $cyan;
+}
+
+/* ---------- 霓虹菱形步骤 ---------- */
+.vp-nodes {
+	display: flex;
+	align-items: center;
+	margin-bottom: 10rpx;
+}
+.vp-node {
+	width: 48rpx;
+	height: 48rpx;
+	transform: rotate(45deg);
+	border: 1rpx solid rgba(148, 208, 255, 0.5);
+	border-radius: 4rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(148, 208, 255, 0.06);
+	transition: border-color 200ms ease-out, box-shadow 200ms ease-out;
+}
+.vp-node.on {
+	border-color: $cyan;
+	box-shadow: 0 0 12rpx rgba(148, 208, 255, 0.5);
+}
+.vp-node.done {
+	border-color: $pink;
+	background: rgba(255, 106, 213, 0.12);
+	box-shadow: 0 0 12rpx rgba(255, 106, 213, 0.5);
+}
+.vp-node__num {
+	font-size: 20rpx;
+	color: $dim;
+	transform: rotate(-45deg);
+}
+.vp-node.on .vp-node__num {
+	color: $cyan;
+}
+.vp-node.done .vp-node__num {
+	color: $pink;
+}
+.vp-wire {
+	flex: 1;
+	height: 2rpx;
+	margin: 0 20rpx;
+	background: rgba(135, 149, 232, 0.35);
+}
+.vp-wire.live {
+	background: linear-gradient(90deg, $cyan, $pink);
+	box-shadow: 0 0 10rpx rgba(255, 106, 213, 0.6);
+}
+.vp-nodes__legend {
+	display: flex;
+	justify-content: space-between;
+	font-size: 22rpx;
+	color: $dim;
+	margin-bottom: 28rpx;
+	padding: 0 2rpx;
+}
+
+/* ---------- 安全提示 ---------- */
+.vp-note {
+	margin-top: 36rpx;
+	background: rgba(148, 208, 255, 0.06);
+	border: 1rpx solid rgba(135, 149, 232, 0.3);
+	border-radius: 8rpx;
+	padding: 24rpx 26rpx;
+}
+.vp-note__h {
+	display: block;
+	font-size: 24rpx;
+	font-weight: 700;
+	color: rgba(148, 208, 255, 0.9);
+	margin-bottom: 8rpx;
+}
+.vp-note__txt {
+	display: block;
+	font-size: 22rpx;
+	line-height: 1.7;
+	color: $dim;
+}
+
+/* ---------- 页脚 ---------- */
+.vp-foot {
+	position: relative;
+	z-index: 2;
+	padding: 36rpx 48rpx 44rpx;
+}
+.vp-foot__row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 12rpx;
+}
+.vp-foot__txt {
+	font-size: 24rpx;
+	color: $dim;
+}
+.vp-copy {
+	display: block;
+	font-size: 20rpx;
+	color: rgba(232, 236, 255, 0.3);
+	letter-spacing: 1rpx;
+}
