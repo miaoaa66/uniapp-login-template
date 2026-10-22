@@ -1,90 +1,83 @@
 <template>
 	<view class="tw-page">
-		<view class="tw-nav">
-			<view class="tw-nav__back" @click="goBack">
-				<view class="pxi pxi-back"></view>
-			</view>
-			<text class="tw-nav__title">注 册</text>
-			<text class="tw-nav__slot">NEW</text>
-		</view>
+		<!-- 登记表信纸 -->
+		<view class="tw-paper">
+			<view class="tw-clip" @click="goBack"><view class="tw-clip__inner"></view></view>
 
-		<view class="tw-body">
 			<view class="tw-head">
-				<text class="tw-head__no">FORM NO.1983</text>
-				<text class="tw-head__t">PIXEL TYPEWRITER CO.</text>
+				<view class="tw-head__line"></view>
+				<view class="tw-head__mid">
+					<text class="tw-head__en">REGISTRATION</text>
+					<text class="tw-head__cn">登 记 表</text>
+				</view>
+				<view class="tw-head__line"></view>
 			</view>
-			<view class="tw-rule"></view>
-			<view class="tw-card">
-				<view class="tw-brand">
-					<view class="tw-brand__logo"><view class="pxi pxi-user"></view></view>
-					<view class="tw-brand__meta">
-						<text class="tw-brand__en">NEW RECORD</text>
-						<text class="tw-brand__cn">新建档案</text>
+
+			<!-- 编号字段 -->
+			<view class="tw-lines">
+				<view class="tw-line">
+					<text class="tw-line__label">1. 姓名</text>
+					<view class="tw-line__blank">
+						<input class="tw-line__in" v-model="nickname" placeholder="昵称（2-12 字）" placeholder-style="color:#b7b0a1" maxlength="12" />
 					</view>
 				</view>
-
-				<text class="tw-title">注 册</text>
-				<text class="tw-lead">填写信息，建立你的第一条记录</text>
-
-				<view class="tw-form">
-					<view class="tw-field">
-						<view class="tw-field__ico"><view class="pxi pxi-user"></view></view>
-						<input class="tw-field__in" v-model="nickname" placeholder="昵称（2-12 字）" placeholder-style="color:#a49c8a" maxlength="12" />
+				<view class="tw-line">
+					<text class="tw-line__label">2. 邮箱</text>
+					<view class="tw-line__blank">
+						<input class="tw-line__in" v-model="email" placeholder="player@pixel.id" placeholder-style="color:#b7b0a1" maxlength="40" />
 					</view>
-
-					<view class="tw-field">
-						<view class="tw-field__ico"><view class="pxi pxi-mail"></view></view>
-						<input class="tw-field__in" v-model="email" placeholder="player@pixel.id" placeholder-style="color:#a49c8a" maxlength="40" />
+				</view>
+				<view class="tw-line">
+					<text class="tw-line__label">3. 印证</text>
+					<view class="tw-line__blank">
+						<input class="tw-line__in" v-model="mailCode" type="number" placeholder="邮箱验证码" placeholder-style="color:#b7b0a1" maxlength="6" />
+						<text class="tw-word" :class="{ off: mailLeft > 0 }" @click="sendCode">{{ mailLeft > 0 ? mailLeft + 's' : '获取验证码' }}</text>
 					</view>
-
-					<view class="tw-field">
-						<view class="tw-field__ico"><view class="pxi pxi-shield"></view></view>
-						<input class="tw-field__in" v-model="mailCode" type="number" placeholder="邮箱验证码" placeholder-style="color:#a49c8a" maxlength="6" />
-						<view class="tw-code" :class="{ off: mailLeft > 0 }" @click="sendCode">{{ mailLeft > 0 ? mailLeft + 's' : '获取验证码' }}</view>
+				</view>
+				<view class="tw-line">
+					<text class="tw-line__label">4. 咒语</text>
+					<view class="tw-line__blank">
+						<input class="tw-line__in" v-model="password" :password="!showPwd" placeholder="设置密码（8-20 位）" placeholder-style="color:#b7b0a1" maxlength="20" />
+						<view class="tw-line__eye" @click="showPwd = !showPwd"><view class="pxi pxi-eye"></view></view>
 					</view>
-
-					<view class="tw-field">
-						<view class="tw-field__ico"><view class="pxi pxi-lock"></view></view>
-						<input class="tw-field__in" v-model="password" :password="!showPwd" placeholder="设置密码（8-20 位）" placeholder-style="color:#a49c8a" maxlength="20" />
-						<view class="tw-eye" @click="showPwd = !showPwd"><view class="pxi pxi-eye"></view></view>
-					</view>
-
-					<view class="tw-field">
-						<view class="tw-field__ico"><view class="pxi pxi-lock"></view></view>
-						<input class="tw-field__in" v-model="password2" :password="!showPwd" placeholder="确认密码" placeholder-style="color:#a49c8a" maxlength="20" />
-					</view>
-
-					<view class="tw-power">
-						<text class="tw-power__t">密码强度</text>
-						<view class="tw-power__bars">
-							<view class="tw-power__bar" :class="{ on: strength >= 1 }"></view>
-							<view class="tw-power__bar" :class="{ on: strength >= 2 }"></view>
-							<view class="tw-power__bar" :class="{ on: strength >= 3 }"></view>
-						</view>
-						<text class="tw-power__v">{{ strengthText }}</text>
-					</view>
-
-					<view class="tw-btn" @click="submit">
-						<view class="pxi pxi-play"></view><text>存 档</text>
-					</view>
-
-					<view class="tw-foot">
-						<text>已有档案？</text>
-						<text class="tw-foot__link" @click="goLogin">返回登录</text>
-					</view>
-
-					<view class="tw-agree" @click="agreed = !agreed">
-						<view class="tw-check" :class="{ on: agreed }"></view>
-						<text>我已阅读并同意<text class="tw-link">《用户协议》</text>与<text class="tw-link">《隐私政策》</text></text>
+				</view>
+				<view class="tw-line">
+					<text class="tw-line__label">5. 复述</text>
+					<view class="tw-line__blank">
+						<input class="tw-line__in" v-model="password2" :password="!showPwd" placeholder="确认密码" placeholder-style="color:#b7b0a1" maxlength="20" />
 					</view>
 				</view>
 			</view>
-			<view class="tw-keys">
-				<view v-for="n in 3" :key="n" class="tw-keys__row">
-					<view v-for="m in 8" :key="m" class="tw-key"></view>
+
+			<!-- 油墨余量 = 密码强度 -->
+			<view class="tw-ink">
+				<text class="tw-ink__t">油墨余量</text>
+				<view class="tw-ink__cells">
+					<view class="tw-ink__cell" :class="{ on: strength >= 1 }"></view>
+					<view class="tw-ink__cell" :class="{ on: strength >= 2 }"></view>
+					<view class="tw-ink__cell" :class="{ on: strength >= 3 }"></view>
 				</view>
+				<text class="tw-ink__v">{{ strengthText }}</text>
 			</view>
-			<view class="tw-platen"></view>
+
+			<view class="tw-post">
+				<view class="tw-agree" @click="agreed = !agreed">
+					<view class="tw-check" :class="{ on: agreed }"></view>
+					<text>我已阅读并同意<text class="tw-link">《用户协议》</text>与<text class="tw-link">《隐私政策》</text></text>
+				</view>
+				<text class="tw-post__zh">此致</text>
+				<text class="tw-post__jing">敬礼！</text>
+				<text class="tw-post__date">PIXEL TYPEWRITER CO. · 1983</text>
+			</view>
+
+			<view class="tw-keywrap">
+				<view class="tw-ribbon" :class="{ go: ribbon }"></view>
+				<view class="tw-key" @click="onSend"><text class="tw-key__t">寄 出</text></view>
+			</view>
+
+			<view class="tw-foot">
+				<text class="tw-foot__link" @click="goLogin">已有档案？返回登录</text>
+			</view>
 		</view>
 	</view>
 </template>
@@ -93,6 +86,8 @@
 	export default {
 		data() {
 			return {
+				ribbon: false,
+				ribbonTimer: null,
 				agreed: false,
 				showPwd: false,
 				nickname: '',
@@ -115,7 +110,7 @@
 				return s
 			},
 			strengthText() {
-				return ['──', '弱', '中', '强'][this.strength]
+				return ['余量不足', '余量不足', '尚可', '充足'][this.strength]
 			}
 		},
 		onLoad(options) {
@@ -130,6 +125,7 @@
 		},
 		onUnload() {
 			this.clearTimer()
+			if (this.ribbonTimer) clearTimeout(this.ribbonTimer)
 		},
 		methods: {
 			toast(title) {
@@ -158,6 +154,18 @@
 					clearInterval(this.timer)
 					this.timer = null
 				}
+			},
+
+			fireRibbon() {
+				this.ribbon = false
+				if (this.ribbonTimer) clearTimeout(this.ribbonTimer)
+				setTimeout(() => { this.ribbon = true }, 30)
+				this.ribbonTimer = setTimeout(() => { this.ribbon = false }, 800)
+			},
+
+			onSend() {
+				this.fireRibbon()
+				this.submit()
 			},
 
 			submit() {

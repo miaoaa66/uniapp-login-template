@@ -1,26 +1,28 @@
 /* ==========================================================================
- * SET E · 像素 RPG 对话框
+ * SET F · 像素 RPG 任务流
  * pages/login96 —— 登录 / 注册 / 找回密码 三页共用
- * 羊皮纸底 + 深棕描边，角色血蓝条与对话框、宝箱还原 8-bit 冒险界面
+ * 羊皮纸场景带 + 深棕对话框：NPC 台词打字机、对话选项切换模式、
+ * 道具栏字段、宝箱任务步骤、石板验证码、红章立约与金色 ▶ 提交键
  *
  * 字体：Zpix（中文像素）+ Press Start 2P（拉丁与数字）
  * 图标：common/pixel-icons.scss（8x8 网格，box-shadow 逐点绘制）
- * 字号：Zpix 走 12px 的整数倍，Press Start 2P 走 8px 的整数倍
  * ========================================================================== */
 
 @import '../../common/pixel-icons.scss';
 
 /* ---------- 设计令牌 ---------- */
-$ink: #3a2a16;         // 主文字
-$dim: #7d6647;         // 次级文字
-$bg: #f2e2c4;          // 页面底色
-$panel: #fffaf0;       // 卡片/面板底色
-$panel2: #eadcbe;      // 次级面板底色（Tab 未选中、字段底）
-$line: #3a2a16;        // 主描边
-$lineSoft: #c3ab84;    // 弱描边
-$accent: #c8860d;      // 主强调色（按钮 / 选中态）
-$accent2: #1f6f8b;     // 次强调色（链接 / 图标）
-$on: #fffaf0;          // 强调色之上的文字
+$parch: #f4e6c2;        // 浅羊皮底（对话框）
+$brown: #4a3220;        // 深棕描边与主文字
+$brown2: #7a5a32;       // 次级棕（NPC 名 / 链接）
+$dim: #a08e6d;          // 占位与弱文字
+$scene: #ecd9ac;        // 场景带天空
+$sceneFar: #b99a5f;     // 远山
+$sceneTree: #55743f;    // 树冠
+$sceneGround: #8a6a3c;  // 地面
+$gold: #d9a441;         // 金色提交键 / 宝箱
+$hp: #3f9e4f;           // 强度绿
+$red: #b03a2e;          // 强调红（红章 / 链接）
+$slotBg: #fbf1d9;       // 道具栏浅底
 
 /* ---------- 页面容器 ---------- */
 .rq-page,
@@ -32,186 +34,331 @@ $on: #fffaf0;          // 强调色之上的文字
 	position: relative;
 	min-height: 100vh;
 	padding-bottom: 40rpx;
-	background-color: $bg;
-	background-image: linear-gradient(rgba(58, 42, 22, .06) 2rpx, transparent 2rpx), linear-gradient(90deg, rgba(58, 42, 22, .06) 2rpx, transparent 2rpx); background-size: 32rpx 32rpx;
+	background-color: #efe0bd;
+	background-image: linear-gradient(rgba(74, 50, 32, .05) 2rpx, transparent 2rpx), linear-gradient(90deg, rgba(74, 50, 32, .05) 2rpx, transparent 2rpx);
+	background-size: 32rpx 32rpx;
 	font-family: 'Zpix', sans-serif;
-	color: $ink;
+	color: $brown;
 	-webkit-font-smoothing: none;
 }
 
-/* ---------- 自绘导航栏 ---------- */
-.rq-nav {
-	display: flex;
-	align-items: center;
-	height: 96rpx;
-	padding: 0 24rpx;
-	background-color: $panel;
-	border-bottom: 4rpx solid $line;
-}
-
-.rq-nav__back {
-	display: flex;
-	align-items: center;
-	width: 110rpx;
-	flex: none;
-	color: $ink;
-}
-
-.rq-nav__back:active {
-	opacity: .5;
-}
-
-.rq-nav__title {
-	flex: 1;
-	text-align: center;
-	font-size: 48rpx;
-	letter-spacing: 6rpx;
-	color: $ink;
-}
-
-.rq-nav__slot {
-	flex: none;
-	min-width: 110rpx;
-	text-align: right;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 24rpx;
-	letter-spacing: 1rpx;
-	color: $dim;
-}
-
-/* ---------- 主体与卡片 ---------- */
-.rq-body {
-	padding: 28rpx 32rpx 0;
-}
-
-.rq-card {
-	padding: 36rpx 32rpx 32rpx;
-	background-color: $panel;
-	border: 4rpx solid $line;
-	box-shadow: 10rpx 10rpx 0 rgba(0, 0, 0, .16);
-}
-
-.rq-brand {
-	display: flex;
-	align-items: center;
-}
-
-.rq-brand__logo {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 68rpx;
-	height: 68rpx;
-	flex: none;
-	color: $on;
-	background-color: $accent;
-	border: 4rpx solid $line;
-	box-shadow: 5rpx 5rpx 0 $line;
-}
-
-.rq-brand__logo .pxi {
-	transform: scale(2);
-}
-
-.rq-brand__meta {
-	margin-left: 20rpx;
-}
-
-.rq-brand__en {
-	display: block;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	letter-spacing: 1rpx;
-	color: $ink;
-}
-
-.rq-brand__cn {
-	display: block;
-	margin-top: 8rpx;
-	font-size: 24rpx;
-	letter-spacing: 4rpx;
-	color: $dim;
-}
-
-.rq-title {
-	display: block;
-	margin-top: 34rpx;
-	font-size: 48rpx;
-	line-height: 1.3;
-	letter-spacing: 8rpx;
-	color: $ink;
-}
-
-.rq-lead {
-	display: block;
-	margin-top: 16rpx;
-	font-size: 24rpx;
-	line-height: 1.6;
-	color: $dim;
-}
-
-/* ---------- 登录方式切换 ---------- */
-.rq-tabs {
-	display: flex;
-	margin-top: 36rpx;
-}
-
-.rq-tab {
-	flex: 1;
-	height: 72rpx;
-	line-height: 68rpx;
-	text-align: center;
-	font-size: 24rpx;
-	color: $dim;
-	background-color: $panel2;
-	border: 4rpx solid $lineSoft;
-}
-
-.rq-tab + .rq-tab {
-	margin-left: -4rpx;
-}
-
-.rq-tab.on {
+/* ---------- 场景带 ---------- */
+.rq-scene {
 	position: relative;
-	z-index: 1;
-	color: $on;
-	background-color: $accent;
-	border-color: $line;
-	box-shadow: 4rpx 4rpx 0 $line;
+	height: 380rpx;
+	overflow: hidden;
+	background-color: $scene;
+	border-bottom: 6rpx solid $brown;
 }
 
-/* ---------- 表单 ---------- */
-.rq-form {
-	margin-top: 32rpx;
+.rq-scene--short {
+	height: 240rpx;
 }
 
-.rq-field {
+/* 羊皮小卷返回键 */
+.rq-back {
+	position: absolute;
+	left: 20rpx;
+	top: 20rpx;
+	z-index: 3;
+	padding: 10rpx 22rpx;
+	background-color: $parch;
+	border: 4rpx solid $brown;
+	border-radius: 10rpx;
+	box-shadow: inset 8rpx 0 0 #d9c391, inset -8rpx 0 0 #d9c391, 4rpx 4rpx 0 rgba(74, 50, 32, .3);
+}
+
+.rq-back:active {
+	transform: translate(2rpx, 2rpx);
+}
+
+.rq-back__t {
+	font-size: 24rpx;
+	color: $brown;
+}
+
+/* 像素太阳 */
+.rq-sun {
+	position: absolute;
+	right: 64rpx;
+	top: 48rpx;
+	width: 48rpx;
+	height: 48rpx;
+	background-color: $gold;
+	border: 4rpx solid $brown;
+	box-shadow: 64rpx 0 0 -20rpx $gold, -64rpx 0 0 -20rpx $gold, 0 64rpx 0 -20rpx $gold, 0 -64rpx 0 -20rpx $gold;
+}
+
+/* 阶梯远山（色块） */
+.rq-mtn {
+	position: absolute;
+	bottom: 56rpx;
+	width: 56rpx;
+	height: 28rpx;
+	background-color: $sceneFar;
+	border: 3rpx solid $brown;
+}
+
+.rq-mtn::before {
+	content: '';
+	position: absolute;
+	left: 14rpx;
+	bottom: 28rpx;
+	width: 28rpx;
+	height: 28rpx;
+	background-color: $sceneFar;
+	border: 3rpx solid $brown;
+}
+
+.rq-mtn--a {
+	left: 14%;
+}
+
+.rq-mtn--b {
+	left: 54%;
+	transform: scale(1.25);
+}
+
+/* 像素树 */
+.rq-tree {
+	position: absolute;
+	bottom: 56rpx;
+	width: 40rpx;
+}
+
+.rq-tree--a {
+	left: 32%;
+}
+
+.rq-tree--b {
+	right: 22%;
+}
+
+.rq-tree__crown {
+	width: 40rpx;
+	height: 36rpx;
+	background-color: $sceneTree;
+	border: 3rpx solid $brown;
+}
+
+.rq-tree__trunk {
+	width: 12rpx;
+	height: 20rpx;
+	margin: 0 auto;
+	background-color: #6e4f2f;
+	border: 3rpx solid $brown;
+	border-top: 0;
+}
+
+/* 旗帜 */
+.rq-flag {
+	position: absolute;
+	left: 6%;
+	bottom: 56rpx;
+	width: 8rpx;
+	height: 120rpx;
+	background-color: $brown;
+}
+
+.rq-flag__cloth {
+	position: absolute;
+	left: 8rpx;
+	top: 0;
+	width: 56rpx;
+	height: 36rpx;
+	background-color: $red;
+	border: 3rpx solid $brown;
+	animation: rq-wave 1s steps(2, end) infinite;
+}
+
+@keyframes rq-wave {
+	0%, 49% { transform: skewY(0deg); }
+	50%, 100% { transform: skewY(-4deg); }
+}
+
+/* 神殿柱剪影（forget） */
+.rq-pillar {
+	position: absolute;
+	bottom: 56rpx;
+	width: 36rpx;
+	height: 110rpx;
+	background-color: #a98d55;
+	border: 3rpx solid $brown;
+}
+
+.rq-pillar::before {
+	content: '';
+	position: absolute;
+	left: -8rpx;
+	top: -12rpx;
+	width: 52rpx;
+	height: 14rpx;
+	background-color: #a98d55;
+	border: 3rpx solid $brown;
+}
+
+.rq-pillar--a {
+	left: 30%;
+}
+
+.rq-pillar--b {
+	left: 47%;
+	height: 130rpx;
+}
+
+.rq-pillar--c {
+	left: 64%;
+}
+
+/* 地面 */
+.rq-ground {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 56rpx;
+	background-color: $sceneGround;
+	border-top: 4rpx solid $brown;
+}
+
+/* ---------- RPG 对话框 ---------- */
+.rq-dialog {
+	position: relative;
+	z-index: 2;
+	margin: -48rpx 32rpx 0;
+	padding: 26rpx 26rpx 30rpx;
+	background-color: $parch;
+	border: 6rpx solid $brown;
+	box-shadow: 10rpx 10rpx 0 rgba(74, 50, 32, .35);
+	animation: rq-in .4s ease-out both;
+}
+
+@keyframes rq-in {
+	from { opacity: 0; transform: translateY(30rpx); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+/* 右上角像素装饰 */
+.rq-dialog__deco {
+	position: absolute;
+	right: 16rpx;
+	top: 16rpx;
+	width: 12rpx;
+	height: 12rpx;
+	background-color: $brown;
+	box-shadow: 18rpx 0 0 $brown, 0 18rpx 0 $brown;
+}
+
+.rq-dialog__head {
 	display: flex;
 	align-items: center;
-	height: 96rpx;
-	padding: 0 22rpx;
-	margin-bottom: 24rpx;
-	background-color: $panel;
-	border: 4rpx solid $line;
+	justify-content: space-between;
+	margin-bottom: 14rpx;
+	padding-bottom: 10rpx;
+	border-bottom: 3rpx dashed rgba(74, 50, 32, .4);
 }
 
-.rq-field__ico {
+.rq-dialog__npc {
+	font-size: 24rpx;
+	letter-spacing: 2rpx;
+	color: $brown2;
+}
+
+.rq-dialog__hint {
+	font-size: 20rpx;
+	color: $dim;
+}
+
+.rq-dialog__text {
+	display: block;
+	min-height: 96rpx;
+	font-size: 26rpx;
+	line-height: 1.8;
+	color: $brown;
+}
+
+.rq-caret {
+	animation: rq-blink .8s steps(2, end) infinite;
+}
+
+@keyframes rq-blink {
+	0%, 49% { opacity: 1; }
+	50%, 100% { opacity: 0; }
+}
+
+/* ---------- 对话选项（登录方式切换） ---------- */
+.rq-opts {
+	margin-top: 20rpx;
+}
+
+.rq-opt {
+	display: flex;
+	align-items: center;
+	padding: 14rpx 16rpx;
+	font-size: 26rpx;
+	color: $brown;
+	border-bottom: 2rpx dashed rgba(74, 50, 32, .25);
+}
+
+.rq-opt__arrow {
+	margin-right: 14rpx;
+	font-size: 24rpx;
+	color: transparent;
+}
+
+.rq-opt__t {
+	letter-spacing: 2rpx;
+}
+
+.rq-opt.on {
+	background-color: rgba(74, 50, 32, .08);
+}
+
+.rq-opt.on .rq-opt__arrow {
+	color: $red;
+}
+
+.rq-opt.on .rq-opt__t {
+	font-weight: bold;
+}
+
+/* ---------- 道具栏字段 ---------- */
+.rq-form {
+	margin-top: 24rpx;
+}
+
+.rq-slot {
+	display: flex;
+	align-items: center;
+	height: 92rpx;
+	padding: 0 20rpx;
+	margin-bottom: 20rpx;
+	background-color: $slotBg;
+	border: 4rpx solid $brown;
+	box-shadow: 4rpx 4rpx 0 rgba(74, 50, 32, .25);
+}
+
+.rq-slot__ico {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	flex: none;
-	margin-right: 18rpx;
-	color: $ink;
+	margin-right: 16rpx;
+	color: $brown;
 }
 
-.rq-field__in {
+.rq-slot__ico .pxi {
+	transform: scale(1.6);
+}
+
+.rq-slot__in {
 	flex: 1;
 	min-width: 0;
 	height: 100%;
 	padding: 0;
 	font-family: 'Zpix', sans-serif;
 	font-size: 24rpx;
-	color: $ink;
+	color: $brown;
 	background-color: transparent;
 	border: 0;
 	border-radius: 0;
@@ -219,9 +366,9 @@ $on: #fffaf0;          // 强调色之上的文字
 	appearance: none;
 }
 
-.rq-field__in--en {
+.rq-slot__in--en {
 	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
+	font-size: 28rpx;
 	letter-spacing: 2rpx;
 }
 
@@ -229,80 +376,200 @@ $on: #fffaf0;          // 强调色之上的文字
 	flex: none;
 	margin-left: 14rpx;
 	padding: 0 6rpx;
-	color: $accent2;
+	color: $brown2;
 }
 
-.rq-code {
+/* 棕色小卷轴验证码键 */
+.rq-scroll {
 	flex: none;
 	margin-left: 14rpx;
-	height: 64rpx;
-	line-height: 60rpx;
-	padding: 0 16rpx;
-	font-size: 24rpx;
-	color: $ink;
-	background-color: $panel2;
-	border: 4rpx solid $line;
+	height: 60rpx;
+	line-height: 56rpx;
+	padding: 0 18rpx;
+	font-size: 22rpx;
+	color: $parch;
+	background-color: $brown2;
+	border: 3rpx solid $brown;
+	border-radius: 8rpx;
 }
 
-.rq-code.off {
-	color: $dim;
-	border-color: $lineSoft;
+.rq-scroll.off {
+	opacity: .5;
 }
 
-/* 右对齐小链接行 */
-.rq-row {
+.rq-aux {
 	display: flex;
 	justify-content: flex-end;
-	margin: -4rpx 0 24rpx;
+	margin: -4rpx 0 8rpx;
+}
+
+.rq-aux__link {
 	font-size: 24rpx;
+	color: $red;
+	text-decoration: underline;
 }
 
-.rq-row__link {
-	color: $accent2;
-}
-
-/* ---------- 六格验证码 ---------- */
-.rq-cells {
+/* ---------- 立约红章 ---------- */
+.rq-foot {
 	display: flex;
+	align-items: center;
 	justify-content: space-between;
-	margin-bottom: 24rpx;
+	margin-top: 24rpx;
 }
 
-.rq-cell {
-	width: 88rpx;
+.rq-agree {
+	display: flex;
+	align-items: flex-start;
+	flex: 1;
+	min-width: 0;
+	margin-right: 20rpx;
+	font-size: 22rpx;
+	line-height: 1.7;
+	color: $brown2;
+}
+
+.rq-seal {
+	position: relative;
+	flex: none;
+	width: 34rpx;
+	height: 34rpx;
+	margin: 4rpx 12rpx 0 0;
+	background-color: $slotBg;
+	border: 4rpx solid $brown;
+	transition: background-color .15s, transform .15s;
+}
+
+.rq-seal.on {
+	background-color: $red;
+	border-color: $red;
+	transform: rotate(-8deg);
+}
+
+.rq-seal.on::after {
+	content: '';
+	position: absolute;
+	left: 9rpx;
+	top: 3rpx;
+	width: 9rpx;
+	height: 17rpx;
+	border: solid $parch;
+	border-width: 0 4rpx 4rpx 0;
+	transform: rotate(45deg);
+}
+
+.rq-agree__link {
+	color: $red;
+}
+
+/* 金色 ▶ 提交键 */
+.rq-go {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex: none;
+	width: 104rpx;
 	height: 104rpx;
-	padding: 0;
-	box-sizing: border-box;
-	text-align: center;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 64rpx;
-	color: $ink;
-	background-color: $panel;
-	border: 4rpx solid $line;
-	border-radius: 0;
-	-webkit-appearance: none;
-	appearance: none;
+	background-color: $gold;
+	border: 6rpx solid $brown;
+	border-radius: 50%;
+	box-shadow: 0 8rpx 0 $brown;
+	transition: transform .1s, box-shadow .1s;
 }
 
-.rq-cell.on {
-	color: $on;
-	background-color: $accent;
-	box-shadow: 6rpx 6rpx 0 $line;
+.rq-go:active {
+	transform: translateY(8rpx);
+	box-shadow: 0 0 0 $brown;
 }
 
-.rq-cell.dim {
+.rq-go__t {
+	font-size: 40rpx;
+	color: $brown;
+}
+
+.rq-foot__tip {
+	font-size: 22rpx;
 	color: $dim;
-	background-color: $panel2;
-	border-color: $lineSoft;
 }
 
-/* ---------- 密码强度 ---------- */
+/* ---------- 页脚链接 ---------- */
+.rq-pagefoot {
+	margin-top: 30rpx;
+	text-align: center;
+	font-size: 24rpx;
+	color: $brown2;
+}
+
+.rq-pagefoot__link {
+	color: $red;
+	text-decoration: underline;
+}
+
+/* ---------- 宝箱任务步骤（register） ---------- */
+.rq-chests {
+	display: flex;
+	justify-content: space-around;
+	margin: 24rpx 0 8rpx;
+}
+
+.rq-chest {
+	position: relative;
+	width: 96rpx;
+	text-align: center;
+}
+
+.rq-chest__lid {
+	height: 30rpx;
+	background-color: #8a5a2b;
+	border: 4rpx solid $brown;
+	transform-origin: left bottom;
+	transition: transform .3s;
+}
+
+.rq-chest.done .rq-chest__lid {
+	transform: rotate(-38deg) translate(2rpx, -4rpx);
+	background-color: $gold;
+}
+
+.rq-chest__body {
+	height: 46rpx;
+	background-color: $gold;
+	border: 4rpx solid $brown;
+	border-top: 0;
+}
+
+.rq-chest__mark {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 34rpx;
+	font-size: 28rpx;
+	font-weight: bold;
+	color: $hp;
+}
+
+.rq-chest__label {
+	display: block;
+	margin-top: 10rpx;
+	font-size: 20rpx;
+	color: $brown2;
+}
+
+.rq-chest.now {
+	animation: rq-hop .6s ease-in-out infinite;
+}
+
+@keyframes rq-hop {
+	0%, 100% { transform: translateY(0); }
+	50% { transform: translateY(-10rpx); }
+}
+
+/* ---------- 咒语强度（register 第 3 步） ---------- */
 .rq-power {
 	display: flex;
 	align-items: center;
-	margin: -4rpx 0 24rpx;
-	font-size: 24rpx;
-	color: $dim;
+	margin: -4rpx 0 20rpx;
+	font-size: 22rpx;
+	color: $brown2;
 }
 
 .rq-power__t {
@@ -316,307 +583,66 @@ $on: #fffaf0;          // 强调色之上的文字
 
 .rq-power__bar {
 	flex: 1;
-	height: 16rpx;
+	height: 20rpx;
 	margin-right: 8rpx;
-	background-color: $panel2;
-	border: 3rpx solid $lineSoft;
+	background-color: #e8d5a8;
+	border: 3rpx solid $brown;
 }
 
 .rq-power__bar.on {
-	background-color: #92cc41;
-	border-color: $line;
+	background-color: $hp;
 }
 
 .rq-power__v {
-	width: 64rpx;
+	min-width: 48rpx;
 	text-align: right;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	color: $ink;
+	color: $brown;
 }
 
-/* ---------- 按钮 ---------- */
-.rq-btn {
+/* ---------- 六格石板验证码（forget） ---------- */
+.rq-cells {
 	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: 96rpx;
-	margin-top: 32rpx;
+	justify-content: space-between;
+	margin: 24rpx 0 8rpx;
+}
+
+.rq-cell {
+	width: 86rpx;
+	height: 104rpx;
+	padding: 0;
+	box-sizing: border-box;
+	text-align: center;
+	font-family: 'Press Start 2P', monospace;
 	font-size: 48rpx;
-	letter-spacing: 8rpx;
-	color: $on;
-	background-color: $accent;
-	border: 4rpx solid $line;
-	box-shadow: 8rpx 8rpx 0 $line;
+	color: $brown;
+	background-color: #e3cf9e;
+	border: 4rpx solid $brown;
+	border-radius: 0;
+	box-shadow: inset 0 8rpx 0 rgba(74, 50, 32, .18);
+	-webkit-appearance: none;
+	appearance: none;
 }
 
-.rq-btn .pxi {
-	margin-right: 14rpx;
+.rq-cell.dim {
+	color: #c9b684;
 }
 
-.rq-btn:active {
-	transform: translate(4rpx, 4rpx);
-	box-shadow: 4rpx 4rpx 0 $line;
-}
-
-.rq-btn--ghost {
-	color: $ink;
-	background-color: $panel;
-}
-
-/* ---------- 页脚与协议 ---------- */
-.rq-foot {
-	margin-top: 32rpx;
-	text-align: center;
-	font-size: 24rpx;
-	color: $dim;
-}
-
-.rq-foot__link {
-	color: $accent2;
-	text-decoration: underline;
-}
-
-.rq-agree {
+/* ---------- 石碑步骤（forget） ---------- */
+.rq-tablets {
 	display: flex;
-	align-items: flex-start;
-	margin-top: 28rpx;
-	font-size: 24rpx;
-	line-height: 1.7;
-	color: $dim;
+	gap: 16rpx;
+	margin-top: 20rpx;
 }
 
-.rq-check {
-	position: relative;
-	flex: none;
-	width: 30rpx;
-	height: 30rpx;
-	margin: 4rpx 12rpx 0 0;
-	background-color: $panel;
-	border: 4rpx solid $line;
+.rq-tablet {
+	padding: 8rpx 18rpx;
+	font-size: 22rpx;
+	color: $brown2;
+	background-color: #e3cf9e;
+	border: 3rpx solid $brown;
 }
 
-.rq-check.on {
-	background-color: #92cc41;
-}
-
-.rq-check.on::after {
-	content: '';
-	position: absolute;
-	left: 8rpx;
-	top: 2rpx;
-	width: 8rpx;
-	height: 15rpx;
-	border: solid $line;
-	border-width: 0 4rpx 4rpx 0;
-	transform: rotate(45deg);
-}
-
-.rq-link {
-	color: $accent2;
-}
-
-/* ---------- 步骤条 ---------- */
-.rq-steps {
-	display: flex;
-	align-items: center;
-	margin: 4rpx 0 30rpx;
-}
-
-.rq-step {
-	display: flex;
-	align-items: center;
-	font-size: 24rpx;
-	color: $dim;
-}
-
-.rq-step__n {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 48rpx;
-	height: 48rpx;
-	margin-right: 12rpx;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	color: $ink;
-	background-color: $panel2;
-	border: 4rpx solid $lineSoft;
-}
-
-.rq-step.on .rq-step__n {
-	color: $on;
-	background-color: $accent2;
-	border-color: $line;
-}
-
-.rq-step__line {
-	flex: 1;
-	height: 4rpx;
-	margin: 0 16rpx;
-	background-color: $lineSoft;
-}
-
-.rq-step.on .rq-step__line {
-	background-color: $line;
-}
-
-/* ---------- 占位符（uniapp 用 placeholder-style 内联声明，这里兼容 H5） ---------- */
-.rq-field__in::-webkit-input-placeholder {
-	color: #a08e6d;
-}
-
-/* ---------- 主题皮肤（覆盖骨架） ---------- */
-.rq-card {
-	border-width: 6rpx;
-	box-shadow: 10rpx 10rpx 0 rgba(58, 42, 22, .28);
-}
-
-.rq-btn {
-	color: $on;
-	background-color: $accent;
-	box-shadow: 6rpx 6rpx 0 $line;
-}
-
-.rq-brand__logo {
-	background-color: $accent2;
-	color: $on;
-}
-
-/* ---------- 主题装饰 ---------- */
-.rq-status {
-	display: flex;
-	align-items: center;
-	margin-bottom: 26rpx;
-	padding: 20rpx;
-	background-color: $panel;
-	border: 6rpx solid $line;
-	box-shadow: 6rpx 6rpx 0 rgba(58, 42, 22, .2);
-}
-
-.rq-face {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 88rpx;
-	height: 88rpx;
-	flex: none;
-	color: $ink;
-	background-color: $panel2;
-	border: 4rpx solid $line;
-}
-
-.rq-face .pxi {
-	transform: scale(2);
-}
-
-.rq-status__meta {
-	flex: 1;
-	min-width: 0;
-	margin-left: 20rpx;
-}
-
-.rq-status__name {
-	display: block;
-	margin-bottom: 12rpx;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 16rpx;
-	letter-spacing: 1rpx;
-	color: $ink;
-}
-
-.rq-bar {
-	position: relative;
-	height: 32rpx;
-	margin-bottom: 10rpx;
-	background-color: $panel2;
-	border: 4rpx solid $line;
-}
-
-.rq-bar__fill {
-	position: absolute;
-	left: 0;
-	top: 0;
-	bottom: 0;
-}
-
-.rq-bar--hp .rq-bar__fill { background-color: #92cc41; }
-.rq-bar--mp .rq-bar__fill { background-color: #4a90d9; }
-
-.rq-bar__t {
-	position: relative;
-	display: block;
-	line-height: 24rpx;
-	text-align: center;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 16rpx;
-	color: $ink;
-}
-
-.rq-quest {
-	display: flex;
-	align-items: flex-end;
-	margin-top: 36rpx;
-}
-
-.rq-quest__box {
-	position: relative;
-	flex: 1;
-	padding: 24rpx 20rpx;
-	background-color: $panel;
-	border: 6rpx solid $line;
-	box-shadow: 6rpx 6rpx 0 rgba(58, 42, 22, .2);
-}
-
-.rq-quest__t {
-	font-size: 24rpx;
-	line-height: 1.6;
-	color: $ink;
-}
-
-.rq-quest__arrow {
-	position: absolute;
-	right: 16rpx;
-	bottom: 8rpx;
-	width: 0;
-	height: 0;
-	border-left: 10rpx solid transparent;
-	border-right: 10rpx solid transparent;
-	border-top: 12rpx solid $accent;
-	animation: rq-bob .9s steps(2, end) infinite;
-}
-
-@keyframes rq-bob {
-	0%, 49% { transform: translateY(0); }
-	50%, 100% { transform: translateY(-6rpx); }
-}
-
-.rq-chest {
-	position: relative;
-	width: 72rpx;
-	height: 76rpx;
-	flex: none;
-	margin-left: 20rpx;
-}
-
-.rq-chest__lid {
-	height: 28rpx;
-	background-color: #a5672b;
-	border: 4rpx solid $line;
-}
-
-.rq-chest__body {
-	height: 40rpx;
-	background-color: #c8860d;
-	border: 4rpx solid $line;
-	border-top: 0;
-}
-
-.rq-chest__lock {
-	position: absolute;
-	left: 28rpx;
-	top: 30rpx;
-	width: 16rpx;
-	height: 20rpx;
-	background-color: $line;
+.rq-tablet.on {
+	color: $parch;
+	background-color: $brown;
 }

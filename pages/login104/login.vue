@@ -1,93 +1,81 @@
 <template>
 	<view class="bk-page">
-		<view class="bk-nav">
-			<view class="bk-nav__back" @click="goBack">
+		<!-- 顶部：积木块返回键 + 标题 -->
+		<view class="bk-top">
+			<view class="bk-back" @click="goBack">
+				<view class="bk-studs"><view class="bk-stud"></view><view class="bk-stud"></view></view>
 				<view class="pxi pxi-back"></view>
 			</view>
-			<text class="bk-nav__title">登 录</text>
-			<text class="bk-nav__slot">BLOCK</text>
-		</view>
-
-		<view class="bk-body">
-			<view class="bk-studbar">
-				<view v-for="n in 8" :key="n" class="bk-stud"></view>
-			</view>
-			<view class="bk-card">
-				<view class="bk-brand">
-					<view class="bk-brand__logo"><view class="pxi pxi-chip"></view></view>
-					<view class="bk-brand__meta">
-						<text class="bk-brand__en">BRICK ID</text>
-						<text class="bk-brand__cn">积木账户</text>
-					</view>
-				</view>
-
-				<text class="bk-title">登 录</text>
-				<text class="bk-lead">拼上最后一块，完成你的作品</text>
-
-				<view class="bk-tabs">
-					<view v-for="(item, i) in tabs" :key="i" class="bk-tab" :class="{ on: tab === i }" @click="tab = i">{{ item }}</view>
-				</view>
-
-				<view class="bk-form">
-					<block v-if="tab === 0">
-						<view class="bk-field">
-							<view class="bk-field__ico"><view class="pxi pxi-user"></view></view>
-							<input class="bk-field__in" v-model="account" placeholder="手机号 / 邮箱" placeholder-style="color:#98a2ae" maxlength="40" />
-						</view>
-						<view class="bk-field">
-							<view class="bk-field__ico"><view class="pxi pxi-lock"></view></view>
-							<input class="bk-field__in" v-model="password" :password="!showPwd" placeholder="请输入登录密码" placeholder-style="color:#98a2ae" maxlength="20" />
-							<view class="bk-eye" @click="showPwd = !showPwd"><view class="pxi pxi-eye"></view></view>
-						</view>
-						<view class="bk-row">
-							<text class="bk-row__link" @click="goForget">忘记密码？</text>
-						</view>
-					</block>
-					<block v-else-if="tab === 1">
-						<view class="bk-field">
-							<view class="bk-field__ico"><view class="pxi pxi-phone"></view></view>
-							<input class="bk-field__in bk-field__in--en" v-model="phone" type="number" placeholder="+86" placeholder-style="color:#98a2ae" maxlength="11" />
-						</view>
-						<view class="bk-field">
-							<view class="bk-field__ico"><view class="pxi pxi-shield"></view></view>
-							<input class="bk-field__in" v-model="smsCode" type="number" placeholder="短信验证码" placeholder-style="color:#98a2ae" maxlength="6" />
-							<view class="bk-code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + 's' : '获取验证码' }}</view>
-						</view>
-					</block>
-					<block v-else>
-						<view class="bk-field">
-							<view class="bk-field__ico"><view class="pxi pxi-mail"></view></view>
-							<input class="bk-field__in" v-model="email" placeholder="player@pixel.id" placeholder-style="color:#98a2ae" maxlength="40" />
-						</view>
-						<view class="bk-field">
-							<view class="bk-field__ico"><view class="pxi pxi-shield"></view></view>
-							<input class="bk-field__in" v-model="mailCode" type="number" placeholder="邮箱验证码" placeholder-style="color:#98a2ae" maxlength="6" />
-							<view class="bk-code" :class="{ off: mailLeft > 0 }" @click="sendCode('mail')">{{ mailLeft > 0 ? mailLeft + 's' : '获取验证码' }}</view>
-						</view>
-					</block>
-
-					<view class="bk-btn" @click="submit">
-						<view class="pxi pxi-play"></view><text>拼 装 完 成</text>
-					</view>
-
-					<view class="bk-foot">
-						<text>还没有积木？</text>
-						<text class="bk-foot__link" @click="goRegister">立即注册</text>
-					</view>
-
-					<view class="bk-agree" @click="agreed = !agreed">
-						<view class="bk-check" :class="{ on: agreed }"></view>
-						<text>我已阅读并同意<text class="bk-link">《用户协议》</text>与<text class="bk-link">《隐私政策》</text></text>
-					</view>
-				</view>
-			</view>
-			<view class="bk-plate">
-				<view class="bk-brick bk-brick--red"></view>
-				<view class="bk-brick bk-brick--blue"></view>
-				<view class="bk-brick bk-brick--green"></view>
-				<view class="bk-brick bk-brick--yellow"></view>
+			<view class="bk-top__t">
+				<text class="bk-top__cn">拼出你的账号</text>
+				<text class="bk-top__en">BRICK LOGIN</text>
 			</view>
 		</view>
+
+		<!-- 模式切换：3 块 2x1 小积木 -->
+		<view class="bk-modes">
+			<view v-for="(m, i) in tabs" :key="i" class="bk-mode" :class="['bk-mode--' + i, { on: tab === i }]" @click="tab = i">
+				<view class="bk-studs"><view class="bk-stud"></view><view class="bk-stud"></view></view>
+				<text>{{ m }}</text>
+			</view>
+		</view>
+
+		<!-- 积木塔表单：载入逐块落位，聚焦抬起 -->
+		<view>
+			<block v-if="tab === 0">
+				<view class="bk-brick bk-brick--red" :class="{ up: focusField === 'account' }" style="animation-delay: .05s;">
+					<view class="bk-studs"><view class="bk-stud"></view><view class="bk-stud"></view><view class="bk-stud"></view><view class="bk-stud"></view></view>
+					<input class="bk-brick__in" v-model="account" placeholder="手机号 / 邮箱" placeholder-style="color:#ffb9bd" maxlength="40" @focus="focusField = 'account'" @blur="focusField = ''" />
+				</view>
+				<view class="bk-brick bk-brick--yellow" :class="{ up: focusField === 'password' }" style="animation-delay: .13s;">
+					<view class="bk-studs"><view class="bk-stud"></view><view class="bk-stud"></view><view class="bk-stud"></view><view class="bk-stud"></view></view>
+					<input class="bk-brick__in" v-model="password" :password="!showPwd" placeholder="请输入登录密码" placeholder-style="color:#8a7400" maxlength="20" @focus="focusField = 'password'" @blur="focusField = ''" />
+					<view class="bk-eye" @click="showPwd = !showPwd"><view class="pxi pxi-eye"></view></view>
+				</view>
+				<view class="bk-row"><text class="bk-row__link" @click="goForget">少了一块？拆除重建 →</text></view>
+			</block>
+			<block v-else-if="tab === 1">
+				<view class="bk-brick bk-brick--blue" :class="{ up: focusField === 'phone' }" style="animation-delay: .05s;">
+					<view class="bk-studs"><view class="bk-stud"></view><view class="bk-stud"></view><view class="bk-stud"></view><view class="bk-stud"></view></view>
+					<input class="bk-brick__in" v-model="phone" type="number" placeholder="11 位手机号" placeholder-style="color:#9fc4e8" maxlength="11" @focus="focusField = 'phone'" @blur="focusField = ''" />
+				</view>
+				<view class="bk-brick bk-brick--green" :class="{ up: focusField === 'smsCode' }" style="animation-delay: .13s;">
+					<view class="bk-studs"><view class="bk-stud"></view><view class="bk-stud"></view><view class="bk-stud"></view><view class="bk-stud"></view></view>
+					<input class="bk-brick__in" v-model="smsCode" type="number" placeholder="短信验证码" placeholder-style="color:#a9dcb4" maxlength="6" @focus="focusField = 'smsCode'" @blur="focusField = ''" />
+					<view class="bk-code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + 's' : '获取验证码' }}</view>
+				</view>
+			</block>
+			<block v-else>
+				<view class="bk-brick bk-brick--orange" :class="{ up: focusField === 'email' }" style="animation-delay: .05s;">
+					<view class="bk-studs"><view class="bk-stud"></view><view class="bk-stud"></view><view class="bk-stud"></view><view class="bk-stud"></view></view>
+					<input class="bk-brick__in" v-model="email" placeholder="player@pixel.id" placeholder-style="color:#ffd9b3" maxlength="40" @focus="focusField = 'email'" @blur="focusField = ''" />
+				</view>
+				<view class="bk-brick bk-brick--green" :class="{ up: focusField === 'mailCode' }" style="animation-delay: .13s;">
+					<view class="bk-studs"><view class="bk-stud"></view><view class="bk-stud"></view><view class="bk-stud"></view><view class="bk-stud"></view></view>
+					<input class="bk-brick__in" v-model="mailCode" type="number" placeholder="邮箱验证码" placeholder-style="color:#a9dcb4" maxlength="6" @focus="focusField = 'mailCode'" @blur="focusField = ''" />
+					<view class="bk-code" :class="{ off: mailLeft > 0 }" @click="sendCode('mail')">{{ mailLeft > 0 ? mailLeft + 's' : '获取验证码' }}</view>
+				</view>
+			</block>
+
+			<!-- 提交：超宽绿色基板 -->
+			<view class="bk-base" style="animation-delay: .21s;" @click="submit">
+				<view class="bk-studs"><view class="bk-stud"></view><view class="bk-stud"></view><view class="bk-stud"></view><view class="bk-stud"></view><view class="bk-stud"></view><view class="bk-stud"></view></view>
+				<text>开 始 拼 装</text>
+			</view>
+
+			<view class="bk-foot">
+				<text>还没有积木？</text>
+				<text class="bk-foot__link" @click="goRegister">立即注册</text>
+			</view>
+
+			<view class="bk-agree" @click="agreed = !agreed">
+				<view class="bk-check" :class="{ on: agreed }"></view>
+				<text>我已阅读并同意<text class="bk-link">《用户协议》</text>与<text class="bk-link">《隐私政策》</text></text>
+			</view>
+		</view>
+
+		<!-- 底部拼装底板 -->
+		<view class="bk-floor"></view>
 	</view>
 </template>
 
@@ -107,7 +95,8 @@
 				mailCode: '',
 				smsLeft: 0,
 				mailLeft: 0,
-				timer: null
+				timer: null,
+				focusField: ''
 			}
 		},
 		onLoad(options) {

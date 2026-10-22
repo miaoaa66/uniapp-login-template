@@ -1,102 +1,110 @@
 <template>
 	<view class="ts-page">
-		<view class="ts-nav">
-			<view class="ts-nav__back" @click="goBack">
-				<view class="pxi pxi-back"></view>
+		<view class="ts-device">
+			<view class="ts-screw ts-screw--lt"></view>
+			<view class="ts-screw ts-screw--rt"></view>
+			<view class="ts-screw ts-screw--lb"></view>
+			<view class="ts-screw ts-screw--rb"></view>
+
+			<view class="ts-toprow">
+				<view class="ts-back" @click="goBack">
+					<view class="pxi pxi-back"></view>
+				</view>
+				<text class="ts-brandt">PIXELMAN · 登录</text>
+				<view class="ts-led"></view>
 			</view>
-			<text class="ts-nav__title">登 录</text>
-			<text class="ts-nav__slot">AUTO</text>
-		</view>
 
-		<view class="ts-body">
-			<view class="ts-tape">
-				<view class="ts-tape__win">
-					<view class="ts-reel ts-reel--left"></view>
-					<view class="ts-tape__label"><text class="ts-tape__t">MIXTAPE 1983 · SIDE A</text></view>
-					<view class="ts-reel ts-reel--right"></view>
+			<view class="ts-bay">
+				<view class="ts-win">
+					<view class="ts-reel ts-reel--l"></view>
+					<view class="ts-eq">
+						<view class="ts-eq__b ts-eq__b--0"></view>
+						<view class="ts-eq__b ts-eq__b--1"></view>
+						<view class="ts-eq__b ts-eq__b--2"></view>
+						<view class="ts-eq__b ts-eq__b--3"></view>
+						<view class="ts-eq__b ts-eq__b--4"></view>
+					</view>
+					<view class="ts-reel ts-reel--r"></view>
 				</view>
-				<view class="ts-tape__screw ts-tape__screw--lt"></view>
-				<view class="ts-tape__screw ts-tape__screw--rt"></view>
-				<view class="ts-tape__screw ts-tape__screw--lb"></view>
-				<view class="ts-tape__screw ts-tape__screw--rb"></view>
+				<view class="ts-winlabel">
+					<text class="ts-winlabel__t">SIDE A · PIXEL MIX</text>
+				</view>
 			</view>
-			<view class="ts-card">
-				<view class="ts-brand">
-					<view class="ts-brand__logo"><view class="pxi pxi-chip"></view></view>
-					<view class="ts-brand__meta">
-						<text class="ts-brand__en">WALKMAN</text>
-						<text class="ts-brand__cn">随身听账户</text>
-					</view>
-				</view>
 
-				<text class="ts-title">登 录</text>
-				<text class="ts-lead">按下播放键，继续你的歌单</text>
-
-				<view class="ts-tabs">
-					<view v-for="(item, i) in tabs" :key="i" class="ts-tab" :class="{ on: tab === i }" @click="tab = i">{{ item }}</view>
-				</view>
-
-				<view class="ts-form">
-					<block v-if="tab === 0">
-						<view class="ts-field">
-							<view class="ts-field__ico"><view class="pxi pxi-user"></view></view>
-							<input class="ts-field__in" v-model="account" placeholder="手机号 / 邮箱" placeholder-style="color:#8b939c" maxlength="40" />
-						</view>
-						<view class="ts-field">
-							<view class="ts-field__ico"><view class="pxi pxi-lock"></view></view>
-							<input class="ts-field__in" v-model="password" :password="!showPwd" placeholder="请输入登录密码" placeholder-style="color:#8b939c" maxlength="20" />
-							<view class="ts-eye" @click="showPwd = !showPwd"><view class="pxi pxi-eye"></view></view>
-						</view>
-						<view class="ts-row">
-							<text class="ts-row__link" @click="goForget">忘记密码？</text>
-						</view>
-					</block>
-					<block v-else-if="tab === 1">
-						<view class="ts-field">
-							<view class="ts-field__ico"><view class="pxi pxi-phone"></view></view>
-							<input class="ts-field__in ts-field__in--en" v-model="phone" type="number" placeholder="+86" placeholder-style="color:#8b939c" maxlength="11" />
-						</view>
-						<view class="ts-field">
-							<view class="ts-field__ico"><view class="pxi pxi-shield"></view></view>
-							<input class="ts-field__in" v-model="smsCode" type="number" placeholder="短信验证码" placeholder-style="color:#8b939c" maxlength="6" />
-							<view class="ts-code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + 's' : '获取验证码' }}</view>
-						</view>
-					</block>
-					<block v-else>
-						<view class="ts-field">
-							<view class="ts-field__ico"><view class="pxi pxi-mail"></view></view>
-							<input class="ts-field__in" v-model="email" placeholder="player@pixel.id" placeholder-style="color:#8b939c" maxlength="40" />
-						</view>
-						<view class="ts-field">
-							<view class="ts-field__ico"><view class="pxi pxi-shield"></view></view>
-							<input class="ts-field__in" v-model="mailCode" type="number" placeholder="邮箱验证码" placeholder-style="color:#8b939c" maxlength="6" />
-							<view class="ts-code" :class="{ off: mailLeft > 0 }" @click="sendCode('mail')">{{ mailLeft > 0 ? mailLeft + 's' : '获取验证码' }}</view>
-						</view>
-					</block>
-
-					<view class="ts-btn" @click="submit">
-						<view class="pxi pxi-play"></view><text>播 放</text>
-					</view>
-
-					<view class="ts-foot">
-						<text>还没有磁带？</text>
-						<text class="ts-foot__link" @click="goRegister">立即注册</text>
-					</view>
-
-					<view class="ts-agree" @click="agreed = !agreed">
-						<view class="ts-check" :class="{ on: agreed }"></view>
-						<text>我已阅读并同意<text class="ts-link">《用户协议》</text>与<text class="ts-link">《隐私政策》</text></text>
+			<view class="ts-presets">
+				<view v-for="(item, i) in tabs" :key="i" class="ts-preset" :class="{ on: tab === i }" @click="tab = i">
+					<view class="ts-preset__led"></view>
+					<view class="ts-preset__col">
+						<text class="ts-preset__t">{{ presets[i] }}</text>
+						<text class="ts-preset__cn">{{ item }}</text>
 					</view>
 				</view>
 			</view>
-			<view class="ts-wave">
-				<view v-for="n in 24" :key="n" class="ts-wave__b" :class="'ts-wave__b--' + (n % 6)"></view>
-			</view>
-			<view class="ts-keys">
-				<view class="ts-key">&lt;&lt;</view>
-				<view class="ts-key ts-key--play">&gt;</view>
-				<view class="ts-key">[]</view>
-				<view class="ts-key">&gt;&gt;</view>
+
+			<view class="ts-list">
+				<block v-if="tab === 0">
+					<view class="ts-track">
+						<text class="ts-track__no">TRACK 01</text>
+						<text class="ts-track__name">账号</text>
+						<input class="ts-track__in" v-model="account" placeholder="手机号 / 邮箱" placeholder-style="color:#8b939c" maxlength="40" />
+					</view>
+					<view class="ts-track">
+						<text class="ts-track__no">TRACK 02</text>
+						<text class="ts-track__name">密码</text>
+						<input class="ts-track__in" v-model="password" :password="!showPwd" placeholder="请输入登录密码" placeholder-style="color:#8b939c" maxlength="20" />
+						<view class="ts-hold" :class="{ on: showPwd }" @click="showPwd = !showPwd"><text class="ts-hold__t">HOLD</text></view>
+					</view>
+					<view class="ts-mini"><text class="ts-mini__t" @click="goForget">忘记密码？REW ◀◀ 倒带重置</text></view>
+				</block>
+				<block v-else-if="tab === 1">
+					<view class="ts-track">
+						<text class="ts-track__no">TRACK 01</text>
+						<text class="ts-track__name">手机号</text>
+						<input class="ts-track__in" v-model="phone" type="number" placeholder="+86" placeholder-style="color:#8b939c" maxlength="11" />
+					</view>
+					<view class="ts-track">
+						<text class="ts-track__no">TRACK 02</text>
+						<text class="ts-track__name">验证码</text>
+						<input class="ts-track__in" v-model="smsCode" type="number" placeholder="短信验证码" placeholder-style="color:#8b939c" maxlength="6" />
+						<view class="ts-rec" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">
+							<view class="ts-rec__dot"></view>
+							<text class="ts-rec__t">{{ smsLeft > 0 ? smsLeft + 's' : 'REC' }}</text>
+						</view>
+					</view>
+				</block>
+				<block v-else>
+					<view class="ts-track">
+						<text class="ts-track__no">TRACK 01</text>
+						<text class="ts-track__name">邮箱</text>
+						<input class="ts-track__in" v-model="email" placeholder="player@pixel.id" placeholder-style="color:#8b939c" maxlength="40" />
+					</view>
+					<view class="ts-track">
+						<text class="ts-track__no">TRACK 02</text>
+						<text class="ts-track__name">验证码</text>
+						<input class="ts-track__in" v-model="mailCode" type="number" placeholder="邮箱验证码" placeholder-style="color:#8b939c" maxlength="6" />
+						<view class="ts-rec" :class="{ off: mailLeft > 0 }" @click="sendCode('mail')">
+							<view class="ts-rec__dot"></view>
+							<text class="ts-rec__t">{{ mailLeft > 0 ? mailLeft + 's' : 'REC' }}</text>
+						</view>
+					</view>
+				</block>
+
+				<view class="ts-keyrow">
+					<view class="ts-keycol">
+						<view class="ts-agree" @click="agreed = !agreed">
+							<view class="ts-check" :class="{ on: agreed }"></view>
+							<text class="ts-agree__t">已阅读并同意<text class="ts-agree__lnk">《用户协议》</text>与<text class="ts-agree__lnk">《隐私政策》</text></text>
+						</view>
+						<view class="ts-foot">
+							<text class="ts-foot__t">还没有磁带？</text>
+							<text class="ts-foot__link" @click="goRegister">录一盘 → 立即注册</text>
+						</view>
+					</view>
+					<view class="ts-play" @click="submit">
+						<view class="pxi pxi-play ts-play__ico"></view>
+						<text class="ts-play__t">PLAY</text>
+					</view>
+				</view>
 			</view>
 		</view>
 	</view>
@@ -107,6 +115,7 @@
 		data() {
 			return {
 				tabs: ["密码登录","手机验证码","邮箱验证码"],
+				presets: ["NORMAL", "SMS", "MAIL"],
 				tab: 0,
 				agreed: false,
 				showPwd: false,

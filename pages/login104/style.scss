@@ -1,26 +1,24 @@
 /* ==========================================================================
- * SET M · 积木砖块 BRICK
+ * SET M · 积木拼装 BRICK
  * pages/login104 —— 登录 / 注册 / 找回密码 三页共用
- * 白底 + 高饱和积木色，凸点顶边与拼装底板还原塑料积木手感
+ * 白底拼装台：字段是带凸点的积木，载入逐块落位，聚焦抬起
+ * 登录 = 积木塔，注册 = 拼搭说明书（3 步 + 成品图），找回 = 拆除重建
  *
  * 字体：Zpix（中文像素）+ Press Start 2P（拉丁与数字）
  * 图标：common/pixel-icons.scss（8x8 网格，box-shadow 逐点绘制）
- * 字号：Zpix 走 12px 的整数倍，Press Start 2P 走 8px 的整数倍
  * ========================================================================== */
 
 @import '../../common/pixel-icons.scss';
 
 /* ---------- 设计令牌 ---------- */
-$ink: #1d2430;         // 主文字
-$dim: #6b7480;         // 次级文字
-$bg: #eef1f5;          // 页面底色
-$panel: #ffffff;       // 卡片/面板底色
-$panel2: #f4f6f9;      // 次级面板底色（Tab 未选中、字段底）
-$line: #1d2430;        // 主描边
-$lineSoft: #c3cad4;    // 弱描边
-$accent: #ffcf00;      // 主强调色（按钮 / 选中态）
-$accent2: #1668c1;     // 次强调色（链接 / 图标）
-$on: #1d2430;          // 强调色之上的文字
+$bg: #f6f7f9;        // 页面白底
+$red: #e3000b;       // 积木红
+$yellow: #ffd500;    // 积木黄
+$blue: #0057a8;      // 积木蓝
+$green: #00852b;     // 积木绿
+$orange: #f57c00;    // 积木橙
+$line: #2d2f33;      // 描边深灰
+$dim: #7b838f;       // 次级文字
 
 /* ---------- 页面容器 ---------- */
 .bk-page,
@@ -31,187 +29,127 @@ $on: #1d2430;          // 强调色之上的文字
 .bk-page {
 	position: relative;
 	min-height: 100vh;
-	padding-bottom: 40rpx;
+	padding: 40rpx 32rpx 60rpx;
 	background-color: $bg;
-	background-image: linear-gradient(rgba(29, 36, 48, .04) 2rpx, transparent 2rpx), linear-gradient(90deg, rgba(29, 36, 48, .04) 2rpx, transparent 2rpx); background-size: 40rpx 40rpx;
 	font-family: 'Zpix', sans-serif;
-	color: $ink;
+	color: $line;
 	-webkit-font-smoothing: none;
 }
 
-/* ---------- 自绘导航栏 ---------- */
-.bk-nav {
+/* ---------- 顶部标题区 ---------- */
+.bk-top {
 	display: flex;
 	align-items: center;
-	height: 96rpx;
-	padding: 0 24rpx;
-	background-color: $panel;
-	border-bottom: 4rpx solid $line;
+	margin-bottom: 44rpx;
 }
 
-.bk-nav__back {
-	display: flex;
-	align-items: center;
-	width: 110rpx;
-	flex: none;
-	color: $ink;
-}
-
-.bk-nav__back:active {
-	opacity: .5;
-}
-
-.bk-nav__title {
-	flex: 1;
-	text-align: center;
-	font-size: 48rpx;
-	letter-spacing: 6rpx;
-	color: $ink;
-}
-
-.bk-nav__slot {
-	flex: none;
-	min-width: 110rpx;
-	text-align: right;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 24rpx;
-	letter-spacing: 1rpx;
-	color: $dim;
-}
-
-/* ---------- 主体与卡片 ---------- */
-.bk-body {
-	padding: 28rpx 32rpx 0;
-}
-
-.bk-card {
-	padding: 36rpx 32rpx 32rpx;
-	background-color: $panel;
-	border: 4rpx solid $line;
-	box-shadow: 10rpx 10rpx 0 rgba(0, 0, 0, .16);
-}
-
-.bk-brand {
-	display: flex;
-	align-items: center;
-}
-
-.bk-brand__logo {
+/* 返回键 = 小积木块按钮 */
+.bk-back {
+	position: relative;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 68rpx;
-	height: 68rpx;
 	flex: none;
-	color: $on;
-	background-color: $accent;
+	width: 92rpx;
+	height: 64rpx;
+	background-color: $red;
+	color: #ffffff;
 	border: 4rpx solid $line;
-	box-shadow: 5rpx 5rpx 0 $line;
+	border-radius: 8rpx;
+	box-shadow: 4rpx 5rpx 0 rgba(45, 47, 51, .35);
+	transition: transform .1s ease, box-shadow .1s ease;
 }
 
-.bk-brand__logo .pxi {
-	transform: scale(2);
+.bk-back:active {
+	transform: translate(3rpx, 3rpx);
+	box-shadow: 1rpx 2rpx 0 rgba(45, 47, 51, .35);
 }
 
-.bk-brand__meta {
-	margin-left: 20rpx;
+.bk-top__t {
+	margin-left: 26rpx;
 }
 
-.bk-brand__en {
+.bk-top__cn {
 	display: block;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	letter-spacing: 1rpx;
-	color: $ink;
+	font-size: 44rpx;
+	letter-spacing: 4rpx;
+	font-weight: bold;
+	color: $line;
 }
 
-.bk-brand__cn {
+.bk-top__en {
 	display: block;
 	margin-top: 8rpx;
-	font-size: 24rpx;
-	letter-spacing: 4rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 16rpx;
+	letter-spacing: 2rpx;
 	color: $dim;
 }
 
-.bk-title {
-	display: block;
-	margin-top: 34rpx;
-	font-size: 48rpx;
-	line-height: 1.3;
-	letter-spacing: 8rpx;
-	color: $ink;
-}
-
-.bk-lead {
-	display: block;
-	margin-top: 16rpx;
-	font-size: 24rpx;
-	line-height: 1.6;
-	color: $dim;
-}
-
-/* ---------- 登录方式切换 ---------- */
-.bk-tabs {
+/* ---------- 积木凸点（通用件） ---------- */
+.bk-studs {
+	position: absolute;
+	top: -16rpx;
+	left: 0;
+	right: 0;
 	display: flex;
-	margin-top: 36rpx;
+	justify-content: space-evenly;
+	pointer-events: none;
 }
 
-.bk-tab {
-	flex: 1;
-	height: 72rpx;
-	line-height: 68rpx;
-	text-align: center;
-	font-size: 24rpx;
-	color: $dim;
-	background-color: $panel2;
-	border: 4rpx solid $lineSoft;
+.bk-stud {
+	width: 26rpx;
+	height: 16rpx;
+	border: 3rpx solid $line;
+	border-bottom: 0;
+	border-radius: 8rpx 8rpx 0 0;
+	background-color: #ffffff;
+	transition: background-color .15s ease;
 }
 
-.bk-tab + .bk-tab {
-	margin-left: -4rpx;
-}
-
-.bk-tab.on {
+/* 积木字段 */
+.bk-brick {
 	position: relative;
-	z-index: 1;
-	color: $on;
-	background-color: $accent;
-	border-color: $line;
-	box-shadow: 4rpx 4rpx 0 $line;
-}
-
-/* ---------- 表单 ---------- */
-.bk-form {
-	margin-top: 32rpx;
-}
-
-.bk-field {
 	display: flex;
 	align-items: center;
-	height: 96rpx;
-	padding: 0 22rpx;
+	min-height: 104rpx;
+	padding: 0 24rpx;
 	margin-bottom: 24rpx;
-	background-color: $panel;
 	border: 4rpx solid $line;
+	border-radius: 10rpx;
+	box-shadow: 5rpx 6rpx 0 rgba(45, 47, 51, .35);
+	animation: bk-drop .45s cubic-bezier(.2, .9, .3, 1.35) backwards;
+	transition: transform .15s ease;
 }
 
-.bk-field__ico {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex: none;
-	margin-right: 18rpx;
-	color: $ink;
+/* 聚焦：微微抬起，凸点变白 */
+.bk-brick.up {
+	transform: translateY(-4rpx);
 }
 
-.bk-field__in {
+.bk-brick--red { background-color: $red; color: #ffffff; }
+.bk-brick--yellow { background-color: $yellow; color: $line; }
+.bk-brick--blue { background-color: $blue; color: #ffffff; }
+.bk-brick--green { background-color: $green; color: #ffffff; }
+.bk-brick--orange { background-color: $orange; color: #ffffff; }
+
+.bk-brick--red .bk-stud { background-color: $red; }
+.bk-brick--yellow .bk-stud { background-color: $yellow; }
+.bk-brick--blue .bk-stud { background-color: $blue; }
+.bk-brick--green .bk-stud { background-color: $green; }
+.bk-brick--orange .bk-stud { background-color: $orange; }
+
+.bk-brick.up .bk-stud {
+	background-color: #ffffff;
+}
+
+.bk-brick__in {
 	flex: 1;
 	min-width: 0;
-	height: 100%;
-	padding: 0;
+	height: 56rpx;
 	font-family: 'Zpix', sans-serif;
-	font-size: 24rpx;
-	color: $ink;
+	font-size: 26rpx;
+	color: inherit;
 	background-color: transparent;
 	border: 0;
 	border-radius: 0;
@@ -219,149 +157,460 @@ $on: #1d2430;          // 强调色之上的文字
 	appearance: none;
 }
 
-.bk-field__in--en {
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	letter-spacing: 2rpx;
-}
-
 .bk-eye {
 	flex: none;
 	margin-left: 14rpx;
 	padding: 0 6rpx;
-	color: $accent2;
+	color: $line;
 }
 
 .bk-code {
 	flex: none;
 	margin-left: 14rpx;
-	height: 64rpx;
-	line-height: 60rpx;
-	padding: 0 16rpx;
-	font-size: 24rpx;
-	color: $ink;
-	background-color: $panel2;
-	border: 4rpx solid $line;
+	padding: 8rpx 14rpx;
+	font-size: 22rpx;
+	color: #ffffff;
+	border: 3rpx solid rgba(255, 255, 255, .85);
+	border-radius: 6rpx;
 }
 
 .bk-code.off {
-	color: $dim;
-	border-color: $lineSoft;
+	opacity: .5;
 }
 
-/* 右对齐小链接行 */
+/* 载入逐块落位：上落 + 60% 处轻微过冲 */
+@keyframes bk-drop {
+	0% { transform: translateY(-40rpx); opacity: 0; }
+	60% { transform: translateY(6rpx); opacity: 1; }
+	100% { transform: translateY(0); opacity: 1; }
+}
+
+/* ---------- 模式切换：3 块 2x1 小积木 ---------- */
+.bk-modes {
+	display: flex;
+	margin-bottom: 40rpx;
+}
+
+.bk-mode {
+	position: relative;
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 72rpx;
+	margin-right: 18rpx;
+	font-size: 24rpx;
+	letter-spacing: 2rpx;
+	border: 4rpx solid $line;
+	border-radius: 8rpx;
+	box-shadow: 4rpx 5rpx 0 rgba(45, 47, 51, .35);
+	opacity: .5;
+	transition: transform .15s ease, opacity .15s ease, box-shadow .15s ease;
+}
+
+.bk-mode:last-child {
+	margin-right: 0;
+}
+
+.bk-mode.on {
+	transform: translateY(-6rpx);
+	opacity: 1;
+	box-shadow: 6rpx 9rpx 0 rgba(45, 47, 51, .45);
+}
+
+.bk-mode--0 { background-color: $red; color: #ffffff; }
+.bk-mode--1 { background-color: $yellow; color: $line; }
+.bk-mode--2 { background-color: $blue; color: #ffffff; }
+
+.bk-mode--0 .bk-stud { background-color: $red; }
+.bk-mode--1 .bk-stud { background-color: $yellow; }
+.bk-mode--2 .bk-stud { background-color: $blue; }
+
+.bk-mode.on .bk-stud {
+	background-color: #ffffff;
+}
+
+/* ---------- 忘记密码小链接 ---------- */
 .bk-row {
 	display: flex;
 	justify-content: flex-end;
-	margin: -4rpx 0 24rpx;
-	font-size: 24rpx;
+	margin: -6rpx 0 26rpx;
+	font-size: 22rpx;
 }
 
 .bk-row__link {
-	color: $accent2;
+	color: $blue;
+	text-decoration: underline;
 }
 
-/* ---------- 六格验证码 ---------- */
-.bk-cells {
-	display: flex;
-	justify-content: space-between;
-	margin-bottom: 24rpx;
-}
-
-.bk-cell {
-	width: 88rpx;
-	height: 104rpx;
-	padding: 0;
-	box-sizing: border-box;
-	text-align: center;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 64rpx;
-	color: $ink;
-	background-color: $panel;
-	border: 4rpx solid $line;
-	border-radius: 0;
-	-webkit-appearance: none;
-	appearance: none;
-}
-
-.bk-cell.on {
-	color: $on;
-	background-color: $accent;
-	box-shadow: 6rpx 6rpx 0 $line;
-}
-
-.bk-cell.dim {
-	color: $dim;
-	background-color: $panel2;
-	border-color: $lineSoft;
-}
-
-/* ---------- 密码强度 ---------- */
-.bk-power {
-	display: flex;
-	align-items: center;
-	margin: -4rpx 0 24rpx;
-	font-size: 24rpx;
-	color: $dim;
-}
-
-.bk-power__t {
-	margin-right: 14rpx;
-}
-
-.bk-power__bars {
-	display: flex;
-	flex: 1;
-}
-
-.bk-power__bar {
-	flex: 1;
-	height: 16rpx;
-	margin-right: 8rpx;
-	background-color: $panel2;
-	border: 3rpx solid $lineSoft;
-}
-
-.bk-power__bar.on {
-	background-color: #92cc41;
-	border-color: $line;
-}
-
-.bk-power__v {
-	width: 64rpx;
-	text-align: right;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	color: $ink;
-}
-
-/* ---------- 按钮 ---------- */
-.bk-btn {
+/* ---------- 提交：绿色基板按钮（8x1 积木） ---------- */
+.bk-base {
+	position: relative;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	height: 96rpx;
-	margin-top: 32rpx;
-	font-size: 48rpx;
-	letter-spacing: 8rpx;
-	color: $on;
-	background-color: $accent;
+	margin-top: 36rpx;
+	background-color: $green;
+	color: #ffffff;
+	font-size: 40rpx;
+	letter-spacing: 10rpx;
 	border: 4rpx solid $line;
-	box-shadow: 8rpx 8rpx 0 $line;
+	border-radius: 10rpx;
+	box-shadow: 6rpx 7rpx 0 rgba(45, 47, 51, .4);
+	animation: bk-drop .45s cubic-bezier(.2, .9, .3, 1.35) backwards;
+	transition: transform .1s ease, box-shadow .1s ease;
 }
 
-.bk-btn .pxi {
-	margin-right: 14rpx;
+.bk-base .bk-stud {
+	background-color: $green;
 }
 
-.bk-btn:active {
-	transform: translate(4rpx, 4rpx);
-	box-shadow: 4rpx 4rpx 0 $line;
+.bk-base:active {
+	transform: translate(3rpx, 3rpx);
+	box-shadow: 2rpx 3rpx 0 rgba(45, 47, 51, .4);
 }
 
-.bk-btn--ghost {
-	color: $ink;
-	background-color: $panel;
+/* 中型积木键（下一步） */
+.bk-next {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 84rpx;
+	margin-top: 30rpx;
+	background-color: $blue;
+	color: #ffffff;
+	font-size: 30rpx;
+	letter-spacing: 8rpx;
+	border: 4rpx solid $line;
+	border-radius: 8rpx;
+	box-shadow: 5rpx 6rpx 0 rgba(45, 47, 51, .35);
+	animation: bk-drop .45s cubic-bezier(.2, .9, .3, 1.35) backwards;
+	transition: transform .1s ease, box-shadow .1s ease;
+}
+
+.bk-next .bk-stud {
+	background-color: $blue;
+}
+
+.bk-next:active {
+	transform: translate(3rpx, 3rpx);
+	box-shadow: 2rpx 3rpx 0 rgba(45, 47, 51, .35);
+}
+
+/* ---------- 底部拼装底板纹（浅灰凸点） ---------- */
+.bk-floor {
+	height: 88rpx;
+	margin-top: 44rpx;
+	border: 4rpx solid $line;
+	border-radius: 10rpx;
+	background-color: #e6e9ee;
+	background-image: radial-gradient(circle at 24rpx 24rpx, #cfd5dd 10rpx, transparent 11rpx);
+	background-size: 48rpx 48rpx;
+}
+
+/* ---------- 注册：说明书步骤圆点 ---------- */
+.bk-stepsrow {
+	display: flex;
+	align-items: center;
+	margin-bottom: 40rpx;
+}
+
+.bk-dot {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 52rpx;
+	height: 52rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 24rpx;
+	border: 4rpx solid $line;
+	border-radius: 8rpx;
+	background-color: #ffffff;
+	color: $dim;
+}
+
+.bk-dot.done {
+	background-color: $green;
+	color: #ffffff;
+}
+
+.bk-dot.cur {
+	background-color: $red;
+	color: #ffffff;
+}
+
+.bk-dotline {
+	flex: 1;
+	height: 4rpx;
+	margin: 0 12rpx;
+	background-color: #c9cfd8;
+	transition: background-color .2s ease;
+}
+
+.bk-dotline.on {
+	background-color: $green;
+}
+
+/* 说明书：左成品图 + 右搭建区 */
+.bk-manual {
+	display: flex;
+}
+
+.bk-result {
+	flex: none;
+	width: 150rpx;
+	margin-right: 24rpx;
+	padding: 16rpx;
+	background-color: #ffffff;
+	border: 4rpx solid $line;
+	border-radius: 8rpx;
+}
+
+.bk-result__t {
+	display: block;
+	margin-bottom: 16rpx;
+	text-align: center;
+	font-size: 20rpx;
+	color: $dim;
+}
+
+.bk-mini {
+	position: relative;
+	height: 44rpx;
+	margin-bottom: 20rpx;
+	border: 3rpx solid $line;
+	border-radius: 6rpx;
+	background-color: #d8dde4;
+	opacity: .55;
+	transition: opacity .2s ease, background-color .2s ease;
+}
+
+.bk-mini:last-child {
+	margin-bottom: 0;
+}
+
+.bk-mini.done {
+	opacity: 1;
+}
+
+.bk-mini--1.done { background-color: $red; }
+.bk-mini--2.done { background-color: $blue; }
+.bk-mini--3.done { background-color: $green; }
+
+.bk-mini__studs {
+	position: absolute;
+	top: -12rpx;
+	left: 0;
+	right: 0;
+	display: flex;
+	justify-content: space-evenly;
+}
+
+.bk-ministud {
+	width: 18rpx;
+	height: 12rpx;
+	border: 2rpx solid $line;
+	border-bottom: 0;
+	border-radius: 5rpx 5rpx 0 0;
+	background-color: #d8dde4;
+}
+
+.bk-mini--1.done .bk-ministud { background-color: $red; }
+.bk-mini--2.done .bk-ministud { background-color: $blue; }
+.bk-mini--3.done .bk-ministud { background-color: $green; }
+
+.bk-mini.done::after {
+	content: '';
+	position: absolute;
+	right: -12rpx;
+	top: -12rpx;
+	width: 30rpx;
+	height: 30rpx;
+	background-color: $green;
+	border: 3rpx solid $line;
+	border-radius: 50%;
+}
+
+.bk-mini.done::before {
+	content: '';
+	position: absolute;
+	right: -4rpx;
+	top: -3rpx;
+	width: 11rpx;
+	height: 6rpx;
+	border: solid #ffffff;
+	border-width: 0 0 3rpx 3rpx;
+	transform: rotate(-45deg);
+	z-index: 1;
+}
+
+.bk-build {
+	flex: 1;
+	min-width: 0;
+}
+
+/* ---------- 密码强度：3 格积木凸点 ---------- */
+.bk-power {
+	display: flex;
+	align-items: center;
+	margin: 4rpx 0 22rpx;
+	font-size: 22rpx;
+	color: $dim;
+}
+
+.bk-power__t {
+	margin-right: 16rpx;
+}
+
+.bk-power__stud {
+	width: 30rpx;
+	height: 30rpx;
+	margin-right: 12rpx;
+	border: 3rpx solid $line;
+	border-radius: 50%;
+	background-color: #ffffff;
+}
+
+.bk-power__stud.on {
+	background-color: $green;
+}
+
+/* ---------- 找回：拆除重建阶段指示 ---------- */
+.bk-phase {
+	display: flex;
+	align-items: center;
+	margin-bottom: 40rpx;
+}
+
+.bk-pbrick {
+	position: relative;
+	width: 108rpx;
+	height: 52rpx;
+	border: 4rpx solid $line;
+	border-radius: 8rpx;
+	opacity: .45;
+	transition: opacity .2s ease, transform .2s ease;
+}
+
+.bk-pbrick.on {
+	opacity: 1;
+	transform: translateY(-4rpx);
+	box-shadow: 4rpx 5rpx 0 rgba(45, 47, 51, .35);
+}
+
+.bk-pbrick--red { background-color: $red; }
+.bk-pbrick--green { background-color: $green; }
+
+.bk-pbrick__studs {
+	position: absolute;
+	top: -14rpx;
+	left: 0;
+	right: 0;
+	display: flex;
+	justify-content: space-evenly;
+}
+
+.bk-pstud {
+	width: 22rpx;
+	height: 14rpx;
+	border: 3rpx solid $line;
+	border-bottom: 0;
+	border-radius: 6rpx 6rpx 0 0;
+}
+
+.bk-pbrick--red .bk-pstud { background-color: $red; }
+.bk-pbrick--green .bk-pstud { background-color: $green; }
+
+.bk-phase__arrow {
+	margin: 0 20rpx;
+	color: $line;
+}
+
+.bk-phase__t {
+	margin-left: 10rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 16rpx;
+	letter-spacing: 2rpx;
+	color: $dim;
+}
+
+/* ---------- 6 格验证码小积木 ---------- */
+.bk-cellbricks {
+	display: flex;
+	justify-content: space-between;
+	margin: 24rpx 0 10rpx;
+}
+
+.bk-cellbrick {
+	position: relative;
+	width: 92rpx;
+}
+
+.bk-cstuds {
+	position: absolute;
+	top: -14rpx;
+	left: 0;
+	right: 0;
+	display: flex;
+	justify-content: space-evenly;
+	pointer-events: none;
+}
+
+.bk-cstud {
+	width: 22rpx;
+	height: 14rpx;
+	border: 3rpx solid $line;
+	border-bottom: 0;
+	border-radius: 6rpx 6rpx 0 0;
+	background-color: #ffffff;
+	transition: background-color .15s ease;
+}
+
+.bk-cellbrick__in {
+	width: 100%;
+	height: 92rpx;
+	box-sizing: border-box;
+	padding: 0;
+	text-align: center;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 36rpx;
+	color: $line;
+	background-color: #ffffff;
+	border: 4rpx solid $line;
+	border-radius: 8rpx;
+	-webkit-appearance: none;
+	appearance: none;
+	transition: border-color .15s ease;
+}
+
+.bk-cellbrick.on .bk-cellbrick__in {
+	border-color: $green;
+}
+
+.bk-cellbrick.on .bk-cstud {
+	background-color: $green;
+}
+
+/* ---------- REBUILD OK 指示牌 ---------- */
+.bk-ok {
+	margin-top: 28rpx;
+	padding: 20rpx;
+	text-align: center;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 28rpx;
+	letter-spacing: 2rpx;
+	color: #ffffff;
+	background-color: $green;
+	border: 4rpx solid $line;
+	border-radius: 8rpx;
+	animation: bk-pop .3s ease-out backwards;
+}
+
+@keyframes bk-pop {
+	0% { transform: scale(.8); opacity: 0; }
+	100% { transform: scale(1); opacity: 1; }
 }
 
 /* ---------- 页脚与协议 ---------- */
@@ -373,15 +622,15 @@ $on: #1d2430;          // 强调色之上的文字
 }
 
 .bk-foot__link {
-	color: $accent2;
+	color: $blue;
 	text-decoration: underline;
 }
 
 .bk-agree {
 	display: flex;
 	align-items: flex-start;
-	margin-top: 28rpx;
-	font-size: 24rpx;
+	margin-top: 26rpx;
+	font-size: 22rpx;
 	line-height: 1.7;
 	color: $dim;
 }
@@ -392,12 +641,13 @@ $on: #1d2430;          // 强调色之上的文字
 	width: 30rpx;
 	height: 30rpx;
 	margin: 4rpx 12rpx 0 0;
-	background-color: $panel;
+	background-color: #ffffff;
 	border: 4rpx solid $line;
+	border-radius: 4rpx;
 }
 
 .bk-check.on {
-	background-color: #92cc41;
+	background-color: $green;
 }
 
 .bk-check.on::after {
@@ -406,137 +656,17 @@ $on: #1d2430;          // 强调色之上的文字
 	left: 8rpx;
 	top: 2rpx;
 	width: 8rpx;
-	height: 15rpx;
-	border: solid $line;
+	height: 14rpx;
+	border: solid #ffffff;
 	border-width: 0 4rpx 4rpx 0;
 	transform: rotate(45deg);
 }
 
 .bk-link {
-	color: $accent2;
-}
-
-/* ---------- 步骤条 ---------- */
-.bk-steps {
-	display: flex;
-	align-items: center;
-	margin: 4rpx 0 30rpx;
-}
-
-.bk-step {
-	display: flex;
-	align-items: center;
-	font-size: 24rpx;
-	color: $dim;
-}
-
-.bk-step__n {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 48rpx;
-	height: 48rpx;
-	margin-right: 12rpx;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	color: $ink;
-	background-color: $panel2;
-	border: 4rpx solid $lineSoft;
-}
-
-.bk-step.on .bk-step__n {
-	color: $on;
-	background-color: $accent2;
-	border-color: $line;
-}
-
-.bk-step__line {
-	flex: 1;
-	height: 4rpx;
-	margin: 0 16rpx;
-	background-color: $lineSoft;
-}
-
-.bk-step.on .bk-step__line {
-	background-color: $line;
+	color: $blue;
 }
 
 /* ---------- 占位符（uniapp 用 placeholder-style 内联声明，这里兼容 H5） ---------- */
-.bk-field__in::-webkit-input-placeholder {
-	color: #98a2ae;
+.bk-brick__in::-webkit-input-placeholder {
+	opacity: .7;
 }
-
-/* ---------- 主题皮肤（覆盖骨架） ---------- */
-.bk-card {
-	box-shadow: 10rpx 10rpx 0 rgba(29, 36, 48, .16);
-}
-
-.bk-btn {
-	color: $on;
-	background-color: $accent;
-	box-shadow: 6rpx 6rpx 0 $line;
-}
-
-.bk-title {
-	color: $accent2;
-}
-
-.bk-tab.on {
-	color: $panel;
-	background-color: $accent2;
-	border-color: $line;
-}
-
-/* ---------- 主题装饰 ---------- */
-.bk-studbar {
-	display: flex;
-	justify-content: center;
-	margin-bottom: 20rpx;
-}
-
-.bk-stud {
-	width: 40rpx;
-	height: 24rpx;
-	margin: 0 6rpx;
-	background-color: $accent;
-	border: 4rpx solid $line;
-	border-bottom: 0;
-	border-radius: 8rpx 8rpx 0 0;
-}
-
-.bk-plate {
-	display: flex;
-	justify-content: space-between;
-	margin-top: 40rpx;
-	padding: 20rpx;
-	background-color: $panel;
-	border: 4rpx solid $line;
-}
-
-.bk-brick {
-	position: relative;
-	width: 108rpx;
-	height: 76rpx;
-	border: 4rpx solid $line;
-}
-
-.bk-brick::before,
-.bk-brick::after {
-	content: '';
-	position: absolute;
-	top: -22rpx;
-	width: 32rpx;
-	height: 22rpx;
-	background-color: inherit;
-	border: 4rpx solid $line;
-	border-bottom: 0;
-	border-radius: 8rpx 8rpx 0 0;
-}
-
-.bk-brick::before { left: 12rpx; }
-.bk-brick::after { right: 12rpx; }
-
-.bk-brick--red { background-color: #e0392b; }
-.bk-brick--blue { background-color: #1668c1; }
-.bk-brick--green { background-color: #29a05a; }
-.bk-brick--yellow { background-color: #ffcf00; }

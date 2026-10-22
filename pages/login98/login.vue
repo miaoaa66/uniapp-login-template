@@ -1,94 +1,99 @@
 <template>
 	<view class="tw-page">
-		<view class="tw-nav">
-			<view class="tw-nav__back" @click="goBack">
-				<view class="pxi pxi-back"></view>
-			</view>
-			<text class="tw-nav__title">登 录</text>
-			<text class="tw-nav__slot">1983</text>
-		</view>
+		<!-- 一张竖放信纸 -->
+		<view class="tw-paper">
+			<!-- 回形针返回键 -->
+			<view class="tw-clip" @click="goBack"><view class="tw-clip__inner"></view></view>
 
-		<view class="tw-body">
+			<!-- 信头：双横线之间 认证函 -->
 			<view class="tw-head">
-				<text class="tw-head__no">FORM NO.1983</text>
-				<text class="tw-head__t">PIXEL TYPEWRITER CO.</text>
+				<view class="tw-head__line"></view>
+				<view class="tw-head__mid">
+					<text class="tw-head__en">CERTIFICATION</text>
+					<text class="tw-head__cn">认 证 函</text>
+				</view>
+				<view class="tw-head__line"></view>
 			</view>
-			<view class="tw-rule"></view>
-			<view class="tw-card">
-				<view class="tw-brand">
-					<view class="tw-brand__logo"><view class="pxi pxi-chip"></view></view>
-					<view class="tw-brand__meta">
-						<text class="tw-brand__en">TYPEWRITER</text>
-						<text class="tw-brand__cn">打字机账户</text>
+
+			<!-- 书信空栏 -->
+			<view class="tw-lines">
+				<block v-if="tab === 0">
+					<view class="tw-line">
+						<text class="tw-line__label">账号</text>
+						<view class="tw-line__blank">
+							<input class="tw-line__in" v-model="account" placeholder="手机号 / 邮箱" placeholder-style="color:#b7b0a1" maxlength="40" />
+						</view>
 					</view>
-				</view>
-
-				<text class="tw-title">登 录</text>
-				<text class="tw-lead">敲下你的账号与密码，开始排版</text>
-
-				<view class="tw-tabs">
-					<view v-for="(item, i) in tabs" :key="i" class="tw-tab" :class="{ on: tab === i }" @click="tab = i">{{ item }}</view>
-				</view>
-
-				<view class="tw-form">
-					<block v-if="tab === 0">
-						<view class="tw-field">
-							<view class="tw-field__ico"><view class="pxi pxi-user"></view></view>
-							<input class="tw-field__in" v-model="account" placeholder="手机号 / 邮箱" placeholder-style="color:#a49c8a" maxlength="40" />
+					<view class="tw-line">
+						<text class="tw-line__label">密码</text>
+						<view class="tw-line__blank">
+							<input class="tw-line__in" v-model="password" :password="!showPwd" placeholder="请输入登录密码" placeholder-style="color:#b7b0a1" maxlength="20" />
+							<view class="tw-line__eye" @click="showPwd = !showPwd"><view class="pxi pxi-eye"></view></view>
 						</view>
-						<view class="tw-field">
-							<view class="tw-field__ico"><view class="pxi pxi-lock"></view></view>
-							<input class="tw-field__in" v-model="password" :password="!showPwd" placeholder="请输入登录密码" placeholder-style="color:#a49c8a" maxlength="20" />
-							<view class="tw-eye" @click="showPwd = !showPwd"><view class="pxi pxi-eye"></view></view>
-						</view>
-						<view class="tw-row">
-							<text class="tw-row__link" @click="goForget">忘记密码？</text>
-						</view>
-					</block>
-					<block v-else-if="tab === 1">
-						<view class="tw-field">
-							<view class="tw-field__ico"><view class="pxi pxi-phone"></view></view>
-							<input class="tw-field__in tw-field__in--en" v-model="phone" type="number" placeholder="+86" placeholder-style="color:#a49c8a" maxlength="11" />
-						</view>
-						<view class="tw-field">
-							<view class="tw-field__ico"><view class="pxi pxi-shield"></view></view>
-							<input class="tw-field__in" v-model="smsCode" type="number" placeholder="短信验证码" placeholder-style="color:#a49c8a" maxlength="6" />
-							<view class="tw-code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + 's' : '获取验证码' }}</view>
-						</view>
-					</block>
-					<block v-else>
-						<view class="tw-field">
-							<view class="tw-field__ico"><view class="pxi pxi-mail"></view></view>
-							<input class="tw-field__in" v-model="email" placeholder="player@pixel.id" placeholder-style="color:#a49c8a" maxlength="40" />
-						</view>
-						<view class="tw-field">
-							<view class="tw-field__ico"><view class="pxi pxi-shield"></view></view>
-							<input class="tw-field__in" v-model="mailCode" type="number" placeholder="邮箱验证码" placeholder-style="color:#a49c8a" maxlength="6" />
-							<view class="tw-code" :class="{ off: mailLeft > 0 }" @click="sendCode('mail')">{{ mailLeft > 0 ? mailLeft + 's' : '获取验证码' }}</view>
-						</view>
-					</block>
-
-					<view class="tw-btn" @click="submit">
-						<view class="pxi pxi-play"></view><text>敲 下 回 车</text>
 					</view>
-
-					<view class="tw-foot">
-						<text>还没有账户？</text>
-						<text class="tw-foot__link" @click="goRegister">立即注册</text>
+				</block>
+				<block v-else-if="tab === 1">
+					<view class="tw-line">
+						<text class="tw-line__label">手机</text>
+						<view class="tw-line__blank">
+							<input class="tw-line__in" v-model="phone" type="number" placeholder="11 位手机号" placeholder-style="color:#b7b0a1" maxlength="11" />
+						</view>
 					</view>
-
-					<view class="tw-agree" @click="agreed = !agreed">
-						<view class="tw-check" :class="{ on: agreed }"></view>
-						<text>我已阅读并同意<text class="tw-link">《用户协议》</text>与<text class="tw-link">《隐私政策》</text></text>
+					<view class="tw-line">
+						<text class="tw-line__label">印文</text>
+						<view class="tw-line__blank">
+							<input class="tw-line__in" v-model="smsCode" type="number" placeholder="短信验证码" placeholder-style="color:#b7b0a1" maxlength="6" />
+							<text class="tw-word" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + 's' : '获取验证码' }}</text>
+						</view>
 					</view>
+				</block>
+				<block v-else>
+					<view class="tw-line">
+						<text class="tw-line__label">邮箱</text>
+						<view class="tw-line__blank">
+							<input class="tw-line__in" v-model="email" placeholder="player@pixel.id" placeholder-style="color:#b7b0a1" maxlength="40" />
+						</view>
+					</view>
+					<view class="tw-line">
+						<text class="tw-line__label">印文</text>
+						<view class="tw-line__blank">
+							<input class="tw-line__in" v-model="mailCode" type="number" placeholder="邮箱验证码" placeholder-style="color:#b7b0a1" maxlength="6" />
+							<text class="tw-word" :class="{ off: mailLeft > 0 }" @click="sendCode('mail')">{{ mailLeft > 0 ? mailLeft + 's' : '获取验证码' }}</text>
+						</view>
+					</view>
+				</block>
+			</view>
+
+			<!-- 复写纸选项 = 登录方式切换 -->
+			<view class="tw-carbon">
+				<view v-for="(item, i) in tabs" :key="i" class="tw-carbon__opt" :class="{ on: tab === i }" @click="tab = i">
+					<view class="tw-box"><view class="tw-box__x"></view></view>
+					<text>{{ item }}</text>
 				</view>
 			</view>
-			<view class="tw-keys">
-				<view v-for="n in 3" :key="n" class="tw-keys__row">
-					<view v-for="m in 8" :key="m" class="tw-key"></view>
+
+			<!-- 信末：勾选项 + 此致敬礼 -->
+			<view class="tw-post">
+				<view class="tw-agree" @click="agreed = !agreed">
+					<view class="tw-check" :class="{ on: agreed }"></view>
+					<text>我已阅读并同意<text class="tw-link">《用户协议》</text>与<text class="tw-link">《隐私政策》</text></text>
 				</view>
+				<text class="tw-post__zh">此致</text>
+				<text class="tw-post__jing">敬礼！</text>
+				<text class="tw-post__date">PIXEL TYPEWRITER CO. · 1983</text>
 			</view>
-			<view class="tw-platen"></view>
+
+			<!-- 打字机大圆键 + 色带 -->
+			<view class="tw-keywrap">
+				<view class="tw-ribbon" :class="{ go: ribbon }"></view>
+				<view class="tw-key" @click="onSend"><text class="tw-key__t">寄 出</text></view>
+			</view>
+
+			<view class="tw-foot">
+				<text class="tw-foot__link" @click="goForget">忘记密码？</text>
+				<text class="tw-foot__sep"> · </text>
+				<text class="tw-foot__link" @click="goRegister">还没有账户？去登记</text>
+			</view>
 		</view>
 	</view>
 </template>
@@ -97,8 +102,10 @@
 	export default {
 		data() {
 			return {
-				tabs: ["密码登录","手机验证码","邮箱验证码"],
+				tabs: ["密码", "短信", "邮箱"],
 				tab: 0,
+				ribbon: false,
+				ribbonTimer: null,
 				agreed: false,
 				showPwd: false,
 				account: '',
@@ -119,6 +126,7 @@
 		},
 		onUnload() {
 			this.clearTimer()
+			if (this.ribbonTimer) clearTimeout(this.ribbonTimer)
 		},
 		methods: {
 			fillDemo() {
@@ -172,6 +180,19 @@
 					clearInterval(this.timer)
 					this.timer = null
 				}
+			},
+
+			// 色带从左向右横扫一次
+			fireRibbon() {
+				this.ribbon = false
+				if (this.ribbonTimer) clearTimeout(this.ribbonTimer)
+				setTimeout(() => { this.ribbon = true }, 30)
+				this.ribbonTimer = setTimeout(() => { this.ribbon = false }, 800)
+			},
+
+			onSend() {
+				this.fireRibbon()
+				this.submit()
 			},
 
 			submit() {

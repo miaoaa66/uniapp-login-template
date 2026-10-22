@@ -1,92 +1,94 @@
 <template>
 	<view class="tk-page">
-		<view class="tk-nav">
-			<view class="tk-nav__back" @click="goBack">
-				<view class="pxi pxi-back"></view>
-			</view>
-			<text class="tk-nav__title">登 录</text>
-			<text class="tk-nav__slot">GATE A</text>
+		<!-- 顶部窄条：返回 + 标题 -->
+		<view class="tk-top">
+			<view class="tk-back" @click="goBack"><view class="pxi pxi-back"></view></view>
+			<text class="tk-top__t">地铁 · 单程票</text>
 		</view>
 
-		<view class="tk-body">
-			<view class="tk-head">
-				<text class="tk-head__a">SINGLE TICKET</text>
-				<text class="tk-head__b">A-1983 · 单程</text>
+		<!-- 横向大车票 -->
+		<view class="tk-ticket">
+			<!-- 左侧票根：撕口选项 = 登录方式切换 -->
+			<view class="tk-stub">
+				<text class="tk-stub__tag">METRO</text>
+				<view v-for="(item, i) in tabs" :key="i" class="tk-tear"
+					:class="{ on: tab === i, tear: leaving === i }" @click="pick(i)">
+					<text class="tk-tear__t">{{ item }}</text>
+				</view>
+				<view class="tk-stub__agree" @click="agreed = !agreed">
+					<view class="tk-dot" :class="{ on: agreed }"></view>
+					<text class="tk-stub__agree-t">已阅并同意《用户协议》与《隐私政策》</text>
+				</view>
 			</view>
-			<view class="tk-card">
-				<view class="tk-brand">
-					<view class="tk-brand__logo"><view class="pxi pxi-chip"></view></view>
-					<view class="tk-brand__meta">
-						<text class="tk-brand__en">TICKET ID</text>
-						<text class="tk-brand__cn">电子乘车码</text>
-					</view>
+
+			<!-- 打孔虚线分隔 -->
+			<view class="tk-holes">
+				<view v-for="n in 6" :key="n" class="tk-hole"></view>
+			</view>
+
+			<!-- 右侧主票 -->
+			<view class="tk-main">
+				<view class="tk-route">
+					<text class="tk-route__a">始发站 PIXEL</text>
+					<view class="tk-route__arrow"></view>
+					<text class="tk-route__b">终点站 登录</text>
 				</view>
 
-				<text class="tk-title">登 录</text>
-				<text class="tk-lead">刷票进站，前往你的目的地</text>
-
-				<view class="tk-tabs">
-					<view v-for="(item, i) in tabs" :key="i" class="tk-tab" :class="{ on: tab === i }" @click="tab = i">{{ item }}</view>
-				</view>
-
-				<view class="tk-form">
+				<view class="tk-fields">
 					<block v-if="tab === 0">
 						<view class="tk-field">
-							<view class="tk-field__ico"><view class="pxi pxi-user"></view></view>
+							<text class="tk-field__label">账号</text>
 							<input class="tk-field__in" v-model="account" placeholder="手机号 / 邮箱" placeholder-style="color:#93a3b8" maxlength="40" />
 						</view>
 						<view class="tk-field">
-							<view class="tk-field__ico"><view class="pxi pxi-lock"></view></view>
+							<text class="tk-field__label">密码</text>
 							<input class="tk-field__in" v-model="password" :password="!showPwd" placeholder="请输入登录密码" placeholder-style="color:#93a3b8" maxlength="20" />
 							<view class="tk-eye" @click="showPwd = !showPwd"><view class="pxi pxi-eye"></view></view>
-						</view>
-						<view class="tk-row">
-							<text class="tk-row__link" @click="goForget">忘记密码？</text>
 						</view>
 					</block>
 					<block v-else-if="tab === 1">
 						<view class="tk-field">
-							<view class="tk-field__ico"><view class="pxi pxi-phone"></view></view>
-							<input class="tk-field__in tk-field__in--en" v-model="phone" type="number" placeholder="+86" placeholder-style="color:#93a3b8" maxlength="11" />
+							<text class="tk-field__label">手机</text>
+							<input class="tk-field__in" v-model="phone" type="number" placeholder="11 位手机号" placeholder-style="color:#93a3b8" maxlength="11" />
 						</view>
 						<view class="tk-field">
-							<view class="tk-field__ico"><view class="pxi pxi-shield"></view></view>
+							<text class="tk-field__label">印文</text>
 							<input class="tk-field__in" v-model="smsCode" type="number" placeholder="短信验证码" placeholder-style="color:#93a3b8" maxlength="6" />
-							<view class="tk-code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + 's' : '获取验证码' }}</view>
+							<text class="tk-get" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + 's' : '获取验证码' }}</text>
 						</view>
 					</block>
 					<block v-else>
 						<view class="tk-field">
-							<view class="tk-field__ico"><view class="pxi pxi-mail"></view></view>
+							<text class="tk-field__label">邮箱</text>
 							<input class="tk-field__in" v-model="email" placeholder="player@pixel.id" placeholder-style="color:#93a3b8" maxlength="40" />
 						</view>
 						<view class="tk-field">
-							<view class="tk-field__ico"><view class="pxi pxi-shield"></view></view>
+							<text class="tk-field__label">印文</text>
 							<input class="tk-field__in" v-model="mailCode" type="number" placeholder="邮箱验证码" placeholder-style="color:#93a3b8" maxlength="6" />
-							<view class="tk-code" :class="{ off: mailLeft > 0 }" @click="sendCode('mail')">{{ mailLeft > 0 ? mailLeft + 's' : '获取验证码' }}</view>
+							<text class="tk-get" :class="{ off: mailLeft > 0 }" @click="sendCode('mail')">{{ mailLeft > 0 ? mailLeft + 's' : '获取验证码' }}</text>
 						</view>
 					</block>
-
-					<view class="tk-btn" @click="submit">
-						<view class="pxi pxi-play"></view><text>刷 票 进 站</text>
-					</view>
-
-					<view class="tk-foot">
-						<text>还没有车票？</text>
-						<text class="tk-foot__link" @click="goRegister">立即注册</text>
-					</view>
-
-					<view class="tk-agree" @click="agreed = !agreed">
-						<view class="tk-check" :class="{ on: agreed }"></view>
-						<text>我已阅读并同意<text class="tk-link">《用户协议》</text>与<text class="tk-link">《隐私政策》</text></text>
-					</view>
 				</view>
-			</view>
-			<view class="tk-stub">
+
+				<view class="tk-price">
+					<text class="tk-price__v">¥ 0.00</text>
+					<text class="tk-price__l">单程 · 限乘一次</text>
+				</view>
+
+				<!-- 条码区 -->
 				<view class="tk-bars">
-					<view v-for="n in 26" :key="n" class="tk-bar" :class="'tk-bar--' + (n % 4)"></view>
+					<view v-for="n in 24" :key="n" class="tk-bar" :class="'tk-bar--' + (n % 5)"></view>
 				</view>
-				<text class="tk-stub__no">1983 0921 4471 0068</text>
+
+				<view class="tk-btn" @click="submit"><text class="tk-btn__t">验 票</text></view>
+
+				<view class="tk-links">
+					<text class="tk-links__l" @click="goForget">补票窗口 · 忘记密码</text>
+					<text class="tk-links__l" @click="goRegister">没有车票？换乘登记</text>
+				</view>
+
+				<!-- 已验票印章 -->
+				<view class="tk-stamp" v-if="stamped"><text class="tk-stamp__t">已验票</text></view>
 			</view>
 		</view>
 	</view>
@@ -96,8 +98,12 @@
 	export default {
 		data() {
 			return {
-				tabs: ["密码登录","手机验证码","邮箱验证码"],
+				tabs: ["密码", "短信", "邮箱"],
 				tab: 0,
+				leaving: null,
+				leavingTimer: null,
+				stamped: false,
+				stampTimer: null,
 				agreed: false,
 				showPwd: false,
 				account: '',
@@ -118,6 +124,8 @@
 		},
 		onUnload() {
 			this.clearTimer()
+			if (this.leavingTimer) clearTimeout(this.leavingTimer)
+			if (this.stampTimer) clearTimeout(this.stampTimer)
 		},
 		methods: {
 			fillDemo() {
@@ -140,6 +148,15 @@
 
 			isEmail(v) {
 				return /^[\w.-]+@[\w-]+\.[\w.-]+$/.test(v)
+			},
+
+			// 撕口切换：旧选中项做一次撕离动画
+			pick(i) {
+				if (i === this.tab) return
+				this.leaving = this.tab
+				this.tab = i
+				if (this.leavingTimer) clearTimeout(this.leavingTimer)
+				this.leavingTimer = setTimeout(() => { this.leaving = null }, 320)
 			},
 
 			sendCode(type) {
@@ -185,8 +202,13 @@
 					if (!this.isEmail(this.email)) return this.toast('请输入正确的邮箱')
 					if (!this.mailCode) return this.toast('请输入邮箱验证码')
 				}
-				// TODO: 调用后端登录接口，成功后跳转首页
-				this.toast('登录成功')
+				// 盖章后再提示
+				this.stamped = true
+				if (this.stampTimer) clearTimeout(this.stampTimer)
+				this.stampTimer = setTimeout(() => {
+					// TODO: 调用后端登录接口，成功后跳转首页
+					this.toast('登录成功')
+				}, 500)
 			},
 
 			goBack() {

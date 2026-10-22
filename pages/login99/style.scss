@@ -1,26 +1,26 @@
 /* ==========================================================================
- * SET H · 地铁车票 TICKET
+ * SET H · 地铁单程票 TICKET
  * pages/login99 —— 登录 / 注册 / 找回密码 三页共用
- * 车票白底 + 深蓝橙撞色，撕口虚线、条码与闸机还原单程票票据
+ * 横向大车票：左窄票根撕口选项 + 打孔虚线分隔 + 主票站名/底线字段/
+ * 票价条码区，深蓝主色、橙强调、红"已验票"章
  *
  * 字体：Zpix（中文像素）+ Press Start 2P（拉丁与数字）
  * 图标：common/pixel-icons.scss（8x8 网格，box-shadow 逐点绘制）
- * 字号：Zpix 走 12px 的整数倍，Press Start 2P 走 8px 的整数倍
  * ========================================================================== */
 
 @import '../../common/pixel-icons.scss';
 
 /* ---------- 设计令牌 ---------- */
-$ink: #10233d;         // 主文字
-$dim: #5c6f88;         // 次级文字
-$bg: #eaeef5;          // 页面底色
-$panel: #ffffff;       // 卡片/面板底色
-$panel2: #f2f5fa;      // 次级面板底色（Tab 未选中、字段底）
-$line: #10233d;        // 主描边
-$lineSoft: #b9c4d4;    // 弱描边
-$accent: #ff8a1f;      // 主强调色（按钮 / 选中态）
-$accent2: #143a6b;     // 次强调色（链接 / 图标）
-$on: #10233d;          // 强调色之上的文字
+$blue: #1d3a8f;         // 深蓝主色（外框 / 按钮 / 底线）
+$blueSoft: #e8eefb;     // 浅蓝分隔
+$stubBg: #f4f7ff;       // 票根浅底
+$bg: #eef1f7;           // 页面底（打孔透色）
+$ink: #16233c;          // 主文字
+$dim: #5c6f88;          // 次级文字
+$ph: #93a3b8;           // 占位
+$orange: #f28c28;       // 强调橙（票价 / 倒计时）
+$red: #d43c33;          // 印章红
+$lineSoft: #b9c4d4;     // 弱描边
 
 /* ---------- 页面容器 ---------- */
 .tk-page,
@@ -31,186 +31,262 @@ $on: #10233d;          // 强调色之上的文字
 .tk-page {
 	position: relative;
 	min-height: 100vh;
-	padding-bottom: 40rpx;
+	padding-bottom: 50rpx;
 	background-color: $bg;
-	background-image: linear-gradient(160deg, rgba(20, 58, 107, .06) 0%, transparent 50%);
 	font-family: 'Zpix', sans-serif;
 	color: $ink;
 	-webkit-font-smoothing: none;
 }
 
-/* ---------- 自绘导航栏 ---------- */
-.tk-nav {
+/* ---------- 顶部窄条 ---------- */
+.tk-top {
 	display: flex;
 	align-items: center;
-	height: 96rpx;
-	padding: 0 24rpx;
-	background-color: $panel;
-	border-bottom: 4rpx solid $line;
+	padding: 22rpx 26rpx 6rpx;
 }
 
-.tk-nav__back {
-	display: flex;
-	align-items: center;
-	width: 110rpx;
-	flex: none;
-	color: $ink;
-}
-
-.tk-nav__back:active {
-	opacity: .5;
-}
-
-.tk-nav__title {
-	flex: 1;
-	text-align: center;
-	font-size: 48rpx;
-	letter-spacing: 6rpx;
-	color: $ink;
-}
-
-.tk-nav__slot {
-	flex: none;
-	min-width: 110rpx;
-	text-align: right;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 24rpx;
-	letter-spacing: 1rpx;
-	color: $dim;
-}
-
-/* ---------- 主体与卡片 ---------- */
-.tk-body {
-	padding: 28rpx 32rpx 0;
-}
-
-.tk-card {
-	padding: 36rpx 32rpx 32rpx;
-	background-color: $panel;
-	border: 4rpx solid $line;
-	box-shadow: 10rpx 10rpx 0 rgba(0, 0, 0, .16);
-}
-
-.tk-brand {
-	display: flex;
-	align-items: center;
-}
-
-.tk-brand__logo {
+.tk-back {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 68rpx;
-	height: 68rpx;
+	width: 64rpx;
+	height: 64rpx;
 	flex: none;
-	color: $on;
-	background-color: $accent;
-	border: 4rpx solid $line;
-	box-shadow: 5rpx 5rpx 0 $line;
+	color: $blue;
+	background-color: #fff;
+	border: 4rpx solid $blue;
+	border-radius: 50%;
 }
 
-.tk-brand__logo .pxi {
-	transform: scale(2);
+.tk-back:active {
+	opacity: .6;
 }
 
-.tk-brand__meta {
-	margin-left: 20rpx;
-}
-
-.tk-brand__en {
-	display: block;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	letter-spacing: 1rpx;
-	color: $ink;
-}
-
-.tk-brand__cn {
-	display: block;
-	margin-top: 8rpx;
-	font-size: 24rpx;
-	letter-spacing: 4rpx;
-	color: $dim;
-}
-
-.tk-title {
-	display: block;
-	margin-top: 34rpx;
-	font-size: 48rpx;
-	line-height: 1.3;
-	letter-spacing: 8rpx;
-	color: $ink;
-}
-
-.tk-lead {
-	display: block;
-	margin-top: 16rpx;
-	font-size: 24rpx;
-	line-height: 1.6;
-	color: $dim;
-}
-
-/* ---------- 登录方式切换 ---------- */
-.tk-tabs {
-	display: flex;
-	margin-top: 36rpx;
-}
-
-.tk-tab {
+.tk-top__t {
 	flex: 1;
-	height: 72rpx;
-	line-height: 68rpx;
 	text-align: center;
+	margin-right: 64rpx;
+	font-size: 28rpx;
+	letter-spacing: 4rpx;
+	color: $blue;
+}
+
+/* ---------- 大车票 ---------- */
+.tk-ticket {
+	display: flex;
+	margin: 22rpx 28rpx 0;
+	background-color: #fff;
+	border: 6rpx solid $blue;
+	border-radius: 18rpx;
+	box-shadow: 0 16rpx 30rpx rgba(29, 58, 143, .18);
+	overflow: hidden;
+	animation: tk-in .45s ease-out both;
+}
+
+.tk-ticket--col {
+	display: block;
+}
+
+@keyframes tk-in {
+	from { opacity: 0; transform: translateY(30rpx); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- 票根 ---------- */
+.tk-stub {
+	display: flex;
+	flex-direction: column;
+	width: 27%;
+	flex: none;
+	background-color: $stubBg;
+	padding: 24rpx 0 18rpx;
+}
+
+.tk-stub__tag {
+	text-align: center;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 16rpx;
+	letter-spacing: 1rpx;
+	color: $blue;
+	margin-bottom: 20rpx;
+}
+
+/* 撕口选项 */
+.tk-tear {
+	padding: 24rpx 8rpx;
+	text-align: center;
+	border-bottom: 2rpx dashed rgba(29, 58, 143, .25);
+	transition: transform .3s, opacity .3s, background-color .2s;
+}
+
+.tk-tear__t {
 	font-size: 24rpx;
-	color: $dim;
-	background-color: $panel2;
-	border: 4rpx solid $lineSoft;
+	letter-spacing: 2rpx;
+	color: $blue;
+	opacity: .45;
 }
 
-.tk-tab + .tk-tab {
-	margin-left: -4rpx;
+.tk-tear.on {
+	background-color: $blue;
 }
 
-.tk-tab.on {
+.tk-tear.on .tk-tear__t {
+	color: #fff;
+	opacity: 1;
+}
+
+/* 撕离动画（旧选中项） */
+.tk-tear.tear {
+	transform: rotate(-6deg);
+	opacity: .6;
+}
+
+/* 票根下小字协议 */
+.tk-stub__agree {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 8rpx;
+	margin-top: auto;
+	padding: 16rpx 12rpx 0;
+}
+
+.tk-dot {
+	width: 24rpx;
+	height: 24rpx;
+	flex: none;
+	border: 3rpx solid $blue;
+	border-radius: 50%;
+	background-color: transparent;
+	transition: background-color .15s;
+}
+
+.tk-dot.on {
+	background-color: $blue;
+}
+
+.tk-stub__agree-t {
+	font-size: 18rpx;
+	line-height: 1.6;
+	text-align: center;
+	color: $blue;
+	opacity: .7;
+}
+
+/* ---------- 打孔虚线分隔 ---------- */
+.tk-holes {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	width: 30rpx;
+	flex: none;
+	padding: 20rpx 0;
+	background-color: #fff;
+	border-left: 3rpx dashed rgba(29, 58, 143, .5);
+	border-right: 3rpx dashed rgba(29, 58, 143, .5);
+}
+
+.tk-hole {
+	width: 20rpx;
+	height: 20rpx;
+	border-radius: 50%;
+	background-color: $bg;
+}
+
+/* ---------- 主票 ---------- */
+.tk-main {
 	position: relative;
-	z-index: 1;
-	color: $on;
-	background-color: $accent;
-	border-color: $line;
-	box-shadow: 4rpx 4rpx 0 $line;
+	flex: 1;
+	min-width: 0;
+	padding: 30rpx 28rpx 34rpx;
 }
 
-/* ---------- 表单 ---------- */
-.tk-form {
-	margin-top: 32rpx;
+/* 站名风格票头 */
+.tk-route {
+	display: flex;
+	align-items: center;
+	gap: 16rpx;
+	padding-bottom: 22rpx;
+	border-bottom: 2rpx solid $blueSoft;
+}
+
+.tk-route__a,
+.tk-route__b {
+	font-size: 26rpx;
+	letter-spacing: 2rpx;
+	color: $blue;
+	font-weight: bold;
+}
+
+.tk-route__arrow {
+	position: relative;
+	flex: 1;
+	height: 4rpx;
+	background-color: $blue;
+}
+
+.tk-route__arrow::before {
+	content: '';
+	position: absolute;
+	left: -2rpx;
+	top: -6rpx;
+	width: 16rpx;
+	height: 16rpx;
+	border-radius: 50%;
+	background-color: $blue;
+}
+
+.tk-route__arrow::after {
+	content: '';
+	position: absolute;
+	right: -2rpx;
+	top: -8rpx;
+	width: 0;
+	height: 0;
+	border-top: 10rpx solid transparent;
+	border-bottom: 10rpx solid transparent;
+	border-left: 16rpx solid $blue;
+}
+
+/* 底线式字段 */
+.tk-fields {
+	margin-top: 26rpx;
 }
 
 .tk-field {
 	display: flex;
 	align-items: center;
-	height: 96rpx;
-	padding: 0 22rpx;
-	margin-bottom: 24rpx;
-	background-color: $panel;
-	border: 4rpx solid $line;
+	padding: 20rpx 0 16rpx;
+	border-bottom: 3rpx solid $blue;
+	margin-bottom: 32rpx;
+	position: relative;
 }
 
-.tk-field__ico {
-	display: flex;
-	align-items: center;
-	justify-content: center;
+.tk-field::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: -18rpx;
+	height: 2rpx;
+	background-color: $blueSoft;
+}
+
+.tk-field__label {
 	flex: none;
-	margin-right: 18rpx;
-	color: $ink;
+	width: 110rpx;
+	font-size: 24rpx;
+	color: $dim;
 }
 
 .tk-field__in {
 	flex: 1;
 	min-width: 0;
-	height: 100%;
+	height: 60rpx;
 	padding: 0;
 	font-family: 'Zpix', sans-serif;
-	font-size: 24rpx;
+	font-size: 28rpx;
 	color: $ink;
 	background-color: transparent;
 	border: 0;
@@ -219,348 +295,346 @@ $on: #10233d;          // 强调色之上的文字
 	appearance: none;
 }
 
-.tk-field__in--en {
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	letter-spacing: 2rpx;
-}
-
 .tk-eye {
 	flex: none;
-	margin-left: 14rpx;
-	padding: 0 6rpx;
-	color: $accent2;
+	margin-left: 12rpx;
+	padding: 0 4rpx;
+	color: $blue;
 }
 
-.tk-code {
+.tk-get {
 	flex: none;
-	margin-left: 14rpx;
-	height: 64rpx;
-	line-height: 60rpx;
-	padding: 0 16rpx;
+	margin-left: 12rpx;
 	font-size: 24rpx;
-	color: $ink;
-	background-color: $panel2;
-	border: 4rpx solid $line;
+	color: $orange;
 }
 
-.tk-code.off {
+.tk-get.off {
 	color: $dim;
-	border-color: $lineSoft;
 }
 
-/* 右对齐小链接行 */
-.tk-row {
+/* 票价区 */
+.tk-price {
 	display: flex;
+	align-items: baseline;
 	justify-content: flex-end;
-	margin: -4rpx 0 24rpx;
+	gap: 14rpx;
+	margin-top: 8rpx;
+}
+
+.tk-price__v {
+	font-family: 'Press Start 2P', monospace;
+	font-size: 28rpx;
+	color: $orange;
+}
+
+.tk-price__l {
+	font-size: 20rpx;
+	color: $dim;
+}
+
+/* 条码区 */
+.tk-bars {
+	display: flex;
+	justify-content: space-between;
+	align-items: stretch;
+	height: 56rpx;
+	margin-top: 22rpx;
+}
+
+.tk-bar {
+	background-color: #111;
+}
+
+.tk-bar--0 { width: 8rpx; }
+.tk-bar--1 { width: 16rpx; }
+.tk-bar--2 { width: 6rpx; }
+.tk-bar--3 { width: 22rpx; }
+.tk-bar--4 { width: 10rpx; }
+
+/* 通栏验票按钮 */
+.tk-btn {
+	margin-top: 30rpx;
+	height: 96rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: $blue;
+	border-radius: 10rpx;
+	box-shadow: 0 6rpx 0 rgba(15, 30, 80, .8);
+	transition: transform .1s, box-shadow .1s;
+}
+
+.tk-btn:active {
+	transform: translateY(6rpx);
+	box-shadow: 0 0 0 rgba(15, 30, 80, .8);
+}
+
+.tk-btn__t {
+	font-size: 32rpx;
+	letter-spacing: 12rpx;
+	color: #fff;
+}
+
+/* 链接行 */
+.tk-links {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 26rpx;
+}
+
+.tk-links__l {
+	font-size: 22rpx;
+	color: $blue;
+	text-decoration: underline;
+}
+
+.tk-foot {
+	margin-top: 26rpx;
+	text-align: center;
+}
+
+.tk-foot__link {
+	font-size: 22rpx;
+	color: $blue;
+	text-decoration: underline;
+}
+
+/* 已验票红章（一次性 stamp 动画） */
+.tk-stamp {
+	position: absolute;
+	right: 36rpx;
+	top: 150rpx;
+	width: 170rpx;
+	height: 170rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 8rpx double $red;
+	border-radius: 50%;
+	transform: rotate(-8deg);
+	animation: tk-stamp .4s ease-out both;
+}
+
+.tk-stamp__t {
+	font-size: 32rpx;
+	letter-spacing: 4rpx;
+	color: $red;
+}
+
+@keyframes tk-stamp {
+	from { transform: rotate(-12deg) scale(2); opacity: 0; }
+	to { transform: rotate(-8deg) scale(1); opacity: .85; }
+}
+
+/* ---------- 排队号小票（forget） ---------- */
+.tk-queue {
+	margin: 22rpx 28rpx 0;
+	padding: 28rpx 24rpx;
+	text-align: center;
+	background-color: #fff;
+	border: 5rpx solid $blue;
+	border-radius: 14rpx;
+	border-bottom: 5rpx dashed $blue;
+}
+
+.tk-queue__no {
+	display: block;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 56rpx;
+	letter-spacing: 2rpx;
+	color: $blue;
+}
+
+.tk-queue__date {
+	display: block;
+	margin-top: 14rpx;
+	font-size: 20rpx;
+	color: $dim;
+}
+
+/* ---------- 分联标签（forget） ---------- */
+.tk-part {
+	margin-bottom: 30rpx;
+}
+
+.tk-part__t {
+	display: inline-block;
+	padding: 8rpx 22rpx;
+	background-color: $blue;
+	border-radius: 8rpx;
 	font-size: 24rpx;
+	letter-spacing: 2rpx;
+	color: #fff;
 }
 
-.tk-row__link {
-	color: $accent2;
-}
-
-/* ---------- 六格验证码 ---------- */
+/* ---------- 六个票格验证码（forget） ---------- */
 .tk-cells {
 	display: flex;
 	justify-content: space-between;
-	margin-bottom: 24rpx;
+	margin-bottom: 34rpx;
 }
 
 .tk-cell {
-	width: 88rpx;
-	height: 104rpx;
+	width: 84rpx;
+	height: 100rpx;
 	padding: 0;
 	box-sizing: border-box;
 	text-align: center;
 	font-family: 'Press Start 2P', monospace;
-	font-size: 64rpx;
+	font-size: 48rpx;
 	color: $ink;
-	background-color: $panel;
-	border: 4rpx solid $line;
-	border-radius: 0;
+	background-color: #fff;
+	border: 3rpx solid $lineSoft;
+	border-bottom: 6rpx solid $blue;
+	border-radius: 8rpx;
 	-webkit-appearance: none;
 	appearance: none;
 }
 
-.tk-cell.on {
-	color: $on;
-	background-color: $accent;
-	box-shadow: 6rpx 6rpx 0 $line;
+.tk-cell.dim {
+	color: $ph;
 }
 
-.tk-cell.dim {
+/* ---------- 联程票（register） ---------- */
+.tk-chain {
+	margin: 12rpx 28rpx 0;
+}
+
+.tk-joint {
+	display: flex;
+	background-color: #fff;
+	border: 5rpx solid $blue;
+	border-radius: 14rpx;
+	overflow: hidden;
+}
+
+.tk-joint__stub {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 8rpx;
+	width: 92rpx;
+	flex: none;
+	background-color: $stubBg;
+	border-right: 3rpx dashed rgba(29, 58, 143, .4);
+}
+
+.tk-joint__no {
+	font-family: 'Press Start 2P', monospace;
+	font-size: 24rpx;
+	color: $blue;
+}
+
+.tk-joint__hole {
+	width: 28rpx;
+	height: 28rpx;
+	border-radius: 50%;
+	background-color: $bg;
+}
+
+.tk-joint__ok {
+	font-size: 26rpx;
+	font-weight: bold;
+	color: $blue;
+}
+
+.tk-joint__main {
+	flex: 1;
+	min-width: 0;
+	padding: 22rpx 24rpx 26rpx;
+}
+
+.tk-joint__t {
+	display: block;
+	margin-bottom: 6rpx;
+	font-size: 24rpx;
+	letter-spacing: 2rpx;
 	color: $dim;
-	background-color: $panel2;
+}
+
+.tk-punch {
+	align-self: flex-end;
+	display: inline-flex;
+	justify-content: center;
+	padding: 8rpx 22rpx;
+	font-size: 20rpx;
+	color: $blue;
+	border: 3rpx solid $blue;
+	border-radius: 8rpx;
+	background-color: transparent;
+}
+
+.tk-punch.done {
+	color: $dim;
 	border-color: $lineSoft;
 }
 
-/* ---------- 密码强度 ---------- */
-.tk-power {
+/* 联票间短虚线 */
+.tk-linkline {
+	width: 0;
+	height: 36rpx;
+	margin-left: 46rpx;
+	border-left: 4rpx dashed rgba(29, 58, 143, .5);
+}
+
+/* 协议行 */
+.tk-agree {
 	display: flex;
-	align-items: center;
-	margin: -4rpx 0 24rpx;
-	font-size: 24rpx;
+	align-items: flex-start;
+	margin-top: 28rpx;
+	font-size: 22rpx;
+	line-height: 1.7;
 	color: $dim;
 }
 
+.tk-agree .tk-dot {
+	margin: 4rpx 12rpx 0 0;
+}
+
+.tk-agree__link {
+	color: $blue;
+}
+
+/* 强度条（register 第三联） */
+.tk-power {
+	display: flex;
+	align-items: center;
+	margin: -8rpx 0 20rpx;
+}
+
 .tk-power__t {
-	margin-right: 14rpx;
+	margin-right: 12rpx;
+	font-size: 22rpx;
+	color: $dim;
 }
 
 .tk-power__bars {
 	display: flex;
 	flex: 1;
+	gap: 8rpx;
 }
 
 .tk-power__bar {
 	flex: 1;
-	height: 16rpx;
-	margin-right: 8rpx;
-	background-color: $panel2;
-	border: 3rpx solid $lineSoft;
+	height: 18rpx;
+	background-color: $blueSoft;
+	border: 2rpx solid $lineSoft;
 }
 
 .tk-power__bar.on {
-	background-color: #92cc41;
-	border-color: $line;
+	background-color: $orange;
+	border-color: $orange;
 }
 
 .tk-power__v {
-	width: 64rpx;
+	min-width: 44rpx;
 	text-align: right;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	color: $ink;
-}
-
-/* ---------- 按钮 ---------- */
-.tk-btn {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: 96rpx;
-	margin-top: 32rpx;
-	font-size: 48rpx;
-	letter-spacing: 8rpx;
-	color: $on;
-	background-color: $accent;
-	border: 4rpx solid $line;
-	box-shadow: 8rpx 8rpx 0 $line;
-}
-
-.tk-btn .pxi {
-	margin-right: 14rpx;
-}
-
-.tk-btn:active {
-	transform: translate(4rpx, 4rpx);
-	box-shadow: 4rpx 4rpx 0 $line;
-}
-
-.tk-btn--ghost {
-	color: $ink;
-	background-color: $panel;
-}
-
-/* ---------- 页脚与协议 ---------- */
-.tk-foot {
-	margin-top: 32rpx;
-	text-align: center;
-	font-size: 24rpx;
+	font-size: 22rpx;
 	color: $dim;
 }
 
-.tk-foot__link {
-	color: $accent2;
-	text-decoration: underline;
-}
-
-.tk-agree {
-	display: flex;
-	align-items: flex-start;
-	margin-top: 28rpx;
-	font-size: 24rpx;
-	line-height: 1.7;
-	color: $dim;
-}
-
-.tk-check {
-	position: relative;
-	flex: none;
-	width: 30rpx;
-	height: 30rpx;
-	margin: 4rpx 12rpx 0 0;
-	background-color: $panel;
-	border: 4rpx solid $line;
-}
-
-.tk-check.on {
-	background-color: #92cc41;
-}
-
-.tk-check.on::after {
-	content: '';
-	position: absolute;
-	left: 8rpx;
-	top: 2rpx;
-	width: 8rpx;
-	height: 15rpx;
-	border: solid $line;
-	border-width: 0 4rpx 4rpx 0;
-	transform: rotate(45deg);
-}
-
-.tk-link {
-	color: $accent2;
-}
-
-/* ---------- 步骤条 ---------- */
-.tk-steps {
-	display: flex;
-	align-items: center;
-	margin: 4rpx 0 30rpx;
-}
-
-.tk-step {
-	display: flex;
-	align-items: center;
-	font-size: 24rpx;
-	color: $dim;
-}
-
-.tk-step__n {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 48rpx;
-	height: 48rpx;
-	margin-right: 12rpx;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	color: $ink;
-	background-color: $panel2;
-	border: 4rpx solid $lineSoft;
-}
-
-.tk-step.on .tk-step__n {
-	color: $on;
-	background-color: $accent2;
-	border-color: $line;
-}
-
-.tk-step__line {
-	flex: 1;
-	height: 4rpx;
-	margin: 0 16rpx;
-	background-color: $lineSoft;
-}
-
-.tk-step.on .tk-step__line {
-	background-color: $line;
-}
-
-/* ---------- 占位符（uniapp 用 placeholder-style 内联声明，这里兼容 H5） ---------- */
-.tk-field__in::-webkit-input-placeholder {
-	color: #93a3b8;
-}
-
-/* ---------- 主题皮肤（覆盖骨架） ---------- */
-.tk-card {
-	position: relative;
-	box-shadow: 10rpx 10rpx 0 rgba(20, 58, 107, .14);
-}
-
-/* 卡片两侧的半圆撕口，做出票根被撕下的感觉（不遮挡内容） */
-.tk-card::before,
-.tk-card::after {
-	content: '';
-	position: absolute;
-	top: 50%;
-	width: 28rpx;
-	height: 28rpx;
-	margin-top: -16rpx;
-	background-color: $bg;
-	border: 4rpx solid $line;
-	border-radius: 50%;
-}
-
-.tk-card::before {
-	left: -20rpx;
-}
-
-.tk-card::after {
-	right: -20rpx;
-}
-
-.tk-btn {
-	color: $on;
-	background-color: $accent;
-	box-shadow: 6rpx 6rpx 0 $line;
-}
-
-.tk-brand__logo {
-	background-color: $accent2;
-	color: $panel;
-}
-
-.tk-code {
-	border-color: $lineSoft;
-}
-
-/* ---------- 主题装饰 ---------- */
-.tk-head {
-	display: flex;
-	align-items: center;
-	margin-bottom: 24rpx;
-	padding: 18rpx 20rpx;
-	background-color: $accent2;
-	border: 4rpx solid $line;
-}
-
-.tk-head__a {
-	flex: 1;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 16rpx;
-	letter-spacing: 1rpx;
-	color: $panel;
-}
-
-.tk-head__b {
-	font-size: 24rpx;
-	color: $panel;
-}
-
-.tk-stub {
-	margin-top: 40rpx;
-	padding: 24rpx 20rpx;
-	background-color: $panel;
-	border: 4rpx solid $line;
-}
-
-.tk-bars {
-	display: flex;
-	align-items: flex-end;
-	height: 72rpx;
-}
-
-.tk-bar {
-	flex: 1;
-	background-color: $line;
-}
-
-.tk-bar--0 { height: 100%; }
-.tk-bar--1 { height: 74%; }
-.tk-bar--2 { height: 88%; }
-.tk-bar--3 { height: 60%; }
-
-.tk-stub__no {
-	display: block;
-	margin-top: 16rpx;
-	text-align: center;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 16rpx;
-	letter-spacing: 1rpx;
-	color: $dim;
+.tk-chain .tk-btn {
+	margin-top: 34rpx;
 }

@@ -1,301 +1,234 @@
 /* ==========================================================================
- * SET C · 赛博霓虹 CRT（Cyber Neon Terminal）
+ * SET C · 赛博 CRT 终端（Cyber CRT Terminal）
  * pages/login94 —— 登录 / 注册 / 找回密码 三页共用
- * 字体：Zpix（中文像素字体）+ Press Start 2P（拉丁与数字）
- * 像素材质：深底 + 硬边霓虹描边 + 扫描线 + 网格地平线
- * 注意：一律使用 background-color / box-shadow，避免 background 简写覆盖尺寸
+ * 整页即终端屏幕：boot 逐行打印 + 命令旗标 + 命令行输入 + 扫描线
+ * 色彩收敛：主色青 #29f3d3 + 警示品红 #ff2e88，无其它色相
+ * 注意：一律使用 background-color / border-color，避免 background 简写覆盖尺寸
  * ========================================================================== */
 
 @import '../../common/pixel-icons.scss';
 
-/* ---------- 霓虹令牌 ---------- */
-$bg: #0b0c14;
-$panel: #14162a;
-$panel-2: #1b1e38;
-$line: #2b2f55;
-$ink: #e8ecff;
-$dim: #8a90b8;
-$magenta: #ff2d95;
-$cyan: #22e0ff;
-$violet: #b678ff;
-$yellow: #ffe066;
+/* ---------- 终端令牌 ---------- */
+$bg: #05070d;
+$ink: #c8f5ec;      // 亮青白
+$dim: #3f6a61;      // 暗青灰
+$line: #16302a;     // 边线
+$cyan: #29f3d3;
+$mag: #ff2e88;
 
-/* ---------- 页面容器 ---------- */
-.cr-page,
-.cr-page * {
-	box-sizing: border-box;
-}
-
-.cr-page {
+/* ---------- 屏幕容器 ---------- */
+.cr-scr {
 	position: relative;
 	min-height: 100vh;
-	padding-bottom: 40rpx;
-	background-color: #0b0c14;
-	background-image:
-		repeating-linear-gradient(to bottom,
-			rgba(255, 255, 255, .04) 0, rgba(255, 255, 255, .04) 2rpx,
-			transparent 2rpx, transparent 6rpx),
-		linear-gradient(rgba(34, 224, 255, .07) 2rpx, transparent 2rpx),
-		linear-gradient(90deg, rgba(34, 224, 255, .07) 2rpx, transparent 2rpx);
-	background-size: auto, 40rpx 40rpx, 40rpx 40rpx;
+	box-sizing: border-box;
+	padding: 0 28rpx 60rpx;
+	background-color: $bg;
 	font-family: 'Zpix', sans-serif;
-	color: #e8ecff;
+	color: $ink;
 	-webkit-font-smoothing: none;
+	animation: cr-flicker 5s steps(2, end) infinite;
 }
 
-/* ---------- 终端标题条 ---------- */
+/* 极轻微闪烁 */
+@keyframes cr-flicker {
+	0%, 92%, 100% { opacity: 1; }
+	94% { opacity: .97; }
+	96% { opacity: 1; }
+	98% { opacity: .985; }
+}
+
+/* 扫描线 overlay（不拦截点击） */
+.cr-scan {
+	position: fixed;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 9;
+	pointer-events: none;
+	background-image: repeating-linear-gradient(to bottom,
+		rgba(41, 243, 211, .05) 0, rgba(41, 243, 211, .05) 2rpx,
+		transparent 2rpx, transparent 8rpx);
+}
+
+/* ---------- 顶部状态栏 ---------- */
+.cr-bar {
+	display: flex;
+	align-items: center;
+	height: 76rpx;
+	border-bottom: 2rpx solid $line;
+}
+
+.cr-bar__back {
+	display: flex;
+	align-items: center;
+	padding: 10rpx 20rpx 10rpx 0;
+	color: $cyan;
+}
+
+.cr-bar__back:active {
+	opacity: .5;
+}
+
+.cr-bar__t {
+	flex: 1;
+	margin-left: 14rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 16rpx;
+	letter-spacing: 1rpx;
+	color: $dim;
+}
+
+.cr-bar__r {
+	font-family: 'Press Start 2P', monospace;
+	font-size: 16rpx;
+	color: $dim;
+}
+
+/* ---------- 终端主体 ---------- */
 .cr-term {
-	display: flex;
-	align-items: center;
-	height: 52rpx;
-	padding: 0 20rpx;
-	background-color: #1b1e38;
-	border-bottom: 4rpx solid #2b2f55;
-}
-
-.cr-term__dot {
-	width: 14rpx;
-	height: 14rpx;
-	flex: none;
-	margin-right: 10rpx;
-}
-
-.cr-term__dot--1 { background-color: #ff2d95; }
-.cr-term__dot--2 { background-color: #ffe066; }
-.cr-term__dot--3 { background-color: #22e0ff; }
-
-.cr-term__t {
-	flex: 1;
-	margin-left: 10rpx;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 16rpx;
-	letter-spacing: 1rpx;
-	color: #8a90b8;
-}
-
-/* ---------- 导航栏 ---------- */
-.cr-nav {
-	display: flex;
-	align-items: center;
-	height: 92rpx;
-	padding: 0 24rpx;
-	background-color: #14162a;
-	border-bottom: 4rpx solid #22e0ff;
-	box-shadow: 0 0 20rpx rgba(34, 224, 255, .35);
-}
-
-.cr-nav__back {
-	width: 80rpx;
-	display: flex;
-	align-items: center;
-	color: #22e0ff;
-}
-
-.cr-nav__back:active {
-	opacity: .6;
-}
-
-.cr-nav__title {
-	flex: 1;
-	text-align: center;
-	font-size: 36rpx;
-	letter-spacing: 8rpx;
-	color: #e8ecff;
-	text-shadow: 3rpx 0 0 #ff2d95, -3rpx 0 0 #22e0ff;
-}
-
-.cr-nav__slot {
-	width: 80rpx;
-	text-align: right;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 16rpx;
-	color: #b678ff;
-}
-
-/* ---------- 主体 ---------- */
-.cr-body {
-	padding: 28rpx 30rpx 0;
-}
-
-/* 状态行 */
-.cr-status {
-	display: flex;
-	align-items: center;
-	margin-bottom: 22rpx;
-	padding: 0 4rpx;
-}
-
-.cr-status__led {
-	width: 14rpx;
-	height: 14rpx;
-	flex: none;
-	margin-right: 12rpx;
-	background-color: #22e0ff;
-	box-shadow: 0 0 16rpx rgba(34, 224, 255, .95);
-	animation: cr-blink 1s steps(1, end) infinite;
-}
-
-@keyframes cr-blink {
-	0%, 54% { opacity: 1; }
-	55%, 100% { opacity: .15; }
-}
-
-.cr-status__t {
-	flex: 1;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 16rpx;
-	letter-spacing: 1rpx;
-	color: #8a90b8;
-}
-
-.cr-status__v {
-	font-family: 'Press Start 2P', monospace;
-	font-size: 16rpx;
-	color: #b678ff;
-}
-
-/* ---------- 面板 ---------- */
-.cr-panel {
-	padding: 34rpx 30rpx 30rpx;
-	background-color: #14162a;
-	border: 4rpx solid #2b2f55;
-	box-shadow: 10rpx 10rpx 0 rgba(34, 224, 255, .18);
-}
-
-.cr-brand {
-	display: flex;
-	align-items: center;
-}
-
-.cr-brand__logo {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 66rpx;
-	height: 66rpx;
-	flex: none;
-	color: #0b0c14;
-	background-color: #22e0ff;
-	box-shadow: 5rpx 5rpx 0 #ff2d95;
-}
-
-.cr-brand__logo .pxi {
-	transform: scale(2);
-}
-
-.cr-brand__meta {
-	margin-left: 20rpx;
-}
-
-.cr-brand__en {
-	display: block;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 24rpx;
-	letter-spacing: 1rpx;
-	color: #e8ecff;
-	text-shadow: 3rpx 0 0 #ff2d95;
-}
-
-.cr-brand__cn {
-	display: block;
-	margin-top: 8rpx;
-	font-size: 24rpx;
-	letter-spacing: 4rpx;
-	color: #8a90b8;
-}
-
-.cr-title {
-	display: block;
-	margin-top: 32rpx;
-	font-size: 48rpx;
-	line-height: 1.3;
-	letter-spacing: 8rpx;
-	color: #e8ecff;
-	text-shadow: 5rpx 0 0 #ff2d95, -5rpx 0 0 #22e0ff;
-}
-
-.cr-lead {
-	display: block;
-	margin-top: 14rpx;
-	font-size: 24rpx;
-	line-height: 1.6;
-	color: #8a90b8;
-}
-
-.cr-lead--en {
-	font-family: 'Press Start 2P', monospace;
-	font-size: 16rpx;
-	letter-spacing: 1rpx;
-	color: #b678ff;
-}
-
-/* ---------- 登录方式切换 ---------- */
-.cr-tabs {
-	display: flex;
-	margin-top: 30rpx;
-}
-
-.cr-tab {
-	flex: 1;
-	height: 70rpx;
-	line-height: 66rpx;
-	text-align: center;
-	font-size: 24rpx;
-	color: #8a90b8;
-	background-color: #1b1e38;
-	border: 4rpx solid #2b2f55;
-}
-
-.cr-tab + .cr-tab {
-	margin-left: -4rpx;
-}
-
-.cr-tab.on {
 	position: relative;
 	z-index: 1;
-	color: #0b0c14;
-	background-color: #22e0ff;
-	border-color: #22e0ff;
-	box-shadow: 0 0 24rpx rgba(34, 224, 255, .6);
+	padding-top: 30rpx;
 }
 
-/* ---------- 表单 ---------- */
-.cr-form {
-	margin-top: 30rpx;
+/* ---------- boot 日志（固定高度防跳动） ---------- */
+.cr-boot {
+	height: 168rpx;
+	overflow: hidden;
 }
 
-.cr-field {
+.cr-boot__l {
+	display: block;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 16rpx;
+	line-height: 42rpx;
+	letter-spacing: 1rpx;
+	color: $dim;
+	opacity: 0;
+	animation: cr-linein .1s steps(1, end) forwards;
+}
+
+.cr-boot__l--1 { animation-delay: .1s; }
+.cr-boot__l--2 { animation-delay: .45s; }
+.cr-boot__l--3 { animation-delay: .8s; }
+.cr-boot__l--4 { animation-delay: 1.15s; }
+
+.cr-boot__l--3,
+.cr-boot__l--4 {
+	color: $cyan;
+}
+
+.cr-caret {
+	color: $cyan;
+	animation: cr-blinkc 1s steps(1, end) infinite;
+}
+
+@keyframes cr-linein {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+@keyframes cr-blinkc {
+	0%, 49% { opacity: 1; }
+	50%, 100% { opacity: 0; }
+}
+
+/* ---------- 区块标题 ---------- */
+.cr-h {
+	display: block;
+	margin: 10rpx 0 26rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 20rpx;
+	letter-spacing: 2rpx;
+	color: $ink;
+	opacity: 0;
+	animation: cr-linein .1s steps(1, end) .95s forwards;
+}
+
+/* 入场延迟工具类（配合 cr-linein） */
+.cr-h--d1 { animation-delay: .95s; }
+.cr-flags--d2 { animation-delay: 1.15s; }
+.cr-lines--d2 { animation-delay: 1.15s; }
+.cr-lines--d3 { animation-delay: 1.3s; }
+.cr-agree--d4 { animation-delay: 1.6s; }
+
+/* ---------- 模式命令旗标 ---------- */
+.cr-flags {
 	display: flex;
-	align-items: center;
-	height: 90rpx;
+	gap: 18rpx;
+	margin-bottom: 34rpx;
+	opacity: 0;
+	animation: cr-linein .1s steps(1, end) forwards;
+}
+
+.cr-flag {
+	height: 60rpx;
+	line-height: 56rpx;
 	padding: 0 20rpx;
-	margin-bottom: 22rpx;
-	background-color: #1b1e38;
-	border: 4rpx solid #2b2f55;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 18rpx;
+	letter-spacing: 1rpx;
+	color: $dim;
+	background-color: transparent;
+	border: 2rpx solid $line;
 }
 
-.cr-field:focus-within {
-	border-color: #22e0ff;
-	box-shadow: 0 0 22rpx rgba(34, 224, 255, .45);
+.cr-flag.on {
+	color: $bg;
+	background-color: $cyan;
+	border-color: $cyan;
+	box-shadow: 0 0 14rpx rgba(41, 243, 211, .5);
 }
 
-.cr-field__ico {
+/* ---------- 命令行输入区 ---------- */
+.cr-lines {
+	opacity: 0;
+	animation: cr-linein .1s steps(1, end) forwards;
+}
+
+.cr-line {
 	display: flex;
 	align-items: center;
-	justify-content: center;
-	flex: none;
-	margin-right: 14rpx;
-	color: #22e0ff;
+	height: 88rpx;
+	margin-bottom: 18rpx;
+	border-bottom: 2rpx solid rgba(41, 243, 211, .35);
 }
 
-.cr-field__in {
+.cr-line:focus-within {
+	border-bottom-color: $cyan;
+
+	.cr-line__p,
+	.cr-line__k {
+		color: $cyan;
+		animation: cr-blinkc .8s steps(1, end) infinite;
+	}
+}
+
+/* 行首提示符 */
+.cr-line__p,
+.cr-line__k {
+	flex: none;
+	margin-right: 16rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 20rpx;
+	color: $dim;
+}
+
+.cr-line__k {
+	color: $cyan;
+	opacity: .75;
+}
+
+/* 透明无框输入，仅下边线 */
+.cr-line__in {
 	flex: 1;
 	min-width: 0;
 	height: 100%;
 	padding: 0;
 	font-family: 'Zpix', sans-serif;
 	font-size: 24rpx;
-	color: #e8ecff;
+	color: $ink;
 	background-color: transparent;
 	border: 0;
 	border-radius: 0;
@@ -303,260 +236,190 @@ $yellow: #ffe066;
 	appearance: none;
 }
 
-.cr-field__in--en {
+.cr-line__in--num {
 	font-family: 'Press Start 2P', monospace;
-	font-size: 24rpx;
+	font-size: 22rpx;
 	letter-spacing: 2rpx;
 }
 
-.cr-eye {
+/* 行尾附加（眼睛 / 链接） */
+.cr-line__ext {
+	flex: none;
+	padding: 0 8rpx;
+	margin-left: 12rpx;
+	color: $dim;
+}
+
+.cr-line--lnk {
+	height: 64rpx;
+	border-bottom-color: transparent;
+}
+
+.cr-lnk {
+	font-family: 'Press Start 2P', monospace;
+	font-size: 16rpx;
+	letter-spacing: 1rpx;
+	color: $dim;
+	text-decoration: underline;
+}
+
+.cr-send {
 	flex: none;
 	margin-left: 12rpx;
-	padding: 0 6rpx;
-	color: #b678ff;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 16rpx;
+	color: $cyan;
 }
 
-.cr-code {
+.cr-send.off {
+	color: $mag;
+}
+
+/* ---------- 协议 ---------- */
+.cr-agree {
+	display: flex;
+	align-items: flex-start;
+	margin: 6rpx 0 8rpx;
+	opacity: 1;
+}
+
+.cr-agree__box {
 	flex: none;
-	margin-left: 12rpx;
-	height: 58rpx;
-	line-height: 54rpx;
-	padding: 0 14rpx;
-	font-size: 24rpx;
-	color: #0b0c14;
-	background-color: #ffe066;
-	box-shadow: 0 0 18rpx rgba(255, 224, 102, .4);
+	margin-right: 10rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 18rpx;
+	line-height: 34rpx;
+	color: $cyan;
 }
 
-.cr-code.off {
-	color: #8a90b8;
-	background-color: #2b2f55;
-	box-shadow: none;
+.cr-agree__t {
+	font-size: 20rpx;
+	line-height: 34rpx;
+	color: $dim;
 }
 
-/* 六格验证码 */
+/* ---------- 6 格终端方块验证码 ---------- */
 .cr-cells {
 	display: flex;
 	justify-content: space-between;
-	margin-bottom: 22rpx;
+	margin: 10rpx 0 4rpx;
 }
 
 .cr-cell {
-	width: 90rpx;
-	height: 106rpx;
-	padding: 0;
+	width: 88rpx;
+	height: 100rpx;
 	box-sizing: border-box;
+	padding: 0;
 	text-align: center;
 	font-family: 'Press Start 2P', monospace;
 	font-size: 30rpx;
-	color: #22e0ff;
-	background-color: #1b1e38;
-	border: 4rpx solid #2b2f55;
+	color: $cyan;
+	background-color: transparent;
+	border: 2rpx solid rgba(41, 243, 211, .35);
 	border-radius: 0;
 	-webkit-appearance: none;
 	appearance: none;
 }
 
 .cr-cell.on {
-	border-color: #22e0ff;
-	box-shadow: 0 0 22rpx rgba(34, 224, 255, .55);
+	color: $bg;
+	background-color: $cyan;
+	border-color: $cyan;
 }
 
-.cr-cell.dim {
-	color: #4a4f78;
-	background-color: #14162a;
-	border-color: #23264a;
+.cr-tip {
+	display: block;
+	margin-top: 8rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 14rpx;
+	color: $dim;
 }
 
-/* 右对齐小链接行 */
-.cr-row {
-	display: flex;
-	justify-content: flex-end;
-	margin: -4rpx 0 22rpx;
-	font-size: 24rpx;
-}
-
-.cr-row__link {
-	color: #22e0ff;
-}
-
-/* ---------- 密码强度 ---------- */
-.cr-power {
+/* ---------- SIGNAL 信号条（register） ---------- */
+.cr-sig {
 	display: flex;
 	align-items: center;
-	margin: -4rpx 0 22rpx;
-	font-size: 24rpx;
-	color: #8a90b8;
+	height: 60rpx;
+	margin-bottom: 18rpx;
 }
 
-.cr-power__t {
-	margin-right: 12rpx;
-}
-
-.cr-power__bars {
-	display: flex;
+.cr-sig__t {
 	flex: 1;
-}
-
-.cr-power__bar {
-	flex: 1;
-	height: 14rpx;
-	margin-right: 8rpx;
-	background-color: #23264a;
-	border: 3rpx solid #2b2f55;
-}
-
-.cr-power__bar.on {
-	background-color: #22e0ff;
-	border-color: #22e0ff;
-	box-shadow: 0 0 14rpx rgba(34, 224, 255, .55);
-}
-
-.cr-power__v {
-	width: 48rpx;
-	text-align: right;
 	font-family: 'Press Start 2P', monospace;
 	font-size: 16rpx;
-	color: #e8ecff;
+	color: $dim;
 }
 
-/* ---------- 按钮 ---------- */
-.cr-btn {
+.cr-sig__bars {
+	display: flex;
+	gap: 8rpx;
+}
+
+.cr-sig__b {
+	width: 32rpx;
+	height: 20rpx;
+	background-color: $line;
+}
+
+.cr-sig__b.on {
+	background-color: $cyan;
+	box-shadow: 0 0 10rpx rgba(41, 243, 211, .45);
+}
+
+/* ---------- EXECUTE 大块按钮 ---------- */
+.cr-exec {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	height: 94rpx;
-	margin-top: 30rpx;
-	font-size: 36rpx;
-	letter-spacing: 8rpx;
-	color: #0b0c14;
-	background-color: #ff2d95;
-	box-shadow: 8rpx 8rpx 0 #22e0ff;
-	text-shadow: 0 0 12rpx rgba(255, 255, 255, .6);
-}
-
-.cr-btn .pxi {
-	margin-right: 14rpx;
-}
-
-.cr-btn:active {
-	transform: translate(4rpx, 4rpx);
-	box-shadow: 4rpx 4rpx 0 #22e0ff;
-}
-
-/* ---------- 页脚 ---------- */
-.cr-foot {
-	margin-top: 30rpx;
-	text-align: center;
-	font-size: 24rpx;
-	color: #8a90b8;
-}
-
-.cr-foot__link {
-	color: #ff2d95;
-}
-
-.cr-agree {
-	display: flex;
-	align-items: flex-start;
+	height: 100rpx;
 	margin-top: 26rpx;
-	font-size: 24rpx;
-	line-height: 1.7;
-	color: #8a90b8;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 22rpx;
+	letter-spacing: 2rpx;
+	color: $bg;
+	background-color: $cyan;
+	border: 2rpx solid $cyan;
+	box-shadow: 6rpx 6rpx 0 rgba(41, 243, 211, .25);
 }
 
-.cr-check {
-	position: relative;
-	flex: none;
-	width: 28rpx;
-	height: 28rpx;
-	margin: 4rpx 12rpx 0 0;
-	background-color: #1b1e38;
-	border: 4rpx solid #2b2f55;
+.cr-exec:active {
+	transform: translate(4rpx, 4rpx);
+	box-shadow: 2rpx 2rpx 0 rgba(41, 243, 211, .25);
 }
 
-.cr-check.on {
-	background-color: #22e0ff;
-	border-color: #22e0ff;
-	box-shadow: 0 0 16rpx rgba(34, 224, 255, .55);
+/* glitch 抖动（exec 触发 0.22s） */
+.cr-exec.glitch {
+	animation: cr-glitch .22s steps(2, end);
 }
 
-.cr-check.on::after {
-	content: '';
-	position: absolute;
-	left: 7rpx;
-	top: 1rpx;
-	width: 8rpx;
-	height: 14rpx;
-	border: solid #0b0c14;
-	border-width: 0 4rpx 4rpx 0;
-	transform: rotate(45deg);
+@keyframes cr-glitch {
+	0% { transform: translate(0, 0); }
+	20% { transform: translate(-8rpx, 3rpx); }
+	40% { transform: translate(6rpx, -4rpx); }
+	60% { transform: translate(-5rpx, -2rpx); }
+	80% { transform: translate(7rpx, 4rpx); }
+	100% { transform: translate(0, 0); }
 }
 
-.cr-link {
-	color: #ff2d95;
-}
-
-/* ---------- 步骤条 ---------- */
-.cr-steps {
-	display: flex;
-	align-items: center;
-	margin: 26rpx 0 28rpx;
-}
-
-.cr-step {
-	display: flex;
-	align-items: center;
-	font-size: 24rpx;
-	color: #8a90b8;
-}
-
-.cr-step__n {
+/* ---------- ACCESS RESTORED 反白大字 ---------- */
+.cr-restored {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 38rpx;
-	height: 38rpx;
-	margin-right: 10rpx;
+	height: 140rpx;
+	margin: 40rpx 0 30rpx;
 	font-family: 'Press Start 2P', monospace;
-	font-size: 16rpx;
-	color: #8a90b8;
-	background-color: #1b1e38;
-	border: 4rpx solid #2b2f55;
+	font-size: 26rpx;
+	letter-spacing: 2rpx;
+	color: $bg;
+	background-color: $cyan;
+	animation: cr-restflash .5s steps(1, end);
 }
 
-.cr-step.on .cr-step__n {
-	color: #0b0c14;
-	background-color: #22e0ff;
-	border-color: #22e0ff;
-	box-shadow: 0 0 18rpx rgba(34, 224, 255, .5);
-}
-
-.cr-step__line {
-	flex: 1;
-	height: 4rpx;
-	margin: 0 14rpx;
-	background-color: #2b2f55;
-}
-
-.cr-step.on .cr-step__line {
-	background-color: #22e0ff;
-}
-
-/* ---------- 底部信息 ---------- */
-.cr-hud {
-	display: flex;
-	justify-content: space-between;
-	margin-top: 30rpx;
-	padding: 0 4rpx;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 16rpx;
-	letter-spacing: 1rpx;
-	color: #4a4f78;
-}
-
-/* ---------- 占位符 ---------- */
-.cr-field__in::-webkit-input-placeholder,
-.cr-cell::-webkit-input-placeholder {
-	color: #5a6090;
+@keyframes cr-restflash {
+	0% { opacity: 0; }
+	30% { opacity: 1; }
+	45% { opacity: .2; }
+	60% { opacity: 1; }
+	100% { opacity: 1; }
 }

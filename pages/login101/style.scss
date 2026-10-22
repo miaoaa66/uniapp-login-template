@@ -1,28 +1,29 @@
 /* ==========================================================================
- * SET J · 便签软木板
+ * SET J · 软木便签板 CORKBOARD
  * pages/login101 —— 登录 / 注册 / 找回密码 三页共用
- * 软木底板 + 彩色便签，图钉与胶带做固定，像贴在计划板上
+ * 整页软木板 + 图钉便签，无导航栏无卡片骨架，模式切换 = 换便签
  *
  * 字体：Zpix（中文像素）+ Press Start 2P（拉丁与数字）
  * 图标：common/pixel-icons.scss（8x8 网格，box-shadow 逐点绘制）
- * 字号：Zpix 走 12px 的整数倍，Press Start 2P 走 8px 的整数倍
  * ========================================================================== */
 
 @import '../../common/pixel-icons.scss';
 
 /* ---------- 设计令牌 ---------- */
-$ink: #3b2c1c;         // 主文字
-$dim: #7a6448;         // 次级文字
-$bg: #c89a5e;          // 页面底色
-$panel: #fff6c8;       // 卡片/面板底色
-$panel2: #ffe9a8;      // 次级面板底色（Tab 未选中、字段底）
-$line: #6b4f2c;        // 主描边
-$lineSoft: #a67c46;    // 弱描边
-$accent: #e8642c;      // 主强调色（按钮 / 选中态）
-$accent2: #2a8a6a;     // 次强调色（链接 / 图标）
-$on: #fff6c8;          // 强调色之上的文字
+$cork: #c89b6d;                  // 软木底
+$ink: #5b4232;                   // 墨棕
+$dim: #8a6a4f;                   // 弱墨色
+$ph: #8a6a4f;                    // 占位符
+$paper: #fdf9ef;                 // 白纸
+$noteY: #ffe28a;                 // 便签黄（密码）
+$noteB: #a8d8f0;                 // 便签蓝（短信）
+$noteP: #f7b8c8;                 // 便签粉（邮箱）
+$noteG: #dcecc3;                 // 便签浅绿
+$stampG: #3f9e4f;                // 章绿
+$stampR: #c0392b;                // 章红
+$pen: #275e8e;                   // 圆珠笔蓝
 
-/* ---------- 页面容器 ---------- */
+/* ---------- 页面容器（软木板） ---------- */
 .nt-page,
 .nt-page * {
 	box-sizing: border-box;
@@ -31,512 +32,520 @@ $on: #fff6c8;          // 强调色之上的文字
 .nt-page {
 	position: relative;
 	min-height: 100vh;
-	padding-bottom: 40rpx;
-	background-color: $bg;
-	background-image: repeating-linear-gradient(135deg, rgba(107, 79, 44, .10) 0rpx, rgba(107, 79, 44, .10) 4rpx, transparent 4rpx, transparent 12rpx);
+	padding-bottom: 70rpx;
+	background-color: $cork;
+	background-image: repeating-linear-gradient(90deg, rgba(91, 66, 50, .07) 0, rgba(91, 66, 50, .07) 2rpx, transparent 2rpx, transparent 30rpx), repeating-linear-gradient(0deg, rgba(91, 66, 50, .05) 0, rgba(91, 66, 50, .05) 2rpx, transparent 2rpx, transparent 40rpx), repeating-linear-gradient(45deg, rgba(255, 255, 255, .05) 0, rgba(255, 255, 255, .05) 4rpx, transparent 4rpx, transparent 14rpx);
 	font-family: 'Zpix', sans-serif;
 	color: $ink;
 	-webkit-font-smoothing: none;
 }
 
-/* ---------- 自绘导航栏 ---------- */
-.nt-nav {
-	display: flex;
-	align-items: center;
-	height: 96rpx;
-	padding: 0 24rpx;
-	background-color: $panel;
-	border-bottom: 4rpx solid $line;
+/* ---------- 板四角图钉 ---------- */
+.nt-boardpin {
+	position: absolute;
+	z-index: 5;
+	width: 28rpx;
+	height: 28rpx;
+	border-radius: 50%;
+	background: radial-gradient(circle at 35% 30%, #ff9c8a, $stampR 55%, #7a1f1f);
+	box-shadow: 2rpx 5rpx 6rpx rgba(0, 0, 0, .35);
 }
 
-.nt-nav__back {
-	display: flex;
-	align-items: center;
-	width: 110rpx;
-	flex: none;
-	color: $ink;
+.nt-boardpin::after {
+	content: '';
+	position: absolute;
+	left: 50%;
+	top: 100%;
+	width: 4rpx;
+	height: 12rpx;
+	margin-left: -2rpx;
+	background-color: #6e5136;
 }
 
-.nt-nav__back:active {
-	opacity: .5;
-}
+.nt-boardpin--lt { left: 18rpx; top: 18rpx; }
+.nt-boardpin--rt { right: 18rpx; top: 18rpx; }
+.nt-boardpin--lb { left: 18rpx; bottom: 18rpx; }
+.nt-boardpin--rb { right: 18rpx; bottom: 18rpx; }
 
-.nt-nav__title {
-	flex: 1;
-	text-align: center;
-	font-size: 48rpx;
-	letter-spacing: 6rpx;
-	color: $ink;
-}
-
-.nt-nav__slot {
-	flex: none;
-	min-width: 110rpx;
-	text-align: right;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 24rpx;
-	letter-spacing: 1rpx;
-	color: $dim;
-}
-
-/* ---------- 主体与卡片 ---------- */
-.nt-body {
-	padding: 28rpx 32rpx 0;
-}
-
-.nt-card {
-	padding: 36rpx 32rpx 32rpx;
-	background-color: $panel;
-	border: 4rpx solid $line;
-	box-shadow: 10rpx 10rpx 0 rgba(0, 0, 0, .16);
-}
-
-.nt-brand {
-	display: flex;
-	align-items: center;
-}
-
-.nt-brand__logo {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 68rpx;
-	height: 68rpx;
-	flex: none;
-	color: $on;
-	background-color: $accent;
-	border: 4rpx solid $line;
-	box-shadow: 5rpx 5rpx 0 $line;
-}
-
-.nt-brand__logo .pxi {
-	transform: scale(2);
-}
-
-.nt-brand__meta {
-	margin-left: 20rpx;
-}
-
-.nt-brand__en {
-	display: block;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	letter-spacing: 1rpx;
-	color: $ink;
-}
-
-.nt-brand__cn {
-	display: block;
-	margin-top: 8rpx;
-	font-size: 24rpx;
-	letter-spacing: 4rpx;
-	color: $dim;
-}
-
-.nt-title {
-	display: block;
-	margin-top: 34rpx;
-	font-size: 48rpx;
-	line-height: 1.3;
-	letter-spacing: 8rpx;
-	color: $ink;
-}
-
-.nt-lead {
-	display: block;
-	margin-top: 16rpx;
-	font-size: 24rpx;
-	line-height: 1.6;
-	color: $dim;
-}
-
-/* ---------- 登录方式切换 ---------- */
-.nt-tabs {
-	display: flex;
-	margin-top: 36rpx;
-}
-
-.nt-tab {
-	flex: 1;
-	height: 72rpx;
-	line-height: 68rpx;
-	text-align: center;
-	font-size: 24rpx;
-	color: $dim;
-	background-color: $panel2;
-	border: 4rpx solid $lineSoft;
-}
-
-.nt-tab + .nt-tab {
-	margin-left: -4rpx;
-}
-
-.nt-tab.on {
+/* ---------- 标签纸（代替导航栏） ---------- */
+.nt-tag {
 	position: relative;
-	z-index: 1;
-	color: $on;
-	background-color: $accent;
-	border-color: $line;
-	box-shadow: 4rpx 4rpx 0 $line;
-}
-
-/* ---------- 表单 ---------- */
-.nt-form {
-	margin-top: 32rpx;
-}
-
-.nt-field {
-	display: flex;
+	display: inline-flex;
 	align-items: center;
-	height: 96rpx;
-	padding: 0 22rpx;
-	margin-bottom: 24rpx;
-	background-color: $panel;
-	border: 4rpx solid $line;
+	margin: 36rpx 0 0 30rpx;
+	padding: 16rpx 24rpx 16rpx 18rpx;
+	background-color: $paper;
+	box-shadow: 4rpx 6rpx 0 rgba(0, 0, 0, .18);
+	transform: rotate(-2deg);
 }
 
-.nt-field__ico {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex: none;
-	margin-right: 18rpx;
+.nt-tag__pin {
+	position: absolute;
+	left: 50%;
+	top: -12rpx;
+	margin-left: -10rpx;
+	width: 20rpx;
+	height: 20rpx;
+	border-radius: 50%;
+	background: radial-gradient(circle at 35% 30%, #ffd28a, #d68910 60%, #8c5a0f);
+	box-shadow: 1rpx 3rpx 3rpx rgba(0, 0, 0, .3);
+}
+
+.nt-tag .pxi {
+	margin-right: 10rpx;
 	color: $ink;
 }
 
-.nt-field__in {
+.nt-tag__t {
+	font-size: 24rpx;
+	letter-spacing: 2rpx;
+	color: $ink;
+}
+
+/* ---------- 图钉 ---------- */
+.nt-pin {
+	position: absolute;
+	left: 50%;
+	top: -16rpx;
+	margin-left: -14rpx;
+	z-index: 2;
+	width: 28rpx;
+	height: 28rpx;
+	border-radius: 50%;
+	background: radial-gradient(circle at 35% 30%, #ffb3a0, $stampR 55%, #7a1f1f);
+	box-shadow: 2rpx 4rpx 5rpx rgba(0, 0, 0, .3);
+}
+
+.nt-pin::after {
+	content: '';
+	position: absolute;
+	left: 50%;
+	top: 100%;
+	width: 4rpx;
+	height: 14rpx;
+	margin-left: -2rpx;
+	background-color: #6e5136;
+}
+
+/* ---------- 登录页：当前操作大便签 ---------- */
+.nt-note--big {
+	margin: 56rpx 36rpx 0;
+	padding: 40rpx 32rpx 36rpx;
+	box-shadow: 0 12rpx 0 rgba(0, 0, 0, .12), 0 20rpx 26rpx rgba(0, 0, 0, .16);
+	transform: rotate(0deg) scale(1.02);
+	animation: nt-pop .25s ease-out;
+}
+
+@keyframes nt-pop {
+	0% { transform: rotate(-4deg) scale(.86); opacity: .5; }
+	100% { transform: rotate(0deg) scale(1.02); opacity: 1; }
+}
+
+.nt-note--c0 { background-color: $noteY; }
+.nt-note--c1 { background-color: $noteB; }
+.nt-note--c2 { background-color: $noteP; }
+
+.nt-note__title {
+	display: block;
+	margin-bottom: 6rpx;
+	font-size: 32rpx;
+	letter-spacing: 4rpx;
+	color: $ink;
+}
+
+/* ---------- 手写感输入行 ---------- */
+.nt-line {
+	display: flex;
+	align-items: center;
+	padding: 22rpx 4rpx 10rpx;
+}
+
+.nt-line__k {
+	flex: none;
+	margin-right: 16rpx;
+	font-size: 24rpx;
+	letter-spacing: 2rpx;
+	color: $ink;
+}
+
+.nt-line__in {
 	flex: 1;
 	min-width: 0;
-	height: 100%;
-	padding: 0;
+	height: 64rpx;
+	padding: 0 4rpx;
 	font-family: 'Zpix', sans-serif;
-	font-size: 24rpx;
-	color: $ink;
+	font-size: 26rpx;
+	color: #3d2b1d;
 	background-color: transparent;
 	border: 0;
+	border-bottom: 2rpx dashed $ink;
 	border-radius: 0;
 	-webkit-appearance: none;
 	appearance: none;
 }
 
-.nt-field__in--en {
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	letter-spacing: 2rpx;
+.nt-line__in::-webkit-input-placeholder {
+	color: $ph;
 }
 
 .nt-eye {
 	flex: none;
-	margin-left: 14rpx;
-	padding: 0 6rpx;
-	color: $accent2;
-}
-
-.nt-code {
-	flex: none;
-	margin-left: 14rpx;
-	height: 64rpx;
-	line-height: 60rpx;
-	padding: 0 16rpx;
-	font-size: 24rpx;
+	margin-left: 12rpx;
+	padding: 4rpx;
 	color: $ink;
-	background-color: $panel2;
-	border: 4rpx solid $line;
+	opacity: .75;
 }
 
-.nt-code.off {
+.nt-send {
+	flex: none;
+	margin-left: 12rpx;
+	font-size: 24rpx;
+	color: $pen;
+	text-decoration: underline;
+}
+
+.nt-send.off {
 	color: $dim;
-	border-color: $lineSoft;
+	text-decoration: none;
 }
 
-/* 右对齐小链接行 */
-.nt-row {
+.nt-mini {
 	display: flex;
 	justify-content: flex-end;
-	margin: -4rpx 0 24rpx;
-	font-size: 24rpx;
+	padding: 14rpx 4rpx 0;
 }
 
-.nt-row__link {
-	color: $accent2;
+.nt-mini__t {
+	font-size: 22rpx;
+	color: $pen;
+	text-decoration: underline;
 }
 
-/* ---------- 六格验证码 ---------- */
+/* ---------- 协议 ---------- */
+.nt-agree {
+	display: flex;
+	align-items: flex-start;
+	margin-top: 24rpx;
+	padding: 0 4rpx;
+}
+
+.nt-agree--board {
+	margin: 40rpx 60rpx 0;
+}
+
+.nt-check {
+	position: relative;
+	flex: none;
+	width: 28rpx;
+	height: 28rpx;
+	margin: 4rpx 12rpx 0 0;
+	border: 3rpx solid $ink;
+	background-color: rgba(255, 255, 255, .4);
+}
+
+.nt-check.on {
+	background-color: rgba(255, 255, 255, .65);
+}
+
+.nt-check.on::after {
+	content: '';
+	position: absolute;
+	left: 7rpx;
+	top: 1rpx;
+	width: 9rpx;
+	height: 16rpx;
+	border: solid $stampG;
+	border-width: 0 4rpx 4rpx 0;
+	transform: rotate(45deg);
+}
+
+.nt-agree__t {
+	font-size: 22rpx;
+	line-height: 1.7;
+	color: $ink;
+	opacity: .85;
+}
+
+.nt-agree__lnk {
+	color: $pen;
+}
+
+/* ---------- 胶带提交按钮 ---------- */
+.nt-tapebtn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 88rpx;
+	margin-top: 30rpx;
+	background-color: rgba(253, 249, 239, .85);
+	clip-path: polygon(3% 0, 97% 6%, 100% 94%, 0 100%);
+	box-shadow: 0 6rpx 0 rgba(0, 0, 0, .1);
+	transform: rotate(-1deg);
+}
+
+.nt-tapebtn:active {
+	transform: rotate(-1deg) scale(.98);
+}
+
+.nt-tapebtn__t {
+	font-size: 30rpx;
+	letter-spacing: 10rpx;
+	color: $ink;
+}
+
+.nt-tapebtn--long {
+	margin: 44rpx 44rpx 0;
+	height: 92rpx;
+}
+
+.nt-tapebtn--ink {
+	background-color: rgba(91, 66, 50, .14);
+}
+
+/* ---------- 缩略便签行 ---------- */
+.nt-thumbrow {
+	display: flex;
+	justify-content: center;
+	margin-top: 60rpx;
+}
+
+.nt-thumb {
+	position: relative;
+	width: 210rpx;
+	padding: 30rpx 14rpx 26rpx;
+	margin: 0 14rpx;
+	text-align: center;
+	box-shadow: 0 8rpx 0 rgba(0, 0, 0, .12);
+	opacity: .85;
+	transition: opacity .25s, transform .25s;
+}
+
+.nt-thumb:active {
+	opacity: 1;
+}
+
+.nt-thumb--c0 { background-color: $noteY; transform: rotate(-3deg) scale(.8); }
+.nt-thumb--c1 { background-color: $noteB; transform: rotate(2deg) scale(.8); }
+.nt-thumb--c2 { background-color: $noteP; transform: rotate(-2deg) scale(.8); }
+
+.nt-thumb__pin {
+	position: absolute;
+	left: 50%;
+	top: -12rpx;
+	margin-left: -10rpx;
+	width: 20rpx;
+	height: 20rpx;
+	border-radius: 50%;
+	background: radial-gradient(circle at 35% 30%, #ffb3a0, $stampR 55%, #7a1f1f);
+	box-shadow: 1rpx 3rpx 3rpx rgba(0, 0, 0, .3);
+}
+
+.nt-thumb__t {
+	font-size: 22rpx;
+	color: $ink;
+}
+
+/* ---------- 底部碎纸条链接 ---------- */
+.nt-scrap {
+	display: flex;
+	justify-content: center;
+	margin-top: 44rpx;
+}
+
+.nt-scrap__t {
+	padding: 12rpx 24rpx;
+	background-color: rgba(253, 249, 239, .7);
+	font-size: 22rpx;
+	color: $ink;
+	box-shadow: 2rpx 4rpx 0 rgba(0, 0, 0, .12);
+	transform: rotate(1.5deg);
+}
+
+/* ---------- 注册页：任务便签 ---------- */
+.nt-task {
+	position: relative;
+	margin: 44rpx 44rpx 0;
+	padding: 26rpx 28rpx 24rpx;
+	box-shadow: 0 8rpx 0 rgba(0, 0, 0, .12);
+	animation: nt-drop .3s ease-out backwards;
+}
+
+.nt-task--0 { background-color: $noteY; transform: rotate(-2deg); animation-delay: 0s; }
+.nt-task--1 { background-color: $noteB; transform: rotate(1.5deg); animation-delay: .06s; }
+.nt-task--2 { background-color: $noteP; transform: rotate(-1deg); animation-delay: .12s; }
+.nt-task--3 { background-color: $paper; transform: rotate(1.8deg); animation-delay: .18s; }
+.nt-task--4 { background-color: $noteG; transform: rotate(-1.6deg); animation-delay: .24s; }
+
+@keyframes nt-drop {
+	0% { opacity: 0; }
+	100% { opacity: 1; }
+}
+
+.nt-task .nt-line {
+	padding-right: 72rpx;
+}
+
+.nt-task__t {
+	display: block;
+	margin-bottom: 2rpx;
+	font-size: 26rpx;
+	letter-spacing: 3rpx;
+	color: $ink;
+}
+
+/* ---------- 墨量条（密码强度） ---------- */
+.nt-ink {
+	display: flex;
+	align-items: center;
+	margin-top: 14rpx;
+	padding: 0 4rpx;
+}
+
+.nt-ink__k {
+	flex: none;
+	margin-right: 12rpx;
+	font-size: 22rpx;
+	color: $dim;
+}
+
+.nt-ink__bar {
+	width: 54rpx;
+	height: 14rpx;
+	margin-right: 8rpx;
+	background-color: rgba(91, 66, 50, .15);
+}
+
+.nt-ink__bar.on {
+	background-color: $ink;
+}
+
+.nt-ink__v {
+	margin-left: auto;
+	font-size: 22rpx;
+	color: $dim;
+}
+
+/* ---------- 绿色圆章（字段有效） ---------- */
+.nt-stamp {
+	position: absolute;
+	right: 18rpx;
+	top: 16rpx;
+	z-index: 2;
+	width: 60rpx;
+	height: 60rpx;
+	border: 5rpx solid $stampG;
+	border-radius: 50%;
+	transform: rotate(-14deg);
+	animation: nt-stampk .28s ease-out;
+}
+
+.nt-stamp::after {
+	content: '';
+	position: absolute;
+	left: 13rpx;
+	top: 12rpx;
+	width: 16rpx;
+	height: 26rpx;
+	border: solid $stampG;
+	border-width: 0 6rpx 6rpx 0;
+	transform: rotate(45deg);
+}
+
+@keyframes nt-stampk {
+	0% { transform: rotate(-14deg) scale(2.4); opacity: 0; }
+	55% { opacity: 1; }
+	100% { transform: rotate(-14deg) scale(1); opacity: 1; }
+}
+
+/* ---------- 红色"已办"章 ---------- */
+.nt-donestamp {
+	position: absolute;
+	right: 30rpx;
+	bottom: 34rpx;
+	z-index: 2;
+	padding: 10rpx 22rpx;
+	border: 6rpx solid $stampR;
+	transform: rotate(-12deg);
+	animation: nt-stampk .3s ease-out;
+}
+
+.nt-donestamp__t {
+	font-size: 34rpx;
+	letter-spacing: 6rpx;
+	color: $stampR;
+}
+
+/* ---------- 找回页：横线备忘录便签 ---------- */
+.nt-memo {
+	position: relative;
+	margin: 56rpx 40rpx 0;
+	padding: 40rpx 30rpx 46rpx 88rpx;
+	background-color: $paper;
+	background-image: repeating-linear-gradient(0deg, transparent 0, transparent 54rpx, rgba(90, 131, 181, .3) 54rpx, rgba(90, 131, 181, .3) 56rpx);
+	box-shadow: 0 12rpx 0 rgba(0, 0, 0, .12), 0 18rpx 24rpx rgba(0, 0, 0, .14);
+	transform: rotate(.6deg);
+}
+
+.nt-memo::before {
+	content: '';
+	position: absolute;
+	left: 56rpx;
+	top: 0;
+	bottom: 0;
+	width: 10rpx;
+	border-left: 3rpx solid rgba(192, 57, 43, .55);
+	border-right: 3rpx solid rgba(192, 57, 43, .55);
+}
+
+.nt-memo__title {
+	display: block;
+	font-size: 32rpx;
+	letter-spacing: 4rpx;
+	color: $ink;
+}
+
+.nt-memo__step {
+	display: inline-flex;
+	margin-top: 16rpx;
+	padding: 6rpx 18rpx;
+	border: 2rpx dashed rgba(192, 57, 43, .5);
+	background-color: rgba(192, 57, 43, .08);
+}
+
+.nt-memo__stept {
+	font-size: 22rpx;
+	color: $stampR;
+}
+
+/* ---------- 小方格验证码 ---------- */
 .nt-cells {
 	display: flex;
 	justify-content: space-between;
-	margin-bottom: 24rpx;
+	margin-top: 22rpx;
 }
 
 .nt-cell {
-	width: 88rpx;
-	height: 104rpx;
+	width: 64rpx;
+	height: 76rpx;
 	padding: 0;
-	box-sizing: border-box;
 	text-align: center;
 	font-family: 'Press Start 2P', monospace;
-	font-size: 64rpx;
-	color: $ink;
-	background-color: $panel;
-	border: 4rpx solid $line;
+	font-size: 34rpx;
+	color: #3d2b1d;
+	background-color: rgba(255, 255, 255, .55);
+	border: 2rpx solid $ink;
 	border-radius: 0;
 	-webkit-appearance: none;
 	appearance: none;
 }
 
 .nt-cell.on {
-	color: $on;
-	background-color: $accent;
-	box-shadow: 6rpx 6rpx 0 $line;
+	border-color: $stampR;
+	color: $stampR;
+	background-color: rgba(255, 255, 255, .85);
 }
 
 .nt-cell.dim {
 	color: $dim;
-	background-color: $panel2;
-	border-color: $lineSoft;
-}
-
-/* ---------- 密码强度 ---------- */
-.nt-power {
-	display: flex;
-	align-items: center;
-	margin: -4rpx 0 24rpx;
-	font-size: 24rpx;
-	color: $dim;
-}
-
-.nt-power__t {
-	margin-right: 14rpx;
-}
-
-.nt-power__bars {
-	display: flex;
-	flex: 1;
-}
-
-.nt-power__bar {
-	flex: 1;
-	height: 16rpx;
-	margin-right: 8rpx;
-	background-color: $panel2;
-	border: 3rpx solid $lineSoft;
-}
-
-.nt-power__bar.on {
-	background-color: #92cc41;
-	border-color: $line;
-}
-
-.nt-power__v {
-	width: 64rpx;
-	text-align: right;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	color: $ink;
-}
-
-/* ---------- 按钮 ---------- */
-.nt-btn {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: 96rpx;
-	margin-top: 32rpx;
-	font-size: 48rpx;
-	letter-spacing: 8rpx;
-	color: $on;
-	background-color: $accent;
-	border: 4rpx solid $line;
-	box-shadow: 8rpx 8rpx 0 $line;
-}
-
-.nt-btn .pxi {
-	margin-right: 14rpx;
-}
-
-.nt-btn:active {
-	transform: translate(4rpx, 4rpx);
-	box-shadow: 4rpx 4rpx 0 $line;
-}
-
-.nt-btn--ghost {
-	color: $ink;
-	background-color: $panel;
-}
-
-/* ---------- 页脚与协议 ---------- */
-.nt-foot {
-	margin-top: 32rpx;
-	text-align: center;
-	font-size: 24rpx;
-	color: $dim;
-}
-
-.nt-foot__link {
-	color: $accent2;
-	text-decoration: underline;
-}
-
-.nt-agree {
-	display: flex;
-	align-items: flex-start;
-	margin-top: 28rpx;
-	font-size: 24rpx;
-	line-height: 1.7;
-	color: $dim;
-}
-
-.nt-check {
-	position: relative;
-	flex: none;
-	width: 30rpx;
-	height: 30rpx;
-	margin: 4rpx 12rpx 0 0;
-	background-color: $panel;
-	border: 4rpx solid $line;
-}
-
-.nt-check.on {
-	background-color: #92cc41;
-}
-
-.nt-check.on::after {
-	content: '';
-	position: absolute;
-	left: 8rpx;
-	top: 2rpx;
-	width: 8rpx;
-	height: 15rpx;
-	border: solid $line;
-	border-width: 0 4rpx 4rpx 0;
-	transform: rotate(45deg);
-}
-
-.nt-link {
-	color: $accent2;
-}
-
-/* ---------- 步骤条 ---------- */
-.nt-steps {
-	display: flex;
-	align-items: center;
-	margin: 4rpx 0 30rpx;
-}
-
-.nt-step {
-	display: flex;
-	align-items: center;
-	font-size: 24rpx;
-	color: $dim;
-}
-
-.nt-step__n {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 48rpx;
-	height: 48rpx;
-	margin-right: 12rpx;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	color: $ink;
-	background-color: $panel2;
-	border: 4rpx solid $lineSoft;
-}
-
-.nt-step.on .nt-step__n {
-	color: $on;
-	background-color: $accent2;
-	border-color: $line;
-}
-
-.nt-step__line {
-	flex: 1;
-	height: 4rpx;
-	margin: 0 16rpx;
-	background-color: $lineSoft;
-}
-
-.nt-step.on .nt-step__line {
-	background-color: $line;
-}
-
-/* ---------- 占位符（uniapp 用 placeholder-style 内联声明，这里兼容 H5） ---------- */
-.nt-field__in::-webkit-input-placeholder {
-	color: #9b7a4d;
-}
-
-/* ---------- 主题皮肤（覆盖骨架） ---------- */
-.nt-card {
-	transform: rotate(-.6deg);
-	box-shadow: 12rpx 12rpx 0 rgba(107, 79, 44, .3);
-}
-
-.nt-brand__logo {
-	background-color: $accent2;
-	color: $panel;
-}
-
-.nt-btn {
-	color: $on;
-	background-color: $accent;
-	box-shadow: 6rpx 6rpx 0 $line;
-}
-
-.nt-tab {
-	background-color: $panel2;
-}
-
-/* ---------- 主题装饰 ---------- */
-.nt-pin {
-	width: 28rpx;
-	height: 28rpx;
-	margin: 0 auto 12rpx;
-	background-color: #d63b3b;
-	border: 4rpx solid #7a1f1f;
-	border-radius: 50%;
-	box-shadow: 4rpx 4rpx 0 rgba(107, 79, 44, .45);
-}
-
-.nt-strip {
-	margin-bottom: 26rpx;
-	padding: 14rpx 0;
-	text-align: center;
-	background-color: rgba(255, 255, 255, .32);
-	border: 3rpx dashed $line;
-}
-
-.nt-strip__t {
-	font-family: 'Press Start 2P', monospace;
-	font-size: 16rpx;
-	letter-spacing: 1rpx;
-	color: $line;
-}
-
-.nt-notes {
-	display: flex;
-	margin-top: 40rpx;
-}
-
-.nt-note {
-	flex: 1;
-	padding: 26rpx 20rpx;
-	border: 4rpx solid $line;
-	box-shadow: 6rpx 6rpx 0 rgba(107, 79, 44, .3);
-}
-
-.nt-note--green {
-	background-color: #cfe9a0;
-	transform: rotate(1.4deg);
-}
-
-.nt-note--pink {
-	margin-left: 24rpx;
-	background-color: #f7c3d4;
-	transform: rotate(-1.6deg);
-}
-
-.nt-note__t {
-	font-size: 24rpx;
-	color: $ink;
+	border-color: rgba(91, 66, 50, .45);
 }

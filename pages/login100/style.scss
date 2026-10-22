@@ -1,26 +1,24 @@
 /* ==========================================================================
- * SET I · 深空雷达 SPACE RADAR
+ * SET I · 深空雷达操控台 SPACE CONSOLE
  * pages/login100 —— 登录 / 注册 / 找回密码 三页共用
- * 近黑深空 + 青绿荧光，旋转扫描雷达与坐标读数还原飞船操控台
+ * 上半屏旋转扫描雷达，下半屏读数式操控台（无卡片骨架）
  *
  * 字体：Zpix（中文像素）+ Press Start 2P（拉丁与数字）
  * 图标：common/pixel-icons.scss（8x8 网格，box-shadow 逐点绘制）
- * 字号：Zpix 走 12px 的整数倍，Press Start 2P 走 8px 的整数倍
  * ========================================================================== */
 
 @import '../../common/pixel-icons.scss';
 
 /* ---------- 设计令牌 ---------- */
-$ink: #b8ffd9;         // 主文字
-$dim: #4d8c72;         // 次级文字
-$bg: #04070f;          // 页面底色
-$panel: #08131a;       // 卡片/面板底色
-$panel2: #0c1c25;      // 次级面板底色（Tab 未选中、字段底）
-$line: #2f6b57;        // 主描边
-$lineSoft: #1b4438;    // 弱描边
-$accent: #4cffb0;      // 主强调色（按钮 / 选中态）
-$accent2: #35c8ff;     // 次强调色（链接 / 图标）
-$on: #04070f;          // 强调色之上的文字
+$bg: #04080a;                    // 近黑深空底
+$ink: #c8ffe6;                   // 主文字（浅青白）
+$teal: #29d98c;                  // 荧光青绿主色
+$tealSoft: rgba(41, 217, 140, .45);
+$tealFaint: rgba(41, 217, 140, .08);
+$amber: #ffb454;                 // 琥珀选中/警示
+$grey: #5a6b7a;                  // 灰蓝辅助文字
+$greyDark: #22323c;              // 深灰蓝弱描边
+$ph: #3d5a52;                    // 占位符色
 
 /* ---------- 页面容器 ---------- */
 .sp-page,
@@ -29,188 +27,268 @@ $on: #04070f;          // 强调色之上的文字
 }
 
 .sp-page {
-	position: relative;
 	min-height: 100vh;
-	padding-bottom: 40rpx;
+	padding-bottom: 60rpx;
 	background-color: $bg;
-	background-image: radial-gradient(circle at 50% 0%, rgba(76, 255, 176, .10) 0%, transparent 60%), linear-gradient(rgba(76, 255, 176, .07) 2rpx, transparent 2rpx), linear-gradient(90deg, rgba(76, 255, 176, .07) 2rpx, transparent 2rpx); background-size: 100% 100%, 64rpx 64rpx, 64rpx 64rpx;
 	font-family: 'Zpix', sans-serif;
 	color: $ink;
 	-webkit-font-smoothing: none;
 }
 
-/* ---------- 自绘导航栏 ---------- */
-.sp-nav {
-	display: flex;
-	align-items: center;
-	height: 96rpx;
-	padding: 0 24rpx;
-	background-color: $panel;
-	border-bottom: 4rpx solid $line;
-}
-
-.sp-nav__back {
-	display: flex;
-	align-items: center;
-	width: 110rpx;
-	flex: none;
-	color: $ink;
-}
-
-.sp-nav__back:active {
-	opacity: .5;
-}
-
-.sp-nav__title {
-	flex: 1;
-	text-align: center;
-	font-size: 48rpx;
-	letter-spacing: 6rpx;
-	color: $ink;
-}
-
-.sp-nav__slot {
-	flex: none;
-	min-width: 110rpx;
-	text-align: right;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 24rpx;
-	letter-spacing: 1rpx;
-	color: $dim;
-}
-
-/* ---------- 主体与卡片 ---------- */
-.sp-body {
-	padding: 28rpx 32rpx 0;
-}
-
-.sp-card {
-	padding: 36rpx 32rpx 32rpx;
-	background-color: $panel;
-	border: 4rpx solid $line;
-	box-shadow: 10rpx 10rpx 0 rgba(0, 0, 0, .16);
-}
-
-.sp-brand {
-	display: flex;
-	align-items: center;
-}
-
-.sp-brand__logo {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 68rpx;
-	height: 68rpx;
-	flex: none;
-	color: $on;
-	background-color: $accent;
-	border: 4rpx solid $line;
-	box-shadow: 5rpx 5rpx 0 $line;
-}
-
-.sp-brand__logo .pxi {
-	transform: scale(2);
-}
-
-.sp-brand__meta {
-	margin-left: 20rpx;
-}
-
-.sp-brand__en {
-	display: block;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	letter-spacing: 1rpx;
-	color: $ink;
-}
-
-.sp-brand__cn {
-	display: block;
-	margin-top: 8rpx;
-	font-size: 24rpx;
-	letter-spacing: 4rpx;
-	color: $dim;
-}
-
-.sp-title {
-	display: block;
-	margin-top: 34rpx;
-	font-size: 48rpx;
-	line-height: 1.3;
-	letter-spacing: 8rpx;
-	color: $ink;
-}
-
-.sp-lead {
-	display: block;
-	margin-top: 16rpx;
-	font-size: 24rpx;
-	line-height: 1.6;
-	color: $dim;
-}
-
-/* ---------- 登录方式切换 ---------- */
-.sp-tabs {
-	display: flex;
-	margin-top: 36rpx;
-}
-
-.sp-tab {
-	flex: 1;
-	height: 72rpx;
-	line-height: 68rpx;
-	text-align: center;
-	font-size: 24rpx;
-	color: $dim;
-	background-color: $panel2;
-	border: 4rpx solid $lineSoft;
-}
-
-.sp-tab + .sp-tab {
-	margin-left: -4rpx;
-}
-
-.sp-tab.on {
+/* ---------- 上半屏：深空穹顶 ---------- */
+.sp-dome {
 	position: relative;
-	z-index: 1;
-	color: $on;
-	background-color: $accent;
-	border-color: $line;
-	box-shadow: 4rpx 4rpx 0 $line;
+	padding: 100rpx 0 46rpx;
+	border-bottom: 2rpx solid $tealSoft;
+	text-align: center;
+	background-color: $bg;
+	background-image: radial-gradient(rgba(200, 255, 230, .35) 2rpx, transparent 2rpx), radial-gradient(rgba(200, 255, 230, .16) 2rpx, transparent 2rpx);
+	background-size: 150rpx 130rpx, 90rpx 100rpx;
+	background-position: 24rpx 40rpx, 70rpx 90rpx;
 }
 
-/* ---------- 表单 ---------- */
-.sp-form {
-	margin-top: 32rpx;
+.sp-dome--slim {
+	padding: 92rpx 0 34rpx;
 }
 
-.sp-field {
+/* EXIT 返回钮 */
+.sp-exit {
+	position: absolute;
+	left: 24rpx;
+	top: 24rpx;
+	z-index: 3;
+	padding: 12rpx 20rpx;
+	border: 2rpx solid $tealSoft;
+	background-color: $tealFaint;
+}
+
+.sp-exit:active {
+	background-color: rgba(41, 217, 140, .22);
+}
+
+.sp-exit__t {
+	font-family: 'Press Start 2P', monospace;
+	font-size: 18rpx;
+	letter-spacing: 2rpx;
+	color: $teal;
+}
+
+/* 四角刻度装饰 */
+.sp-tick {
+	position: absolute;
+	width: 26rpx;
+	height: 26rpx;
+	opacity: .7;
+}
+
+.sp-tick--lt { left: 20rpx; top: 96rpx; border-left: 3rpx solid $grey; border-top: 3rpx solid $grey; }
+.sp-tick--rt { right: 20rpx; top: 96rpx; border-right: 3rpx solid $grey; border-top: 3rpx solid $grey; }
+.sp-tick--lb { left: 20rpx; bottom: 18rpx; border-left: 3rpx solid $grey; border-bottom: 3rpx solid $grey; }
+.sp-tick--rb { right: 20rpx; bottom: 18rpx; border-right: 3rpx solid $grey; border-bottom: 3rpx solid $grey; }
+
+/* 角落读数 */
+.sp-dome__hud {
+	position: absolute;
+	z-index: 2;
+}
+
+.sp-dome__hud--lt { left: 60rpx; top: 100rpx; text-align: left; }
+.sp-dome__hud--rt { right: 60rpx; top: 100rpx; text-align: right; }
+.sp-dome__hud--lb { left: 60rpx; bottom: 22rpx; text-align: left; }
+.sp-dome__hud--rb { right: 60rpx; bottom: 22rpx; text-align: right; }
+
+.sp-dome__r {
+	font-family: 'Press Start 2P', monospace;
+	font-size: 16rpx;
+	letter-spacing: 1rpx;
+	color: $grey;
+}
+
+.sp-dome__cap {
+	display: block;
+	margin-top: 26rpx;
+	font-family: 'Press Start 2P', 'Zpix', monospace;
+	font-size: 18rpx;
+	letter-spacing: 2rpx;
+	color: $grey;
+}
+
+/* ---------- 雷达 ---------- */
+.sp-radar {
+	position: relative;
+	width: 340rpx;
+	height: 340rpx;
+	margin: 0 auto;
+	border: 3rpx solid $tealSoft;
+	border-radius: 50%;
+	background: radial-gradient(circle, $tealFaint 0%, transparent 68%);
+}
+
+.sp-dome--slim .sp-radar {
+	width: 220rpx;
+	height: 220rpx;
+}
+
+.sp-radar__ring {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	border: 2rpx solid $tealSoft;
+	border-radius: 50%;
+}
+
+.sp-radar__ring--out { width: 66%; height: 66%; }
+.sp-radar__ring--mid { width: 40%; height: 40%; }
+.sp-radar__ring--in { width: 16%; height: 16%; border-color: rgba(41, 217, 140, .8); }
+
+.sp-radar__cross {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.sp-radar__cross::before {
+	content: '';
+	position: absolute;
+	left: 50%;
+	top: 0;
+	bottom: 0;
+	width: 2rpx;
+	margin-left: -1rpx;
+	background: rgba(41, 217, 140, .25);
+}
+
+.sp-radar__cross::after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 0;
+	right: 0;
+	height: 2rpx;
+	margin-top: -1rpx;
+	background: rgba(41, 217, 140, .25);
+}
+
+/* conic-gradient 扫描扇形，4s 旋转一周 */
+.sp-radar__sweep {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	background: conic-gradient(from 0deg, rgba(41, 217, 140, .5) 0deg, rgba(41, 217, 140, .1) 70deg, transparent 110deg);
+	animation: sp-spin 4s linear infinite;
+}
+
+@keyframes sp-spin {
+	from { transform: rotate(0deg); }
+	to { transform: rotate(360deg); }
+}
+
+/* 扫过处周期点亮的光点 */
+.sp-radar__blip {
+	position: absolute;
+	width: 12rpx;
+	height: 12rpx;
+	border-radius: 50%;
+	background-color: $teal;
+	animation: sp-blip 4s linear infinite;
+}
+
+.sp-radar__blip--a { left: 32%; top: 38%; }
+.sp-radar__blip--b { left: 62%; top: 58%; background-color: $amber; animation-delay: 1.4s; }
+.sp-radar__blip--c { left: 48%; top: 72%; animation-delay: 2.6s; }
+
+@keyframes sp-blip {
+	0%, 16% { opacity: .12; box-shadow: none; }
+	22%, 44% { opacity: 1; box-shadow: 0 0 14rpx rgba(41, 217, 140, .9); }
+	58%, 100% { opacity: .12; box-shadow: none; }
+}
+
+/* ---------- 下半屏：操控台 ---------- */
+.sp-console {
+	padding: 30rpx 40rpx 0;
+}
+
+/* 频道开关（模式切换） */
+.sp-chrow {
 	display: flex;
-	align-items: center;
-	height: 96rpx;
-	padding: 0 22rpx;
-	margin-bottom: 24rpx;
-	background-color: $panel;
-	border: 4rpx solid $line;
+	margin-bottom: 16rpx;
 }
 
-.sp-field__ico {
+.sp-ch {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	flex: none;
-	margin-right: 18rpx;
-	color: $ink;
+	flex: 1;
+	padding: 18rpx 0;
+	border: 2rpx solid $greyDark;
+	background-color: rgba(90, 107, 122, .08);
+	transition: border-color .15s;
 }
 
-.sp-field__in {
+.sp-ch + .sp-ch {
+	margin-left: 14rpx;
+}
+
+.sp-ch__led {
+	flex: none;
+	width: 12rpx;
+	height: 12rpx;
+	margin-right: 10rpx;
+	background-color: $greyDark;
+}
+
+.sp-ch__t {
+	font-size: 24rpx;
+	letter-spacing: 2rpx;
+	color: $grey;
+}
+
+.sp-ch.on {
+	border-color: $amber;
+	background-color: rgba(255, 180, 84, .08);
+}
+
+.sp-ch.on .sp-ch__led {
+	background-color: $amber;
+	box-shadow: 0 0 10rpx rgba(255, 180, 84, .9);
+}
+
+.sp-ch.on .sp-ch__t {
+	color: $amber;
+}
+
+/* ---------- 读数式字段行 ---------- */
+.sp-line {
+	position: relative;
+	display: flex;
+	align-items: center;
+	padding: 30rpx 6rpx 24rpx;
+	border-bottom: 2rpx solid $tealSoft;
+}
+
+.sp-line__k {
+	flex: none;
+	margin-right: 16rpx;
+	font-family: 'Press Start 2P', 'Zpix', monospace;
+	font-size: 20rpx;
+	letter-spacing: 1rpx;
+	color: $teal;
+}
+
+.sp-line__in {
 	flex: 1;
 	min-width: 0;
-	height: 100%;
+	height: 56rpx;
 	padding: 0;
 	font-family: 'Zpix', sans-serif;
-	font-size: 24rpx;
+	font-size: 26rpx;
+	letter-spacing: 2rpx;
 	color: $ink;
 	background-color: transparent;
 	border: 0;
@@ -219,364 +297,340 @@ $on: #04070f;          // 强调色之上的文字
 	appearance: none;
 }
 
-.sp-field__in--en {
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	letter-spacing: 2rpx;
+.sp-line__in::-webkit-input-placeholder {
+	color: $ph;
 }
 
 .sp-eye {
 	flex: none;
 	margin-left: 14rpx;
-	padding: 0 6rpx;
-	color: $accent2;
+	padding: 6rpx;
+	color: $teal;
 }
 
-.sp-code {
+/* 发送验证码 */
+.sp-send {
 	flex: none;
 	margin-left: 14rpx;
-	height: 64rpx;
-	line-height: 60rpx;
-	padding: 0 16rpx;
+	min-width: 140rpx;
+	padding: 8rpx 0;
+	text-align: center;
+}
+
+.sp-send__t {
 	font-size: 24rpx;
-	color: $ink;
-	background-color: $panel2;
-	border: 4rpx solid $line;
+	letter-spacing: 2rpx;
+	color: $amber;
 }
 
-.sp-code.off {
-	color: $dim;
-	border-color: $lineSoft;
+.sp-send.off .sp-send__t {
+	color: $grey;
 }
 
-/* 右对齐小链接行 */
-.sp-row {
+/* 聚焦时四角出现目标锁定框（两个伪元素 + 两个小 view） */
+.sp-line__c {
+	position: absolute;
+	width: 20rpx;
+	height: 20rpx;
+	opacity: 0;
+}
+
+.sp-line__c--tr { right: -6rpx; top: -8rpx; border-top: 4rpx solid $amber; border-right: 4rpx solid $amber; }
+.sp-line__c--bl { left: -6rpx; bottom: -8rpx; border-bottom: 4rpx solid $amber; border-left: 4rpx solid $amber; }
+
+.sp-line::before {
+	content: '';
+	position: absolute;
+	left: -6rpx;
+	top: -8rpx;
+	width: 20rpx;
+	height: 20rpx;
+	border-top: 4rpx solid $amber;
+	border-left: 4rpx solid $amber;
+	opacity: 0;
+}
+
+.sp-line::after {
+	content: '';
+	position: absolute;
+	right: -6rpx;
+	bottom: -8rpx;
+	width: 20rpx;
+	height: 20rpx;
+	border-bottom: 4rpx solid $amber;
+	border-right: 4rpx solid $amber;
+	opacity: 0;
+}
+
+.sp-line.lock::before,
+.sp-line.lock::after,
+.sp-line.lock .sp-line__c {
+	opacity: 1;
+	animation: sp-lock .3s steps(2, end) 2;
+}
+
+@keyframes sp-lock {
+	0% { opacity: 1; }
+	50% { opacity: 0; }
+	100% { opacity: 1; }
+}
+
+/* 次级链接行 */
+.sp-mini {
 	display: flex;
 	justify-content: flex-end;
-	margin: -4rpx 0 24rpx;
+	padding: 18rpx 6rpx 0;
+}
+
+.sp-mini__t {
 	font-size: 24rpx;
+	color: $grey;
+	text-decoration: underline;
 }
 
-.sp-row__link {
-	color: $accent2;
+/* ---------- ENERGY 充能格（注册页强度） ---------- */
+.sp-energy {
+	display: flex;
+	align-items: center;
+	padding: 26rpx 6rpx 6rpx;
 }
 
-/* ---------- 六格验证码 ---------- */
+.sp-energy__k {
+	flex: none;
+	margin-right: 18rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 18rpx;
+	letter-spacing: 1rpx;
+	color: $grey;
+}
+
+.sp-energy__bar {
+	width: 64rpx;
+	height: 22rpx;
+	margin-right: 10rpx;
+	border: 2rpx solid $greyDark;
+	background-color: rgba(90, 107, 122, .15);
+}
+
+.sp-energy__bar.on {
+	border-color: $teal;
+	background-color: $teal;
+	box-shadow: 0 0 10rpx rgba(41, 217, 140, .55);
+}
+
+.sp-energy__v {
+	margin-left: auto;
+	font-size: 22rpx;
+	letter-spacing: 2rpx;
+	color: $teal;
+}
+
+/* ---------- PHASE 阶段（找回页） ---------- */
+.sp-phase {
+	margin-bottom: 10rpx;
+}
+
+.sp-phase__row {
+	display: flex;
+	align-items: center;
+	padding: 14rpx 6rpx;
+	opacity: .35;
+}
+
+.sp-phase__row.on {
+	opacity: 1;
+}
+
+.sp-phase__dot {
+	flex: none;
+	width: 14rpx;
+	height: 14rpx;
+	margin-right: 14rpx;
+	border: 2rpx solid $greyDark;
+}
+
+.sp-phase__row.on .sp-phase__dot {
+	border-color: $teal;
+	background-color: $teal;
+	box-shadow: 0 0 8rpx rgba(41, 217, 140, .8);
+}
+
+.sp-phase__t {
+	font-size: 24rpx;
+	letter-spacing: 3rpx;
+	color: $teal;
+}
+
+/* ---------- 坐标读数验证码格 ---------- */
 .sp-cells {
 	display: flex;
 	justify-content: space-between;
-	margin-bottom: 24rpx;
+	padding: 26rpx 0 8rpx;
 }
 
 .sp-cell {
-	width: 88rpx;
-	height: 104rpx;
+	width: 92rpx;
+	height: 108rpx;
 	padding: 0;
-	box-sizing: border-box;
 	text-align: center;
 	font-family: 'Press Start 2P', monospace;
-	font-size: 64rpx;
+	font-size: 48rpx;
 	color: $ink;
-	background-color: $panel;
-	border: 4rpx solid $line;
+	background-color: rgba(41, 217, 140, .05);
+	background-image: linear-gradient($teal, $teal), linear-gradient($teal, $teal);
+	background-size: 14rpx 4rpx, 4rpx 14rpx;
+	background-position: 0 0, 0 0;
+	background-repeat: no-repeat;
+	border: 2rpx solid $greyDark;
 	border-radius: 0;
 	-webkit-appearance: none;
 	appearance: none;
 }
 
 .sp-cell.on {
-	color: $on;
-	background-color: $accent;
-	box-shadow: 6rpx 6rpx 0 $line;
+	border-color: $amber;
+	color: $amber;
 }
 
 .sp-cell.dim {
-	color: $dim;
-	background-color: $panel2;
-	border-color: $lineSoft;
+	color: $grey;
 }
 
-/* ---------- 密码强度 ---------- */
-.sp-power {
-	display: flex;
-	align-items: center;
-	margin: -4rpx 0 24rpx;
-	font-size: 24rpx;
-	color: $dim;
+.sp-cells__cap {
+	display: block;
+	padding: 6rpx 6rpx 0;
+	font-family: 'Press Start 2P', 'Zpix', monospace;
+	font-size: 14rpx;
+	letter-spacing: 1rpx;
+	color: $grey;
 }
 
-.sp-power__t {
-	margin-right: 14rpx;
-}
-
-.sp-power__bars {
-	display: flex;
-	flex: 1;
-}
-
-.sp-power__bar {
-	flex: 1;
-	height: 16rpx;
-	margin-right: 8rpx;
-	background-color: $panel2;
-	border: 3rpx solid $lineSoft;
-}
-
-.sp-power__bar.on {
-	background-color: #92cc41;
-	border-color: $line;
-}
-
-.sp-power__v {
-	width: 64rpx;
-	text-align: right;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	color: $ink;
-}
-
-/* ---------- 按钮 ---------- */
-.sp-btn {
+/* ---------- ENGAGE 充电按钮 ---------- */
+.sp-engage {
+	position: relative;
+	overflow: hidden;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	height: 96rpx;
-	margin-top: 32rpx;
-	font-size: 48rpx;
-	letter-spacing: 8rpx;
-	color: $on;
-	background-color: $accent;
-	border: 4rpx solid $line;
-	box-shadow: 8rpx 8rpx 0 $line;
+	height: 108rpx;
+	margin-top: 40rpx;
+	border: 4rpx solid $teal;
+	background-color: $tealFaint;
 }
 
-.sp-btn .pxi {
-	margin-right: 14rpx;
+.sp-engage:active {
+	background-color: rgba(41, 217, 140, .22);
 }
 
-.sp-btn:active {
-	transform: translate(4rpx, 4rpx);
-	box-shadow: 4rpx 4rpx 0 $line;
+.sp-engage__charge {
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	width: 0;
+	background-color: rgba(41, 217, 140, .3);
 }
 
-.sp-btn--ghost {
-	color: $ink;
-	background-color: $panel;
+.sp-engage.charging .sp-engage__charge {
+	animation: sp-charge .6s linear forwards;
 }
 
-/* ---------- 页脚与协议 ---------- */
-.sp-foot {
-	margin-top: 32rpx;
-	text-align: center;
-	font-size: 24rpx;
-	color: $dim;
+@keyframes sp-charge {
+	from { width: 0; }
+	to { width: 100%; }
 }
 
-.sp-foot__link {
-	color: $accent2;
-	text-decoration: underline;
+.sp-engage__t {
+	position: relative;
+	z-index: 1;
+	font-family: 'Press Start 2P', 'Zpix', monospace;
+	font-size: 26rpx;
+	letter-spacing: 2rpx;
+	color: $teal;
 }
 
-.sp-agree {
+/* ---------- 协议 / 页脚 / 闪光横幅 ---------- */
+.sp-proto {
 	display: flex;
 	align-items: flex-start;
-	margin-top: 28rpx;
-	font-size: 24rpx;
-	line-height: 1.7;
-	color: $dim;
+	margin-top: 30rpx;
+	padding: 0 6rpx;
 }
 
-.sp-check {
+.sp-proto__k {
+	flex: none;
+	margin-right: 16rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 14rpx;
+	letter-spacing: 1rpx;
+	color: $grey;
+	line-height: 2.6;
+}
+
+.sp-proto__box {
 	position: relative;
 	flex: none;
 	width: 30rpx;
 	height: 30rpx;
-	margin: 4rpx 12rpx 0 0;
-	background-color: $panel;
-	border: 4rpx solid $line;
+	margin: 6rpx 12rpx 0 0;
+	border: 3rpx solid $tealSoft;
+	background-color: transparent;
 }
 
-.sp-check.on {
-	background-color: #92cc41;
+.sp-proto__box.on {
+	border-color: $teal;
+	background-color: $teal;
+	box-shadow: 0 0 8rpx rgba(41, 217, 140, .7);
 }
 
-.sp-check.on::after {
-	content: '';
-	position: absolute;
-	left: 8rpx;
-	top: 2rpx;
-	width: 8rpx;
-	height: 15rpx;
-	border: solid $line;
-	border-width: 0 4rpx 4rpx 0;
-	transform: rotate(45deg);
+.sp-proto__t {
+	font-size: 22rpx;
+	line-height: 1.8;
+	color: $grey;
 }
 
-.sp-link {
-	color: $accent2;
+.sp-proto__lnk {
+	color: $teal;
 }
 
-/* ---------- 步骤条 ---------- */
-.sp-steps {
+.sp-foot {
 	display: flex;
-	align-items: center;
-	margin: 4rpx 0 30rpx;
-}
-
-.sp-step {
-	display: flex;
-	align-items: center;
-	font-size: 24rpx;
-	color: $dim;
-}
-
-.sp-step__n {
-	display: flex;
-	align-items: center;
 	justify-content: center;
-	width: 48rpx;
-	height: 48rpx;
+	align-items: center;
+	margin-top: 34rpx;
+}
+
+.sp-foot__t {
 	margin-right: 12rpx;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	color: $ink;
-	background-color: $panel2;
-	border: 4rpx solid $lineSoft;
+	font-size: 24rpx;
+	color: $grey;
 }
 
-.sp-step.on .sp-step__n {
-	color: $on;
-	background-color: $accent2;
-	border-color: $line;
-}
-
-.sp-step__line {
-	flex: 1;
-	height: 4rpx;
-	margin: 0 16rpx;
-	background-color: $lineSoft;
-}
-
-.sp-step.on .sp-step__line {
-	background-color: $line;
-}
-
-/* ---------- 占位符（uniapp 用 placeholder-style 内联声明，这里兼容 H5） ---------- */
-.sp-field__in::-webkit-input-placeholder {
-	color: #3f7a63;
-}
-
-/* ---------- 主题皮肤（覆盖骨架） ---------- */
-.sp-card {
-	border-color: $line;
-	box-shadow: 0 0 36rpx rgba(76, 255, 176, .16);
-}
-
-.sp-btn {
-	color: $on;
-	background-color: $accent;
-	text-shadow: none;
-	box-shadow: 6rpx 6rpx 0 $lineSoft;
-}
-
-.sp-title {
-	text-shadow: 0 0 24rpx rgba(76, 255, 176, .6);
-}
-
-.sp-field__ico {
-	color: $accent;
-}
-
-/* ---------- 主题装饰 ---------- */
-.sp-radar {
-	position: relative;
-	width: 260rpx;
-	height: 260rpx;
-	margin: 10rpx auto 30rpx;
-	border: 4rpx solid $line;
-	border-radius: 50%;
-	overflow: hidden;
-}
-
-.sp-radar__ring {
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	transform: translate(-50%, -50%);
-	border: 3rpx solid $lineSoft;
-	border-radius: 50%;
-}
-
-.sp-radar__ring { width: 200rpx; height: 200rpx; }
-.sp-radar__ring--inner { width: 110rpx; height: 110rpx; }
-
-.sp-radar__cross {
-	position: absolute;
-	left: 50%;
-	top: 0;
-	width: 3rpx;
-	height: 100%;
-	background-color: $lineSoft;
-	transform: translateX(-50%);
-}
-
-.sp-radar__cross::after {
-	content: '';
-	position: absolute;
-	left: -128rpx;
-	top: 128rpx;
-	width: 260rpx;
-	height: 3rpx;
-	background-color: $lineSoft;
-}
-
-.sp-radar__sweep {
-	position: absolute;
-	left: 50%;
-	top: 0;
-	width: 50%;
-	height: 50%;
-	transform-origin: left bottom;
-	background: linear-gradient(45deg, rgba(76, 255, 176, .34), transparent 70%);
-	animation: sp-spin 3.2s linear infinite;
-}
-
-@keyframes sp-spin {
-	from { transform: rotate(0deg); }
-	to { transform: rotate(360deg); }
-}
-
-.sp-radar__blip {
-	position: absolute;
-	width: 12rpx;
-	height: 12rpx;
-	background-color: $accent2;
-}
-
-.sp-radar__blip--a { left: 76rpx; top: 84rpx; }
-.sp-radar__blip--b { left: 168rpx; top: 152rpx; }
-
-.sp-hud {
-	display: flex;
-	margin-top: 32rpx;
-	padding: 20rpx;
-	background-color: $panel;
-	border: 4rpx solid $line;
-}
-
-.sp-hud__col {
-	flex: 1;
-}
-
-.sp-hud__col--r {
-	text-align: right;
-}
-
-.sp-hud__l {
-	display: block;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 16rpx;
-	line-height: 2.2;
+.sp-foot__link {
+	font-size: 24rpx;
 	letter-spacing: 1rpx;
-	color: $dim;
+	color: $amber;
+	text-decoration: underline;
+}
+
+.sp-flash {
+	margin-top: 30rpx;
+	padding: 20rpx 0;
+	text-align: center;
+	border: 3rpx solid $amber;
+	background-color: rgba(255, 180, 84, .08);
+	animation: sp-flashk .5s steps(2, end) 4;
+}
+
+.sp-flash__t {
+	font-family: 'Press Start 2P', 'Zpix', monospace;
+	font-size: 22rpx;
+	letter-spacing: 2rpx;
+	color: $amber;
+}
+
+@keyframes sp-flashk {
+	0% { opacity: 1; }
+	50% { opacity: .1; }
+	100% { opacity: 1; }
 }

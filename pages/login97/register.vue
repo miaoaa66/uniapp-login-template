@@ -1,91 +1,102 @@
 <template>
 	<view class="am-page">
-		<view class="am-nav">
-			<view class="am-nav__back" @click="goBack">
+		<!-- 双线框头部 -->
+		<view class="am-head">
+			<view class="am-head__back" @click="goBack">
 				<view class="pxi pxi-back"></view>
 			</view>
-			<text class="am-nav__title">注 册</text>
-			<text class="am-nav__slot">adduser</text>
+			<text class="am-head__t">PIXEL BBS · 新用户注册</text>
+			<text class="am-head__r">adduser</text>
 		</view>
 
 		<view class="am-body">
-			<view class="am-term">
-				<view class="am-term__bar">
-					<view class="am-term__dot"></view>
-					<view class="am-term__dot"></view>
-					<view class="am-term__dot"></view>
-					<text class="am-term__title">AMBER-OS v1.0 / tty0</text>
+			<text class="am-cap">NEW ACCOUNT / 注册新账户</text>
+
+			<!-- 编号字段菜单 -->
+			<view class="am-fields">
+				<view class="am-f">
+					<view class="am-f__krow">
+						<text class="am-f__no">01</text>
+						<text class="am-f__k">NICKNAME / 昵称</text>
+					</view>
+					<view class="am-f__row">
+						<input class="am-f__in" v-model="nickname" placeholder="昵称（2-12 字）" placeholder-style="color:#6b520e" maxlength="12" />
+						<text class="am-caret">▉</text>
+					</view>
+				</view>
+
+				<view class="am-f">
+					<view class="am-f__krow">
+						<text class="am-f__no">02</text>
+						<text class="am-f__k">MAIL / 邮箱地址</text>
+					</view>
+					<view class="am-f__row">
+						<input class="am-f__in" v-model="email" placeholder="player@pixel.id" placeholder-style="color:#6b520e" maxlength="40" />
+						<text class="am-caret">▉</text>
+					</view>
+				</view>
+
+				<view class="am-f">
+					<view class="am-f__krow">
+						<text class="am-f__no">03</text>
+						<text class="am-f__k">CODE / 邮箱验证码</text>
+					</view>
+					<view class="am-f__row">
+						<input class="am-f__in am-f__in--num" v-model="mailCode" type="number" placeholder="邮箱验证码" placeholder-style="color:#6b520e" maxlength="6" />
+						<text class="am-f__send" :class="{ off: mailLeft > 0 }" @click="sendCode">{{ mailLeft > 0 ? mailLeft + 's' : '[SEND]' }}</text>
+						<text class="am-caret">▉</text>
+					</view>
+				</view>
+
+				<view class="am-f">
+					<view class="am-f__krow">
+						<text class="am-f__no">04</text>
+						<text class="am-f__k">PASSWORD / 口令</text>
+					</view>
+					<view class="am-f__row">
+						<input class="am-f__in" v-model="password" :password="!showPwd" placeholder="设置密码（8-20 位）" placeholder-style="color:#6b520e" maxlength="20" />
+						<view class="am-f__eye" @click="showPwd = !showPwd"><view class="pxi pxi-eye"></view></view>
+						<text class="am-caret">▉</text>
+					</view>
+				</view>
+
+				<view class="am-f">
+					<view class="am-f__krow">
+						<text class="am-f__no">05</text>
+						<text class="am-f__k">CONFIRM / 确认口令</text>
+					</view>
+					<view class="am-f__row">
+						<input class="am-f__in" v-model="password2" :password="!showPwd" placeholder="确认密码" placeholder-style="color:#6b520e" maxlength="20" />
+						<text class="am-caret">▉</text>
+					</view>
+				</view>
+
+				<!-- METER 强度行 -->
+				<view class="am-meter">
+					<text class="am-meter__k">METER [</text>
+					<view class="am-meter__bars">
+						<view v-for="n in 6" :key="n" class="am-meter__b" :class="{ on: meterLit >= n }"></view>
+					</view>
+					<text class="am-meter__r">] {{ meterText }}</text>
+				</view>
+
+				<view class="am-f am-f--lnk">
+					<text class="am-f__lnk" @click="goLogin">已有账户？[LOGIN]</text>
+				</view>
+
+				<view class="am-agree" @click="agreed = !agreed">
+					<text class="am-agree__box">[{{ agreed ? 'X' : '\u00A0' }}]</text>
+					<text class="am-agree__t">我已阅读并同意《用户协议》与《隐私政策》</text>
 				</view>
 			</view>
-			<view class="am-card">
-				<view class="am-brand">
-					<view class="am-brand__logo"><view class="pxi pxi-user"></view></view>
-					<view class="am-brand__meta">
-						<text class="am-brand__en">ADDUSER</text>
-						<text class="am-brand__cn">新建终端账户</text>
-					</view>
-				</view>
+		</view>
 
-				<text class="am-title">注 册</text>
-				<text class="am-lead">创建账户并写入 /etc/passwd</text>
-
-				<view class="am-form">
-					<view class="am-field">
-						<view class="am-field__ico"><view class="pxi pxi-user"></view></view>
-						<input class="am-field__in" v-model="nickname" placeholder="昵称（2-12 字）" placeholder-style="color:#82600e" maxlength="12" />
-					</view>
-
-					<view class="am-field">
-						<view class="am-field__ico"><view class="pxi pxi-mail"></view></view>
-						<input class="am-field__in" v-model="email" placeholder="player@pixel.id" placeholder-style="color:#82600e" maxlength="40" />
-					</view>
-
-					<view class="am-field">
-						<view class="am-field__ico"><view class="pxi pxi-shield"></view></view>
-						<input class="am-field__in" v-model="mailCode" type="number" placeholder="邮箱验证码" placeholder-style="color:#82600e" maxlength="6" />
-						<view class="am-code" :class="{ off: mailLeft > 0 }" @click="sendCode">{{ mailLeft > 0 ? mailLeft + 's' : '获取验证码' }}</view>
-					</view>
-
-					<view class="am-field">
-						<view class="am-field__ico"><view class="pxi pxi-lock"></view></view>
-						<input class="am-field__in" v-model="password" :password="!showPwd" placeholder="设置密码（8-20 位）" placeholder-style="color:#82600e" maxlength="20" />
-						<view class="am-eye" @click="showPwd = !showPwd"><view class="pxi pxi-eye"></view></view>
-					</view>
-
-					<view class="am-field">
-						<view class="am-field__ico"><view class="pxi pxi-lock"></view></view>
-						<input class="am-field__in" v-model="password2" :password="!showPwd" placeholder="确认密码" placeholder-style="color:#82600e" maxlength="20" />
-					</view>
-
-					<view class="am-power">
-						<text class="am-power__t">密码强度</text>
-						<view class="am-power__bars">
-							<view class="am-power__bar" :class="{ on: strength >= 1 }"></view>
-							<view class="am-power__bar" :class="{ on: strength >= 2 }"></view>
-							<view class="am-power__bar" :class="{ on: strength >= 3 }"></view>
-						</view>
-						<text class="am-power__v">{{ strengthText }}</text>
-					</view>
-
-					<view class="am-btn" @click="submit">
-						<view class="pxi pxi-play"></view><text>写 入</text>
-					</view>
-
-					<view class="am-foot">
-						<text>已有账户？</text>
-						<text class="am-foot__link" @click="goLogin">返回登录</text>
-					</view>
-
-					<view class="am-agree" @click="agreed = !agreed">
-						<view class="am-check" :class="{ on: agreed }"></view>
-						<text>我已阅读并同意<text class="am-link">《用户协议》</text>与<text class="am-link">《隐私政策》</text></text>
-					</view>
-				</view>
-			</view>
-			<view class="am-log">
-				<text class="am-log__l">&gt; LOADING MODULES ....... [OK]</text>
-				<text class="am-log__l">&gt; MOUNT /dev/pixel ........ [OK]</text>
-				<text class="am-log__l">&gt; READY<span class="am-caret">_</span></text>
+		<!-- 底部反色状态栏 -->
+		<view class="am-fbar">
+			<text class="am-fbar__l">[F1 帮助]</text>
+			<text class="am-fbar__c">PIXEL BBS v3.2</text>
+			<view class="am-enter" @click="submit">
+				<text>[ENTER 确认]</text>
 			</view>
 		</view>
 	</view>
@@ -116,8 +127,12 @@
 				if (/[^a-zA-Z0-9]/.test(v)) s++
 				return s
 			},
-			strengthText() {
-				return ['──', '弱', '中', '强'][this.strength]
+			// METER：0/2/4/6 格阶梯点亮
+			meterLit() {
+				return [0, 2, 4, 6][this.strength]
+			},
+			meterText() {
+				return ['--', '弱', '中', '强'][this.strength]
 			}
 		},
 		onLoad(options) {

@@ -1,100 +1,102 @@
 <template>
 	<view class="sp-page">
-		<view class="sp-nav">
-			<view class="sp-nav__back" @click="goBack">
-				<view class="pxi pxi-back"></view>
+		<view class="sp-dome">
+			<view class="sp-exit" @click="goBack">
+				<text class="sp-exit__t">EXIT ▸</text>
 			</view>
-			<text class="sp-nav__title">登 录</text>
-			<text class="sp-nav__slot">ORBIT</text>
-		</view>
-
-		<view class="sp-body">
+			<view class="sp-tick sp-tick--lt"></view>
+			<view class="sp-tick sp-tick--rt"></view>
+			<view class="sp-tick sp-tick--lb"></view>
+			<view class="sp-tick sp-tick--rb"></view>
+			<view class="sp-dome__hud sp-dome__hud--lt"><text class="sp-dome__r">LAT 31.02N</text></view>
+			<view class="sp-dome__hud sp-dome__hud--rt"><text class="sp-dome__r">LON 121.45E</text></view>
+			<view class="sp-dome__hud sp-dome__hud--lb"><text class="sp-dome__r">SIG 98.2%</text></view>
+			<view class="sp-dome__hud sp-dome__hud--rb"><text class="sp-dome__r">TGT 03</text></view>
 			<view class="sp-radar">
-				<view class="sp-radar__ring"></view>
-				<view class="sp-radar__ring sp-radar__ring--inner"></view>
+				<view class="sp-radar__ring sp-radar__ring--out"></view>
+				<view class="sp-radar__ring sp-radar__ring--mid"></view>
+				<view class="sp-radar__ring sp-radar__ring--in"></view>
 				<view class="sp-radar__cross"></view>
 				<view class="sp-radar__sweep"></view>
 				<view class="sp-radar__blip sp-radar__blip--a"></view>
 				<view class="sp-radar__blip sp-radar__blip--b"></view>
+				<view class="sp-radar__blip sp-radar__blip--c"></view>
 			</view>
-			<view class="sp-card">
-				<view class="sp-brand">
-					<view class="sp-brand__logo"><view class="pxi pxi-chip"></view></view>
-					<view class="sp-brand__meta">
-						<text class="sp-brand__en">CREW ID</text>
-						<text class="sp-brand__cn">船员身份</text>
-					</view>
-				</view>
+		</view>
 
-				<text class="sp-title">登 录</text>
-				<text class="sp-lead">验证身份后接入主控系统</text>
-
-				<view class="sp-tabs">
-					<view v-for="(item, i) in tabs" :key="i" class="sp-tab" :class="{ on: tab === i }" @click="tab = i">{{ item }}</view>
-				</view>
-
-				<view class="sp-form">
-					<block v-if="tab === 0">
-						<view class="sp-field">
-							<view class="sp-field__ico"><view class="pxi pxi-user"></view></view>
-							<input class="sp-field__in" v-model="account" placeholder="手机号 / 邮箱" placeholder-style="color:#3f7a63" maxlength="40" />
-						</view>
-						<view class="sp-field">
-							<view class="sp-field__ico"><view class="pxi pxi-lock"></view></view>
-							<input class="sp-field__in" v-model="password" :password="!showPwd" placeholder="请输入登录密码" placeholder-style="color:#3f7a63" maxlength="20" />
-							<view class="sp-eye" @click="showPwd = !showPwd"><view class="pxi pxi-eye"></view></view>
-						</view>
-						<view class="sp-row">
-							<text class="sp-row__link" @click="goForget">忘记密码？</text>
-						</view>
-					</block>
-					<block v-else-if="tab === 1">
-						<view class="sp-field">
-							<view class="sp-field__ico"><view class="pxi pxi-phone"></view></view>
-							<input class="sp-field__in sp-field__in--en" v-model="phone" type="number" placeholder="+86" placeholder-style="color:#3f7a63" maxlength="11" />
-						</view>
-						<view class="sp-field">
-							<view class="sp-field__ico"><view class="pxi pxi-shield"></view></view>
-							<input class="sp-field__in" v-model="smsCode" type="number" placeholder="短信验证码" placeholder-style="color:#3f7a63" maxlength="6" />
-							<view class="sp-code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + 's' : '获取验证码' }}</view>
-						</view>
-					</block>
-					<block v-else>
-						<view class="sp-field">
-							<view class="sp-field__ico"><view class="pxi pxi-mail"></view></view>
-							<input class="sp-field__in" v-model="email" placeholder="player@pixel.id" placeholder-style="color:#3f7a63" maxlength="40" />
-						</view>
-						<view class="sp-field">
-							<view class="sp-field__ico"><view class="pxi pxi-shield"></view></view>
-							<input class="sp-field__in" v-model="mailCode" type="number" placeholder="邮箱验证码" placeholder-style="color:#3f7a63" maxlength="6" />
-							<view class="sp-code" :class="{ off: mailLeft > 0 }" @click="sendCode('mail')">{{ mailLeft > 0 ? mailLeft + 's' : '获取验证码' }}</view>
-						</view>
-					</block>
-
-					<view class="sp-btn" @click="submit">
-						<view class="pxi pxi-play"></view><text>接 入 主 控</text>
-					</view>
-
-					<view class="sp-foot">
-						<text>尚无船员编号？</text>
-						<text class="sp-foot__link" @click="goRegister">立即注册</text>
-					</view>
-
-					<view class="sp-agree" @click="agreed = !agreed">
-						<view class="sp-check" :class="{ on: agreed }"></view>
-						<text>我已阅读并同意<text class="sp-link">《用户协议》</text>与<text class="sp-link">《隐私政策》</text></text>
-					</view>
+		<view class="sp-console">
+			<view class="sp-chrow">
+				<view v-for="(item, i) in tabs" :key="i" class="sp-ch" :class="{ on: tab === i }" @click="tab = i">
+					<view class="sp-ch__led"></view>
+					<text class="sp-ch__t">CH-0{{ i + 1 }} {{ item }}</text>
 				</view>
 			</view>
-			<view class="sp-hud">
-				<view class="sp-hud__col">
-					<text class="sp-hud__l">SECTOR 07</text>
-					<text class="sp-hud__l">BEARING 214°</text>
+
+			<view class="sp-form">
+				<block v-if="tab === 0">
+					<view class="sp-line" :class="{ lock: focusKey === 'account' }">
+						<text class="sp-line__k">ACCNT ▸</text>
+						<input class="sp-line__in" v-model="account" placeholder="手机号 / 邮箱" placeholder-style="color:#3d5a52" maxlength="40" @focus="focusKey = 'account'" @blur="focusKey = ''" />
+						<view class="sp-line__c sp-line__c--tr"></view>
+						<view class="sp-line__c sp-line__c--bl"></view>
+					</view>
+					<view class="sp-line" :class="{ lock: focusKey === 'password' }">
+						<text class="sp-line__k">KEYWD ▸</text>
+						<input class="sp-line__in" v-model="password" :password="!showPwd" placeholder="请输入登录密码" placeholder-style="color:#3d5a52" maxlength="20" @focus="focusKey = 'password'" @blur="focusKey = ''" />
+						<view class="sp-eye" @click="showPwd = !showPwd"><view class="pxi pxi-eye"></view></view>
+						<view class="sp-line__c sp-line__c--tr"></view>
+						<view class="sp-line__c sp-line__c--bl"></view>
+					</view>
+					<view class="sp-mini"><text class="sp-mini__t" @click="goForget">忘记密码？SEND SOS ▸</text></view>
+				</block>
+				<block v-else-if="tab === 1">
+					<view class="sp-line" :class="{ lock: focusKey === 'phone' }">
+						<text class="sp-line__k">PHONE ▸</text>
+						<input class="sp-line__in" v-model="phone" type="number" placeholder="+86" placeholder-style="color:#3d5a52" maxlength="11" @focus="focusKey = 'phone'" @blur="focusKey = ''" />
+						<view class="sp-line__c sp-line__c--tr"></view>
+						<view class="sp-line__c sp-line__c--bl"></view>
+					</view>
+					<view class="sp-line" :class="{ lock: focusKey === 'smsCode' }">
+						<text class="sp-line__k">CODE ▸</text>
+						<input class="sp-line__in" v-model="smsCode" type="number" placeholder="短信验证码" placeholder-style="color:#3d5a52" maxlength="6" @focus="focusKey = 'smsCode'" @blur="focusKey = ''" />
+						<view class="sp-send" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')"><text class="sp-send__t">{{ smsLeft > 0 ? smsLeft + 's' : 'SEND ▸' }}</text></view>
+						<view class="sp-line__c sp-line__c--tr"></view>
+						<view class="sp-line__c sp-line__c--bl"></view>
+					</view>
+				</block>
+				<block v-else>
+					<view class="sp-line" :class="{ lock: focusKey === 'email' }">
+						<text class="sp-line__k">MAILT ▸</text>
+						<input class="sp-line__in" v-model="email" placeholder="player@pixel.id" placeholder-style="color:#3d5a52" maxlength="40" @focus="focusKey = 'email'" @blur="focusKey = ''" />
+						<view class="sp-line__c sp-line__c--tr"></view>
+						<view class="sp-line__c sp-line__c--bl"></view>
+					</view>
+					<view class="sp-line" :class="{ lock: focusKey === 'mailCode' }">
+						<text class="sp-line__k">CODE ▸</text>
+						<input class="sp-line__in" v-model="mailCode" type="number" placeholder="邮箱验证码" placeholder-style="color:#3d5a52" maxlength="6" @focus="focusKey = 'mailCode'" @blur="focusKey = ''" />
+						<view class="sp-send" :class="{ off: mailLeft > 0 }" @click="sendCode('mail')"><text class="sp-send__t">{{ mailLeft > 0 ? mailLeft + 's' : 'SEND ▸' }}</text></view>
+						<view class="sp-line__c sp-line__c--tr"></view>
+						<view class="sp-line__c sp-line__c--bl"></view>
+					</view>
+				</block>
+
+				<view class="sp-engage" :class="{ charging: charging }" @click="submit">
+					<view class="sp-engage__charge"></view>
+					<text class="sp-engage__t">ENGAGE ▸ 接入主控</text>
 				</view>
-				<view class="sp-hud__col sp-hud__col--r">
-					<text class="sp-hud__l">X 128.44</text>
-					<text class="sp-hud__l">Y 902.10</text>
+
+				<view class="sp-proto" @click="agreed = !agreed">
+					<text class="sp-proto__k">PROTOCOL ACCEPT</text>
+					<view class="sp-proto__box" :class="{ on: agreed }"></view>
+					<text class="sp-proto__t">我已阅读并同意<text class="sp-proto__lnk">《用户协议》</text>与<text class="sp-proto__lnk">《隐私政策》</text></text>
 				</view>
+
+				<view class="sp-foot">
+					<text class="sp-foot__t">尚无船员编号？</text>
+					<text class="sp-foot__link" @click="goRegister">ENLIST ▸ 立即注册</text>
+				</view>
+
+				<view v-if="okFlash" class="sp-flash"><text class="sp-flash__t">LINK ESTABLISHED · 已接入</text></view>
 			</view>
 		</view>
 	</view>
@@ -116,7 +118,10 @@
 				mailCode: '',
 				smsLeft: 0,
 				mailLeft: 0,
-				timer: null
+				timer: null,
+				focusKey: '',
+				charging: false,
+				okFlash: false
 			}
 		},
 		onLoad(options) {
@@ -181,7 +186,17 @@
 				}
 			},
 
+			// 按下后充电条 0.6s 充满再执行校验
 			submit() {
+				if (this.charging) return
+				this.charging = true
+				setTimeout(() => {
+					this.charging = false
+					this.doSubmit()
+				}, 600)
+			},
+
+			doSubmit() {
 				if (!this.agreed) return this.toast('请先阅读并同意用户协议')
 				if (this.tab === 0) {
 					if (!this.account) return this.toast('请输入账号')
@@ -195,6 +210,8 @@
 				}
 				// TODO: 调用后端登录接口，成功后跳转首页
 				this.toast('登录成功')
+				this.okFlash = true
+				setTimeout(() => { this.okFlash = false }, 2200)
 			},
 
 			goBack() {

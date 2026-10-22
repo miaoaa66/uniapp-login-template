@@ -1,25 +1,28 @@
 /* ==========================================================================
- * SET A · FC 红白机（Nintendo Family Computer）
+ * SET A · FC 红白机 —— 电视机开机流（重设计版）
  * pages/login92 —— 登录 / 注册 / 找回密码 三页共用
+ * 结构：自绘信道导航 → 电视机（深黑 CRT 屏 + 灰色机身）
+ *       屏内 = BOOT 文字 / 游戏菜单 / 内嵌行表单
+ *       机身 = POWER 呼吸灯 + 红色实体 START 胶囊键
  * 字体：Zpix（中文像素字体）+ Press Start 2P（拉丁与数字）
- * 像素图标：common/pixel-icons.scss（8x8 网格，box-shadow 逐点绘制）
  * ========================================================================== */
 
 @import '../../common/pixel-icons.scss';
 
 /* ---------- 设计令牌 ---------- */
-$ink: #16171c;
-$ink-dim: #63666f;
-$case: #dcdcde;
-$case-line: #121317;
-$paper: #ffffff;
-$paper-2: #ebebee;
-$line-soft: #c6c6cb;
-$red: #e76e55;
-$blue: #209cee;
-$yellow: #f7d51d;
+$crt: #0b0c10;        // CRT 深黑
+$crt-line: #3a4050;   // 屏内扫描线边
+$white: #e8e8ea;      // 屏内主文字
+$dim: #8b909c;        // 屏内次要文字
+$green: #7ce07c;      // BOOT 文字绿
+$hp-green: #92cc41;   // HP 三格绿
+$case: #dcdcde;       // 机身灰
+$ink: #121317;        // 硬边描黑
+$red: #e76e55;        // START 键 / LED 红
+$blue: #209cee;       // 标题阴影 / 链接蓝
+$yellow: #f7d51d;     // 锁位方块黄
 
-/* ---------- 页面容器 ---------- */
+/* ---------- 页面容器（灰色机身网格底） ---------- */
 .fc-page,
 .fc-page * {
 	box-sizing: border-box;
@@ -28,32 +31,32 @@ $yellow: #f7d51d;
 .fc-page {
 	position: relative;
 	min-height: 100vh;
-	padding-bottom: 40rpx;
-	background-color: #dcdcde;
+	padding-bottom: 48rpx;
+	background-color: $case;
 	background-image:
 		linear-gradient(rgba(18, 19, 23, .05) 2rpx, transparent 2rpx),
 		linear-gradient(90deg, rgba(18, 19, 23, .05) 2rpx, transparent 2rpx);
 	background-size: 24rpx 24rpx;
 	font-family: 'Zpix', sans-serif;
-	color: #16171c;
+	color: $ink;
 	-webkit-font-smoothing: none;
 }
 
-/* ---------- 自绘导航栏 ---------- */
+/* ---------- 自绘导航（信道条） ---------- */
 .fc-nav {
 	display: flex;
 	align-items: center;
-	height: 96rpx;
+	height: 92rpx;
 	padding: 0 24rpx;
-	background-color: #ffffff;
-	border-bottom: 4rpx solid #121317;
+	background-color: $crt;
+	border-bottom: 4rpx solid $ink;
 }
 
 .fc-nav__back {
 	width: 110rpx;
 	display: flex;
 	align-items: center;
-	color: #16171c;
+	color: $white;
 }
 
 .fc-nav__back:active {
@@ -63,9 +66,10 @@ $yellow: #f7d51d;
 .fc-nav__title {
 	flex: 1;
 	text-align: center;
-	font-size: 36rpx;
-	letter-spacing: 6rpx;
-	color: #16171c;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 18rpx;
+	letter-spacing: 2rpx;
+	color: $white;
 }
 
 .fc-nav__slot {
@@ -73,183 +77,181 @@ $yellow: #f7d51d;
 	font-family: 'Press Start 2P', monospace;
 	font-size: 16rpx;
 	text-align: right;
-	color: #63666f;
+	color: $dim;
 }
 
-/* ---------- 主体 ---------- */
-.fc-body {
-	padding: 28rpx 32rpx 0;
+/* ---------- 电视机 ---------- */
+.fc-tv {
+	margin: 32rpx 32rpx 0;
 }
 
-/* 机身铭牌 */
-.fc-plate {
+/* ---------- CRT 屏幕 ---------- */
+.fc-screen {
+	position: relative;
+	min-height: 640rpx;
+	padding: 40rpx 30rpx 36rpx;
+	overflow: hidden;
+	background-color: $crt;
+	/* 扫描线纹理 */
+	background-image: repeating-linear-gradient(0deg, rgba(255, 255, 255, .05) 0 2rpx, transparent 2rpx 10rpx);
+	border: 6rpx solid $ink;
+	border-radius: 12rpx;
+	box-shadow: inset 0 0 40rpx rgba(0, 0, 0, .8), 8rpx 8rpx 0 rgba(18, 19, 23, .2);
+	color: $white;
+}
+
+/* 开机白闪：一次性覆盖层 */
+.fc-screen--form::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 6;
+	background-color: #ffffff;
+	pointer-events: none;
+	animation: fc-flash .3s steps(1, end) 1 forwards;
+}
+
+/* 表单卷轴下拉入场 */
+.fc-in {
+	animation: fc-scrollin .45s ease-out .3s both;
+}
+
+/* ---------- 待机：PRESS START ---------- */
+.fc-press {
+	display: block;
+	margin-top: 250rpx;
+	text-align: center;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 36rpx;
+	letter-spacing: 4rpx;
+	color: $white;
+	animation: fc-press-blink 1.2s steps(1, end) infinite;
+}
+
+.fc-press__sub {
+	display: block;
+	margin-top: 30rpx;
+	text-align: center;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 16rpx;
+	letter-spacing: 2rpx;
+	color: $dim;
+	animation: fc-press-blink 1.2s steps(1, end) infinite reverse;
+}
+
+/* ---------- BOOT 逐行文字 ---------- */
+.fc-bootlog {
+	margin-bottom: 26rpx;
+}
+
+.fc-bootlog__l {
+	display: block;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 18rpx;
+	line-height: 2.2;
+	letter-spacing: 2rpx;
+	color: $dim;
+	opacity: 0;
+	animation: fc-linein .01s steps(1, end) forwards;
+}
+
+.fc-bootlog__l--sys {
+	animation-delay: .35s;
+}
+
+.fc-bootlog__l--ok {
+	animation-delay: .65s;
+	color: $green;
+}
+
+/* ---------- 游戏菜单（登录方式） ---------- */
+.fc-menu {
+	margin-bottom: 26rpx;
+}
+
+.fc-menu__i {
 	display: flex;
 	align-items: center;
-	padding: 0 4rpx 22rpx;
+	height: 62rpx;
+	font-size: 24rpx;
+	letter-spacing: 4rpx;
+	color: $dim;
 }
 
-.fc-led {
-	width: 16rpx;
-	height: 16rpx;
+.fc-menu__i.on {
+	color: $white;
+}
+
+/* 行首闪烁 ▶（CSS 三角） */
+.fc-cursor {
+	width: 0;
+	height: 0;
 	flex: none;
-	margin-right: 14rpx;
-	background-color: #ff3b30;
-	border: 3rpx solid #121317;
-	box-shadow: 0 0 14rpx rgba(255, 59, 48, .95);
+	margin-right: 16rpx;
+	border-left: 14rpx solid $white;
+	border-top: 9rpx solid transparent;
+	border-bottom: 9rpx solid transparent;
+	opacity: 0;
+}
+
+.fc-menu__i.on .fc-cursor {
+	opacity: 1;
 	animation: fc-blink 1s steps(1, end) infinite;
 }
 
-@keyframes fc-blink {
-	0%, 49% { opacity: 1; }
-	50%, 100% { opacity: .2; }
+/* ---------- 屏内嵌行表单 ---------- */
+.fc-rows {
+	margin-bottom: 26rpx;
 }
 
-.fc-plate__t {
-	flex: 1;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 16rpx;
-	letter-spacing: 1rpx;
-	color: #4a4d57;
-}
-
-.fc-plate__tag {
-	font-family: 'Press Start 2P', monospace;
-	font-size: 16rpx;
-	padding: 4rpx 10rpx;
-	color: #4a4d57;
-	border: 3rpx solid #4a4d57;
-}
-
-/* ---------- 卡片 ---------- */
-.fc-card {
-	padding: 36rpx 32rpx 32rpx;
-	background-color: #ffffff;
-	border: 4rpx solid #121317;
-	box-shadow: 12rpx 12rpx 0 rgba(18, 19, 23, .22);
-}
-
-.fc-brand {
-	display: flex;
-	align-items: center;
-}
-
-.fc-brand__logo {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 68rpx;
-	height: 68rpx;
-	flex: none;
-	color: #121317;
-	background-color: #f7d51d;
-	border: 4rpx solid #121317;
-	box-shadow: 5rpx 5rpx 0 #121317;
-}
-
-.fc-brand__logo .pxi {
-	transform: scale(2);
-}
-
-.fc-brand__meta {
-	margin-left: 20rpx;
-}
-
-.fc-brand__en {
-	display: block;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 24rpx;
-	letter-spacing: 1rpx;
-	color: #16171c;
-}
-
-.fc-brand__cn {
-	display: block;
-	margin-top: 8rpx;
-	font-size: 24rpx;
-	letter-spacing: 4rpx;
-	color: #63666f;
-}
-
-.fc-title {
-	display: block;
-	margin-top: 34rpx;
-	font-size: 48rpx;
-	line-height: 1.25;
-	letter-spacing: 8rpx;
-	color: #16171c;
-	text-shadow: 6rpx 6rpx 0 #209cee;
-}
-
-.fc-lead {
-	display: block;
-	margin-top: 16rpx;
-	font-size: 24rpx;
-	line-height: 1.6;
-	color: #63666f;
-}
-
-/* ---------- 登录方式切换 ---------- */
-.fc-tabs {
-	display: flex;
-	margin-top: 36rpx;
-}
-
-.fc-tab {
-	flex: 1;
-	height: 68rpx;
-	line-height: 64rpx;
-	text-align: center;
-	font-size: 24rpx;
-	color: #63666f;
-	background-color: #ebebee;
-	border: 4rpx solid #c6c6cb;
-}
-
-.fc-tab + .fc-tab {
-	margin-left: -4rpx;
-}
-
-.fc-tab.on {
+.fc-row {
 	position: relative;
-	z-index: 1;
-	color: #ffffff;
-	background-color: #e76e55;
-	border-color: #121317;
-	box-shadow: 4rpx 4rpx 0 #121317;
-}
-
-/* ---------- 表单 ---------- */
-.fc-form {
-	margin-top: 32rpx;
-}
-
-.fc-field {
 	display: flex;
 	align-items: center;
-	height: 92rpx;
-	padding: 0 22rpx;
-	margin-bottom: 24rpx;
-	background-color: #ffffff;
-	border: 4rpx solid #121317;
+	height: 88rpx;
+	padding: 0 4rpx;
+	/* 底部 2rpx 扫描线式边线 */
+	background-image: repeating-linear-gradient(90deg, $crt-line 0 10rpx, transparent 10rpx 18rpx);
+	background-repeat: no-repeat;
+	background-position: left bottom;
+	background-size: 100% 2rpx;
 }
 
-.fc-field__ico {
-	display: flex;
-	align-items: center;
-	justify-content: center;
+.fc-row.focus {
+	background-image: repeating-linear-gradient(90deg, $white 0 10rpx, transparent 10rpx 18rpx);
+	background-repeat: no-repeat;
+	background-position: left bottom;
+	background-size: 100% 2rpx;
+}
+
+/* 聚焦行行首 ▶ */
+.fc-row__cur {
+	width: 0;
+	height: 0;
 	flex: none;
-	margin-right: 18rpx;
-	color: #16171c;
+	margin-right: 14rpx;
+	border-left: 12rpx solid $white;
+	border-top: 8rpx solid transparent;
+	border-bottom: 8rpx solid transparent;
+	opacity: 0;
 }
 
-.fc-field__in {
+.fc-row.focus .fc-row__cur {
+	opacity: 1;
+	animation: fc-blink 1s steps(1, end) infinite;
+}
+
+.fc-row__in {
 	flex: 1;
 	min-width: 0;
 	height: 100%;
 	padding: 0;
 	font-family: 'Zpix', sans-serif;
 	font-size: 24rpx;
-	color: #16171c;
+	color: $white;
 	background-color: transparent;
 	border: 0;
 	border-radius: 0;
@@ -257,280 +259,143 @@ $yellow: #f7d51d;
 	appearance: none;
 }
 
-.fc-field__in--en {
+.fc-row__in--en {
 	font-family: 'Press Start 2P', monospace;
-	font-size: 24rpx;
+	font-size: 22rpx;
 	letter-spacing: 2rpx;
 }
 
-.fc-eye {
+.fc-row__eye {
 	flex: none;
 	margin-left: 14rpx;
 	padding: 0 6rpx;
-	color: #209cee;
+	color: $blue;
 }
 
-.fc-code {
+.fc-row--link {
+	height: 64rpx;
+}
+
+.fc-row__lt {
+	font-size: 24rpx;
+	color: $blue;
+}
+
+/* 屏内 SEND 小按钮 */
+.fc-send {
 	flex: none;
 	margin-left: 14rpx;
-	height: 60rpx;
-	line-height: 56rpx;
-	padding: 0 16rpx;
-	font-size: 24rpx;
-	color: #16171c;
-	background-color: #f7d51d;
-	border: 4rpx solid #121317;
-}
-
-.fc-code.off {
-	color: #8b8e99;
-	background-color: #ebebee;
-	border-color: #c6c6cb;
-}
-
-/* 右对齐小链接行 */
-.fc-row {
-	display: flex;
-	justify-content: flex-end;
-	margin: -4rpx 0 24rpx;
-	font-size: 24rpx;
-}
-
-.fc-row__link {
-	color: #209cee;
-}
-
-/* 六格验证码 */
-.fc-cells {
-	display: flex;
-	justify-content: space-between;
-	margin-bottom: 24rpx;
-}
-
-.fc-cell {
-	width: 92rpx;
-	height: 108rpx;
-	padding: 0;
-	box-sizing: border-box;
-	text-align: center;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	color: #16171c;
-	background-color: #ffffff;
-	border: 4rpx solid #121317;
-	border-radius: 0;
-	-webkit-appearance: none;
-	appearance: none;
-}
-
-.fc-cell.on {
-	background-color: #f7d51d;
-	box-shadow: 6rpx 6rpx 0 #121317;
-}
-
-.fc-cell.dim {
-	color: #b9bcc4;
-	background-color: #ebebee;
-	border-color: #c6c6cb;
-}
-
-/* ---------- 密码强度 ---------- */
-.fc-power {
-	display: flex;
-	align-items: center;
-	margin: -4rpx 0 24rpx;
-	font-size: 24rpx;
-	color: #63666f;
-}
-
-.fc-power__t {
-	margin-right: 14rpx;
-}
-
-.fc-power__bars {
-	display: flex;
-	flex: 1;
-}
-
-.fc-power__bar {
-	flex: 1;
-	height: 16rpx;
-	margin-right: 8rpx;
-	background-color: #ebebee;
-	border: 3rpx solid #c6c6cb;
-}
-
-.fc-power__bar.on {
-	background-color: #92cc41;
-	border-color: #121317;
-}
-
-.fc-power__v {
-	width: 48rpx;
-	text-align: right;
+	padding: 8rpx 14rpx;
 	font-family: 'Press Start 2P', monospace;
 	font-size: 16rpx;
-	color: #16171c;
+	color: $green;
+	border: 2rpx solid $green;
 }
 
-/* ---------- 按钮 ---------- */
-.fc-btn {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: 96rpx;
-	margin-top: 32rpx;
-	font-size: 36rpx;
-	letter-spacing: 8rpx;
-	color: #ffffff;
-	background-color: #e76e55;
-	border: 4rpx solid #121317;
-	box-shadow: 8rpx 8rpx 0 #121317;
-	text-shadow: 3rpx 3rpx 0 rgba(0, 0, 0, .3);
+.fc-send.off {
+	color: $dim;
+	border-color: $dim;
 }
 
-.fc-btn .pxi {
-	margin-right: 14rpx;
-}
-
-.fc-btn:active {
-	transform: translate(4rpx, 4rpx);
-	box-shadow: 4rpx 4rpx 0 #121317;
-}
-
-.fc-btn--ghost {
-	color: #16171c;
-	background-color: #ffffff;
-	text-shadow: none;
-}
-
-/* ---------- 页脚链接 ---------- */
-.fc-foot {
-	margin-top: 32rpx;
-	text-align: center;
-	font-size: 24rpx;
-	color: #63666f;
-}
-
-.fc-foot__link {
-	color: #209cee;
-	text-decoration: underline;
-}
-
+/* ---------- 协议 / 页脚（屏内） ---------- */
 .fc-agree {
 	display: flex;
 	align-items: flex-start;
-	margin-top: 28rpx;
-	font-size: 24rpx;
+	margin-top: 8rpx;
+	font-size: 22rpx;
 	line-height: 1.7;
-	color: #63666f;
+	color: $dim;
 }
 
 .fc-check {
 	position: relative;
 	flex: none;
-	width: 30rpx;
-	height: 30rpx;
+	width: 26rpx;
+	height: 26rpx;
 	margin: 4rpx 12rpx 0 0;
-	background-color: #ffffff;
-	border: 4rpx solid #121317;
+	background-color: transparent;
+	border: 2rpx solid $dim;
 }
 
 .fc-check.on {
-	background-color: #92cc41;
+	background-color: $green;
+	border-color: $green;
 }
 
 .fc-check.on::after {
 	content: '';
 	position: absolute;
-	left: 8rpx;
-	top: 2rpx;
-	width: 8rpx;
-	height: 15rpx;
-	border: solid #121317;
-	border-width: 0 4rpx 4rpx 0;
+	left: 7rpx;
+	top: 1rpx;
+	width: 7rpx;
+	height: 13rpx;
+	border: solid $crt;
+	border-width: 0 3rpx 3rpx 0;
 	transform: rotate(45deg);
 }
 
-.fc-link {
-	color: #209cee;
+.fc-agree__lk {
+	color: $blue;
 }
 
-/* ---------- 步骤条 ---------- */
-.fc-steps {
-	display: flex;
-	align-items: center;
-	margin: 4rpx 0 30rpx;
+.fc-foot {
+	margin-top: 22rpx;
+	text-align: center;
+	font-size: 22rpx;
+	color: $dim;
 }
 
-.fc-step {
-	display: flex;
-	align-items: center;
-	font-size: 24rpx;
-	color: #63666f;
+.fc-foot__lk {
+	color: $blue;
+	text-decoration: underline;
 }
 
-.fc-step__n {
+/* ---------- 机身 ---------- */
+.fc-panel {
+	margin-top: 26rpx;
+	padding: 24rpx 26rpx 30rpx;
+	background-color: $case;
+	border: 6rpx solid $ink;
+	border-radius: 10rpx;
+	box-shadow: 8rpx 8rpx 0 rgba(18, 19, 23, .2);
+}
+
+.fc-panel__brand {
 	display: flex;
 	align-items: center;
-	justify-content: center;
-	width: 40rpx;
-	height: 40rpx;
-	margin-right: 10rpx;
+}
+
+/* POWER 红灯呼吸 */
+.fc-led {
+	width: 18rpx;
+	height: 18rpx;
+	flex: none;
+	margin-right: 14rpx;
+	background-color: $red;
+	border: 3rpx solid $ink;
+	border-radius: 50%;
+	box-shadow: 0 0 12rpx rgba(231, 110, 85, .95);
+	animation: fc-breathe 2s ease-in-out infinite;
+}
+
+.fc-panel__t {
 	font-family: 'Press Start 2P', monospace;
-	font-size: 16rpx;
-	color: #16171c;
-	background-color: #ebebee;
-	border: 4rpx solid #c6c6cb;
+	font-size: 14rpx;
+	letter-spacing: 1rpx;
+	color: #4a4d57;
 }
 
-.fc-step.on .fc-step__n {
-	color: #ffffff;
-	background-color: #209cee;
-	border-color: #121317;
-}
-
-.fc-step__line {
-	flex: 1;
-	height: 4rpx;
-	margin: 0 16rpx;
-	background-color: #c6c6cb;
-}
-
-.fc-step.on .fc-step__line {
-	background-color: #121317;
-}
-
-/* ---------- 机身装饰 ---------- */
-.fc-deco {
-	margin-top: 36rpx;
-	padding: 0 8rpx;
-}
-
-.fc-carts {
-	display: flex;
-	justify-content: center;
-}
-
-.fc-carts__i {
-	width: 30rpx;
-	height: 12rpx;
-	margin: 0 4rpx;
-	background-color: #121317;
-	opacity: .75;
-}
-
-.fc-pad {
+.fc-panel__mid {
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
 	margin-top: 26rpx;
 }
 
+/* 十字键（装饰） */
 .fc-dpad {
 	position: relative;
-	width: 60rpx;
-	height: 60rpx;
+	width: 64rpx;
+	height: 64rpx;
 	flex: none;
 }
 
@@ -539,37 +404,66 @@ $yellow: #f7d51d;
 	content: '';
 	position: absolute;
 	background-color: #33353d;
-	border: 4rpx solid #121317;
+	border: 4rpx solid $ink;
 }
 
 .fc-dpad::before {
-	left: 22rpx;
+	left: 23rpx;
 	top: 0;
-	width: 16rpx;
-	height: 60rpx;
+	width: 18rpx;
+	height: 64rpx;
 }
 
 .fc-dpad::after {
 	left: 0;
-	top: 22rpx;
-	width: 60rpx;
-	height: 16rpx;
+	top: 23rpx;
+	width: 64rpx;
+	height: 18rpx;
 }
 
-.fc-hint {
+/* 散热栅（装饰） */
+.fc-vents {
+	display: flex;
+	margin-left: 24rpx;
+}
+
+.fc-vents__i {
+	width: 8rpx;
+	height: 44rpx;
+	margin-right: 10rpx;
+	background-color: $ink;
+	opacity: .55;
+}
+
+/* 红色实体 START 胶囊键 */
+.fc-start {
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	flex: 1;
+	height: 72rpx;
+	margin: 0 26rpx;
+	border-radius: 40rpx;
+	background-color: $red;
+	border: 4rpx solid $ink;
+	box-shadow: 0 10rpx 0 rgba(18, 19, 23, .55);
+	text-shadow: 2rpx 2rpx 0 rgba(0, 0, 0, .35);
+	transition: transform .06s, box-shadow .06s;
+}
+
+.fc-start text {
 	font-family: 'Press Start 2P', monospace;
-	font-size: 16rpx;
-	line-height: 2.2;
-	letter-spacing: 1rpx;
-	color: #8b8e99;
+	font-size: 22rpx;
+	letter-spacing: 3rpx;
+	color: #ffffff;
 }
 
-.fc-hint__t {
-	display: block;
-	text-align: center;
+.fc-start:active {
+	transform: translate(2rpx, 2rpx);
+	box-shadow: 0 5rpx 0 rgba(18, 19, 23, .55);
 }
 
+/* A/B 圆钮（装饰） */
 .fc-ab {
 	display: flex;
 	flex: none;
@@ -579,13 +473,14 @@ $yellow: #f7d51d;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 54rpx;
-	height: 54rpx;
+	width: 56rpx;
+	height: 56rpx;
 	font-family: 'Press Start 2P', monospace;
 	font-size: 16rpx;
 	color: #ffffff;
 	background-color: #cf3a2b;
-	border: 4rpx solid #121317;
+	border: 4rpx solid $ink;
+	border-radius: 50%;
 	box-shadow: 4rpx 4rpx 0 rgba(0, 0, 0, .3);
 }
 
@@ -594,18 +489,206 @@ $yellow: #f7d51d;
 	background-color: #ad2c1f;
 }
 
-.fc-hud {
-	display: flex;
-	justify-content: space-between;
-	margin-top: 30rpx;
-	padding: 0 4rpx;
+/* ---------- 注册页：PLAYER SELECT ---------- */
+.fc-select {
+	display: block;
+	margin-top: 6rpx;
+	text-align: center;
 	font-family: 'Press Start 2P', monospace;
-	font-size: 16rpx;
-	letter-spacing: 1rpx;
-	color: #8b8e99;
+	font-size: 28rpx;
+	letter-spacing: 3rpx;
+	color: $white;
+	text-shadow: 4rpx 4rpx 0 $blue;
 }
 
-/* ---------- 占位符颜色（uniapp 用 placeholder-style 内联声明） ---------- */
-.fc-field__in::-webkit-input-placeholder {
-	color: #a8abb4;
+.fc-select__sub {
+	display: block;
+	margin-top: 16rpx;
+	margin-bottom: 30rpx;
+	text-align: center;
+	font-size: 22rpx;
+	letter-spacing: 4rpx;
+	color: $dim;
+}
+
+/* 高分榜署名：大字昵称 */
+.fc-name {
+	padding: 22rpx 0 26rpx;
+	margin-bottom: 26rpx;
+	text-align: center;
+	background-image: repeating-linear-gradient(90deg, $crt-line 0 10rpx, transparent 10rpx 18rpx);
+	background-repeat: no-repeat;
+	background-position: left bottom;
+	background-size: 100% 2rpx;
+}
+
+.fc-name__label {
+	display: block;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 14rpx;
+	letter-spacing: 2rpx;
+	color: $dim;
+}
+
+.fc-name__in {
+	display: block;
+	width: 100%;
+	height: 88rpx;
+	margin-top: 10rpx;
+	padding: 0;
+	text-align: center;
+	font-family: 'Press Start 2P', 'Zpix', monospace;
+	font-size: 34rpx;
+	letter-spacing: 10rpx;
+	color: $white;
+	background-color: transparent;
+	border: 0;
+	border-radius: 0;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+/* HP 三格（密码强度） */
+.fc-hp {
+	display: flex;
+	align-items: center;
+	margin: 22rpx 0 8rpx;
+}
+
+.fc-hp__t {
+	margin-right: 14rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 16rpx;
+	color: $white;
+}
+
+.fc-hp__cells {
+	display: flex;
+	flex: 1;
+}
+
+.fc-hp__c {
+	flex: 1;
+	height: 18rpx;
+	margin-right: 10rpx;
+	background-color: transparent;
+	border: 2rpx solid $dim;
+}
+
+.fc-hp__c.on {
+	background-color: $hp-green;
+	border-color: $hp-green;
+}
+
+.fc-hp__v {
+	width: 48rpx;
+	text-align: right;
+	font-size: 22rpx;
+	color: $dim;
+}
+
+/* ---------- 找回页：CONTINUE? ---------- */
+.fc-cont {
+	display: block;
+	margin-top: 10rpx;
+	text-align: center;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 34rpx;
+	letter-spacing: 3rpx;
+	color: $white;
+	text-shadow: 4rpx 4rpx 0 $blue;
+}
+
+/* 9→0 循环倒计时（纯装饰） */
+.fc-count {
+	display: block;
+	margin: 18rpx 0 10rpx;
+	text-align: center;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 52rpx;
+	color: $green;
+}
+
+.fc-cont__sub {
+	display: block;
+	margin-bottom: 26rpx;
+	text-align: center;
+	font-size: 22rpx;
+	letter-spacing: 2rpx;
+	color: $dim;
+}
+
+/* 步骤区段标题 */
+.fc-sec {
+	display: flex;
+	align-items: center;
+	height: 52rpx;
+	margin-bottom: 6rpx;
+	font-family: 'Press Start 2P', 'Zpix', monospace;
+	font-size: 18rpx;
+	letter-spacing: 2rpx;
+	color: $green;
+}
+
+/* 锁位方块：6 格验证码 */
+.fc-lock {
+	display: flex;
+	justify-content: space-between;
+	margin: 18rpx 0 30rpx;
+}
+
+.fc-lock__c {
+	width: 88rpx;
+	height: 100rpx;
+	padding: 0;
+	box-sizing: border-box;
+	text-align: center;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 28rpx;
+	color: $yellow;
+	background-color: #151920;
+	border: 3rpx solid $yellow;
+	border-radius: 0;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.fc-lock__c.on {
+	background-color: #1d222e;
+	box-shadow: 0 0 10rpx rgba(247, 213, 29, .5);
+}
+
+.fc-lock__c.dim {
+	color: #3d4350;
+	border-color: #5c5f6a;
+}
+
+/* ---------- keyframes ---------- */
+@keyframes fc-blink {
+	0%, 49% { opacity: 1; }
+	50%, 100% { opacity: 0; }
+}
+
+@keyframes fc-press-blink {
+	0%, 59% { opacity: 1; }
+	60%, 100% { opacity: .1; }
+}
+
+@keyframes fc-breathe {
+	0%, 100% { opacity: 1; box-shadow: 0 0 8rpx rgba(231, 110, 85, .9); }
+	50% { opacity: .35; box-shadow: 0 0 22rpx rgba(231, 110, 85, .35); }
+}
+
+@keyframes fc-flash {
+	0% { opacity: 1; }
+	100% { opacity: 0; }
+}
+
+@keyframes fc-scrollin {
+	from { transform: translateY(-30rpx); opacity: 0; }
+	to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fc-linein {
+	to { opacity: 1; }
 }

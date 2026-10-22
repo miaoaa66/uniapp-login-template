@@ -4,112 +4,99 @@
 			<view class="fc-nav__back" @click="goBack">
 				<view class="pxi pxi-back"></view>
 			</view>
-			<text class="fc-nav__title">注 册</text>
+			<text class="fc-nav__title">CHANNEL-02 · REGIST</text>
 			<text class="fc-nav__slot">1983</text>
 		</view>
 
-		<view class="fc-body">
-			<view class="fc-plate">
-				<view class="fc-led"></view>
-				<text class="fc-plate__t">INSERT CARTRIDGE</text>
-				<text class="fc-plate__tag">PLAYER 1</text>
-			</view>
+		<!-- 电视机 -->
+		<view class="fc-tv">
+			<!-- CRT 屏幕：PLAYER SELECT -->
+			<view class="fc-screen fc-screen--form">
+				<view class="fc-in">
+					<text class="fc-select">PLAYER SELECT</text>
+					<text class="fc-select__sub">创建你的像素通行证</text>
 
-			<view class="fc-card">
-				<view class="fc-brand">
-					<view class="fc-brand__logo">
-						<view class="pxi pxi-invader"></view>
-					</view>
-					<view class="fc-brand__meta">
-						<text class="fc-brand__en">PIXEL ID</text>
-						<text class="fc-brand__cn">创建通行证</text>
-					</view>
-				</view>
-
-				<text class="fc-title">注 册</text>
-				<text class="fc-lead">选择你的角色名，开始第一关</text>
-
-				<view class="fc-form">
-					<view class="fc-field">
-						<view class="fc-field__ico"><view class="pxi pxi-user"></view></view>
-						<input class="fc-field__in" v-model="nickname" placeholder="昵称（2-12 字）"
-							placeholder-style="color:#a8abb4" maxlength="12" />
+					<!-- 高分榜署名：大字昵称 -->
+					<view class="fc-name">
+						<text class="fc-name__label">HI-SCORE NAME</text>
+						<input class="fc-name__in" v-model="nickname" placeholder="昵称（2-12 字）"
+							placeholder-style="color:#5a6070" maxlength="12" />
 					</view>
 
-					<view class="fc-field">
-						<view class="fc-field__ico"><view class="pxi pxi-mail"></view></view>
-						<input class="fc-field__in" v-model="email" placeholder="player@pixel.id"
-							placeholder-style="color:#a8abb4" maxlength="40" />
-					</view>
-
-					<view class="fc-field">
-						<view class="fc-field__ico"><view class="pxi pxi-shield"></view></view>
-						<input class="fc-field__in" v-model="mailCode" type="number" placeholder="邮箱验证码"
-							placeholder-style="color:#a8abb4" maxlength="6" />
-						<view class="fc-code" :class="{ off: mailLeft > 0 }" @click="sendCode">
-							{{ mailLeft > 0 ? mailLeft + 's' : '获取验证码' }}
+					<!-- 屏内嵌行表单 -->
+					<view class="fc-rows">
+						<view class="fc-row" :class="{ focus: focusField === 'email' }">
+							<view class="fc-row__cur"></view>
+							<input class="fc-row__in" v-model="email" placeholder="player@pixel.id"
+								placeholder-style="color:#6f7480" maxlength="40"
+								@focus="focusField = 'email'" @blur="focusField = ''" />
+						</view>
+						<view class="fc-row" :class="{ focus: focusField === 'mailCode' }">
+							<view class="fc-row__cur"></view>
+							<input class="fc-row__in" v-model="mailCode" type="number" placeholder="邮箱验证码"
+								placeholder-style="color:#6f7480" maxlength="6"
+								@focus="focusField = 'mailCode'" @blur="focusField = ''" />
+							<view class="fc-send" :class="{ off: mailLeft > 0 }" @click="sendCode">
+								{{ mailLeft > 0 ? mailLeft + 's' : 'SEND' }}
+							</view>
+						</view>
+						<view class="fc-row" :class="{ focus: focusField === 'password' }">
+							<view class="fc-row__cur"></view>
+							<input class="fc-row__in" v-model="password" :password="!showPwd" placeholder="设置密码（8-20 位）"
+								placeholder-style="color:#6f7480" maxlength="20"
+								@focus="focusField = 'password'" @blur="focusField = ''" />
+							<view class="fc-row__eye" @click="showPwd = !showPwd">
+								<view class="pxi pxi-eye"></view>
+							</view>
+						</view>
+						<view class="fc-row" :class="{ focus: focusField === 'password2' }">
+							<view class="fc-row__cur"></view>
+							<input class="fc-row__in" v-model="password2" :password="!showPwd" placeholder="确认密码"
+								placeholder-style="color:#6f7480" maxlength="20"
+								@focus="focusField = 'password2'" @blur="focusField = ''" />
 						</view>
 					</view>
 
-					<view class="fc-field">
-						<view class="fc-field__ico"><view class="pxi pxi-lock"></view></view>
-						<input class="fc-field__in" v-model="password" :password="!showPwd" placeholder="设置密码（8-20 位）"
-							placeholder-style="color:#a8abb4" maxlength="20" />
-						<view class="fc-eye" @click="showPwd = !showPwd">
-							<view class="pxi pxi-eye"></view>
+					<!-- HP 三格 -->
+					<view class="fc-hp">
+						<text class="fc-hp__t">HP</text>
+						<view class="fc-hp__cells">
+							<view class="fc-hp__c" :class="{ on: strength >= 1 }"></view>
+							<view class="fc-hp__c" :class="{ on: strength >= 2 }"></view>
+							<view class="fc-hp__c" :class="{ on: strength >= 3 }"></view>
 						</view>
+						<text class="fc-hp__v">{{ strengthText }}</text>
 					</view>
 
-					<view class="fc-field">
-						<view class="fc-field__ico"><view class="pxi pxi-lock"></view></view>
-						<input class="fc-field__in" v-model="password2" :password="!showPwd" placeholder="确认密码"
-							placeholder-style="color:#a8abb4" maxlength="20" />
-					</view>
-
-					<view class="fc-power">
-						<text class="fc-power__t">密码强度</text>
-						<view class="fc-power__bars">
-							<view class="fc-power__bar" :class="{ on: strength >= 1 }"></view>
-							<view class="fc-power__bar" :class="{ on: strength >= 2 }"></view>
-							<view class="fc-power__bar" :class="{ on: strength >= 3 }"></view>
-						</view>
-						<text class="fc-power__v">{{ strengthText }}</text>
-					</view>
-
-					<view class="fc-btn" @click="submit">
-						<view class="pxi pxi-play"></view><text>创 建 通 行 证</text>
+					<!-- 协议 -->
+					<view class="fc-agree" @click="agreed = !agreed">
+						<view class="fc-check" :class="{ on: agreed }"></view>
+						<text>我已阅读并同意<text class="fc-agree__lk">《用户协议》</text>与<text class="fc-agree__lk">《隐私政策》</text></text>
 					</view>
 
 					<view class="fc-foot">
 						<text>已有通行证？</text>
-						<text class="fc-foot__link" @click="goLogin">返回登录</text>
-					</view>
-
-					<view class="fc-agree" @click="agreed = !agreed">
-						<view class="fc-check" :class="{ on: agreed }"></view>
-						<text>我已阅读并同意<text class="fc-link">《用户协议》</text>与<text class="fc-link">《隐私政策》</text></text>
+						<text class="fc-foot__lk" @click="goLogin">返回登录</text>
 					</view>
 				</view>
 			</view>
 
-			<view class="fc-deco">
-				<view class="fc-carts">
-					<view v-for="n in 9" :key="n" class="fc-carts__i"></view>
+			<!-- 机身 -->
+			<view class="fc-panel">
+				<view class="fc-panel__brand">
+					<view class="fc-led"></view>
+					<text class="fc-panel__t">INSERT CARTRIDGE · PLAYER 1</text>
 				</view>
-				<view class="fc-pad">
+				<view class="fc-panel__mid">
 					<view class="fc-dpad"></view>
-					<view class="fc-hint">
-						<text class="fc-hint__t">START</text>
-						<text class="fc-hint__t">SELECT</text>
+					<view class="fc-vents">
+						<view v-for="n in 4" :key="n" class="fc-vents__i"></view>
 					</view>
+					<view class="fc-start" @click="submit"><text>START</text></view>
 					<view class="fc-ab">
 						<view class="fc-rbtn">A</view>
 						<view class="fc-rbtn">B</view>
 					</view>
-				</view>
-				<view class="fc-hud">
-					<text>© 2026 PIXEL-ID LAB</text>
-					<text>1UP 000000</text>
 				</view>
 			</view>
 		</view>
@@ -120,6 +107,7 @@
 	export default {
 		data() {
 			return {
+				focusField: '',
 				agreed: false,
 				showPwd: false,
 				nickname: '',

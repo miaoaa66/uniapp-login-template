@@ -1,100 +1,66 @@
 <template>
 	<view class="vd-page">
-		<view class="vd-nav">
-			<view class="vd-nav__back" @click="goBack">
-				<view class="pxi pxi-back"></view>
-			</view>
-			<text class="vd-nav__title">注 册</text>
-			<text class="vd-nav__slot">REFILL</text>
-		</view>
-
-		<view class="vd-body">
-			<view class="vd-light">
-				<text class="vd-light__t">DRINKS 24H</text>
-				<view class="vd-light__bars">
-					<view v-for="n in 4" :key="n" class="vd-light__bar" :class="'vd-light__bar--' + (n % 2)"></view>
+		<!-- 机身：顶盖灯箱 + 补货面板 -->
+		<view class="vd-machine">
+			<view class="vd-cap">
+				<view class="vd-cap__back" @click="goBack"><view class="pxi pxi-back"></view></view>
+				<view class="vd-sign">
+					<view class="vd-sign__lamp"></view>
+					<text class="vd-sign__t">补货服务 · REFILL 24H</text>
+					<view class="vd-sign__lamp vd-sign__lamp--r"></view>
 				</view>
 			</view>
-			<view class="vd-price">
-				<text class="vd-price__l">ITEM A1</text>
-				<text class="vd-price__r">¥150</text>
-			</view>
-			<view class="vd-card">
-				<view class="vd-brand">
-					<view class="vd-brand__logo"><view class="pxi pxi-user"></view></view>
-					<view class="vd-brand__meta">
-						<text class="vd-brand__en">NEW STOCK</text>
-						<text class="vd-brand__cn">补货 / 注册</text>
-					</view>
+
+			<view class="vd-panel">
+				<text class="vd-panel__title">补货员登记</text>
+				<text class="vd-panel__sub">登记后你的专属货道即刻上架</text>
+
+				<!-- 货位号风格字段 -->
+				<view class="vd-line">
+					<text class="vd-line__no">SLOT-01</text>
+					<input class="vd-line__in" v-model="nickname" placeholder="昵称（2-12 字）" placeholder-style="color:#8b97a8" maxlength="12" />
+				</view>
+				<view class="vd-line">
+					<text class="vd-line__no">SLOT-02</text>
+					<input class="vd-line__in" v-model="email" placeholder="player@pixel.id" placeholder-style="color:#8b97a8" maxlength="40" />
+				</view>
+				<view class="vd-line">
+					<text class="vd-line__no">SLOT-03</text>
+					<input class="vd-line__in" v-model="mailCode" type="number" placeholder="邮箱验证码" placeholder-style="color:#8b97a8" maxlength="6" />
+					<view class="vd-code" :class="{ off: mailLeft > 0 }" @click="sendCode">{{ mailLeft > 0 ? mailLeft + 's' : '获取验证码' }}</view>
+				</view>
+				<view class="vd-line">
+					<text class="vd-line__no">SLOT-04</text>
+					<input class="vd-line__in" v-model="password" :password="!showPwd" placeholder="设置密码（8-20 位）" placeholder-style="color:#8b97a8" maxlength="20" />
+					<view class="vd-eye" @click="showPwd = !showPwd"><view class="pxi pxi-eye"></view></view>
+				</view>
+				<view class="vd-line">
+					<text class="vd-line__no">SLOT-05</text>
+					<input class="vd-line__in" v-model="password2" :password="!showPwd" placeholder="确认密码" placeholder-style="color:#8b97a8" maxlength="20" />
 				</view>
 
-				<text class="vd-title">注 册</text>
-				<text class="vd-lead">注册会员，补进属于你的专属货道</text>
+				<view class="vd-batt">
+					<text class="vd-batt__t">电量</text>
+					<view class="vd-batt__bar" :class="{ on: strength >= 1 }"></view>
+					<view class="vd-batt__bar" :class="{ on: strength >= 2 }"></view>
+					<view class="vd-batt__bar" :class="{ on: strength >= 3 }"></view>
+					<text class="vd-batt__v">{{ strengthText }}</text>
+				</view>
 
-				<view class="vd-form">
-					<view class="vd-field">
-						<view class="vd-field__ico"><view class="pxi pxi-user"></view></view>
-						<input class="vd-field__in" v-model="nickname" placeholder="昵称（2-12 字）" placeholder-style="color:#8b97a8" maxlength="12" />
-					</view>
+				<view class="vd-btn" @click="submit"><text>完 成 上 架</text></view>
 
-					<view class="vd-field">
-						<view class="vd-field__ico"><view class="pxi pxi-mail"></view></view>
-						<input class="vd-field__in" v-model="email" placeholder="player@pixel.id" placeholder-style="color:#8b97a8" maxlength="40" />
-					</view>
+				<view class="vd-agree" @click="agreed = !agreed">
+					<view class="vd-check" :class="{ on: agreed }"></view>
+					<text>我已阅读并同意<text class="vd-link">《用户协议》</text>与<text class="vd-link">《隐私政策》</text></text>
+				</view>
 
-					<view class="vd-field">
-						<view class="vd-field__ico"><view class="pxi pxi-shield"></view></view>
-						<input class="vd-field__in" v-model="mailCode" type="number" placeholder="邮箱验证码" placeholder-style="color:#8b97a8" maxlength="6" />
-						<view class="vd-code" :class="{ off: mailLeft > 0 }" @click="sendCode">{{ mailLeft > 0 ? mailLeft + 's' : '获取验证码' }}</view>
-					</view>
-
-					<view class="vd-field">
-						<view class="vd-field__ico"><view class="pxi pxi-lock"></view></view>
-						<input class="vd-field__in" v-model="password" :password="!showPwd" placeholder="设置密码（8-20 位）" placeholder-style="color:#8b97a8" maxlength="20" />
-						<view class="vd-eye" @click="showPwd = !showPwd"><view class="pxi pxi-eye"></view></view>
-					</view>
-
-					<view class="vd-field">
-						<view class="vd-field__ico"><view class="pxi pxi-lock"></view></view>
-						<input class="vd-field__in" v-model="password2" :password="!showPwd" placeholder="确认密码" placeholder-style="color:#8b97a8" maxlength="20" />
-					</view>
-
-					<view class="vd-power">
-						<text class="vd-power__t">密码强度</text>
-						<view class="vd-power__bars">
-							<view class="vd-power__bar" :class="{ on: strength >= 1 }"></view>
-							<view class="vd-power__bar" :class="{ on: strength >= 2 }"></view>
-							<view class="vd-power__bar" :class="{ on: strength >= 3 }"></view>
-						</view>
-						<text class="vd-power__v">{{ strengthText }}</text>
-					</view>
-
-					<view class="vd-btn" @click="submit">
-						<view class="pxi pxi-play"></view><text>上 架 新 品</text>
-					</view>
-
-					<view class="vd-foot">
-						<text>已经是会员？</text>
-						<text class="vd-foot__link" @click="goLogin">返回登录</text>
-					</view>
-
-					<view class="vd-agree" @click="agreed = !agreed">
-						<view class="vd-check" :class="{ on: agreed }"></view>
-						<text>我已阅读并同意<text class="vd-link">《用户协议》</text>与<text class="vd-link">《隐私政策》</text></text>
-					</view>
+				<view class="vd-foot">
+					<text>已经是会员？</text>
+					<text class="vd-foot__link" @click="goLogin">返回登录</text>
 				</view>
 			</view>
-			<view class="vd-shelf">
-				<view v-for="n in 6" :key="n" class="vd-slot">
-					<view class="vd-can" :class="'vd-can--' + (n % 3)"></view>
-					<text class="vd-slot__no">{{ 'A' + n }}</text>
-				</view>
-			</view>
-			<view class="vd-tray">
-				<view class="vd-tray__mouth"></view>
-				<text class="vd-tray__t">PUSH</text>
-				<view class="vd-tray__arrow"><view class="pxi pxi-arrow"></view></view>
-			</view>
+
+			<view class="vd-hatch"><view class="vd-hatch__door"><text>PUSH</text></view></view>
 		</view>
 	</view>
 </template>

@@ -1,113 +1,135 @@
 <template>
 	<view class="gb-page">
-		<view class="gb-nav">
-			<view class="gb-nav__back" @click="goBack">
+		<view class="gb-topbar">
+			<view class="gb-topbar__back" @click="goBack">
 				<view class="pxi pxi-back"></view>
+				<text>BACK</text>
 			</view>
-			<text class="gb-nav__title">新建存档</text>
-			<view class="gb-nav__led">
-				<view class="gb-led"></view>
-			</view>
+			<text class="gb-topbar__t">PIXEL® DMG</text>
 		</view>
 
-		<view class="gb-body">
-			<view class="gb-shell">
-				<view class="gb-shell__brand">
-					<text class="gb-shell__en">PIXEL BOY</text>
-					<text class="gb-shell__sub">NEW GAME PLAYER 1</text>
-				</view>
+		<!-- 机身 -->
+		<view class="gb-shell">
+			<view class="gb-bezel">
+				<view class="gb-screw gb-screw--tl"></view>
+				<view class="gb-screw gb-screw--br"></view>
 
-				<view class="gb-screen">
-					<view class="gb-head">
-						<view class="gb-head__logo">
-							<view class="pxi pxi-invader"></view>
-						</view>
-						<view class="gb-head__meta">
-							<text class="gb-head__en">PIXEL ID</text>
-							<text class="gb-head__cn">创建通行证</text>
-						</view>
+				<!-- LCD 屏幕：存档命名 -->
+				<view class="gb-screen gb-screen--form">
+					<text class="gb-title">REGIST</text>
+					<text class="gb-lead">创建你的存档，开始新冒险</text>
+
+					<!-- 独立大格：昵称（编辑态常驻） -->
+					<view class="gb-name">
+						<input class="gb-name__in" v-model="nickname" placeholder="PLAYER-?"
+							placeholder-style="color:#8bac0f" maxlength="12" />
+						<text class="gb-name__tag">NAME?</text>
 					</view>
 
-					<text class="gb-title">注 册</text>
-					<text class="gb-lead">输入手机号，短信验证码开场</text>
-
+					<!-- 菜单行 / 编辑态 两态字段 -->
 					<view class="gb-form">
-						<view class="gb-field">
-							<view class="gb-field__ico"><view class="pxi pxi-user"></view></view>
-							<input class="gb-field__in" v-model="nickname" placeholder="昵称（2-12 字）"
-								placeholder-style="color:#6f8a4a" maxlength="12" />
+						<view class="gb-mrow" :class="{ edit: editing === 'email' }">
+							<block v-if="editing !== 'email'">
+								<text class="gb-mrow__label">邮箱</text>
+								<view class="gb-mrow__dots"></view>
+								<text class="gb-mrow__val" :class="{ empty: !email }"
+									@click="editing = 'email'">{{ email || '未设定' }}</text>
+							</block>
+							<block v-else>
+								<text class="gb-mrow__label">邮箱</text>
+								<input class="gb-mrow__in" v-model="email" :focus="true"
+									placeholder="未设定" placeholder-style="color:#8bac0f" maxlength="40"
+									@blur="editing = ''" />
+								<view class="gb-caret"></view>
+							</block>
+						</view>
+						<view class="gb-mrow" :class="{ edit: editing === 'mailCode' }">
+							<block v-if="editing !== 'mailCode'">
+								<text class="gb-mrow__label">验证码</text>
+								<view class="gb-mrow__dots"></view>
+								<text class="gb-mrow__val gb-send" :class="{ off: mailLeft > 0 }"
+									@click="sendCode">{{ mailLeft > 0 ? mailLeft + 's' : 'SEND' }}</text>
+							</block>
+							<block v-else>
+								<text class="gb-mrow__label">验证码</text>
+								<input class="gb-mrow__in gb-mrow__in--en" v-model="mailCode" type="number" :focus="true"
+									placeholder="未设定" placeholder-style="color:#8bac0f" maxlength="6"
+									@blur="editing = ''" />
+								<view class="gb-caret"></view>
+							</block>
+						</view>
+						<view class="gb-mrow" :class="{ edit: editing === 'password' }">
+							<block v-if="editing !== 'password'">
+								<text class="gb-mrow__label">密码</text>
+								<view class="gb-mrow__dots"></view>
+								<text class="gb-mrow__val" :class="{ empty: !password }"
+									@click="editing = 'password'">{{ pwdMask }}</text>
+							</block>
+							<block v-else>
+								<text class="gb-mrow__label">密码</text>
+								<input class="gb-mrow__in" v-model="password" :password="!showPwd" :focus="true"
+									placeholder="未设定" placeholder-style="color:#8bac0f" maxlength="20"
+									@blur="editing = ''" />
+								<view class="gb-caret"></view>
+							</block>
+						</view>
+						<view class="gb-mrow" :class="{ edit: editing === 'password2' }">
+							<block v-if="editing !== 'password2'">
+								<text class="gb-mrow__label">确认</text>
+								<view class="gb-mrow__dots"></view>
+								<text class="gb-mrow__val" :class="{ empty: !password2 }"
+									@click="editing = 'password2'">{{ pwd2Mask }}</text>
+							</block>
+							<block v-else>
+								<text class="gb-mrow__label">确认</text>
+								<input class="gb-mrow__in" v-model="password2" :password="!showPwd" :focus="true"
+									placeholder="未设定" placeholder-style="color:#8bac0f" maxlength="20"
+									@blur="editing = ''" />
+								<view class="gb-caret"></view>
+							</block>
 						</view>
 
-						<view class="gb-field">
-							<view class="gb-field__ico"><view class="pxi pxi-phone"></view></view>
-							<input class="gb-field__in gb-field__in--en" v-model="phone" type="number" placeholder="+86"
-								placeholder-style="color:#6f8a4a" maxlength="11" />
-						</view>
-
-						<view class="gb-field">
-							<view class="gb-field__ico"><view class="pxi pxi-shield"></view></view>
-							<input class="gb-field__in" v-model="smsCode" type="number" placeholder="短信验证码"
-								placeholder-style="color:#6f8a4a" maxlength="6" />
-							<view class="gb-code" :class="{ off: smsLeft > 0 }" @click="sendCode">
-								{{ smsLeft > 0 ? smsLeft + 's' : '获取验证码' }}
-							</view>
-						</view>
-
-						<view class="gb-field">
-							<view class="gb-field__ico"><view class="pxi pxi-lock"></view></view>
-							<input class="gb-field__in" v-model="password" :password="!showPwd" placeholder="设置密码（8-20 位）"
-								placeholder-style="color:#6f8a4a" maxlength="20" />
-							<view class="gb-eye" @click="showPwd = !showPwd">
-								<view class="pxi pxi-eye"></view>
-							</view>
-						</view>
-
-						<view class="gb-field">
-							<view class="gb-field__ico"><view class="pxi pxi-lock"></view></view>
-							<input class="gb-field__in" v-model="password2" :password="!showPwd" placeholder="确认密码"
-								placeholder-style="color:#6f8a4a" maxlength="20" />
-						</view>
-
+						<!-- POWER 三格 -->
 						<view class="gb-power">
-							<text class="gb-power__t">强度</text>
-							<view class="gb-power__bars">
-								<view class="gb-power__bar" :class="{ on: strength >= 1 }"></view>
-								<view class="gb-power__bar" :class="{ on: strength >= 2 }"></view>
-								<view class="gb-power__bar" :class="{ on: strength >= 3 }"></view>
+							<text class="gb-power__t">POWER</text>
+							<view class="gb-power__cells">
+								<view class="gb-power__c" :class="{ on: strength >= 1 }"></view>
+								<view class="gb-power__c" :class="{ on: strength >= 2 }"></view>
+								<view class="gb-power__c" :class="{ on: strength >= 3 }"></view>
 							</view>
 							<text class="gb-power__v">{{ strengthText }}</text>
 						</view>
 
-						<view class="gb-btn" @click="submit">
-						<view class="pxi pxi-play"></view><text>START · 开 始 游 戏</text>
-					</view>
-
-						<view class="gb-foot">
-							<text>已有存档？</text>
-							<text class="gb-foot__link" @click="goLogin">继续游戏</text>
-						</view>
-
+						<!-- 协议 -->
 						<view class="gb-agree" @click="agreed = !agreed">
 							<view class="gb-check" :class="{ on: agreed }"></view>
-							<text>我已阅读并同意<text class="gb-link">《用户协议》</text>与<text class="gb-link">《隐私政策》</text></text>
+							<text>同意<text class="gb-agree__lk">《用户协议》</text>与<text class="gb-agree__lk">《隐私政策》</text></text>
+						</view>
+
+						<view class="gb-links">
+							<text class="gb-links__lk" @click="goLogin">LOGIN?</text>
 						</view>
 					</view>
 				</view>
+			</view>
 
-				<view class="gb-ctrl">
-					<view class="gb-dpad">
-						<view class="gb-dpad__h"></view>
-						<view class="gb-dpad__v"></view>
-						<view class="gb-dpad__c"></view>
-					</view>
-					<view class="gb-btns">
-						<view class="gb-abtn">B</view>
-						<view class="gb-abtn">A</view>
-					</view>
+			<!-- 实体键区 -->
+			<view class="gb-keys">
+				<view class="gb-dpad">
+					<view class="gb-dpad__h"></view>
+					<view class="gb-dpad__v"></view>
+					<view class="gb-dpad__c"></view>
 				</view>
+				<view class="gb-ab">
+					<view class="gb-abtn gb-abtn--b" @click="onB"><text>B</text></view>
+					<view class="gb-abtn gb-abtn--a" @click="submit"><text>A</text></view>
+				</view>
+			</view>
 
+			<view class="gb-brandrow">
+				<text class="gb-brandrow__t">DOT MATRIX WITH STEREO SOUND</text>
 				<view class="gb-speaker">
-					<view v-for="n in 5" :key="n" class="gb-speaker__i"></view>
+					<view v-for="n in 3" :key="n" class="gb-speaker__i"></view>
 				</view>
 			</view>
 		</view>
@@ -118,14 +140,15 @@
 	export default {
 		data() {
 			return {
+				editing: '',
 				agreed: false,
 				showPwd: false,
 				nickname: '',
-				phone: '',
-				smsCode: '',
+				email: '',
+				mailCode: '',
 				password: '',
 				password2: '',
-				smsLeft: 0,
+				mailLeft: 0,
 				timer: null
 			}
 		},
@@ -141,22 +164,35 @@
 			},
 			strengthText() {
 				return ['──', '弱', '中', '强'][this.strength]
+			},
+			pwdMask() {
+				if (!this.password) return '未设定'
+				return this.showPwd ? this.password : '••••••'
+			},
+			pwd2Mask() {
+				if (!this.password2) return '未设定'
+				return this.showPwd ? this.password2 : '••••••'
 			}
 		},
 		onLoad(options) {
 			if (options && options.demo) {
 				this.agreed = true
 				this.nickname = 'PLAYER-1'
-				this.phone = '13800001234'
-				this.smsCode = '1989'
-				this.password = 'dmG-1989'
-				this.password2 = 'dmG-1989'
+				this.email = 'player@pixel.id'
+				this.mailCode = '1983'
+				this.password = '1up-1983'
+				this.password2 = '1up-1983'
 			}
 		},
 		onUnload() {
 			this.clearTimer()
 		},
 		methods: {
+			// B 键：切换密码显隐
+			onB() {
+				this.showPwd = !this.showPwd
+			},
+
 			toast(title) {
 				uni.showToast({
 					title,
@@ -164,19 +200,19 @@
 				})
 			},
 
-			isPhone(v) {
-				return /^1\d{10}$/.test(v)
+			isEmail(v) {
+				return /^[\w.-]+@[\w-]+\.[\w.-]+$/.test(v)
 			},
 
 			sendCode() {
-				if (this.smsLeft > 0) return
-				if (!this.isPhone(this.phone)) return this.toast('请输入正确的手机号')
-				this.smsLeft = 60
+				if (this.mailLeft > 0) return
+				if (!this.isEmail(this.email)) return this.toast('请输入正确的邮箱')
+				this.mailLeft = 60
 				// TODO: 调用后端发送验证码接口
 				this.toast('验证码已发送')
 				if (this.timer) return
 				this.timer = setInterval(() => {
-					if (this.smsLeft > 0) this.smsLeft--
+					if (this.mailLeft > 0) this.mailLeft--
 					else this.clearTimer()
 				}, 1000)
 			},
@@ -190,8 +226,8 @@
 
 			submit() {
 				if (!this.nickname) return this.toast('请输入昵称')
-				if (!this.isPhone(this.phone)) return this.toast('请输入正确的手机号')
-				if (!this.smsCode) return this.toast('请输入短信验证码')
+				if (!this.isEmail(this.email)) return this.toast('请输入正确的邮箱')
+				if (!this.mailCode) return this.toast('请输入邮箱验证码')
 				if (this.password.length < 8) return this.toast('密码至少 8 位')
 				if (this.password !== this.password2) return this.toast('两次输入的密码不一致')
 				if (!this.agreed) return this.toast('请先阅读并同意用户协议')

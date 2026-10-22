@@ -1,26 +1,26 @@
 /* ==========================================================================
- * SET N · 自动售货机 VENDING
+ * SET N · 深夜售货机 VENDING
  * pages/login105 —— 登录 / 注册 / 找回密码 三页共用
- * 深夜蓝底 + 红白机身，灯箱招牌与货道格子、投币出货口还原街角自动售货机
+ * 深夜蓝环境里的红白机身：灯箱招牌 / 玻璃橱窗货道 / 操作面板与出货口
+ * 登录 = 点货道选模式，注册 = 补货员登记（SLOT 货位），找回 = 呼叫服务
  *
  * 字体：Zpix（中文像素）+ Press Start 2P（拉丁与数字）
  * 图标：common/pixel-icons.scss（8x8 网格，box-shadow 逐点绘制）
- * 字号：Zpix 走 12px 的整数倍，Press Start 2P 走 8px 的整数倍
  * ========================================================================== */
 
 @import '../../common/pixel-icons.scss';
 
 /* ---------- 设计令牌 ---------- */
-$ink: #141b28;         // 主文字
-$dim: #5d6b7d;         // 次级文字
-$bg: #0e1626;          // 页面底色
-$panel: #f4f6f9;       // 卡片/面板底色
-$panel2: #dde3ec;      // 次级面板底色（Tab 未选中、字段底）
-$line: #141b28;        // 主描边
-$lineSoft: #b6c0cd;    // 弱描边
-$accent: #e0392b;      // 主强调色（按钮 / 选中态）
-$accent2: #c9880e;     // 次强调色（链接 / 图标）
-$on: #ffffff;          // 强调色之上的文字
+$night: #0e1c3a;     // 环境深夜蓝
+$mred: #d23b3b;      // 机身红
+$mbody: #f4f4f4;     // 机身白
+$lamp: #fff8e0;      // 灯箱暖白
+$scr: #4ade80;       // 屏幕绿
+$sel: #3f9e4f;       // 选中绿
+$sv: #f2c14e;        // 服务黄
+$glass: #101828;     // 橱窗深玻璃
+$dark: #0a1122;      // 机身描边近黑
+$dimg: #6a7688;      // 面板次级文字
 
 /* ---------- 页面容器 ---------- */
 .vd-page,
@@ -31,187 +31,325 @@ $on: #ffffff;          // 强调色之上的文字
 .vd-page {
 	position: relative;
 	min-height: 100vh;
-	padding-bottom: 40rpx;
-	background-color: $bg;
-	background-image: radial-gradient(rgba(120, 150, 190, .10) 2rpx, transparent 2rpx); background-size: 24rpx 24rpx;
+	padding: 40rpx 0 60rpx;
+	background-color: $night;
+	background-image: radial-gradient(rgba(120, 150, 190, .08) 2rpx, transparent 2rpx);
+	background-size: 26rpx 26rpx;
 	font-family: 'Zpix', sans-serif;
-	color: $ink;
+	color: $dark;
 	-webkit-font-smoothing: none;
 }
 
-/* ---------- 自绘导航栏 ---------- */
-.vd-nav {
+/* ---------- 机身 ---------- */
+.vd-machine {
+	width: 90%;
+	margin: 0 auto;
+}
+
+/* 红色顶盖 + 灯箱招牌 */
+.vd-cap {
 	display: flex;
 	align-items: center;
-	height: 96rpx;
-	padding: 0 24rpx;
-	background-color: $panel;
-	border-bottom: 4rpx solid $line;
+	padding: 24rpx 24rpx 26rpx;
+	background-color: $mred;
+	border: 4rpx solid $dark;
+	border-bottom: 0;
+	border-radius: 20rpx 20rpx 0 0;
 }
 
-.vd-nav__back {
-	display: flex;
-	align-items: center;
-	width: 110rpx;
-	flex: none;
-	color: $ink;
-}
-
-.vd-nav__back:active {
-	opacity: .5;
-}
-
-.vd-nav__title {
-	flex: 1;
-	text-align: center;
-	font-size: 48rpx;
-	letter-spacing: 6rpx;
-	color: $ink;
-}
-
-.vd-nav__slot {
-	flex: none;
-	min-width: 110rpx;
-	text-align: right;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 24rpx;
-	letter-spacing: 1rpx;
-	color: $dim;
-}
-
-/* ---------- 主体与卡片 ---------- */
-.vd-body {
-	padding: 28rpx 32rpx 0;
-}
-
-.vd-card {
-	padding: 36rpx 32rpx 32rpx;
-	background-color: $panel;
-	border: 4rpx solid $line;
-	box-shadow: 10rpx 10rpx 0 rgba(0, 0, 0, .16);
-}
-
-.vd-brand {
-	display: flex;
-	align-items: center;
-}
-
-.vd-brand__logo {
+.vd-cap__back {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 68rpx;
-	height: 68rpx;
 	flex: none;
-	color: $on;
-	background-color: $accent;
-	border: 4rpx solid $line;
-	box-shadow: 5rpx 5rpx 0 $line;
+	width: 56rpx;
+	height: 56rpx;
+	margin-right: 20rpx;
+	color: $mred;
+	background-color: $mbody;
+	border: 3rpx solid $dark;
+	border-radius: 50%;
 }
 
-.vd-brand__logo .pxi {
-	transform: scale(2);
+.vd-cap__back:active {
+	opacity: .6;
 }
 
-.vd-brand__meta {
-	margin-left: 20rpx;
+.vd-sign {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 16rpx 20rpx;
+	background-color: $lamp;
+	border: 3rpx solid $dark;
+	border-radius: 8rpx;
+	box-shadow: 0 0 30rpx rgba(255, 248, 224, .5);
 }
 
-.vd-brand__en {
-	display: block;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	letter-spacing: 1rpx;
-	color: $ink;
+.vd-sign__t {
+	font-size: 26rpx;
+	letter-spacing: 2rpx;
+	color: #6b5410;
 }
 
-.vd-brand__cn {
-	display: block;
+/* 两侧灯珠交替闪烁 */
+.vd-sign__lamp {
+	width: 18rpx;
+	height: 18rpx;
+	border: 2rpx solid $dark;
+	border-radius: 50%;
+	background-color: #ff5a4e;
+	animation: vd-lamp 1.2s steps(1, end) infinite;
+}
+
+.vd-sign__lamp--r {
+	animation-delay: .6s;
+}
+
+@keyframes vd-lamp {
+	0%, 49% { opacity: 1; }
+	50%, 100% { opacity: .25; }
+}
+
+/* ---------- 玻璃橱窗 ---------- */
+.vd-window {
+	position: relative;
+	padding: 30rpx 20rpx 30rpx;
+	background-color: $glass;
+	border: 4rpx solid $dark;
+}
+
+.vd-window__tube {
+	position: absolute;
+	top: 10rpx;
+	left: 20rpx;
+	right: 20rpx;
+	height: 10rpx;
+	background-color: #eaf6ff;
+	border-radius: 6rpx;
+	box-shadow: 0 0 24rpx rgba(190, 225, 255, .8);
+}
+
+.vd-slots {
+	display: flex;
+	margin-top: 24rpx;
+}
+
+/* 货道格 */
+.vd-slot {
+	position: relative;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 20rpx 8rpx 16rpx;
+	margin-right: 14rpx;
+	background-color: rgba(255, 255, 255, .04);
+	border: 3rpx solid #223250;
+	border-radius: 6rpx;
+	transition: opacity .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+
+.vd-slot:last-child {
+	margin-right: 0;
+}
+
+/* 未选中变暗 */
+.vd-slot.dim {
+	opacity: .6;
+}
+
+/* 选中：内嵌绿光 */
+.vd-slot.on {
+	border-color: $sel;
+	box-shadow: inset 0 0 26rpx rgba(63, 158, 79, .45), 0 0 14rpx rgba(63, 158, 79, .5);
+}
+
+/* 商品袋：矩形 + 封口锯齿 */
+.vd-bag {
+	position: relative;
+	width: 72rpx;
+	height: 92rpx;
+	border: 3rpx solid rgba(0, 0, 0, .4);
+	border-radius: 4rpx 4rpx 8rpx 8rpx;
+}
+
+.vd-bag__seal {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 12rpx;
+	background-image: repeating-linear-gradient(135deg, rgba(0, 0, 0, .35) 0 6rpx, transparent 6rpx 12rpx);
+}
+
+.vd-bag__ico {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	color: rgba(255, 255, 255, .9);
+}
+
+.vd-bag--0 { background-color: $mred; }
+.vd-bag--1 { background-color: #2f7fd0; }
+.vd-bag--2 { background-color: #c98f1b; }
+
+.vd-slot__name {
+	margin-top: 12rpx;
+	font-size: 22rpx;
+	color: #cfe0f5;
+}
+
+.vd-slot__price {
 	margin-top: 8rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 16rpx;
+	color: $scr;
+}
+
+.vd-slot__no {
+	margin-top: 8rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 16rpx;
+	color: #55688f;
+}
+
+/* SELECTED 小灯牌 */
+.vd-slot__sel {
+	margin-top: 12rpx;
+	padding: 6rpx 12rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 16rpx;
+	color: #3a4a6e;
+	background-color: #0b1220;
+	border-radius: 4rpx;
+	transition: background-color .2s ease, color .2s ease, box-shadow .2s ease;
+}
+
+.vd-slot__sel.lit {
+	color: #ffffff;
+	background-color: $sel;
+	box-shadow: 0 0 12rpx rgba(63, 158, 79, .8);
+}
+
+/* ---------- 操作面板 ---------- */
+.vd-panel {
+	padding: 28rpx 26rpx 30rpx;
+	background-color: $mbody;
+	border: 4rpx solid $dark;
+	border-top: 0;
+	border-radius: 0 0 20rpx 20rpx;
+}
+
+.vd-panel__title {
+	display: block;
+	font-size: 36rpx;
+	letter-spacing: 6rpx;
+	color: $dark;
+}
+
+.vd-panel__sub {
+	display: block;
+	margin-top: 10rpx;
+	font-size: 22rpx;
+	color: $dimg;
+}
+
+.vd-panel__row {
+	display: flex;
+	align-items: stretch;
+	margin-bottom: 26rpx;
+}
+
+/* 数字屏：深底绿字 */
+.vd-screen {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	height: 88rpx;
+	padding: 0 20rpx;
+	background-color: $glass;
+	border: 3rpx solid $dark;
+	border-radius: 8rpx;
+	box-shadow: inset 0 0 18rpx rgba(0, 0, 0, .8);
+}
+
+.vd-screen__t {
+	font-family: 'Press Start 2P', monospace;
+	font-size: 24rpx;
+	letter-spacing: 2rpx;
+	color: $scr;
+	text-shadow: 0 0 10rpx rgba(74, 222, 128, .7);
+	animation: vd-ready 2.4s steps(2, end) infinite;
+}
+
+@keyframes vd-ready {
+	0%, 92% { opacity: 1; }
+	93%, 96% { opacity: .4; }
+	97%, 100% { opacity: 1; }
+}
+
+/* 竖缝投币口 */
+.vd-coin {
+	flex: none;
+	width: 140rpx;
+	margin-left: 18rpx;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background-color: #e3e6ea;
+	border: 3rpx solid $dark;
+	border-radius: 8rpx;
+}
+
+.vd-coin__slit {
+	width: 16rpx;
+	height: 44rpx;
+	background-color: #0a0f18;
+	border-radius: 4rpx;
+}
+
+.vd-coin__t {
+	margin-top: 8rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 16rpx;
+	color: #55688f;
+}
+
+/* 白底面板底线输入 */
+.vd-line {
+	display: flex;
+	align-items: center;
+	padding: 20rpx 0;
+	border-bottom: 3rpx solid #c9ced6;
+}
+
+.vd-line__tag {
+	flex: none;
+	width: 96rpx;
 	font-size: 24rpx;
 	letter-spacing: 4rpx;
-	color: $dim;
+	color: $mred;
 }
 
-.vd-title {
-	display: block;
-	margin-top: 34rpx;
-	font-size: 48rpx;
-	line-height: 1.3;
-	letter-spacing: 8rpx;
-	color: $ink;
-}
-
-.vd-lead {
-	display: block;
-	margin-top: 16rpx;
-	font-size: 24rpx;
-	line-height: 1.6;
-	color: $dim;
-}
-
-/* ---------- 登录方式切换 ---------- */
-.vd-tabs {
-	display: flex;
-	margin-top: 36rpx;
-}
-
-.vd-tab {
-	flex: 1;
-	height: 72rpx;
-	line-height: 68rpx;
-	text-align: center;
-	font-size: 24rpx;
-	color: $dim;
-	background-color: $panel2;
-	border: 4rpx solid $lineSoft;
-}
-
-.vd-tab + .vd-tab {
-	margin-left: -4rpx;
-}
-
-.vd-tab.on {
-	position: relative;
-	z-index: 1;
-	color: $on;
-	background-color: $accent;
-	border-color: $line;
-	box-shadow: 4rpx 4rpx 0 $line;
-}
-
-/* ---------- 表单 ---------- */
-.vd-form {
-	margin-top: 32rpx;
-}
-
-.vd-field {
-	display: flex;
-	align-items: center;
-	height: 96rpx;
-	padding: 0 22rpx;
-	margin-bottom: 24rpx;
-	background-color: $panel;
-	border: 4rpx solid $line;
-}
-
-.vd-field__ico {
-	display: flex;
-	align-items: center;
-	justify-content: center;
+.vd-line__no {
 	flex: none;
-	margin-right: 18rpx;
-	color: $ink;
+	width: 150rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 16rpx;
+	color: $mred;
 }
 
-.vd-field__in {
+.vd-line__in {
 	flex: 1;
 	min-width: 0;
-	height: 100%;
-	padding: 0;
+	height: 48rpx;
 	font-family: 'Zpix', sans-serif;
-	font-size: 24rpx;
-	color: $ink;
+	font-size: 26rpx;
+	color: $dark;
 	background-color: transparent;
 	border: 0;
 	border-radius: 0;
@@ -219,171 +357,229 @@ $on: #ffffff;          // 强调色之上的文字
 	appearance: none;
 }
 
-.vd-field__in--en {
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	letter-spacing: 2rpx;
-}
-
 .vd-eye {
 	flex: none;
 	margin-left: 14rpx;
-	padding: 0 6rpx;
-	color: $accent2;
+	padding: 0 8rpx;
+	color: $dark;
 }
 
 .vd-code {
 	flex: none;
-	margin-left: 14rpx;
-	height: 64rpx;
-	line-height: 60rpx;
-	padding: 0 16rpx;
-	font-size: 24rpx;
-	color: $ink;
-	background-color: $panel2;
-	border: 4rpx solid $line;
+	margin-left: 12rpx;
+	padding: 8rpx 14rpx;
+	font-size: 22rpx;
+	color: #ffffff;
+	background-color: $mred;
+	border: 3rpx solid $mred;
+	border-radius: 6rpx;
 }
 
 .vd-code.off {
-	color: $dim;
-	border-color: $lineSoft;
+	color: $dimg;
+	background-color: transparent;
+	border-color: #c9ced6;
 }
 
-/* 右对齐小链接行 */
 .vd-row {
 	display: flex;
 	justify-content: flex-end;
-	margin: -4rpx 0 24rpx;
-	font-size: 24rpx;
+	margin-top: 14rpx;
+	font-size: 22rpx;
 }
 
 .vd-row__link {
-	color: $accent2;
+	color: $mred;
+	text-decoration: underline;
 }
 
-/* ---------- 六格验证码 ---------- */
-.vd-cells {
-	display: flex;
-	justify-content: space-between;
-	margin-bottom: 24rpx;
-}
-
-.vd-cell {
-	width: 88rpx;
-	height: 104rpx;
-	padding: 0;
-	box-sizing: border-box;
+.vd-hint {
+	padding: 20rpx 0;
 	text-align: center;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 64rpx;
-	color: $ink;
-	background-color: $panel;
-	border: 4rpx solid $line;
-	border-radius: 0;
-	-webkit-appearance: none;
-	appearance: none;
+	font-size: 22rpx;
+	color: $dimg;
 }
 
-.vd-cell.on {
-	color: $on;
-	background-color: $accent;
-	box-shadow: 6rpx 6rpx 0 $line;
+.vd-form__cap {
+	display: block;
+	margin: 26rpx 0 6rpx;
+	font-size: 22rpx;
+	color: $dimg;
 }
 
-.vd-cell.dim {
-	color: $dim;
-	background-color: $panel2;
-	border-color: $lineSoft;
-}
-
-/* ---------- 密码强度 ---------- */
-.vd-power {
-	display: flex;
-	align-items: center;
-	margin: -4rpx 0 24rpx;
-	font-size: 24rpx;
-	color: $dim;
-}
-
-.vd-power__t {
-	margin-right: 14rpx;
-}
-
-.vd-power__bars {
-	display: flex;
-	flex: 1;
-}
-
-.vd-power__bar {
-	flex: 1;
-	height: 16rpx;
-	margin-right: 8rpx;
-	background-color: $panel2;
-	border: 3rpx solid $lineSoft;
-}
-
-.vd-power__bar.on {
-	background-color: #92cc41;
-	border-color: $line;
-}
-
-.vd-power__v {
-	width: 64rpx;
-	text-align: right;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	color: $ink;
-}
-
-/* ---------- 按钮 ---------- */
+/* ---------- 出货大红按钮 ---------- */
 .vd-btn {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	height: 96rpx;
-	margin-top: 32rpx;
-	font-size: 48rpx;
-	letter-spacing: 8rpx;
-	color: $on;
-	background-color: $accent;
-	border: 4rpx solid $line;
-	box-shadow: 8rpx 8rpx 0 $line;
-}
-
-.vd-btn .pxi {
-	margin-right: 14rpx;
+	margin-top: 30rpx;
+	font-size: 40rpx;
+	letter-spacing: 12rpx;
+	color: #ffffff;
+	background-color: $mred;
+	border: 3rpx solid $dark;
+	border-radius: 16rpx;
+	box-shadow: 0 6rpx 0 #8f2320;
+	transition: transform .1s ease, box-shadow .1s ease;
 }
 
 .vd-btn:active {
-	transform: translate(4rpx, 4rpx);
-	box-shadow: 4rpx 4rpx 0 $line;
+	transform: translateY(4rpx);
+	box-shadow: 0 2rpx 0 #8f2320;
 }
 
-.vd-btn--ghost {
-	color: $ink;
-	background-color: $panel;
+/* 服务呼叫黄按钮 */
+.vd-call {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 92rpx;
+	margin-top: 30rpx;
+	font-size: 30rpx;
+	letter-spacing: 8rpx;
+	color: #4a3806;
+	background-color: $sv;
+	border: 3rpx solid $dark;
+	border-radius: 12rpx;
+	box-shadow: 0 6rpx 0 #b28c22;
+	transition: transform .1s ease, box-shadow .1s ease;
+}
+
+.vd-call:active {
+	transform: translateY(4rpx);
+	box-shadow: 0 2rpx 0 #b28c22;
+}
+
+/* 按下服务模式后持续闪烁 */
+.vd-call.blink {
+	animation: vd-blink .5s steps(2, end) infinite;
+}
+
+@keyframes vd-blink {
+	0%, 49% { opacity: 1; }
+	50%, 100% { opacity: .55; }
+}
+
+.vd-servtag {
+	display: block;
+	margin-bottom: 20rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 16rpx;
+	letter-spacing: 1rpx;
+	color: $sv;
+}
+
+/* ---------- 出货口挡板 ---------- */
+.vd-hatch {
+	margin-top: 26rpx;
+	padding: 14rpx;
+	background-color: #dfe3e8;
+	border: 3rpx solid $dark;
+	border-radius: 8rpx;
+}
+
+.vd-hatch__door {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 72rpx;
+	font-size: 24rpx;
+	letter-spacing: 4rpx;
+	color: #ffd9d5;
+	background-color: #a8322c;
+	border: 3rpx solid $dark;
+	border-radius: 6rpx;
+	transition: transform .3s ease;
+}
+
+/* 挡板下拉打开 */
+.vd-hatch.open .vd-hatch__door {
+	transform: translateY(30rpx) rotate(4deg);
+	background-color: #7c201c;
+}
+
+/* ---------- 6 格投币验证码 ---------- */
+.vd-coincells {
+	display: flex;
+	justify-content: space-between;
+	margin: 20rpx 0 8rpx;
+}
+
+.vd-coincell {
+	width: 84rpx;
+	height: 96rpx;
+	box-sizing: border-box;
+	padding: 0;
+	text-align: center;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 36rpx;
+	color: $scr;
+	background-color: $glass;
+	border: 3rpx solid #2a3a55;
+	border-radius: 6rpx;
+	-webkit-appearance: none;
+	appearance: none;
+	transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.vd-coincell.on {
+	border-color: $sv;
+	box-shadow: 0 0 12rpx rgba(242, 193, 78, .5);
+}
+
+/* ---------- 电量条强度（3 格绿） ---------- */
+.vd-batt {
+	display: flex;
+	align-items: center;
+	margin-top: 20rpx;
+	font-size: 22rpx;
+	color: $dimg;
+}
+
+.vd-batt__t {
+	margin-right: 16rpx;
+}
+
+.vd-batt__bar {
+	width: 56rpx;
+	height: 20rpx;
+	margin-right: 10rpx;
+	border: 3rpx solid #9aa5b5;
+	border-radius: 4rpx;
+	background-color: #ffffff;
+}
+
+.vd-batt__bar.on {
+	background-color: $scr;
+	border-color: $sel;
+}
+
+.vd-batt__v {
+	margin-left: 4rpx;
+	color: $dark;
 }
 
 /* ---------- 页脚与协议 ---------- */
 .vd-foot {
-	margin-top: 32rpx;
+	margin-top: 28rpx;
 	text-align: center;
-	font-size: 24rpx;
-	color: $dim;
+	font-size: 22rpx;
+	color: $dimg;
 }
 
 .vd-foot__link {
-	color: $accent2;
+	color: $mred;
 	text-decoration: underline;
 }
 
 .vd-agree {
 	display: flex;
 	align-items: flex-start;
-	margin-top: 28rpx;
-	font-size: 24rpx;
+	margin-top: 24rpx;
+	font-size: 22rpx;
 	line-height: 1.7;
-	color: $dim;
+	color: $dimg;
 }
 
 .vd-check {
@@ -392,242 +588,33 @@ $on: #ffffff;          // 强调色之上的文字
 	width: 30rpx;
 	height: 30rpx;
 	margin: 4rpx 12rpx 0 0;
-	background-color: $panel;
-	border: 4rpx solid $line;
+	background-color: #ffffff;
+	border: 3rpx solid #9aa5b5;
+	border-radius: 4rpx;
 }
 
 .vd-check.on {
-	background-color: #92cc41;
+	background-color: $sel;
+	border-color: $sel;
 }
 
 .vd-check.on::after {
 	content: '';
 	position: absolute;
 	left: 8rpx;
-	top: 2rpx;
-	width: 8rpx;
-	height: 15rpx;
-	border: solid $line;
+	top: 3rpx;
+	width: 9rpx;
+	height: 14rpx;
+	border: solid #ffffff;
 	border-width: 0 4rpx 4rpx 0;
 	transform: rotate(45deg);
 }
 
 .vd-link {
-	color: $accent2;
-}
-
-/* ---------- 步骤条 ---------- */
-.vd-steps {
-	display: flex;
-	align-items: center;
-	margin: 4rpx 0 30rpx;
-}
-
-.vd-step {
-	display: flex;
-	align-items: center;
-	font-size: 24rpx;
-	color: $dim;
-}
-
-.vd-step__n {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 48rpx;
-	height: 48rpx;
-	margin-right: 12rpx;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	color: $ink;
-	background-color: $panel2;
-	border: 4rpx solid $lineSoft;
-}
-
-.vd-step.on .vd-step__n {
-	color: $on;
-	background-color: $accent2;
-	border-color: $line;
-}
-
-.vd-step__line {
-	flex: 1;
-	height: 4rpx;
-	margin: 0 16rpx;
-	background-color: $lineSoft;
-}
-
-.vd-step.on .vd-step__line {
-	background-color: $line;
+	color: $mred;
 }
 
 /* ---------- 占位符（uniapp 用 placeholder-style 内联声明，这里兼容 H5） ---------- */
-.vd-field__in::-webkit-input-placeholder {
+.vd-line__in::-webkit-input-placeholder {
 	color: #8b97a8;
-}
-
-/* ---------- 主题皮肤（覆盖骨架） ---------- */
-.vd-card {
-	box-shadow: 12rpx 12rpx 0 rgba(5, 8, 15, .55);
-}
-
-.vd-field {
-	background-color: $panel2;
-}
-
-.vd-btn {
-	color: $on;
-	background-color: $accent;
-	box-shadow: 6rpx 6rpx 0 $line;
-}
-
-.vd-title {
-	color: $accent;
-	text-shadow: 5rpx 5rpx 0 rgba(255, 211, 77, .42);
-}
-
-/* ---------- 主题装饰 ---------- */
-.vd-light {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	margin-bottom: 20rpx;
-	padding: 20rpx;
-	background-color: $panel;
-	border: 4rpx solid $line;
-	box-shadow: 0 0 32rpx rgba(244, 246, 249, .22);
-}
-
-.vd-light__t {
-	font-family: 'Press Start 2P', monospace;
-	font-size: 24rpx;
-	letter-spacing: 1rpx;
-	color: $accent;
-	animation: vd-flicker 2.4s steps(1, end) infinite;
-}
-
-@keyframes vd-flicker {
-	0%, 88% { opacity: 1; }
-	89%, 91% { opacity: .35; }
-	92%, 100% { opacity: 1; }
-}
-
-.vd-light__bars {
-	display: flex;
-}
-
-.vd-light__bar {
-	width: 16rpx;
-	height: 16rpx;
-	margin-left: 8rpx;
-	background-color: #ffd34d;
-}
-
-.vd-light__bar--1 {
-	background-color: #2fa4d9;
-}
-
-.vd-price {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	margin-bottom: 24rpx;
-	padding: 16rpx 20rpx;
-	background-color: #10192a;
-	border: 4rpx solid $line;
-}
-
-.vd-price__l {
-	font-family: 'Press Start 2P', monospace;
-	font-size: 16rpx;
-	letter-spacing: 1rpx;
-	color: #5d7291;
-}
-
-.vd-price__r {
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	letter-spacing: 2rpx;
-	color: #2fd4a4;
-}
-
-.vd-shelf {
-	display: flex;
-	flex-wrap: wrap;
-	margin-top: 40rpx;
-	background-color: $panel;
-	border: 4rpx solid $line;
-}
-
-.vd-slot {
-	width: 33.33%;
-	padding: 22rpx 0 16rpx;
-	text-align: center;
-	border-right: 3rpx solid $lineSoft;
-	border-bottom: 3rpx solid $lineSoft;
-}
-
-.vd-can {
-	position: relative;
-	width: 48rpx;
-	height: 64rpx;
-	margin: 0 auto;
-	border: 3rpx solid $line;
-}
-
-.vd-can::after {
-	content: '';
-	position: absolute;
-	left: 0;
-	top: 10rpx;
-	width: 100%;
-	height: 6rpx;
-	background-color: rgba(255, 255, 255, .85);
-}
-
-.vd-can--0 { background-color: #e0392b; }
-.vd-can--1 { background-color: #2fa4d9; }
-.vd-can--2 { background-color: #ffd34d; }
-
-.vd-slot__no {
-	display: block;
-	margin-top: 10rpx;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 16rpx;
-	letter-spacing: 1rpx;
-	color: $dim;
-}
-
-.vd-tray {
-	margin-top: 24rpx;
-	padding: 20rpx;
-	background-color: #10192a;
-	border: 4rpx solid $line;
-	box-shadow: inset 0 0 24rpx rgba(0, 0, 0, .85);
-}
-
-.vd-tray__mouth {
-	height: 20rpx;
-	margin-bottom: 16rpx;
-	background-color: #05080f;
-	border: 3rpx solid #2a3a55;
-}
-
-.vd-tray__t {
-	font-family: 'Press Start 2P', monospace;
-	font-size: 16rpx;
-	letter-spacing: 2rpx;
-	color: #ffd34d;
-}
-
-.vd-tray__arrow {
-	display: flex;
-	justify-content: flex-end;
-	color: #2fd4a4;
-	animation: vd-bob 1s steps(2, end) infinite;
-}
-
-@keyframes vd-bob {
-	0%, 49% { transform: translateY(0); }
-	50%, 100% { transform: translateY(-4rpx); }
 }

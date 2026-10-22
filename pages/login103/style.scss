@@ -1,26 +1,22 @@
 /* ==========================================================================
- * SET L · 日历打卡
+ * SET L · 台历打卡 CALENDAR
  * pages/login103 —— 登录 / 注册 / 找回密码 三页共用
- * 月历头 + 7 列日期格，红色今日圈与打卡勾还原桌面台历
+ * 上半月历纸 + 下方打卡面板：圆章选项 / 底线输入 / 红色打卡钮
+ * 注册 = 周计划报名表，找回 = 撕页翻面台历
  *
  * 字体：Zpix（中文像素）+ Press Start 2P（拉丁与数字）
  * 图标：common/pixel-icons.scss（8x8 网格，box-shadow 逐点绘制）
- * 字号：Zpix 走 12px 的整数倍，Press Start 2P 走 8px 的整数倍
  * ========================================================================== */
 
 @import '../../common/pixel-icons.scss';
 
 /* ---------- 设计令牌 ---------- */
-$ink: #1d2430;         // 主文字
-$dim: #6b7480;         // 次级文字
-$bg: #f3f5f8;          // 页面底色
-$panel: #ffffff;       // 卡片/面板底色
-$panel2: #eef1f5;      // 次级面板底色（Tab 未选中、字段底）
-$line: #1d2430;        // 主描边
-$lineSoft: #c3cad4;    // 弱描边
-$accent: #e23b2e;      // 主强调色（按钮 / 选中态）
-$accent2: #2b6cb0;     // 次强调色（链接 / 图标）
-$on: #ffffff;          // 强调色之上的文字
+$paper: #fdfcf8;      // 纸白（日历纸 / 面板）
+$red: #d43c33;        // 日历红（打卡 / 选中 / 按钮）
+$ink: #2b2b2b;        // 墨黑（正文 / 描边）
+$dim: #9a9a9a;        // 辅助灰
+$wknd: #f7d9d6;       // 周末淡红
+$desk: #ece7db;       // 桌面底色
 
 /* ---------- 页面容器 ---------- */
 .ca-page,
@@ -31,186 +27,302 @@ $on: #ffffff;          // 强调色之上的文字
 .ca-page {
 	position: relative;
 	min-height: 100vh;
-	padding-bottom: 40rpx;
-	background-color: $bg;
-	background-image: linear-gradient(rgba(29, 36, 48, .04) 2rpx, transparent 2rpx); background-size: 100% 40rpx;
+	padding: 32rpx 28rpx 60rpx;
+	background-color: $desk;
+	background-image: linear-gradient(rgba(43, 43, 43, .05) 2rpx, transparent 2rpx);
+	background-size: 100% 44rpx;
 	font-family: 'Zpix', sans-serif;
 	color: $ink;
 	-webkit-font-smoothing: none;
 }
 
-/* ---------- 自绘导航栏 ---------- */
-.ca-nav {
-	display: flex;
-	align-items: center;
-	height: 96rpx;
-	padding: 0 24rpx;
-	background-color: $panel;
-	border-bottom: 4rpx solid $line;
+/* ---------- 月历纸 ---------- */
+.ca-cal {
+	position: relative;
+	background-color: $paper;
+	border: 4rpx solid $ink;
+	box-shadow: 8rpx 8rpx 0 rgba(43, 43, 43, .14);
 }
 
-.ca-nav__back {
+/* 顶部装订环：两个小圆 */
+.ca-cal__rings {
+	position: absolute;
+	top: -16rpx;
+	left: 0;
+	right: 0;
+	display: flex;
+	justify-content: space-between;
+	padding: 0 140rpx;
+	pointer-events: none;
+}
+
+.ca-ring {
+	width: 26rpx;
+	height: 26rpx;
+	background-color: $desk;
+	border: 4rpx solid $ink;
+	border-radius: 50%;
+}
+
+/* 红色月历头 */
+.ca-cal__head {
 	display: flex;
 	align-items: center;
-	width: 110rpx;
+	padding: 16rpx 20rpx;
+	background-color: $red;
+	color: $paper;
+}
+
+.ca-cal__back {
+	display: flex;
+	align-items: center;
 	flex: none;
-	color: $ink;
+	padding: 8rpx 18rpx 8rpx 2rpx;
+	color: $paper;
 }
 
-.ca-nav__back:active {
-	opacity: .5;
+.ca-cal__back:active {
+	opacity: .6;
 }
 
-.ca-nav__title {
+.ca-cal__title {
 	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+.ca-cal__cn {
+	font-size: 32rpx;
+	letter-spacing: 4rpx;
+}
+
+.ca-cal__en {
+	margin-top: 6rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 16rpx;
+	letter-spacing: 2rpx;
+	opacity: .85;
+}
+
+.ca-cal__today {
+	flex: none;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 32rpx;
+}
+
+/* 星期与日期格：7 列 */
+.ca-cal__week {
+	display: flex;
+	flex-wrap: wrap;
+	padding-top: 14rpx;
+	border-bottom: 3rpx solid rgba(43, 43, 43, .15);
+}
+
+.ca-cal__wd {
+	width: 14.28%;
 	text-align: center;
-	font-size: 48rpx;
-	letter-spacing: 6rpx;
+	font-size: 24rpx;
 	color: $ink;
 }
 
-.ca-nav__slot {
-	flex: none;
-	min-width: 110rpx;
-	text-align: right;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 24rpx;
-	letter-spacing: 1rpx;
-	color: $dim;
+.ca-cal__wd.red {
+	color: $red;
 }
 
-/* ---------- 主体与卡片 ---------- */
-.ca-body {
-	padding: 28rpx 32rpx 0;
-}
-
-.ca-card {
-	padding: 36rpx 32rpx 32rpx;
-	background-color: $panel;
-	border: 4rpx solid $line;
-	box-shadow: 10rpx 10rpx 0 rgba(0, 0, 0, .16);
-}
-
-.ca-brand {
+.ca-cal__grid {
 	display: flex;
-	align-items: center;
+	flex-wrap: wrap;
+	padding: 8rpx 0 14rpx;
 }
 
-.ca-brand__logo {
+.ca-cal__cell {
+	position: relative;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 68rpx;
-	height: 68rpx;
-	flex: none;
-	color: $on;
-	background-color: $accent;
-	border: 4rpx solid $line;
-	box-shadow: 5rpx 5rpx 0 $line;
+	width: 14.28%;
+	height: 76rpx;
 }
 
-.ca-brand__logo .pxi {
-	transform: scale(2);
-}
-
-.ca-brand__meta {
-	margin-left: 20rpx;
-}
-
-.ca-brand__en {
-	display: block;
+.ca-cal__num {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 52rpx;
+	height: 52rpx;
 	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	letter-spacing: 1rpx;
+	font-size: 24rpx;
 	color: $ink;
 }
 
-.ca-brand__cn {
-	display: block;
-	margin-top: 8rpx;
-	font-size: 24rpx;
-	letter-spacing: 4rpx;
-	color: $dim;
+.ca-cal__cell.red .ca-cal__num {
+	color: $red;
 }
 
-.ca-title {
+.ca-cal__cell.today .ca-cal__num {
+	border: 4rpx solid $red;
+	border-radius: 50%;
+	color: $red;
+}
+
+/* 今日格上的红章（✔ 或 已重置） */
+.ca-stamp {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 60rpx;
+	height: 60rpx;
+	margin: -30rpx 0 0 -30rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 5rpx solid $red;
+	border-radius: 50%;
+	background-color: rgba(253, 252, 248, .55);
+	animation: ca-stamp .4s ease-out both;
+}
+
+.ca-stamp::after {
+	content: '';
+	width: 18rpx;
+	height: 10rpx;
+	border: solid $red;
+	border-width: 0 0 5rpx 5rpx;
+	transform: rotate(-45deg);
+}
+
+.ca-stamp--txt::after {
+	display: none;
+}
+
+.ca-stamp__t {
+	font-size: 18rpx;
+	color: $red;
+}
+
+@keyframes ca-stamp {
+	0% { transform: scale(1.8) rotate(-20deg); opacity: 0; }
+	100% { transform: scale(1) rotate(-10deg); opacity: .9; }
+}
+
+/* 找回页迷你月历 */
+.ca-cal--mini .ca-cal__cell {
+	height: 64rpx;
+}
+
+.ca-cal--mini .ca-cal__num {
+	width: 44rpx;
+	height: 44rpx;
+	font-size: 20rpx;
+}
+
+.ca-cal--mini .ca-stamp {
+	width: 68rpx;
+	height: 68rpx;
+	margin: -34rpx 0 0 -34rpx;
+}
+
+/* ---------- 打卡面板（纸白卡片 + 撕票锯齿） ---------- */
+.ca-panel {
+	margin-top: 36rpx;
+	padding: 0 28rpx 32rpx;
+	background-color: $paper;
+	border: 4rpx solid $ink;
+	box-shadow: 8rpx 8rpx 0 rgba(43, 43, 43, .14);
+}
+
+.ca-panel__tear {
+	height: 0;
+	margin: 0 -28rpx;
+	border-top: 6rpx dashed rgba(43, 43, 43, .3);
+}
+
+.ca-panel__t {
 	display: block;
-	margin-top: 34rpx;
-	font-size: 48rpx;
-	line-height: 1.3;
+	margin-top: 30rpx;
+	font-size: 40rpx;
 	letter-spacing: 8rpx;
 	color: $ink;
 }
 
-.ca-lead {
+.ca-panel__sub {
 	display: block;
-	margin-top: 16rpx;
+	margin-top: 12rpx;
 	font-size: 24rpx;
-	line-height: 1.6;
 	color: $dim;
 }
 
-/* ---------- 登录方式切换 ---------- */
-.ca-tabs {
+/* ---------- 打卡圆章（登录方式） ---------- */
+.ca-seals {
 	display: flex;
-	margin-top: 36rpx;
-}
-
-.ca-tab {
-	flex: 1;
-	height: 72rpx;
-	line-height: 68rpx;
-	text-align: center;
-	font-size: 24rpx;
-	color: $dim;
-	background-color: $panel2;
-	border: 4rpx solid $lineSoft;
-}
-
-.ca-tab + .ca-tab {
-	margin-left: -4rpx;
-}
-
-.ca-tab.on {
-	position: relative;
-	z-index: 1;
-	color: $on;
-	background-color: $accent;
-	border-color: $line;
-	box-shadow: 4rpx 4rpx 0 $line;
-}
-
-/* ---------- 表单 ---------- */
-.ca-form {
+	justify-content: space-between;
 	margin-top: 32rpx;
 }
 
-.ca-field {
+.ca-seal {
 	display: flex;
-	align-items: center;
-	height: 96rpx;
-	padding: 0 22rpx;
-	margin-bottom: 24rpx;
-	background-color: $panel;
-	border: 4rpx solid $line;
-}
-
-.ca-field__ico {
-	display: flex;
+	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	flex: none;
-	margin-right: 18rpx;
-	color: $ink;
+	width: 168rpx;
+	height: 168rpx;
+	border: 4rpx solid rgba(43, 43, 43, .45);
+	border-radius: 50%;
+	color: rgba(43, 43, 43, .55);
+	transition: transform .2s ease, border-color .2s ease, color .2s ease;
 }
 
-.ca-field__in {
+.ca-seal__no {
+	margin-bottom: 8rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 20rpx;
+}
+
+.ca-seal__t {
+	font-size: 26rpx;
+	letter-spacing: 4rpx;
+}
+
+.ca-seal.on {
+	border: 6rpx solid $red;
+	color: $red;
+	transform: rotate(-8deg);
+}
+
+/* ---------- 底线式输入 ---------- */
+.ca-form {
+	margin-top: 36rpx;
+}
+
+.ca-form__cap {
+	display: block;
+	margin: 30rpx 0 4rpx;
+	font-size: 22rpx;
+	letter-spacing: 2rpx;
+	color: $dim;
+}
+
+.ca-line {
+	display: flex;
+	align-items: center;
+	padding: 22rpx 0;
+	border-bottom: 3rpx solid rgba(43, 43, 43, .3);
+}
+
+.ca-line__tag {
+	flex: none;
+	width: 96rpx;
+	font-size: 24rpx;
+	letter-spacing: 4rpx;
+	color: $red;
+}
+
+.ca-line__in {
 	flex: 1;
 	min-width: 0;
-	height: 100%;
-	padding: 0;
+	height: 48rpx;
 	font-family: 'Zpix', sans-serif;
-	font-size: 24rpx;
+	font-size: 26rpx;
 	color: $ink;
 	background-color: transparent;
 	border: 0;
@@ -219,169 +331,282 @@ $on: #ffffff;          // 强调色之上的文字
 	appearance: none;
 }
 
-.ca-field__in--en {
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	letter-spacing: 2rpx;
-}
-
-.ca-eye {
+.ca-line__eye {
 	flex: none;
 	margin-left: 14rpx;
-	padding: 0 6rpx;
-	color: $accent2;
+	padding: 0 8rpx;
+	color: $ink;
 }
 
 .ca-code {
 	flex: none;
-	margin-left: 14rpx;
-	height: 64rpx;
-	line-height: 60rpx;
-	padding: 0 16rpx;
-	font-size: 24rpx;
-	color: $ink;
-	background-color: $panel2;
-	border: 4rpx solid $line;
+	margin-left: 12rpx;
+	padding: 8rpx 14rpx;
+	font-size: 22rpx;
+	color: $paper;
+	background-color: $red;
+	border: 3rpx solid $red;
 }
 
 .ca-code.off {
 	color: $dim;
-	border-color: $lineSoft;
+	background-color: transparent;
+	border-color: rgba(43, 43, 43, .3);
 }
 
-/* 右对齐小链接行 */
 .ca-row {
 	display: flex;
 	justify-content: flex-end;
-	margin: -4rpx 0 24rpx;
-	font-size: 24rpx;
+	margin-top: 14rpx;
+	font-size: 22rpx;
 }
 
 .ca-row__link {
-	color: $accent2;
+	color: $red;
+	text-decoration: underline;
 }
 
-/* ---------- 六格验证码 ---------- */
-.ca-cells {
+/* ---------- 打卡按钮 ---------- */
+.ca-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100rpx;
+	margin-top: 36rpx;
+	font-size: 44rpx;
+	letter-spacing: 16rpx;
+	color: $paper;
+	background-color: $red;
+	box-shadow: 6rpx 6rpx 0 rgba(43, 43, 43, .35);
+	transition: transform .1s ease, box-shadow .1s ease;
+}
+
+.ca-btn:active {
+	transform: translate(3rpx, 3rpx);
+	box-shadow: 2rpx 2rpx 0 rgba(43, 43, 43, .35);
+}
+
+.ca-count {
+	margin-top: 18rpx;
+	text-align: center;
+	font-size: 22rpx;
+	letter-spacing: 2rpx;
+	color: $red;
+}
+
+/* ---------- 周计划报名表 ---------- */
+.ca-sheet {
+	background-color: $paper;
+	border: 4rpx solid $ink;
+	box-shadow: 8rpx 8rpx 0 rgba(43, 43, 43, .14);
+	padding: 28rpx;
+}
+
+.ca-sheet__head {
+	display: flex;
+	align-items: center;
+	padding-bottom: 20rpx;
+	border-bottom: 4rpx solid $red;
+}
+
+.ca-sheet__back {
+	display: flex;
+	align-items: center;
+	flex: none;
+	padding: 8rpx 20rpx 8rpx 0;
+	color: $ink;
+}
+
+.ca-sheet__back:active {
+	opacity: .6;
+}
+
+.ca-sheet__meta {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+.ca-sheet__cn {
+	font-size: 36rpx;
+	letter-spacing: 6rpx;
+}
+
+.ca-sheet__en {
+	margin-top: 6rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 16rpx;
+	letter-spacing: 2rpx;
+	color: $dim;
+}
+
+.ca-sheet__date {
+	font-family: 'Press Start 2P', monospace;
+	font-size: 20rpx;
+	color: $red;
+}
+
+/* W1-W3 周格 */
+.ca-weeks {
+	display: flex;
+	margin-top: 26rpx;
+	border: 3rpx solid rgba(43, 43, 43, .35);
+}
+
+.ca-wk {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 14rpx 16rpx;
+	border-right: 3rpx solid rgba(43, 43, 43, .15);
+}
+
+.ca-wk--last {
+	border-right: 0;
+}
+
+.ca-wk__meta {
+	display: flex;
+	flex-direction: column;
+}
+
+.ca-wk__no {
+	font-family: 'Press Start 2P', monospace;
+	font-size: 18rpx;
+	color: $red;
+}
+
+.ca-wk__t {
+	margin-top: 6rpx;
+	font-size: 22rpx;
+	color: $ink;
+}
+
+.ca-wk__check {
+	position: relative;
+	flex: none;
+	width: 34rpx;
+	height: 34rpx;
+	border: 3rpx solid rgba(43, 43, 43, .35);
+	border-radius: 50%;
+	transition: background-color .2s ease, border-color .2s ease;
+}
+
+.ca-wk__check.on {
+	border-color: $red;
+	background-color: rgba(212, 60, 51, .14);
+}
+
+.ca-wk__check.on::after {
+	content: '';
+	position: absolute;
+	left: 9rpx;
+	top: 7rpx;
+	width: 12rpx;
+	height: 7rpx;
+	border: solid $red;
+	border-width: 0 0 4rpx 4rpx;
+	transform: rotate(-45deg);
+}
+
+/* 墨条强度（3 格） */
+.ca-ink {
+	display: flex;
+	align-items: center;
+	margin-top: 18rpx;
+	font-size: 22rpx;
+	color: $dim;
+}
+
+.ca-ink__t {
+	margin-right: 14rpx;
+}
+
+.ca-ink__bar {
+	width: 64rpx;
+	height: 14rpx;
+	margin-right: 10rpx;
+	border: 2rpx solid rgba(43, 43, 43, .4);
+	background-color: rgba(43, 43, 43, .08);
+}
+
+.ca-ink__bar.on {
+	background-color: $ink;
+	border-color: $ink;
+}
+
+.ca-ink__v {
+	margin-left: 4rpx;
+	color: $ink;
+}
+
+/* ---------- 撕页翻面（找回密码两步切换） ---------- */
+.ca-flip {
+	animation: ca-flip-in .3s ease-out backwards;
+	transition: transform .28s ease-in, opacity .28s ease-in;
+}
+
+.ca-flip.out {
+	transform: translateY(-40rpx);
+	opacity: 0;
+}
+
+@keyframes ca-flip-in {
+	from { transform: translateY(-40rpx); opacity: 0; }
+	to { transform: translateY(0); opacity: 1; }
+}
+
+/* ---------- 6 格日期验证码 ---------- */
+.ca-datecells {
 	display: flex;
 	justify-content: space-between;
-	margin-bottom: 24rpx;
+	margin: 20rpx 0 8rpx;
 }
 
-.ca-cell {
-	width: 88rpx;
-	height: 104rpx;
-	padding: 0;
+.ca-date {
+	width: 84rpx;
+	height: 96rpx;
 	box-sizing: border-box;
+	padding: 0;
 	text-align: center;
 	font-family: 'Press Start 2P', monospace;
-	font-size: 64rpx;
+	font-size: 36rpx;
 	color: $ink;
-	background-color: $panel;
-	border: 4rpx solid $line;
+	background-color: #ffffff;
+	border: 3rpx solid $red;
 	border-radius: 0;
 	-webkit-appearance: none;
 	appearance: none;
 }
 
-.ca-cell.on {
-	color: $on;
-	background-color: $accent;
-	box-shadow: 6rpx 6rpx 0 $line;
+.ca-date.on {
+	background-color: $wknd;
 }
 
-.ca-cell.dim {
+.ca-date.dim {
 	color: $dim;
-	background-color: $panel2;
-	border-color: $lineSoft;
-}
-
-/* ---------- 密码强度 ---------- */
-.ca-power {
-	display: flex;
-	align-items: center;
-	margin: -4rpx 0 24rpx;
-	font-size: 24rpx;
-	color: $dim;
-}
-
-.ca-power__t {
-	margin-right: 14rpx;
-}
-
-.ca-power__bars {
-	display: flex;
-	flex: 1;
-}
-
-.ca-power__bar {
-	flex: 1;
-	height: 16rpx;
-	margin-right: 8rpx;
-	background-color: $panel2;
-	border: 3rpx solid $lineSoft;
-}
-
-.ca-power__bar.on {
-	background-color: #92cc41;
-	border-color: $line;
-}
-
-.ca-power__v {
-	width: 64rpx;
-	text-align: right;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	color: $ink;
-}
-
-/* ---------- 按钮 ---------- */
-.ca-btn {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: 96rpx;
-	margin-top: 32rpx;
-	font-size: 48rpx;
-	letter-spacing: 8rpx;
-	color: $on;
-	background-color: $accent;
-	border: 4rpx solid $line;
-	box-shadow: 8rpx 8rpx 0 $line;
-}
-
-.ca-btn .pxi {
-	margin-right: 14rpx;
-}
-
-.ca-btn:active {
-	transform: translate(4rpx, 4rpx);
-	box-shadow: 4rpx 4rpx 0 $line;
-}
-
-.ca-btn--ghost {
-	color: $ink;
-	background-color: $panel;
+	border-color: rgba(212, 60, 51, .4);
 }
 
 /* ---------- 页脚与协议 ---------- */
 .ca-foot {
-	margin-top: 32rpx;
+	margin-top: 30rpx;
 	text-align: center;
 	font-size: 24rpx;
 	color: $dim;
 }
 
 .ca-foot__link {
-	color: $accent2;
+	color: $red;
 	text-decoration: underline;
 }
 
 .ca-agree {
 	display: flex;
 	align-items: flex-start;
-	margin-top: 28rpx;
-	font-size: 24rpx;
+	margin-top: 26rpx;
+	font-size: 22rpx;
 	line-height: 1.7;
 	color: $dim;
 }
@@ -392,179 +617,32 @@ $on: #ffffff;          // 强调色之上的文字
 	width: 30rpx;
 	height: 30rpx;
 	margin: 4rpx 12rpx 0 0;
-	background-color: $panel;
-	border: 4rpx solid $line;
+	background-color: #ffffff;
+	border: 3rpx solid rgba(43, 43, 43, .45);
 }
 
 .ca-check.on {
-	background-color: #92cc41;
+	background-color: $red;
+	border-color: $red;
 }
 
 .ca-check.on::after {
 	content: '';
 	position: absolute;
 	left: 8rpx;
-	top: 2rpx;
-	width: 8rpx;
-	height: 15rpx;
-	border: solid $line;
+	top: 3rpx;
+	width: 9rpx;
+	height: 14rpx;
+	border: solid #ffffff;
 	border-width: 0 4rpx 4rpx 0;
 	transform: rotate(45deg);
 }
 
 .ca-link {
-	color: $accent2;
-}
-
-/* ---------- 步骤条 ---------- */
-.ca-steps {
-	display: flex;
-	align-items: center;
-	margin: 4rpx 0 30rpx;
-}
-
-.ca-step {
-	display: flex;
-	align-items: center;
-	font-size: 24rpx;
-	color: $dim;
-}
-
-.ca-step__n {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 48rpx;
-	height: 48rpx;
-	margin-right: 12rpx;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	color: $ink;
-	background-color: $panel2;
-	border: 4rpx solid $lineSoft;
-}
-
-.ca-step.on .ca-step__n {
-	color: $on;
-	background-color: $accent2;
-	border-color: $line;
-}
-
-.ca-step__line {
-	flex: 1;
-	height: 4rpx;
-	margin: 0 16rpx;
-	background-color: $lineSoft;
-}
-
-.ca-step.on .ca-step__line {
-	background-color: $line;
+	color: $red;
 }
 
 /* ---------- 占位符（uniapp 用 placeholder-style 内联声明，这里兼容 H5） ---------- */
-.ca-field__in::-webkit-input-placeholder {
-	color: #9aa3af;
-}
-
-/* ---------- 主题皮肤（覆盖骨架） ---------- */
-.ca-card {
-	box-shadow: 10rpx 10rpx 0 rgba(29, 36, 48, .12);
-}
-
-.ca-brand__logo {
-	background-color: $accent;
-	color: $on;
-}
-
-.ca-btn {
-	color: $on;
-	background-color: $accent;
-	box-shadow: 6rpx 6rpx 0 $line;
-}
-
-.ca-title {
-	color: $accent;
-}
-
-/* ---------- 主题装饰 ---------- */
-.ca-month {
-	display: flex;
-	align-items: baseline;
-	margin-bottom: 24rpx;
-	padding: 18rpx 24rpx;
-	background-color: $accent2;
-	border: 4rpx solid $line;
-}
-
-.ca-month__m {
-	flex: 1;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	letter-spacing: 2rpx;
-	color: $on;
-}
-
-.ca-month__y {
-	font-family: 'Press Start 2P', monospace;
-	font-size: 16rpx;
-	letter-spacing: 1rpx;
-	color: $on;
-}
-
-.ca-week {
-	display: flex;
-	margin-top: 40rpx;
-	padding: 12rpx 0;
-	border-bottom: 4rpx solid $line;
-}
-
-.ca-week__d {
-	flex: 1;
-	text-align: center;
-	font-size: 24rpx;
-	color: $dim;
-}
-
-.ca-grid {
-	display: flex;
-	flex-wrap: wrap;
-	padding-top: 16rpx;
-}
-
-.ca-day {
-	width: 14.28%;
-	padding: 12rpx 0;
-	text-align: center;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 16rpx;
-	color: $ink;
-}
-
-.ca-day--off {
-	color: $lineSoft;
-}
-
-.ca-day--past {
-	color: $dim;
-}
-
-.ca-day--today {
-	position: relative;
-	color: $on;
-}
-
-.ca-day--today::before {
-	content: '';
-	position: absolute;
-	left: 50%;
-	top: 4rpx;
-	width: 52rpx;
-	height: 52rpx;
-	margin-left: -26rpx;
-	background-color: $accent;
-	border: 4rpx solid $line;
-}
-
-.ca-day--today {
-	z-index: 1;
+.ca-line__in::-webkit-input-placeholder {
+	color: #9a9a9a;
 }

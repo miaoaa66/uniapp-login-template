@@ -1,20 +1,22 @@
 /* ==========================================================================
- * SET B · GAME BOY 绿屏（DMG-01 · 四色点阵）
+ * SET B · GAME BOY 四色菜单机（DMG-01 · 重设计版）
  * pages/login93 —— 登录 / 注册 / 找回密码 三页共用
+ * 颜色严格 DMG 四色：最深/深/浅/最浅绿 + 机身壳深绿
+ * 结构：壳顶返回条 → 深绿机身（bezel + 螺丝 + LCD 屏）→ D-pad / A B 实体键
+ * 屏内：开机落字动画、纵向菜单、菜单行/编辑态两态字段
  * 字体：Zpix（中文像素字体）+ Press Start 2P（拉丁与数字）
- * 像素材质：LCD 点阵背景 + 深绿外壳 + 硬边描边
  * ========================================================================== */
 
 @import '../../common/pixel-icons.scss';
 
-/* ---------- 四色令牌（DMG 经典绿） ---------- */
-$gb-0: #0f380f;
-$gb-1: #306230;
-$gb-2: #8bac0f;
-$gb-3: #9bbc0f;
-$gb-lcd: #dff0a6;
+/* ---------- DMG 四色令牌 ---------- */
+$gb-0: #0f380f;   // 最深绿
+$gb-1: #306230;   // 深绿
+$gb-2: #8bac0f;   // 浅绿
+$gb-3: #9bbc0f;   // 最浅绿
+$shell: #2c3c26;  // 机身壳深绿
 
-/* ---------- 页面容器 ---------- */
+/* ---------- 页面容器（深绿壳，宽壳边） ---------- */
 .gb-page,
 .gb-page * {
 	box-sizing: border-box;
@@ -23,226 +25,247 @@ $gb-lcd: #dff0a6;
 .gb-page {
 	position: relative;
 	min-height: 100vh;
-	padding-bottom: 40rpx;
-	background-color: #9bbc0f;
-	background-image: radial-gradient(rgba(15, 56, 15, .22) 2rpx, transparent 2rpx);
-	background-size: 12rpx 12rpx;
+	padding-bottom: 60rpx;
+	background-color: $shell;
 	font-family: 'Zpix', sans-serif;
-	color: #0f380f;
+	color: $gb-0;
 	-webkit-font-smoothing: none;
 }
 
-/* ---------- 顶部外壳（导航） ---------- */
-.gb-nav {
+/* ---------- 壳顶：返回 + 铭牌 ---------- */
+.gb-topbar {
 	display: flex;
 	align-items: center;
 	height: 96rpx;
-	padding: 0 24rpx;
-	background-color: #9bbc0f;
-	border-bottom: 4rpx solid #0f380f;
+	padding: 0 32rpx;
 }
 
-.gb-nav__back {
-	width: 80rpx;
+.gb-topbar__back {
 	display: flex;
 	align-items: center;
-	color: #0f380f;
+	width: 140rpx;
+	color: $gb-2;
 }
 
-.gb-nav__back:active {
+.gb-topbar__back:active {
 	opacity: .5;
 }
 
-.gb-nav__title {
-	flex: 1;
-	text-align: center;
-	font-size: 36rpx;
-	letter-spacing: 8rpx;
-	color: #0f380f;
-}
-
-.gb-nav__led {
-	width: 80rpx;
-	display: flex;
-	justify-content: flex-end;
-	align-items: center;
-}
-
-.gb-led {
-	width: 16rpx;
-	height: 16rpx;
-	flex: none;
-	background-color: #cf1a0e;
-	border: 3rpx solid #0f380f;
-	box-shadow: 0 0 12rpx rgba(207, 26, 14, .9);
-	animation: gb-blink 1.2s steps(1, end) infinite;
-}
-
-@keyframes gb-blink {
-	0%, 59% { opacity: 1; }
-	60%, 100% { opacity: .2; }
-}
-
-/* ---------- 主体 ---------- */
-.gb-body {
-	padding: 26rpx 28rpx 0;
-}
-
-/* 掌机面板（深绿外壳） */
-.gb-shell {
-	padding: 20rpx 20rpx 26rpx;
-	background-color: #8bac0f;
-	border: 6rpx solid #0f380f;
-}
-
-.gb-shell__brand {
-	display: flex;
-	align-items: baseline;
-	margin-bottom: 16rpx;
-}
-
-.gb-shell__en {
-	font-family: 'Press Start 2P', monospace;
-	font-size: 24rpx;
-	letter-spacing: 1rpx;
-	color: #0f380f;
-	text-shadow: 3rpx 3rpx 0 #9bbc0f;
-}
-
-.gb-shell__sub {
-	flex: 1;
-	margin-left: 12rpx;
+.gb-topbar__back text {
+	margin-left: 8rpx;
 	font-family: 'Press Start 2P', monospace;
 	font-size: 16rpx;
-	letter-spacing: 0;
-	color: #306230;
 }
 
-/* LCD 屏幕（内容卡片） */
+.gb-topbar__t {
+	flex: 1;
+	text-align: right;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 16rpx;
+	letter-spacing: 1rpx;
+	color: $gb-2;
+}
+
+/* ---------- 机身 ---------- */
+.gb-shell {
+	margin: 8rpx 30rpx 0;
+	padding: 26rpx 24rpx 28rpx;
+	background-color: $shell;
+	border: 4rpx solid $gb-0;
+	/* GB 经典右下大圆角 */
+	border-radius: 12rpx 12rpx 56rpx 12rpx;
+}
+
+/* 屏幕外框（深绿 bezel + 螺丝） */
+.gb-bezel {
+	position: relative;
+	padding: 20rpx;
+	background-color: $gb-1;
+	border: 4rpx solid $gb-0;
+	border-radius: 10rpx 10rpx 40rpx 10rpx;
+}
+
+.gb-screw {
+	position: absolute;
+	width: 14rpx;
+	height: 14rpx;
+	background-color: $gb-0;
+	border-radius: 50%;
+}
+
+.gb-screw--tl {
+	left: 14rpx;
+	top: 14rpx;
+}
+
+.gb-screw--br {
+	right: 14rpx;
+	bottom: 14rpx;
+}
+
+/* ---------- LCD 屏幕 ---------- */
 .gb-screen {
-	padding: 30rpx 26rpx 28rpx;
-	background-color: #dff0a6;
-	background-image: radial-gradient(rgba(15, 56, 15, .1) 2rpx, transparent 2rpx);
+	min-height: 620rpx;
+	padding: 30rpx 24rpx 30rpx;
+	overflow: hidden;
+	background-color: $gb-3;
+	/* LCD 点阵纹理 */
+	background-image: radial-gradient(rgba(15, 56, 15, .14) 2rpx, transparent 2rpx);
 	background-size: 10rpx 10rpx;
-	border: 6rpx solid #0f380f;
+	border: 4rpx solid $gb-0;
+	border-radius: 6rpx;
+	color: $gb-0;
 }
 
-.gb-head {
-	display: flex;
-	align-items: center;
+/* 进入表单时整屏 opacity 闪一下 */
+.gb-screen--form {
+	animation: gb-flick .4s steps(1, end) 1;
 }
 
-.gb-head__logo {
+/* ---------- 开机动画：PIXEL® 落下 ---------- */
+.gb-boot {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 64rpx;
-	height: 64rpx;
-	flex: none;
-	color: #dff0a6;
-	background-color: #0f380f;
-	border: 4rpx solid #0f380f;
+	height: 560rpx;
 }
 
-.gb-head__logo .pxi {
-	transform: scale(2);
-}
-
-.gb-head__meta {
-	margin-left: 18rpx;
-}
-
-.gb-head__en {
-	display: block;
+.gb-boot__logo {
 	font-family: 'Press Start 2P', monospace;
-	font-size: 24rpx;
-	letter-spacing: 1rpx;
-	color: #0f380f;
-}
-
-.gb-head__cn {
-	display: block;
-	margin-top: 6rpx;
-	font-size: 24rpx;
+	font-size: 40rpx;
 	letter-spacing: 4rpx;
-	color: #306230;
+	color: $gb-0;
+	animation: gb-drop .8s steps(4) both;
 }
 
+/* ---------- 屏内标题 ---------- */
 .gb-title {
 	display: block;
-	margin-top: 26rpx;
-	font-size: 48rpx;
-	line-height: 1.3;
-	letter-spacing: 8rpx;
-	color: #0f380f;
-	text-shadow: 4rpx 4rpx 0 #8bac0f;
+	margin-top: 4rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 32rpx;
+	letter-spacing: 3rpx;
+	color: $gb-0;
+	text-shadow: 3rpx 3rpx 0 $gb-2;
 }
 
 .gb-lead {
 	display: block;
-	margin-top: 12rpx;
-	font-size: 24rpx;
-	line-height: 1.6;
-	color: #306230;
+	margin-top: 14rpx;
+	font-size: 22rpx;
+	letter-spacing: 2rpx;
+	color: $gb-1;
 }
 
-/* ---------- 登录方式切换（卡带标签） ---------- */
-.gb-tabs {
-	display: flex;
-	margin-top: 28rpx;
-	border-bottom: 4rpx solid #0f380f;
+/* ---------- GB 纵向菜单（登录方式） ---------- */
+.gb-menu {
+	margin-top: 24rpx;
 }
 
-.gb-tab {
-	flex: 1;
-	height: 66rpx;
-	line-height: 62rpx;
-	text-align: center;
-	font-size: 24rpx;
-	color: #306230;
-	background-color: transparent;
-	border: 4rpx solid transparent;
-	border-bottom: 0;
-}
-
-.gb-tab.on {
-	color: #dff0a6;
-	background-color: #0f380f;
-	border-color: #0f380f;
-}
-
-/* ---------- 表单 ---------- */
-.gb-form {
-	margin-top: 28rpx;
-}
-
-.gb-field {
+.gb-menu__i {
 	display: flex;
 	align-items: center;
-	height: 88rpx;
-	padding: 0 20rpx;
-	margin-bottom: 22rpx;
-	background-color: #eaf8c4;
-	border: 4rpx solid #0f380f;
+	height: 60rpx;
+	padding: 0 10rpx;
+	font-size: 24rpx;
+	color: $gb-0;
 }
 
-.gb-field__ico {
-	display: flex;
-	align-items: center;
-	justify-content: center;
+.gb-menu__i.on {
+	background-color: $gb-0;
+	color: $gb-3;
+}
+
+/* 选中行行首 ▶（CSS 三角） */
+.gb-menu__cur {
+	width: 0;
+	height: 0;
 	flex: none;
-	margin-right: 16rpx;
-	color: #0f380f;
+	margin-right: 14rpx;
+	border-left: 12rpx solid transparent;
+	border-top: 8rpx solid transparent;
+	border-bottom: 8rpx solid transparent;
 }
 
-.gb-field__in {
+.gb-menu__i.on .gb-menu__cur {
+	border-left-color: $gb-3;
+}
+
+.gb-menu__hint {
+	display: block;
+	margin: 8rpx 0 6rpx;
+	padding: 0 10rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 14rpx;
+	letter-spacing: 2rpx;
+	color: $gb-1;
+}
+
+/* ---------- 菜单行 / 编辑态 两态字段 ---------- */
+.gb-form {
+	margin-top: 20rpx;
+}
+
+.gb-mrow {
+	display: flex;
+	align-items: center;
+	min-height: 68rpx;
+	padding: 0 10rpx;
+	font-size: 24rpx;
+}
+
+.gb-mrow + .gb-mrow {
+	border-top: 3rpx dotted rgba(15, 56, 15, .35);
+}
+
+.gb-mrow__label {
+	flex: none;
+	color: $gb-0;
+}
+
+.gb-mrow__dots {
+	flex: 1;
+	height: 24rpx;
+	margin: 0 12rpx;
+	border-bottom: 3rpx dotted rgba(15, 56, 15, .4);
+}
+
+.gb-mrow__val {
+	flex: none;
+	max-width: 60%;
+	text-align: right;
+	color: $gb-0;
+	word-break: break-all;
+}
+
+.gb-mrow__val.empty {
+	color: $gb-2;
+}
+
+.gb-mrow--link .gb-mrow__val {
+	color: $gb-1;
+	text-decoration: underline;
+}
+
+/* 编辑态：反色深绿底 + 最浅绿字 */
+.gb-mrow.edit {
+	background-color: $gb-0;
+	color: $gb-3;
+}
+
+.gb-mrow.edit .gb-mrow__label {
+	color: $gb-3;
+}
+
+.gb-mrow__in {
 	flex: 1;
 	min-width: 0;
-	height: 100%;
+	height: 68rpx;
+	margin-left: 12rpx;
 	padding: 0;
 	font-family: 'Zpix', sans-serif;
 	font-size: 24rpx;
-	color: #0f380f;
+	color: $gb-3;
 	background-color: transparent;
 	border: 0;
 	border-radius: 0;
@@ -250,182 +273,158 @@ $gb-lcd: #dff0a6;
 	appearance: none;
 }
 
-.gb-field__in--en {
+.gb-mrow__in--en {
 	font-family: 'Press Start 2P', monospace;
-	font-size: 24rpx;
+	font-size: 20rpx;
 	letter-spacing: 2rpx;
 }
 
-.gb-eye {
+/* 编辑态行尾闪烁方块光标 ▉ */
+.gb-caret {
+	width: 16rpx;
+	height: 28rpx;
 	flex: none;
-	margin-left: 12rpx;
-	padding: 0 6rpx;
-	color: #306230;
+	margin-left: 8rpx;
+	background-color: $gb-3;
+	animation: gb-caret 1s steps(1, end) infinite;
 }
 
-.gb-code {
-	flex: none;
-	margin-left: 12rpx;
-	height: 58rpx;
-	line-height: 54rpx;
-	padding: 0 14rpx;
-	font-size: 24rpx;
-	color: #dff0a6;
-	background-color: #306230;
-	border: 4rpx solid #0f380f;
-}
-
-.gb-code.off {
-	color: #8bac0f;
-	background-color: #c3d98a;
-	border-color: #8bac0f;
-}
-
-/* 六格验证码 */
-.gb-cells {
-	display: flex;
-	justify-content: space-between;
-	margin-bottom: 22rpx;
-}
-
-.gb-cell {
-	width: 92rpx;
-	height: 104rpx;
-	padding: 0;
-	box-sizing: border-box;
-	text-align: center;
+/* 屏内 SEND 小按钮 */
+.gb-send {
+	padding: 6rpx 12rpx;
 	font-family: 'Press Start 2P', monospace;
-	font-size: 30rpx;
-	color: #0f380f;
-	background-color: #eaf8c4;
-	border: 4rpx solid #0f380f;
+	font-size: 16rpx;
+	color: $gb-3;
+	background-color: $gb-1;
+	border: 3rpx solid $gb-0;
+}
+
+.gb-send.off {
+	color: $gb-2;
+	background-color: transparent;
+	border-color: $gb-2;
+}
+
+/* SEND 小按钮行（forget 第一步） */
+.gb-sendrow {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 72rpx;
+	margin-top: 20rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 18rpx;
+	letter-spacing: 2rpx;
+	color: $gb-3;
+	background-color: $gb-0;
+	border: 3rpx solid $gb-0;
+}
+
+.gb-sendrow.off {
+	color: $gb-2;
+	background-color: transparent;
+	border-color: $gb-2;
+}
+
+/* ---------- 注册页：存档命名大格 ---------- */
+.gb-name {
+	margin-top: 22rpx;
+	padding: 22rpx 16rpx 18rpx;
+	background-color: $gb-3;
+	border: 4rpx solid $gb-0;
+}
+
+.gb-name__in {
+	display: block;
+	width: 100%;
+	height: 80rpx;
+	padding: 0;
+	text-align: center;
+	font-family: 'Press Start 2P', 'Zpix', monospace;
+	font-size: 32rpx;
+	letter-spacing: 8rpx;
+	color: $gb-0;
+	background-color: transparent;
+	border: 0;
 	border-radius: 0;
 	-webkit-appearance: none;
 	appearance: none;
 }
 
-.gb-cell.on {
-	color: #dff0a6;
-	background-color: #306230;
+.gb-name__tag {
+	display: block;
+	margin-top: 8rpx;
+	text-align: center;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 14rpx;
+	letter-spacing: 2rpx;
+	color: $gb-1;
 }
 
-.gb-cell.dim {
-	color: #8bac0f;
-	background-color: #cfe09c;
-	border-color: #8bac0f;
-}
-
-/* 右对齐小链接行 */
-.gb-row {
-	display: flex;
-	justify-content: flex-end;
-	margin: -4rpx 0 22rpx;
-	font-size: 24rpx;
-}
-
-.gb-row__link {
-	color: #306230;
-	text-decoration: underline;
-}
-
-/* ---------- 密码强度 ---------- */
+/* ---------- POWER 三格（密码强度） ---------- */
 .gb-power {
 	display: flex;
 	align-items: center;
-	margin: -4rpx 0 22rpx;
-	font-size: 24rpx;
-	color: #306230;
+	padding: 16rpx 10rpx 0;
+	border-top: 3rpx dotted rgba(15, 56, 15, .35);
 }
 
 .gb-power__t {
-	margin-right: 12rpx;
+	margin-right: 14rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 14rpx;
+	color: $gb-1;
 }
 
-.gb-power__bars {
+.gb-power__cells {
 	display: flex;
 	flex: 1;
 }
 
-.gb-power__bar {
+.gb-power__c {
 	flex: 1;
-	height: 14rpx;
-	margin-right: 8rpx;
-	background-color: #cfe09c;
-	border: 3rpx solid #8bac0f;
+	height: 16rpx;
+	margin-right: 10rpx;
+	background-color: transparent;
+	border: 3rpx solid $gb-2;
 }
 
-.gb-power__bar.on {
-	background-color: #0f380f;
-	border-color: #0f380f;
+.gb-power__c.on {
+	background-color: $gb-0;
+	border-color: $gb-0;
 }
 
 .gb-power__v {
 	width: 44rpx;
 	text-align: right;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 16rpx;
-	color: #0f380f;
+	font-size: 22rpx;
+	color: $gb-1;
 }
 
-/* ---------- 按钮 ---------- */
-.gb-btn {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: 92rpx;
-	margin-top: 28rpx;
-	font-size: 36rpx;
-	letter-spacing: 8rpx;
-	color: #dff0a6;
-	background-color: #0f380f;
-	border: 4rpx solid #0f380f;
-	box-shadow: 8rpx 8rpx 0 rgba(15, 56, 15, .35);
-	text-shadow: 2rpx 2rpx 0 #306230;
-}
-
-.gb-btn .pxi {
-	margin-right: 14rpx;
-}
-
-.gb-btn:active {
-	transform: translate(4rpx, 4rpx);
-	box-shadow: 4rpx 4rpx 0 rgba(15, 56, 15, .35);
-}
-
-/* ---------- 页脚 ---------- */
-.gb-foot {
-	margin-top: 28rpx;
-	text-align: center;
-	font-size: 24rpx;
-	color: #306230;
-}
-
-.gb-foot__link {
-	color: #0f380f;
-	text-decoration: underline;
-}
-
+/* ---------- 协议 / 链接（屏内菜单行风） ---------- */
 .gb-agree {
 	display: flex;
 	align-items: flex-start;
-	margin-top: 26rpx;
-	font-size: 24rpx;
+	margin-top: 18rpx;
+	padding: 14rpx 10rpx 0;
+	border-top: 3rpx dotted rgba(15, 56, 15, .35);
+	font-size: 22rpx;
 	line-height: 1.7;
-	color: #306230;
+	color: $gb-1;
 }
 
 .gb-check {
 	position: relative;
 	flex: none;
-	width: 28rpx;
-	height: 28rpx;
+	width: 26rpx;
+	height: 26rpx;
 	margin: 4rpx 12rpx 0 0;
-	background-color: #eaf8c4;
-	border: 4rpx solid #0f380f;
+	background-color: $gb-3;
+	border: 3rpx solid $gb-0;
 }
 
 .gb-check.on {
-	background-color: #306230;
+	background-color: $gb-0;
 }
 
 .gb-check.on::after {
@@ -433,71 +432,96 @@ $gb-lcd: #dff0a6;
 	position: absolute;
 	left: 7rpx;
 	top: 1rpx;
-	width: 8rpx;
-	height: 14rpx;
-	border: solid #dff0a6;
-	border-width: 0 4rpx 4rpx 0;
+	width: 7rpx;
+	height: 13rpx;
+	border: solid $gb-3;
+	border-width: 0 3rpx 3rpx 0;
 	transform: rotate(45deg);
 }
 
-.gb-link {
-	color: #0f380f;
+.gb-agree__lk {
+	color: $gb-0;
 	text-decoration: underline;
 }
 
-/* ---------- 步骤条 ---------- */
-.gb-steps {
-	display: flex;
-	align-items: center;
-	margin: 24rpx 0 26rpx;
-}
-
-.gb-step {
-	display: flex;
-	align-items: center;
-	font-size: 24rpx;
-	color: #306230;
-}
-
-.gb-step__n {
+.gb-links {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 38rpx;
-	height: 38rpx;
-	margin-right: 10rpx;
+	margin-top: 20rpx;
+}
+
+.gb-links__lk {
 	font-family: 'Press Start 2P', monospace;
 	font-size: 16rpx;
-	color: #306230;
-	background-color: #cfe09c;
-	border: 4rpx solid #8bac0f;
+	letter-spacing: 1rpx;
+	color: $gb-1;
+	text-decoration: underline;
 }
 
-.gb-step.on .gb-step__n {
-	color: #dff0a6;
-	background-color: #0f380f;
-	border-color: #0f380f;
+.gb-links__bar {
+	margin: 0 16rpx;
+	color: $gb-2;
 }
 
-.gb-step__line {
-	flex: 1;
-	height: 4rpx;
-	margin: 0 14rpx;
-	background-color: #8bac0f;
+/* ---------- 找回页 ---------- */
+/* STEP 1/2 反色条 */
+.gb-stepbar {
+	margin-top: 22rpx;
+	padding: 12rpx 16rpx;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 16rpx;
+	letter-spacing: 2rpx;
+	color: $gb-3;
+	background-color: $gb-0;
+	border: 3rpx solid $gb-0;
 }
 
-.gb-step.on .gb-step__line {
-	background-color: #0f380f;
+.gb-cells {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 26rpx;
 }
 
-/* ---------- 底部控制器 ---------- */
-.gb-ctrl {
+.gb-cell {
+	width: 86rpx;
+	height: 100rpx;
+	padding: 0;
+	box-sizing: border-box;
+	text-align: center;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 30rpx;
+	color: $gb-0;
+	background-color: $gb-3;
+	border: 4rpx solid $gb-0;
+	border-radius: 0;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.gb-cell.fill {
+	color: $gb-3;
+	background-color: $gb-0;
+}
+
+.gb-tip {
+	display: block;
+	margin-top: 16rpx;
+	text-align: center;
+	font-size: 22rpx;
+	color: $gb-1;
+}
+
+/* ---------- 实体键区：D-pad + A/B ---------- */
+.gb-keys {
 	display: flex;
 	align-items: center;
-	justify-content: center;
-	margin-top: 22rpx;
+	justify-content: space-between;
+	margin-top: 30rpx;
+	padding: 0 10rpx;
 }
 
+/* 十字键（纯 CSS） */
 .gb-dpad {
 	position: relative;
 	width: 108rpx;
@@ -511,7 +535,7 @@ $gb-lcd: #dff0a6;
 	top: 36rpx;
 	width: 108rpx;
 	height: 36rpx;
-	background-color: #0f380f;
+	background-color: $gb-0;
 }
 
 .gb-dpad__v {
@@ -520,7 +544,7 @@ $gb-lcd: #dff0a6;
 	top: 0;
 	width: 36rpx;
 	height: 108rpx;
-	background-color: #0f380f;
+	background-color: $gb-0;
 }
 
 .gb-dpad__c {
@@ -529,48 +553,91 @@ $gb-lcd: #dff0a6;
 	top: 46rpx;
 	width: 16rpx;
 	height: 16rpx;
-	background-color: #8bac0f;
+	background-color: $gb-2;
 }
 
-.gb-btns {
+/* A/B 圆键：最浅绿底 + 最深绿描边 */
+.gb-ab {
 	display: flex;
-	flex: 1;
-	justify-content: flex-end;
-	align-items: center;
+	flex: none;
+	align-items: flex-start;
 }
 
 .gb-abtn {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 78rpx;
-	height: 78rpx;
-	margin-left: 20rpx;
+	width: 88rpx;
+	height: 88rpx;
 	font-family: 'Press Start 2P', monospace;
-	font-size: 24rpx;
-	color: #9bbc0f;
-	background-color: #0f380f;
-	border: 4rpx solid #0f380f;
-	box-shadow: 0 6rpx 0 rgba(15, 56, 15, .45);
+	font-size: 26rpx;
+	color: $gb-0;
+	background-color: $gb-3;
+	border: 4rpx solid $gb-0;
+	border-radius: 50%;
+	box-shadow: 0 8rpx 0 rgba(15, 56, 15, .6);
+	transition: transform .06s, box-shadow .06s;
 }
 
-/* 扬声器孔 */
+.gb-abtn text {
+	color: $gb-0;
+}
+
+.gb-abtn--b {
+	margin-top: 44rpx;
+	margin-right: 22rpx;
+}
+
+.gb-abtn:active {
+	transform: translateY(8rpx);
+	box-shadow: 0 0 0 rgba(15, 56, 15, .6);
+}
+
+/* ---------- 壳底铭牌 + 扬声器 ---------- */
+.gb-brandrow {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: 24rpx;
+	padding: 0 6rpx;
+}
+
+.gb-brandrow__t {
+	font-family: 'Press Start 2P', monospace;
+	font-size: 12rpx;
+	letter-spacing: 1rpx;
+	color: $gb-2;
+}
+
 .gb-speaker {
 	display: flex;
-	justify-content: flex-end;
-	margin-top: 20rpx;
 }
 
 .gb-speaker__i {
 	width: 10rpx;
-	height: 56rpx;
+	height: 52rpx;
 	margin-left: 16rpx;
-	background-color: #0f380f;
+	background-color: $gb-0;
 	transform: rotate(20deg);
 }
 
-/* ---------- 占位符 ---------- */
-.gb-field__in::-webkit-input-placeholder,
-.gb-cell::-webkit-input-placeholder {
-	color: #6f8a4a;
+/* ---------- keyframes ---------- */
+/* 开机落字：translateY + steps(4) */
+@keyframes gb-drop {
+	from { transform: translateY(-240rpx); opacity: 0; }
+	to { transform: translateY(0); opacity: 1; }
+}
+
+/* 整屏 opacity 闪一下 */
+@keyframes gb-flick {
+	0% { opacity: .15; }
+	30% { opacity: 1; }
+	50% { opacity: .3; }
+	70%, 100% { opacity: 1; }
+}
+
+/* 编辑态方块光标闪烁 */
+@keyframes gb-caret {
+	0%, 49% { opacity: 1; }
+	50%, 100% { opacity: 0; }
 }

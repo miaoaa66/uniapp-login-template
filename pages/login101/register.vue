@@ -1,91 +1,81 @@
 <template>
 	<view class="nt-page">
-		<view class="nt-nav">
-			<view class="nt-nav__back" @click="goBack">
-				<view class="pxi pxi-back"></view>
-			</view>
-			<text class="nt-nav__title">注 册</text>
-			<text class="nt-nav__slot">NEW</text>
+		<view class="nt-boardpin nt-boardpin--lt"></view>
+		<view class="nt-boardpin nt-boardpin--rt"></view>
+		<view class="nt-boardpin nt-boardpin--lb"></view>
+		<view class="nt-boardpin nt-boardpin--rb"></view>
+
+		<view class="nt-tag" @click="goBack">
+			<view class="nt-tag__pin"></view>
+			<view class="pxi pxi-back"></view>
+			<text class="nt-tag__t">任务板 · 注册</text>
 		</view>
 
-		<view class="nt-body">
+		<view class="nt-task nt-task--0">
 			<view class="nt-pin"></view>
-			<view class="nt-strip">
-				<text class="nt-strip__t">TODAY · 登录 / 注册</text>
+			<text class="nt-task__t">昵称</text>
+			<view class="nt-line">
+				<input class="nt-line__in" v-model="nickname" placeholder="2-12 字" placeholder-style="color:#8a6a4f" maxlength="12" />
 			</view>
-			<view class="nt-card">
-				<view class="nt-brand">
-					<view class="nt-brand__logo"><view class="pxi pxi-user"></view></view>
-					<view class="nt-brand__meta">
-						<text class="nt-brand__en">NEW NOTE</text>
-						<text class="nt-brand__cn">新建便签</text>
-					</view>
-				</view>
+			<view v-if="okNick" class="nt-stamp"></view>
+		</view>
 
-				<text class="nt-title">注 册</text>
-				<text class="nt-lead">写一张新便签，钉在计划板上</text>
-
-				<view class="nt-form">
-					<view class="nt-field">
-						<view class="nt-field__ico"><view class="pxi pxi-user"></view></view>
-						<input class="nt-field__in" v-model="nickname" placeholder="昵称（2-12 字）" placeholder-style="color:#9b7a4d" maxlength="12" />
-					</view>
-
-					<view class="nt-field">
-						<view class="nt-field__ico"><view class="pxi pxi-mail"></view></view>
-						<input class="nt-field__in" v-model="email" placeholder="player@pixel.id" placeholder-style="color:#9b7a4d" maxlength="40" />
-					</view>
-
-					<view class="nt-field">
-						<view class="nt-field__ico"><view class="pxi pxi-shield"></view></view>
-						<input class="nt-field__in" v-model="mailCode" type="number" placeholder="邮箱验证码" placeholder-style="color:#9b7a4d" maxlength="6" />
-						<view class="nt-code" :class="{ off: mailLeft > 0 }" @click="sendCode">{{ mailLeft > 0 ? mailLeft + 's' : '获取验证码' }}</view>
-					</view>
-
-					<view class="nt-field">
-						<view class="nt-field__ico"><view class="pxi pxi-lock"></view></view>
-						<input class="nt-field__in" v-model="password" :password="!showPwd" placeholder="设置密码（8-20 位）" placeholder-style="color:#9b7a4d" maxlength="20" />
-						<view class="nt-eye" @click="showPwd = !showPwd"><view class="pxi pxi-eye"></view></view>
-					</view>
-
-					<view class="nt-field">
-						<view class="nt-field__ico"><view class="pxi pxi-lock"></view></view>
-						<input class="nt-field__in" v-model="password2" :password="!showPwd" placeholder="确认密码" placeholder-style="color:#9b7a4d" maxlength="20" />
-					</view>
-
-					<view class="nt-power">
-						<text class="nt-power__t">密码强度</text>
-						<view class="nt-power__bars">
-							<view class="nt-power__bar" :class="{ on: strength >= 1 }"></view>
-							<view class="nt-power__bar" :class="{ on: strength >= 2 }"></view>
-							<view class="nt-power__bar" :class="{ on: strength >= 3 }"></view>
-						</view>
-						<text class="nt-power__v">{{ strengthText }}</text>
-					</view>
-
-					<view class="nt-btn" @click="submit">
-						<view class="pxi pxi-play"></view><text>钉 上 去</text>
-					</view>
-
-					<view class="nt-foot">
-						<text>已有便签？</text>
-						<text class="nt-foot__link" @click="goLogin">返回登录</text>
-					</view>
-
-					<view class="nt-agree" @click="agreed = !agreed">
-						<view class="nt-check" :class="{ on: agreed }"></view>
-						<text>我已阅读并同意<text class="nt-link">《用户协议》</text>与<text class="nt-link">《隐私政策》</text></text>
-					</view>
-				</view>
+		<view class="nt-task nt-task--1">
+			<view class="nt-pin"></view>
+			<text class="nt-task__t">邮箱</text>
+			<view class="nt-line">
+				<input class="nt-line__in" v-model="email" placeholder="player@pixel.id" placeholder-style="color:#8a6a4f" maxlength="40" />
 			</view>
-			<view class="nt-notes">
-				<view class="nt-note nt-note--green">
-					<text class="nt-note__t">记得勾选协议</text>
-				</view>
-				<view class="nt-note nt-note--pink">
-					<text class="nt-note__t">验证码 60 秒</text>
-				</view>
+			<view v-if="okMail" class="nt-stamp"></view>
+		</view>
+
+		<view class="nt-task nt-task--2">
+			<view class="nt-pin"></view>
+			<text class="nt-task__t">验证码</text>
+			<view class="nt-line">
+				<input class="nt-line__in" v-model="mailCode" type="number" placeholder="邮箱验证码" placeholder-style="color:#8a6a4f" maxlength="6" />
+				<text class="nt-send" :class="{ off: mailLeft > 0 }" @click="sendCode">{{ mailLeft > 0 ? mailLeft + 's' : '取验证码' }}</text>
 			</view>
+			<view v-if="okCode" class="nt-stamp"></view>
+		</view>
+
+		<view class="nt-task nt-task--3">
+			<view class="nt-pin"></view>
+			<text class="nt-task__t">密码</text>
+			<view class="nt-line">
+				<input class="nt-line__in" v-model="password" :password="!showPwd" placeholder="8-20 位" placeholder-style="color:#8a6a4f" maxlength="20" />
+				<view class="nt-eye" @click="showPwd = !showPwd"><view class="pxi pxi-eye"></view></view>
+			</view>
+			<view class="nt-ink">
+				<text class="nt-ink__k">墨量</text>
+				<view class="nt-ink__bar" :class="{ on: strength >= 1 }"></view>
+				<view class="nt-ink__bar" :class="{ on: strength >= 2 }"></view>
+				<view class="nt-ink__bar" :class="{ on: strength >= 3 }"></view>
+				<text class="nt-ink__v">{{ strengthText }}</text>
+			</view>
+			<view v-if="okPwd" class="nt-stamp"></view>
+		</view>
+
+		<view class="nt-task nt-task--4">
+			<view class="nt-pin"></view>
+			<text class="nt-task__t">确认密码</text>
+			<view class="nt-line">
+				<input class="nt-line__in" v-model="password2" :password="!showPwd" placeholder="再写一遍" placeholder-style="color:#8a6a4f" maxlength="20" />
+			</view>
+			<view v-if="okPwd2" class="nt-stamp"></view>
+		</view>
+
+		<view class="nt-agree nt-agree--board" @click="agreed = !agreed">
+			<view class="nt-check" :class="{ on: agreed }"></view>
+			<text class="nt-agree__t">我已阅读并同意<text class="nt-agree__lnk">《用户协议》</text>与<text class="nt-agree__lnk">《隐私政策》</text></text>
+		</view>
+
+		<view class="nt-tapebtn nt-tapebtn--long" @click="submit">
+			<text class="nt-tapebtn__t">全 部 完 成 · 提 交</text>
+		</view>
+
+		<view class="nt-scrap" @click="goLogin">
+			<text class="nt-scrap__t">已有便签？返回登录 →</text>
 		</view>
 	</view>
 </template>
@@ -117,6 +107,22 @@
 			},
 			strengthText() {
 				return ['──', '弱', '中', '强'][this.strength]
+			},
+			// 字段有效判定（盖绿章用）
+			okNick() {
+				return !!this.nickname.trim()
+			},
+			okMail() {
+				return this.isEmail(this.email)
+			},
+			okCode() {
+				return !!this.mailCode
+			},
+			okPwd() {
+				return this.password.length >= 8
+			},
+			okPwd2() {
+				return this.password2.length > 0 && this.password === this.password2
 			}
 		},
 		onLoad(options) {

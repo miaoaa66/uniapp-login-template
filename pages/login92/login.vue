@@ -1,133 +1,135 @@
 <template>
 	<view class="fc-page">
-		<!-- 自绘导航栏 -->
+		<!-- 自绘导航（电视机顶信道条） -->
 		<view class="fc-nav">
 			<view class="fc-nav__back" @click="goBack">
 				<view class="pxi pxi-back"></view>
 			</view>
-			<text class="fc-nav__title">登 录</text>
+			<text class="fc-nav__title">CHANNEL-01 · LOGIN</text>
 			<text class="fc-nav__slot">1983</text>
 		</view>
 
-		<view class="fc-body">
-			<!-- 机身铭牌 -->
-			<view class="fc-plate">
-				<view class="fc-led"></view>
-				<text class="fc-plate__t">PIXEL-1 ENTERTAINMENT SYSTEM</text>
-				<text class="fc-plate__tag">POWER</text>
+		<!-- 电视机 -->
+		<view class="fc-tv">
+			<!-- CRT 屏幕 -->
+			<view class="fc-screen" :class="{ 'fc-screen--form': phase === 'form' }" @click="pressStart">
+				<!-- 待机：PRESS START -->
+				<block v-if="phase === 'boot'">
+					<text class="fc-press">PRESS START</text>
+					<text class="fc-press__sub">- TAP SCREEN -</text>
+				</block>
+
+				<!-- 开机后：屏内系统 -->
+				<block v-else>
+					<view class="fc-in">
+						<view class="fc-bootlog">
+							<text class="fc-bootlog__l fc-bootlog__l--sys">PIXEL-ID SYSTEM</text>
+							<text class="fc-bootlog__l fc-bootlog__l--ok">BOOT OK</text>
+						</view>
+
+						<!-- 游戏菜单：登录方式 -->
+						<view class="fc-menu">
+							<view v-for="(t, i) in tabs" :key="i" class="fc-menu__i" :class="{ on: tab === i }"
+								@click.stop="tab = i">
+								<view class="fc-cursor"></view>
+								<text>{{ t }}</text>
+							</view>
+						</view>
+
+						<!-- 屏内嵌行表单 -->
+						<view class="fc-rows">
+							<!-- 密码登录 -->
+							<block v-if="tab === 0">
+								<view class="fc-row" :class="{ focus: focusField === 'account' }">
+									<view class="fc-row__cur"></view>
+									<input class="fc-row__in" v-model="account" placeholder="手机号 / 邮箱"
+										placeholder-style="color:#6f7480" maxlength="40"
+										@focus="focusField = 'account'" @blur="focusField = ''" />
+								</view>
+								<view class="fc-row" :class="{ focus: focusField === 'password' }">
+									<view class="fc-row__cur"></view>
+									<input class="fc-row__in" v-model="password" :password="!showPwd"
+										placeholder="登录密码" placeholder-style="color:#6f7480" maxlength="20"
+										@focus="focusField = 'password'" @blur="focusField = ''" />
+									<view class="fc-row__eye" @click.stop="showPwd = !showPwd">
+										<view class="pxi pxi-eye"></view>
+									</view>
+								</view>
+								<view class="fc-row fc-row--link" @click.stop="goForget">
+									<view class="fc-row__cur"></view>
+									<text class="fc-row__lt">忘记密码？</text>
+								</view>
+							</block>
+
+							<!-- 手机验证码登录 -->
+							<block v-else-if="tab === 1">
+								<view class="fc-row" :class="{ focus: focusField === 'phone' }">
+									<view class="fc-row__cur"></view>
+									<input class="fc-row__in fc-row__in--en" v-model="phone" type="number"
+										placeholder="+86" placeholder-style="color:#6f7480" maxlength="11"
+										@focus="focusField = 'phone'" @blur="focusField = ''" />
+								</view>
+								<view class="fc-row" :class="{ focus: focusField === 'smsCode' }">
+									<view class="fc-row__cur"></view>
+									<input class="fc-row__in" v-model="smsCode" type="number" placeholder="短信验证码"
+										placeholder-style="color:#6f7480" maxlength="6"
+										@focus="focusField = 'smsCode'" @blur="focusField = ''" />
+									<view class="fc-send" :class="{ off: smsLeft > 0 }" @click.stop="sendCode('sms')">
+										{{ smsLeft > 0 ? smsLeft + 's' : 'SEND' }}
+									</view>
+								</view>
+							</block>
+
+							<!-- 邮箱验证码登录 -->
+							<block v-else>
+								<view class="fc-row" :class="{ focus: focusField === 'email' }">
+									<view class="fc-row__cur"></view>
+									<input class="fc-row__in" v-model="email" placeholder="player@pixel.id"
+										placeholder-style="color:#6f7480" maxlength="40"
+										@focus="focusField = 'email'" @blur="focusField = ''" />
+								</view>
+								<view class="fc-row" :class="{ focus: focusField === 'mailCode' }">
+									<view class="fc-row__cur"></view>
+									<input class="fc-row__in" v-model="mailCode" type="number" placeholder="邮箱验证码"
+										placeholder-style="color:#6f7480" maxlength="6"
+										@focus="focusField = 'mailCode'" @blur="focusField = ''" />
+									<view class="fc-send" :class="{ off: mailLeft > 0 }" @click.stop="sendCode('mail')">
+										{{ mailLeft > 0 ? mailLeft + 's' : 'SEND' }}
+									</view>
+								</view>
+							</block>
+						</view>
+
+						<!-- 协议 -->
+						<view class="fc-agree" @click.stop="agreed = !agreed">
+							<view class="fc-check" :class="{ on: agreed }"></view>
+							<text>我已阅读并同意<text class="fc-agree__lk">《用户协议》</text>与<text class="fc-agree__lk">《隐私政策》</text></text>
+						</view>
+
+						<view class="fc-foot">
+							<text>还没有通行证？</text>
+							<text class="fc-foot__lk" @click.stop="goRegister">立即注册</text>
+						</view>
+					</view>
+				</block>
 			</view>
 
-			<view class="fc-card">
-				<view class="fc-brand">
-					<view class="fc-brand__logo">
-						<view class="pxi pxi-invader"></view>
-					</view>
-					<view class="fc-brand__meta">
-						<text class="fc-brand__en">PIXEL ID</text>
-						<text class="fc-brand__cn">像素通行证</text>
-					</view>
+			<!-- 机身 -->
+			<view class="fc-panel">
+				<view class="fc-panel__brand">
+					<view class="fc-led"></view>
+					<text class="fc-panel__t">PIXEL-1 ENTERTAINMENT SYSTEM</text>
 				</view>
-
-				<text class="fc-title">登 录</text>
-				<text class="fc-lead">插入卡带，继续你的像素冒险</text>
-
-				<!-- 登录方式切换 -->
-				<view class="fc-tabs">
-					<view v-for="(t, i) in tabs" :key="i" class="fc-tab" :class="{ on: tab === i }" @click="tab = i">
-						{{ t }}
-					</view>
-				</view>
-
-				<view class="fc-form">
-					<!-- 密码登录 -->
-					<block v-if="tab === 0">
-						<view class="fc-field">
-							<view class="fc-field__ico"><view class="pxi pxi-user"></view></view>
-							<input class="fc-field__in" v-model="account" placeholder="手机号 / 邮箱"
-								placeholder-style="color:#a8abb4" maxlength="40" />
-						</view>
-						<view class="fc-field">
-							<view class="fc-field__ico"><view class="pxi pxi-lock"></view></view>
-							<input class="fc-field__in" v-model="password" :password="!showPwd" placeholder="请输入登录密码"
-								placeholder-style="color:#a8abb4" maxlength="20" />
-							<view class="fc-eye" @click="showPwd = !showPwd">
-								<view class="pxi pxi-eye"></view>
-							</view>
-						</view>
-						<view class="fc-row">
-							<text class="fc-row__link" @click="goForget">忘记密码？</text>
-						</view>
-					</block>
-
-					<!-- 手机验证码登录 -->
-					<block v-else-if="tab === 1">
-						<view class="fc-field">
-							<view class="fc-field__ico"><view class="pxi pxi-phone"></view></view>
-							<input class="fc-field__in fc-field__in--en" v-model="phone" type="number" placeholder="+86"
-								placeholder-style="color:#a8abb4" maxlength="11" />
-						</view>
-						<view class="fc-field">
-							<view class="fc-field__ico"><view class="pxi pxi-shield"></view></view>
-							<input class="fc-field__in" v-model="smsCode" type="number" placeholder="短信验证码"
-								placeholder-style="color:#a8abb4" maxlength="6" />
-							<view class="fc-code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">
-								{{ smsLeft > 0 ? smsLeft + 's' : '获取验证码' }}
-							</view>
-						</view>
-					</block>
-
-					<!-- 邮箱验证码登录 -->
-					<block v-else>
-						<view class="fc-field">
-							<view class="fc-field__ico"><view class="pxi pxi-mail"></view></view>
-							<input class="fc-field__in" v-model="email" placeholder="player@pixel.id"
-								placeholder-style="color:#a8abb4" maxlength="40" />
-						</view>
-						<view class="fc-field">
-							<view class="fc-field__ico"><view class="pxi pxi-shield"></view></view>
-							<input class="fc-field__in" v-model="mailCode" type="number" placeholder="邮箱验证码"
-								placeholder-style="color:#a8abb4" maxlength="6" />
-							<view class="fc-code" :class="{ off: mailLeft > 0 }" @click="sendCode('mail')">
-								{{ mailLeft > 0 ? mailLeft + 's' : '获取验证码' }}
-							</view>
-						</view>
-					</block>
-
-					<view class="fc-btn" @click="submit">
-						<view class="pxi pxi-play"></view><text>登 录</text>
-					</view>
-
-					<view class="fc-foot">
-						<text>还没有通行证？</text>
-						<text class="fc-foot__link" @click="goRegister">立即注册</text>
-					</view>
-
-					<view class="fc-agree" @click="agreed = !agreed">
-						<view class="fc-check" :class="{ on: agreed }"></view>
-						<text>我已阅读并同意<text class="fc-link">《用户协议》</text>与<text class="fc-link">《隐私政策》</text></text>
-					</view>
-				</view>
-			</view>
-
-			<!-- 机身装饰 -->
-			<view class="fc-deco">
-				<view class="fc-carts">
-					<view v-for="n in 9" :key="n" class="fc-carts__i"></view>
-				</view>
-				<view class="fc-pad">
+				<view class="fc-panel__mid">
 					<view class="fc-dpad"></view>
-					<view class="fc-hint">
-						<text class="fc-hint__t">START</text>
-						<text class="fc-hint__t">SELECT</text>
+					<view class="fc-vents">
+						<view v-for="n in 4" :key="n" class="fc-vents__i"></view>
 					</view>
+					<view class="fc-start" @click="onStart"><text>START</text></view>
 					<view class="fc-ab">
 						<view class="fc-rbtn">A</view>
 						<view class="fc-rbtn">B</view>
 					</view>
-				</view>
-				<view class="fc-hud">
-					<text>© 2026 PIXEL-ID LAB</text>
-					<text>1UP 000000</text>
 				</view>
 			</view>
 		</view>
@@ -138,6 +140,8 @@
 	export default {
 		data() {
 			return {
+				phase: 'boot', // boot | form
+				focusField: '',
 				tabs: ['密码登录', '手机验证码', '邮箱验证码'],
 				tab: 0,
 				agreed: false,
@@ -156,12 +160,30 @@
 		onLoad(options) {
 			// 演示参数：?tab=1&demo=1
 			if (options && options.tab) this.tab = Number(options.tab) || 0
-			if (options && options.demo) this.fillDemo()
+			if (options && options.demo) {
+				this.fillDemo()
+				this.phase = 'form'
+			}
 		},
 		onUnload() {
 			this.clearTimer()
 		},
 		methods: {
+			// 电视开机：白闪 → 系统卷轴下拉
+			pressStart() {
+				if (this.phase !== 'boot') return
+				this.phase = 'form'
+			},
+
+			// 机身 START 键：待机时开机，开机后提交
+			onStart() {
+				if (this.phase === 'boot') {
+					this.pressStart()
+				} else {
+					this.submit()
+				}
+			},
+
 			fillDemo() {
 				this.agreed = true
 				this.account = 'player@pixel.id'

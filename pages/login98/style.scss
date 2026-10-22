@@ -1,26 +1,23 @@
 /* ==========================================================================
- * SET G · 打字机点阵
+ * SET G · 打字机信纸
  * pages/login98 —— 登录 / 注册 / 找回密码 三页共用
- * 米白稿纸 + 墨黑描边，双横线抬头与打字键排还原机械打字机
+ * 整页一张竖放信纸：横格纹纸面、双横线信头、回形针返回键、
+ * 书信空栏（左标签 + 底线空白）、复写纸选项、打字机大圆键与色带横扫
  *
  * 字体：Zpix（中文像素）+ Press Start 2P（拉丁与数字）
  * 图标：common/pixel-icons.scss（8x8 网格，box-shadow 逐点绘制）
- * 字号：Zpix 走 12px 的整数倍，Press Start 2P 走 8px 的整数倍
  * ========================================================================== */
 
 @import '../../common/pixel-icons.scss';
 
 /* ---------- 设计令牌 ---------- */
-$ink: #22201c;         // 主文字
-$dim: #6d6862;         // 次级文字
-$bg: #f6f1e4;          // 页面底色
-$panel: #fffdf7;       // 卡片/面板底色
-$panel2: #ece5d4;      // 次级面板底色（Tab 未选中、字段底）
-$line: #22201c;        // 主描边
-$lineSoft: #b9b2a2;    // 弱描边
-$accent: #b3242b;      // 主强调色（按钮 / 选中态）
-$accent2: #2b4fa0;     // 次强调色（链接 / 图标）
-$on: #fffdf7;          // 强调色之上的文字
+$paper: #f7f3e8;        // 信纸纸白
+$ink: #2b2b2b;          // 墨黑
+$dim: #8f887a;          // 次级灰
+$ph: #b7b0a1;           // 占位浅灰
+$desk: #ded5c0;         // 页面桌面底
+$ribbonRed: #c23b2e;    // 色带红（少量点缀）
+$lineSoft: #b9b2a2;     // 弱描边
 
 /* ---------- 页面容器 ---------- */
 .tw-page,
@@ -29,188 +26,128 @@ $on: #fffdf7;          // 强调色之上的文字
 }
 
 .tw-page {
-	position: relative;
 	min-height: 100vh;
-	padding-bottom: 40rpx;
-	background-color: $bg;
-	background-image: repeating-linear-gradient(0deg, transparent 0rpx, transparent 46rpx, rgba(34, 32, 28, .09) 46rpx, rgba(34, 32, 28, .09) 48rpx);
+	padding: 30rpx 26rpx 60rpx;
+	background-color: $desk;
 	font-family: 'Zpix', sans-serif;
 	color: $ink;
 	-webkit-font-smoothing: none;
 }
 
-/* ---------- 自绘导航栏 ---------- */
-.tw-nav {
+/* ---------- 信纸 ---------- */
+.tw-paper {
+	position: relative;
+	padding: 46rpx 36rpx 56rpx;
+	background-color: $paper;
+	background-image: repeating-linear-gradient(0deg, transparent 0rpx, transparent 54rpx, rgba(43, 43, 43, .07) 54rpx, rgba(43, 43, 43, .07) 56rpx);
+	box-shadow: 0 12rpx 28rpx rgba(60, 50, 30, .22);
+	animation: tw-in .45s ease-out both;
+}
+
+@keyframes tw-in {
+	from { opacity: 0; transform: translateY(24rpx); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- 回形针返回键 ---------- */
+.tw-clip {
+	position: absolute;
+	right: 52rpx;
+	top: -24rpx;
+	width: 44rpx;
+	height: 92rpx;
+	border: 6rpx solid #8c8578;
+	border-radius: 22rpx;
+	transform: rotate(8deg);
+	background-color: transparent;
+}
+
+.tw-clip__inner {
+	position: absolute;
+	left: 10rpx;
+	top: 14rpx;
+	width: 14rpx;
+	height: 46rpx;
+	border: 6rpx solid #8c8578;
+	border-radius: 10rpx;
+	border-bottom: 0;
+}
+
+.tw-clip:active {
+	opacity: .6;
+}
+
+/* ---------- 信头：双横线 ---------- */
+.tw-head {
 	display: flex;
 	align-items: center;
-	height: 96rpx;
-	padding: 0 24rpx;
-	background-color: $panel;
-	border-bottom: 4rpx solid $line;
+	gap: 22rpx;
 }
 
-.tw-nav__back {
-	display: flex;
-	align-items: center;
-	width: 110rpx;
-	flex: none;
-	color: $ink;
-}
-
-.tw-nav__back:active {
-	opacity: .5;
-}
-
-.tw-nav__title {
+.tw-head__line {
 	flex: 1;
+	height: 10rpx;
+	border-top: 4rpx solid $ink;
+	border-bottom: 2rpx solid $ink;
+}
+
+.tw-head__mid {
+	flex: none;
 	text-align: center;
-	font-size: 48rpx;
-	letter-spacing: 6rpx;
+}
+
+.tw-head__en {
+	display: block;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 20rpx;
+	letter-spacing: 2rpx;
 	color: $ink;
 }
 
-.tw-nav__slot {
-	flex: none;
-	min-width: 110rpx;
-	text-align: right;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 24rpx;
-	letter-spacing: 1rpx;
-	color: $dim;
-}
-
-/* ---------- 主体与卡片 ---------- */
-.tw-body {
-	padding: 28rpx 32rpx 0;
-}
-
-.tw-card {
-	padding: 36rpx 32rpx 32rpx;
-	background-color: $panel;
-	border: 4rpx solid $line;
-	box-shadow: 10rpx 10rpx 0 rgba(0, 0, 0, .16);
-}
-
-.tw-brand {
-	display: flex;
-	align-items: center;
-}
-
-.tw-brand__logo {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 68rpx;
-	height: 68rpx;
-	flex: none;
-	color: $on;
-	background-color: $accent;
-	border: 4rpx solid $line;
-	box-shadow: 5rpx 5rpx 0 $line;
-}
-
-.tw-brand__logo .pxi {
-	transform: scale(2);
-}
-
-.tw-brand__meta {
-	margin-left: 20rpx;
-}
-
-.tw-brand__en {
+.tw-head__cn {
 	display: block;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	letter-spacing: 1rpx;
-	color: $ink;
-}
-
-.tw-brand__cn {
-	display: block;
-	margin-top: 8rpx;
-	font-size: 24rpx;
-	letter-spacing: 4rpx;
-	color: $dim;
-}
-
-.tw-title {
-	display: block;
-	margin-top: 34rpx;
-	font-size: 48rpx;
-	line-height: 1.3;
+	margin-top: 10rpx;
+	font-size: 34rpx;
 	letter-spacing: 8rpx;
 	color: $ink;
 }
 
-.tw-lead {
-	display: block;
-	margin-top: 16rpx;
-	font-size: 24rpx;
-	line-height: 1.6;
-	color: $dim;
+/* ---------- 书信空栏 ---------- */
+.tw-lines {
+	margin-top: 48rpx;
 }
 
-/* ---------- 登录方式切换 ---------- */
-.tw-tabs {
+.tw-line {
 	display: flex;
-	margin-top: 36rpx;
+	align-items: flex-end;
+	margin-bottom: 46rpx;
 }
 
-.tw-tab {
-	flex: 1;
-	height: 72rpx;
-	line-height: 68rpx;
-	text-align: center;
-	font-size: 24rpx;
-	color: $dim;
-	background-color: $panel2;
-	border: 4rpx solid $lineSoft;
-}
-
-.tw-tab + .tw-tab {
-	margin-left: -4rpx;
-}
-
-.tw-tab.on {
-	position: relative;
-	z-index: 1;
-	color: $on;
-	background-color: $accent;
-	border-color: $line;
-	box-shadow: 4rpx 4rpx 0 $line;
-}
-
-/* ---------- 表单 ---------- */
-.tw-form {
-	margin-top: 32rpx;
-}
-
-.tw-field {
-	display: flex;
-	align-items: center;
-	height: 96rpx;
-	padding: 0 22rpx;
-	margin-bottom: 24rpx;
-	background-color: $panel;
-	border: 4rpx solid $line;
-}
-
-.tw-field__ico {
-	display: flex;
-	align-items: center;
-	justify-content: center;
+.tw-line__label {
 	flex: none;
-	margin-right: 18rpx;
+	width: 170rpx;
+	padding-bottom: 12rpx;
+	font-size: 28rpx;
 	color: $ink;
 }
 
-.tw-field__in {
+.tw-line__blank {
+	display: flex;
+	align-items: flex-end;
 	flex: 1;
 	min-width: 0;
-	height: 100%;
+	min-height: 64rpx;
+	padding-bottom: 6rpx;
+	border-bottom: 3rpx solid $ink;
+}
+
+.tw-line__in {
+	flex: 1;
+	min-width: 0;
+	height: 60rpx;
 	padding: 0;
 	font-family: 'Zpix', sans-serif;
-	font-size: 24rpx;
+	font-size: 28rpx;
 	color: $ink;
 	background-color: transparent;
 	border: 0;
@@ -219,169 +156,94 @@ $on: #fffdf7;          // 强调色之上的文字
 	appearance: none;
 }
 
-.tw-field__in--en {
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
-	letter-spacing: 2rpx;
+.tw-line__eye {
+	flex: none;
+	margin-left: 12rpx;
+	padding: 0 4rpx 8rpx;
+	color: $dim;
 }
 
-.tw-eye {
+/* 行内小动作字（验证码 / 链接） */
+.tw-word {
 	flex: none;
-	margin-left: 14rpx;
-	padding: 0 6rpx;
-	color: $accent2;
-}
-
-.tw-code {
-	flex: none;
-	margin-left: 14rpx;
-	height: 64rpx;
-	line-height: 60rpx;
-	padding: 0 16rpx;
+	margin-left: 12rpx;
+	padding-bottom: 8rpx;
 	font-size: 24rpx;
 	color: $ink;
-	background-color: $panel2;
-	border: 4rpx solid $line;
+	border-bottom: 2rpx solid $ink;
 }
 
-.tw-code.off {
+.tw-word.off {
 	color: $dim;
-	border-color: $lineSoft;
+	border-bottom-color: $dim;
 }
 
-/* 右对齐小链接行 */
-.tw-row {
+/* ---------- 复写纸选项 ---------- */
+.tw-carbon {
 	display: flex;
-	justify-content: flex-end;
-	margin: -4rpx 0 24rpx;
-	font-size: 24rpx;
+	gap: 44rpx;
+	margin: 6rpx 0 40rpx;
 }
 
-.tw-row__link {
-	color: $accent2;
-}
-
-/* ---------- 六格验证码 ---------- */
-.tw-cells {
-	display: flex;
-	justify-content: space-between;
-	margin-bottom: 24rpx;
-}
-
-.tw-cell {
-	width: 88rpx;
-	height: 104rpx;
-	padding: 0;
-	box-sizing: border-box;
-	text-align: center;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 64rpx;
-	color: $ink;
-	background-color: $panel;
-	border: 4rpx solid $line;
-	border-radius: 0;
-	-webkit-appearance: none;
-	appearance: none;
-}
-
-.tw-cell.on {
-	color: $on;
-	background-color: $accent;
-	box-shadow: 6rpx 6rpx 0 $line;
-}
-
-.tw-cell.dim {
-	color: $dim;
-	background-color: $panel2;
-	border-color: $lineSoft;
-}
-
-/* ---------- 密码强度 ---------- */
-.tw-power {
+.tw-carbon__opt {
 	display: flex;
 	align-items: center;
-	margin: -4rpx 0 24rpx;
-	font-size: 24rpx;
+	gap: 10rpx;
+	font-size: 26rpx;
 	color: $dim;
 }
 
-.tw-power__t {
-	margin-right: 14rpx;
-}
-
-.tw-power__bars {
-	display: flex;
-	flex: 1;
-}
-
-.tw-power__bar {
-	flex: 1;
-	height: 16rpx;
-	margin-right: 8rpx;
-	background-color: $panel2;
-	border: 3rpx solid $lineSoft;
-}
-
-.tw-power__bar.on {
-	background-color: #92cc41;
-	border-color: $line;
-}
-
-.tw-power__v {
-	width: 64rpx;
-	text-align: right;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
+.tw-carbon__opt.on {
 	color: $ink;
 }
 
-/* ---------- 按钮 ---------- */
-.tw-btn {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: 96rpx;
-	margin-top: 32rpx;
-	font-size: 48rpx;
-	letter-spacing: 8rpx;
-	color: $on;
-	background-color: $accent;
-	border: 4rpx solid $line;
-	box-shadow: 8rpx 8rpx 0 $line;
+.tw-box {
+	position: relative;
+	width: 30rpx;
+	height: 30rpx;
+	border: 3rpx solid $ink;
+	transition: transform .15s;
 }
 
-.tw-btn .pxi {
-	margin-right: 14rpx;
+.tw-box__x {
+	display: none;
 }
 
-.tw-btn:active {
-	transform: translate(4rpx, 4rpx);
-	box-shadow: 4rpx 4rpx 0 $line;
+.tw-carbon__opt.on .tw-box {
+	transform: rotate(3deg);
 }
 
-.tw-btn--ghost {
-	color: $ink;
-	background-color: $panel;
+.tw-carbon__opt.on .tw-box__x {
+	display: block;
+	position: absolute;
+	left: 2rpx;
+	top: 11rpx;
+	width: 20rpx;
+	height: 3rpx;
+	background-color: $ink;
+	transform: rotate(45deg);
 }
 
-/* ---------- 页脚与协议 ---------- */
-.tw-foot {
-	margin-top: 32rpx;
-	text-align: center;
-	font-size: 24rpx;
-	color: $dim;
+.tw-carbon__opt.on .tw-box__x::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 20rpx;
+	height: 3rpx;
+	background-color: $ink;
+	transform: rotate(-90deg);
 }
 
-.tw-foot__link {
-	color: $accent2;
-	text-decoration: underline;
+/* ---------- 信末：勾选 + 此致敬礼 ---------- */
+.tw-post {
+	margin-top: 8rpx;
 }
 
 .tw-agree {
 	display: flex;
 	align-items: flex-start;
-	margin-top: 28rpx;
-	font-size: 24rpx;
+	font-size: 22rpx;
 	line-height: 1.7;
 	color: $dim;
 }
@@ -389,15 +251,15 @@ $on: #fffdf7;          // 强调色之上的文字
 .tw-check {
 	position: relative;
 	flex: none;
-	width: 30rpx;
-	height: 30rpx;
+	width: 28rpx;
+	height: 28rpx;
 	margin: 4rpx 12rpx 0 0;
-	background-color: $panel;
-	border: 4rpx solid $line;
+	border: 3rpx solid $ink;
+	background-color: transparent;
 }
 
 .tw-check.on {
-	background-color: #92cc41;
+	background-color: $ink;
 }
 
 .tw-check.on::after {
@@ -405,138 +267,226 @@ $on: #fffdf7;          // 强调色之上的文字
 	position: absolute;
 	left: 8rpx;
 	top: 2rpx;
-	width: 8rpx;
-	height: 15rpx;
-	border: solid $line;
-	border-width: 0 4rpx 4rpx 0;
+	width: 7rpx;
+	height: 14rpx;
+	border: solid $paper;
+	border-width: 0 3rpx 3rpx 0;
 	transform: rotate(45deg);
 }
 
 .tw-link {
-	color: $accent2;
+	color: $ribbonRed;
 }
 
-/* ---------- 步骤条 ---------- */
-.tw-steps {
-	display: flex;
-	align-items: center;
-	margin: 4rpx 0 30rpx;
+.tw-post__zh {
+	display: block;
+	margin-top: 28rpx;
+	text-align: right;
+	font-size: 28rpx;
+	letter-spacing: 6rpx;
+	color: $ink;
 }
 
-.tw-step {
+.tw-post__jing {
+	display: block;
+	margin-top: 8rpx;
+	text-align: right;
+	font-size: 28rpx;
+	letter-spacing: 6rpx;
+	color: $ink;
+}
+
+.tw-post__date {
+	display: block;
+	margin-top: 18rpx;
+	text-align: right;
+	font-family: 'Press Start 2P', monospace;
+	font-size: 16rpx;
+	letter-spacing: 1rpx;
+	color: $dim;
+}
+
+/* ---------- 打字机大圆键 + 色带 ---------- */
+.tw-keywrap {
+	position: relative;
+	margin-top: 64rpx;
+	display: flex;
+	justify-content: center;
+}
+
+.tw-ribbon {
+	position: absolute;
+	left: 50%;
+	top: -26rpx;
+	width: 560rpx;
+	height: 18rpx;
+	margin-left: -280rpx;
+	background: linear-gradient(180deg, $ribbonRed 0 50%, #1c1a16 50% 100%);
+	opacity: .9;
+	transform: scaleX(0);
+	transform-origin: left center;
+}
+
+.tw-ribbon.go {
+	animation: tw-sweep .55s linear forwards;
+}
+
+@keyframes tw-sweep {
+	from { transform: scaleX(0); }
+	to { transform: scaleX(1); }
+}
+
+.tw-key {
 	display: flex;
 	align-items: center;
+	justify-content: center;
+	width: 150rpx;
+	height: 150rpx;
+	background: radial-gradient(circle at 35% 28%, #55503f, #16140e 75%);
+	border: 4rpx solid #000;
+	border-radius: 50%;
+	box-shadow: 0 10rpx 0 #000, 0 16rpx 20rpx rgba(0, 0, 0, .3);
+	transition: transform .1s, box-shadow .1s;
+}
+
+.tw-key:active {
+	transform: translateY(8rpx);
+	box-shadow: 0 2rpx 0 #000;
+}
+
+.tw-key__t {
+	font-size: 30rpx;
+	letter-spacing: 6rpx;
+	color: $paper;
+}
+
+/* ---------- 页脚 ---------- */
+.tw-foot {
+	margin-top: 40rpx;
+	text-align: center;
 	font-size: 24rpx;
 	color: $dim;
 }
 
-.tw-step__n {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 48rpx;
-	height: 48rpx;
-	margin-right: 12rpx;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 32rpx;
+.tw-foot__link {
 	color: $ink;
-	background-color: $panel2;
-	border: 4rpx solid $lineSoft;
+	text-decoration: underline;
 }
 
-.tw-step.on .tw-step__n {
-	color: $on;
-	background-color: $accent2;
-	border-color: $line;
-}
-
-.tw-step__line {
-	flex: 1;
-	height: 4rpx;
-	margin: 0 16rpx;
-	background-color: $lineSoft;
-}
-
-.tw-step.on .tw-step__line {
-	background-color: $line;
-}
-
-/* ---------- 占位符（uniapp 用 placeholder-style 内联声明，这里兼容 H5） ---------- */
-.tw-field__in::-webkit-input-placeholder {
-	color: #a49c8a;
-}
-
-/* ---------- 主题皮肤（覆盖骨架） ---------- */
-.tw-card {
-	box-shadow: 8rpx 8rpx 0 rgba(34, 32, 28, .18);
-}
-
-.tw-btn {
-	color: $on;
-	background-color: $accent;
-	box-shadow: 6rpx 6rpx 0 $line;
-}
-
-.tw-brand__logo {
-	background-color: $accent2;
-}
-
-/* ---------- 主题装饰 ---------- */
-.tw-head {
-	display: flex;
-	align-items: baseline;
-	padding: 0 4rpx;
-}
-
-.tw-head__no {
-	flex: 1;
-	font-family: 'Press Start 2P', monospace;
-	font-size: 16rpx;
-	letter-spacing: 1rpx;
+.tw-foot__sep {
 	color: $dim;
 }
 
-.tw-head__t {
+/* ---------- 分节标题（forget） ---------- */
+.tw-sec {
+	margin-top: 40rpx;
+}
+
+.tw-sec + .tw-sec {
+	margin-top: 20rpx;
+}
+
+.tw-sec__t {
+	display: inline-block;
+	margin-bottom: 30rpx;
+	padding-bottom: 8rpx;
+	font-size: 30rpx;
+	letter-spacing: 4rpx;
+	color: $ink;
+	border-bottom: 3rpx solid $ink;
+}
+
+/* ---------- 六小纸格验证码（forget，底线格样式） ---------- */
+.tw-cells {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 40rpx;
+}
+
+.tw-cell {
+	width: 84rpx;
+	height: 100rpx;
+	padding: 0;
+	box-sizing: border-box;
+	text-align: center;
 	font-family: 'Press Start 2P', monospace;
-	font-size: 16rpx;
-	letter-spacing: 1rpx;
+	font-size: 48rpx;
+	color: $ink;
+	background-color: #fffdf7;
+	border: 3rpx solid $lineSoft;
+	border-bottom: 6rpx solid $ink;
+	border-radius: 0;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.tw-cell.on {
+	border-color: $ink;
+}
+
+.tw-cell.dim {
+	color: $ph;
+}
+
+/* ---------- 油墨余量（register，密码强度） ---------- */
+.tw-ink {
+	display: flex;
+	align-items: center;
+	margin: -10rpx 0 40rpx;
+}
+
+.tw-ink__t {
+	margin-right: 16rpx;
+	font-size: 24rpx;
 	color: $ink;
 }
 
-.tw-rule {
-	height: 12rpx;
-	margin: 12rpx 0 26rpx;
-	border-top: 4rpx solid $line;
-	border-bottom: 2rpx solid $line;
-}
-
-.tw-keys {
-	margin-top: 40rpx;
-	padding: 20rpx;
-	background-color: $panel;
-	border: 4rpx solid $line;
-	box-shadow: 6rpx 6rpx 0 rgba(34, 32, 28, .16);
-}
-
-.tw-keys__row {
+.tw-ink__cells {
 	display: flex;
-	justify-content: space-between;
+	gap: 10rpx;
 }
 
-.tw-keys__row + .tw-keys__row {
-	margin-top: 12rpx;
+.tw-ink__cell {
+	width: 40rpx;
+	height: 36rpx;
+	border: 3rpx solid $ink;
+	background-color: transparent;
 }
 
-.tw-key {
-	width: 56rpx;
-	height: 40rpx;
-	background-color: $panel2;
-	border: 4rpx solid $line;
+.tw-ink__cell.on {
+	background-color: $ink;
 }
 
-.tw-platen {
-	height: 20rpx;
-	margin-top: 12rpx;
-	background-color: $line;
-	border-radius: 10rpx;
+.tw-ink__v {
+	margin-left: 18rpx;
+	font-size: 24rpx;
+	color: $dim;
+}
+
+/* ---------- 存档成功盖章（forget） ---------- */
+.tw-stamp {
+	position: absolute;
+	left: 50%;
+	top: 42%;
+	width: 260rpx;
+	height: 140rpx;
+	margin-left: -130rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 8rpx double $ribbonRed;
+	border-radius: 50%;
+	transform: rotate(-10deg);
+	animation: tw-stamp .35s ease-out both;
+}
+
+.tw-stamp__t {
+	font-size: 34rpx;
+	letter-spacing: 6rpx;
+	color: $ribbonRed;
+}
+
+@keyframes tw-stamp {
+	from { transform: rotate(-10deg) scale(2); opacity: 0; }
+	to { transform: rotate(-10deg) scale(1); opacity: .92; }
 }

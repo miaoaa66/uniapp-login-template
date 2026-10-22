@@ -1,95 +1,76 @@
 <template>
 	<view class="nt-page">
-		<view class="nt-nav">
-			<view class="nt-nav__back" @click="goBack">
-				<view class="pxi pxi-back"></view>
-			</view>
-			<text class="nt-nav__title">登 录</text>
-			<text class="nt-nav__slot">TODAY</text>
+		<view class="nt-boardpin nt-boardpin--lt"></view>
+		<view class="nt-boardpin nt-boardpin--rt"></view>
+		<view class="nt-boardpin nt-boardpin--lb"></view>
+		<view class="nt-boardpin nt-boardpin--rb"></view>
+
+		<view class="nt-tag" @click="goBack">
+			<view class="nt-tag__pin"></view>
+			<view class="pxi pxi-back"></view>
+			<text class="nt-tag__t">任务板 · 登录</text>
 		</view>
 
-		<view class="nt-body">
+		<view :key="tab" class="nt-note nt-note--big" :class="'nt-note--c' + tab">
 			<view class="nt-pin"></view>
-			<view class="nt-strip">
-				<text class="nt-strip__t">TODAY · 登录 / 注册</text>
-			</view>
-			<view class="nt-card">
-				<view class="nt-brand">
-					<view class="nt-brand__logo"><view class="pxi pxi-chip"></view></view>
-					<view class="nt-brand__meta">
-						<text class="nt-brand__en">PINBOARD</text>
-						<text class="nt-brand__cn">计划板账户</text>
+			<text class="nt-note__title">{{ tabs[tab] }}</text>
+
+			<view class="nt-form">
+				<block v-if="tab === 0">
+					<view class="nt-line">
+						<text class="nt-line__k">账号</text>
+						<input class="nt-line__in" v-model="account" placeholder="手机号 / 邮箱" placeholder-style="color:#8a6a4f" maxlength="40" />
 					</view>
+					<view class="nt-line">
+						<text class="nt-line__k">密码</text>
+						<input class="nt-line__in" v-model="password" :password="!showPwd" placeholder="请输入登录密码" placeholder-style="color:#8a6a4f" maxlength="20" />
+						<view class="nt-eye" @click="showPwd = !showPwd"><view class="pxi pxi-eye"></view></view>
+					</view>
+					<view class="nt-mini"><text class="nt-mini__t" @click="goForget">忘记密码？换一张备忘 →</text></view>
+				</block>
+				<block v-else-if="tab === 1">
+					<view class="nt-line">
+						<text class="nt-line__k">手机号</text>
+						<input class="nt-line__in" v-model="phone" type="number" placeholder="+86" placeholder-style="color:#8a6a4f" maxlength="11" />
+					</view>
+					<view class="nt-line">
+						<text class="nt-line__k">验证码</text>
+						<input class="nt-line__in" v-model="smsCode" type="number" placeholder="短信验证码" placeholder-style="color:#8a6a4f" maxlength="6" />
+						<text class="nt-send" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + 's' : '取验证码' }}</text>
+					</view>
+				</block>
+				<block v-else>
+					<view class="nt-line">
+						<text class="nt-line__k">邮箱</text>
+						<input class="nt-line__in" v-model="email" placeholder="player@pixel.id" placeholder-style="color:#8a6a4f" maxlength="40" />
+					</view>
+					<view class="nt-line">
+						<text class="nt-line__k">验证码</text>
+						<input class="nt-line__in" v-model="mailCode" type="number" placeholder="邮箱验证码" placeholder-style="color:#8a6a4f" maxlength="6" />
+						<text class="nt-send" :class="{ off: mailLeft > 0 }" @click="sendCode('mail')">{{ mailLeft > 0 ? mailLeft + 's' : '取验证码' }}</text>
+					</view>
+				</block>
+
+				<view class="nt-agree" @click="agreed = !agreed">
+					<view class="nt-check" :class="{ on: agreed }"></view>
+					<text class="nt-agree__t">我已阅读并同意<text class="nt-agree__lnk">《用户协议》</text>与<text class="nt-agree__lnk">《隐私政策》</text></text>
 				</view>
 
-				<text class="nt-title">登 录</text>
-				<text class="nt-lead">撕下便签，写今天的计划</text>
-
-				<view class="nt-tabs">
-					<view v-for="(item, i) in tabs" :key="i" class="nt-tab" :class="{ on: tab === i }" @click="tab = i">{{ item }}</view>
-				</view>
-
-				<view class="nt-form">
-					<block v-if="tab === 0">
-						<view class="nt-field">
-							<view class="nt-field__ico"><view class="pxi pxi-user"></view></view>
-							<input class="nt-field__in" v-model="account" placeholder="手机号 / 邮箱" placeholder-style="color:#9b7a4d" maxlength="40" />
-						</view>
-						<view class="nt-field">
-							<view class="nt-field__ico"><view class="pxi pxi-lock"></view></view>
-							<input class="nt-field__in" v-model="password" :password="!showPwd" placeholder="请输入登录密码" placeholder-style="color:#9b7a4d" maxlength="20" />
-							<view class="nt-eye" @click="showPwd = !showPwd"><view class="pxi pxi-eye"></view></view>
-						</view>
-						<view class="nt-row">
-							<text class="nt-row__link" @click="goForget">忘记密码？</text>
-						</view>
-					</block>
-					<block v-else-if="tab === 1">
-						<view class="nt-field">
-							<view class="nt-field__ico"><view class="pxi pxi-phone"></view></view>
-							<input class="nt-field__in nt-field__in--en" v-model="phone" type="number" placeholder="+86" placeholder-style="color:#9b7a4d" maxlength="11" />
-						</view>
-						<view class="nt-field">
-							<view class="nt-field__ico"><view class="pxi pxi-shield"></view></view>
-							<input class="nt-field__in" v-model="smsCode" type="number" placeholder="短信验证码" placeholder-style="color:#9b7a4d" maxlength="6" />
-							<view class="nt-code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + 's' : '获取验证码' }}</view>
-						</view>
-					</block>
-					<block v-else>
-						<view class="nt-field">
-							<view class="nt-field__ico"><view class="pxi pxi-mail"></view></view>
-							<input class="nt-field__in" v-model="email" placeholder="player@pixel.id" placeholder-style="color:#9b7a4d" maxlength="40" />
-						</view>
-						<view class="nt-field">
-							<view class="nt-field__ico"><view class="pxi pxi-shield"></view></view>
-							<input class="nt-field__in" v-model="mailCode" type="number" placeholder="邮箱验证码" placeholder-style="color:#9b7a4d" maxlength="6" />
-							<view class="nt-code" :class="{ off: mailLeft > 0 }" @click="sendCode('mail')">{{ mailLeft > 0 ? mailLeft + 's' : '获取验证码' }}</view>
-						</view>
-					</block>
-
-					<view class="nt-btn" @click="submit">
-						<view class="pxi pxi-play"></view><text>贴 上 便 签</text>
-					</view>
-
-					<view class="nt-foot">
-						<text>还没有便签？</text>
-						<text class="nt-foot__link" @click="goRegister">立即注册</text>
-					</view>
-
-					<view class="nt-agree" @click="agreed = !agreed">
-						<view class="nt-check" :class="{ on: agreed }"></view>
-						<text>我已阅读并同意<text class="nt-link">《用户协议》</text>与<text class="nt-link">《隐私政策》</text></text>
-					</view>
+				<view class="nt-tapebtn" @click="submit">
+					<text class="nt-tapebtn__t">按 下 提 交</text>
 				</view>
 			</view>
-			<view class="nt-notes">
-				<view class="nt-note nt-note--green">
-					<text class="nt-note__t">记得勾选协议</text>
-				</view>
-				<view class="nt-note nt-note--pink">
-					<text class="nt-note__t">验证码 60 秒</text>
-				</view>
+		</view>
+
+		<view class="nt-thumbrow">
+			<view v-for="item in thumbTabs" :key="item.i" class="nt-thumb" :class="'nt-thumb--c' + item.i" @click="tab = item.i">
+				<view class="nt-thumb__pin"></view>
+				<text class="nt-thumb__t">{{ item.label }}</text>
 			</view>
+		</view>
+
+		<view class="nt-scrap" @click="goRegister">
+			<text class="nt-scrap__t">还没有便签？写一张新的 → 立即注册</text>
 		</view>
 	</view>
 </template>
@@ -111,6 +92,12 @@
 				smsLeft: 0,
 				mailLeft: 0,
 				timer: null
+			}
+		},
+		computed: {
+			// 未选中的两张便签 → 缩略行
+			thumbTabs() {
+				return this.tabs.map((label, i) => ({ i, label })).filter(t => t.i !== this.tab)
 			}
 		},
 		onLoad(options) {

@@ -1,83 +1,82 @@
 <template>
 	<view class="am-page">
-		<view class="am-nav">
-			<view class="am-nav__back" @click="goBack">
+		<!-- 双线框头部 -->
+		<view class="am-head">
+			<view class="am-head__back" @click="goBack">
 				<view class="pxi pxi-back"></view>
 			</view>
-			<text class="am-nav__title">找回密码</text>
-			<text class="am-nav__slot">passwd</text>
+			<text class="am-head__t">PIXEL BBS · 口令恢复</text>
+			<text class="am-head__r">passwd</text>
 		</view>
 
 		<view class="am-body">
-			<view class="am-term">
-				<view class="am-term__bar">
-					<view class="am-term__dot"></view>
-					<view class="am-term__dot"></view>
-					<view class="am-term__dot"></view>
-					<text class="am-term__title">AMBER-OS v1.0 / tty0</text>
+			<text class="am-cap">PASSWORD RECOVERY / 口令恢复协议</text>
+
+			<!-- 协议步骤行 -->
+			<view class="am-steps">
+				<view class="am-steps__row" :class="{ on: step >= 1 }">
+					<text class="am-steps__t">STEP 1 验证身份</text>
+					<text class="am-steps__ok">{{ step >= 2 ? 'OK' : '...' }}</text>
+				</view>
+				<view class="am-steps__row" :class="{ on: step >= 2 }">
+					<text class="am-steps__t">STEP 2 重置密码</text>
+					<text class="am-steps__ok">{{ done ? 'OK' : (step >= 2 ? 'RUN' : '...') }}</text>
 				</view>
 			</view>
-			<view class="am-card">
-				<view class="am-brand">
-					<view class="am-brand__logo"><view class="pxi pxi-key"></view></view>
-					<view class="am-brand__meta">
-						<text class="am-brand__en">PASSWD</text>
-						<text class="am-brand__cn">重置终端口令</text>
+
+			<!-- STEP 1：邮箱 + 6 格琥珀方块验证码 -->
+			<view class="am-fields">
+				<view class="am-f">
+					<text class="am-f__k">MAIL / 注册邮箱</text>
+					<view class="am-f__row">
+						<input class="am-f__in" v-model="email" placeholder="注册时使用的邮箱" placeholder-style="color:#6b520e" maxlength="40" />
+						<text class="am-f__send" :class="{ off: mailLeft > 0 }" @click="sendCode">{{ mailLeft > 0 ? mailLeft + 's' : '[SEND]' }}</text>
+						<text class="am-caret">▉</text>
 					</view>
 				</view>
 
-				<text class="am-title">找回密码</text>
-				<text class="am-lead">验证邮箱后执行 passwd 重置口令</text>
+				<view class="am-cells">
+					<input v-for="(c, i) in cells" :key="i" class="am-cell" :class="{ on: !!c }"
+						v-model="cells[i]" type="number" maxlength="1" placeholder=" " placeholder-style="color:#3a2c08"
+						:focus="focusIndex === i" @input="onCell(i, $event)" />
+				</view>
+				<text class="am-tip">INPUT 6-DIGIT CODE / 输入 6 位验证码</text>
 
-				<view class="am-steps">
-					<view class="am-step" :class="{ on: step >= 1 }">
-						<view class="am-step__n">1</view>
-						<text>验证邮箱</text>
-					</view>
-					<view class="am-step__line" :class="{ on: step >= 2 }"></view>
-					<view class="am-step" :class="{ on: step >= 2 }">
-						<view class="am-step__n">2</view>
-						<text>重置密码</text>
+				<!-- STEP 2：新密码两行 -->
+				<view class="am-f">
+					<text class="am-f__k">NEWPASS / 新口令</text>
+					<view class="am-f__row">
+						<input class="am-f__in" v-model="password" :password="!showPwd" placeholder="新密码（8-20 位）" placeholder-style="color:#6b520e" maxlength="20" />
+						<view class="am-f__eye" @click="showPwd = !showPwd"><view class="pxi pxi-eye"></view></view>
+						<text class="am-caret">▉</text>
 					</view>
 				</view>
 
-				<view class="am-form">
-					<view class="am-field">
-						<view class="am-field__ico"><view class="pxi pxi-mail"></view></view>
-						<input class="am-field__in" v-model="email" placeholder="注册时使用的邮箱" placeholder-style="color:#82600e" maxlength="40" />
-						<view class="am-code" :class="{ off: mailLeft > 0 }" @click="sendCode">{{ mailLeft > 0 ? mailLeft + 's' : '获取验证码' }}</view>
+				<view class="am-f">
+					<text class="am-f__k">CONFIRM / 确认口令</text>
+					<view class="am-f__row">
+						<input class="am-f__in" v-model="password2" :password="!showPwd" placeholder="确认新密码" placeholder-style="color:#6b520e" maxlength="20" />
+						<text class="am-caret">▉</text>
 					</view>
+				</view>
 
-					<view class="am-cells">
-						<input v-for="(c, i) in cells" :key="i" class="am-cell" :class="{ dim: !c, on: focusIndex === i }"
-							v-model="cells[i]" type="number" maxlength="1" :focus="focusIndex === i" @input="onCell(i, $event)" />
-					</view>
-
-					<view class="am-field">
-						<view class="am-field__ico"><view class="pxi pxi-lock"></view></view>
-						<input class="am-field__in" v-model="password" :password="!showPwd" placeholder="新密码（8-20 位）" placeholder-style="color:#82600e" maxlength="20" />
-						<view class="am-eye" @click="showPwd = !showPwd"><view class="pxi pxi-eye"></view></view>
-					</view>
-
-					<view class="am-field">
-						<view class="am-field__ico"><view class="pxi pxi-lock"></view></view>
-						<input class="am-field__in" v-model="password2" :password="!showPwd" placeholder="确认新密码" placeholder-style="color:#82600e" maxlength="20" />
-					</view>
-
-					<view class="am-btn" @click="submit">
-						<view class="pxi pxi-play"></view><text>执 行</text>
-					</view>
-
-					<view class="am-foot">
-						<text>想起口令了？</text>
-						<text class="am-foot__link" @click="goLogin">返回登录</text>
-					</view>
+				<view class="am-f am-f--lnk">
+					<text class="am-f__lnk" @click="goLogin">想起口令了？[LOGIN]</text>
 				</view>
 			</view>
-			<view class="am-log">
-				<text class="am-log__l">&gt; LOADING MODULES ....... [OK]</text>
-				<text class="am-log__l">&gt; MOUNT /dev/pixel ........ [OK]</text>
-				<text class="am-log__l">&gt; READY<span class="am-caret">_</span></text>
+
+			<!-- 完成反白大字 -->
+			<view v-if="done" class="am-done">
+				<text>** PASSWORD UPDATED **</text>
+			</view>
+		</view>
+
+		<!-- 底部反色状态栏 -->
+		<view class="am-fbar">
+			<text class="am-fbar__l">[F1 帮助]</text>
+			<text class="am-fbar__c">PIXEL BBS v3.2</text>
+			<view class="am-enter" @click="submit">
+				<text>[ENTER 确认]</text>
 			</view>
 		</view>
 	</view>
@@ -88,6 +87,7 @@
 		data() {
 			return {
 				step: 1,
+				done: false,
 				showPwd: false,
 				email: '',
 				cells: ['', '', '', '', '', ''],
@@ -145,12 +145,21 @@
 				}
 			},
 
+			// 保持原校验顺序；STEP 标记随校验推进
 			submit() {
-				if (!this.isEmail(this.email)) return this.toast('请输入正确的邮箱')
-				if (this.cells.join('').length < 6) return this.toast('请输入 6 位验证码')
+				if (!this.isEmail(this.email)) {
+					this.step = 1
+					return this.toast('请输入正确的邮箱')
+				}
+				if (this.cells.join('').length < 6) {
+					this.step = 1
+					return this.toast('请输入 6 位验证码')
+				}
+				this.step = 2
 				if (this.password.length < 8) return this.toast('新密码至少 8 位')
 				if (this.password !== this.password2) return this.toast('两次输入的密码不一致')
 				// TODO: 调用后端重置密码接口
+				this.done = true
 				this.toast('密码已重置')
 			},
 

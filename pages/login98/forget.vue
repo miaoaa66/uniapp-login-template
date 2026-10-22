@@ -1,82 +1,69 @@
 <template>
 	<view class="tw-page">
-		<view class="tw-nav">
-			<view class="tw-nav__back" @click="goBack">
-				<view class="pxi pxi-back"></view>
-			</view>
-			<text class="tw-nav__title">找回密码</text>
-			<text class="tw-nav__slot">REPRINT</text>
-		</view>
+		<!-- 补办公函信纸 -->
+		<view class="tw-paper">
+			<view class="tw-clip" @click="goBack"><view class="tw-clip__inner"></view></view>
 
-		<view class="tw-body">
 			<view class="tw-head">
-				<text class="tw-head__no">FORM NO.1983</text>
-				<text class="tw-head__t">PIXEL TYPEWRITER CO.</text>
+				<view class="tw-head__line"></view>
+				<view class="tw-head__mid">
+					<text class="tw-head__en">REISSUE LETTER</text>
+					<text class="tw-head__cn">补 办 公 函</text>
+				</view>
+				<view class="tw-head__line"></view>
 			</view>
-			<view class="tw-rule"></view>
-			<view class="tw-card">
-				<view class="tw-brand">
-					<view class="tw-brand__logo"><view class="pxi pxi-key"></view></view>
-					<view class="tw-brand__meta">
-						<text class="tw-brand__en">REPRINT</text>
-						<text class="tw-brand__cn">重打密码页</text>
+
+			<!-- 一、身份核验 -->
+			<view class="tw-sec">
+				<text class="tw-sec__t">一、身份核验</text>
+				<view class="tw-line">
+					<text class="tw-line__label">邮箱</text>
+					<view class="tw-line__blank">
+						<input class="tw-line__in" v-model="email" placeholder="注册时使用的邮箱" placeholder-style="color:#b7b0a1" maxlength="40" />
+						<text class="tw-word" :class="{ off: mailLeft > 0 }" @click="sendCode">{{ mailLeft > 0 ? mailLeft + 's' : '获取验证码' }}</text>
 					</view>
 				</view>
+				<view class="tw-cells">
+					<input v-for="(c, i) in cells" :key="i" class="tw-cell" :class="{ dim: !c, on: focusIndex === i }"
+						v-model="cells[i]" type="number" maxlength="1" :focus="focusIndex === i" @input="onCell(i, $event)" />
+				</view>
+			</view>
 
-				<text class="tw-title">找回密码</text>
-				<text class="tw-lead">验证邮箱后重新打印你的密码</text>
-
-				<view class="tw-steps">
-					<view class="tw-step" :class="{ on: step >= 1 }">
-						<view class="tw-step__n">1</view>
-						<text>验证邮箱</text>
-					</view>
-					<view class="tw-step__line" :class="{ on: step >= 2 }"></view>
-					<view class="tw-step" :class="{ on: step >= 2 }">
-						<view class="tw-step__n">2</view>
-						<text>重置密码</text>
+			<!-- 二、重设密码（核验通过后展开） -->
+			<view class="tw-sec" v-if="step >= 2">
+				<text class="tw-sec__t">二、重设密码</text>
+				<view class="tw-line">
+					<text class="tw-line__label">新密码</text>
+					<view class="tw-line__blank">
+						<input class="tw-line__in" v-model="password" :password="!showPwd" placeholder="新密码（8-20 位）" placeholder-style="color:#b7b0a1" maxlength="20" />
+						<view class="tw-line__eye" @click="showPwd = !showPwd"><view class="pxi pxi-eye"></view></view>
 					</view>
 				</view>
-
-				<view class="tw-form">
-					<view class="tw-field">
-						<view class="tw-field__ico"><view class="pxi pxi-mail"></view></view>
-						<input class="tw-field__in" v-model="email" placeholder="注册时使用的邮箱" placeholder-style="color:#a49c8a" maxlength="40" />
-						<view class="tw-code" :class="{ off: mailLeft > 0 }" @click="sendCode">{{ mailLeft > 0 ? mailLeft + 's' : '获取验证码' }}</view>
-					</view>
-
-					<view class="tw-cells">
-						<input v-for="(c, i) in cells" :key="i" class="tw-cell" :class="{ dim: !c, on: focusIndex === i }"
-							v-model="cells[i]" type="number" maxlength="1" :focus="focusIndex === i" @input="onCell(i, $event)" />
-					</view>
-
-					<view class="tw-field">
-						<view class="tw-field__ico"><view class="pxi pxi-lock"></view></view>
-						<input class="tw-field__in" v-model="password" :password="!showPwd" placeholder="新密码（8-20 位）" placeholder-style="color:#a49c8a" maxlength="20" />
-						<view class="tw-eye" @click="showPwd = !showPwd"><view class="pxi pxi-eye"></view></view>
-					</view>
-
-					<view class="tw-field">
-						<view class="tw-field__ico"><view class="pxi pxi-lock"></view></view>
-						<input class="tw-field__in" v-model="password2" :password="!showPwd" placeholder="确认新密码" placeholder-style="color:#a49c8a" maxlength="20" />
-					</view>
-
-					<view class="tw-btn" @click="submit">
-						<view class="pxi pxi-play"></view><text>重 新 打 印</text>
-					</view>
-
-					<view class="tw-foot">
-						<text>想起密码了？</text>
-						<text class="tw-foot__link" @click="goLogin">返回登录</text>
+				<view class="tw-line">
+					<text class="tw-line__label">复述</text>
+					<view class="tw-line__blank">
+						<input class="tw-line__in" v-model="password2" :password="!showPwd" placeholder="确认新密码" placeholder-style="color:#b7b0a1" maxlength="20" />
 					</view>
 				</view>
 			</view>
-			<view class="tw-keys">
-				<view v-for="n in 3" :key="n" class="tw-keys__row">
-					<view v-for="m in 8" :key="m" class="tw-key"></view>
-				</view>
+
+			<view class="tw-post">
+				<text class="tw-post__zh">此致</text>
+				<text class="tw-post__jing">敬礼！</text>
+				<text class="tw-post__date">PIXEL TYPEWRITER CO. · 1983</text>
 			</view>
-			<view class="tw-platen"></view>
+
+			<view class="tw-keywrap">
+				<view class="tw-ribbon" :class="{ go: ribbon }"></view>
+				<view class="tw-key" @click="onSend"><text class="tw-key__t">寄 出</text></view>
+			</view>
+
+			<view class="tw-foot">
+				<text class="tw-foot__link" @click="goLogin">想起密码了？返回登录</text>
+			</view>
+
+			<!-- 存档成功盖章 -->
+			<view class="tw-stamp" v-if="stamped"><text class="tw-stamp__t">存档成功</text></view>
 		</view>
 	</view>
 </template>
@@ -86,6 +73,9 @@
 		data() {
 			return {
 				step: 1,
+				stamped: false,
+				ribbon: false,
+				ribbonTimer: null,
 				showPwd: false,
 				email: '',
 				cells: ['', '', '', '', '', ''],
@@ -106,6 +96,7 @@
 		},
 		onUnload() {
 			this.clearTimer()
+			if (this.ribbonTimer) clearTimeout(this.ribbonTimer)
 		},
 		methods: {
 			toast(title) {
@@ -143,13 +134,28 @@
 				}
 			},
 
-			submit() {
-				if (!this.isEmail(this.email)) return this.toast('请输入正确的邮箱')
-				if (this.cells.join('').length < 6) return this.toast('请输入 6 位验证码')
-				if (this.password.length < 8) return this.toast('新密码至少 8 位')
-				if (this.password !== this.password2) return this.toast('两次输入的密码不一致')
-				// TODO: 调用后端重置密码接口
-				this.toast('密码已重置')
+			fireRibbon() {
+				this.ribbon = false
+				if (this.ribbonTimer) clearTimeout(this.ribbonTimer)
+				setTimeout(() => { this.ribbon = true }, 30)
+				this.ribbonTimer = setTimeout(() => { this.ribbon = false }, 800)
+			},
+
+			onSend() {
+				this.fireRibbon()
+				if (this.step === 1) {
+					if (!this.isEmail(this.email)) return this.toast('请输入正确的邮箱')
+					if (this.cells.join('').length < 6) return this.toast('请输入 6 位验证码')
+					this.step = 2
+				} else {
+					if (!this.isEmail(this.email)) return this.toast('请输入正确的邮箱')
+					if (this.cells.join('').length < 6) return this.toast('请输入 6 位验证码')
+					if (this.password.length < 8) return this.toast('新密码至少 8 位')
+					if (this.password !== this.password2) return this.toast('两次输入的密码不一致')
+					// TODO: 调用后端重置密码接口
+					this.stamped = true
+					this.toast('密码已重置')
+				}
 			},
 
 			goBack() {

@@ -1,102 +1,121 @@
 <template>
 	<view class="ac-page">
-		<view class="ac-nav">
-			<view class="ac-nav__back" @click="goBack">
+		<!-- 顶部 marquee 灯箱 -->
+		<view class="ac-marquee">
+			<view class="ac-marquee__back" @click="goBack">
 				<view class="pxi pxi-back"></view>
 			</view>
-			<text class="ac-nav__title">登 录</text>
-			<text class="ac-nav__slot">CR 1</text>
+			<view class="ac-bulbs">
+				<view v-for="n in 4" :key="'l'+n" class="ac-bulb" :class="n % 2 ? 'ac-bulb--a' : 'ac-bulb--b'"></view>
+			</view>
+			<text class="ac-marquee__t">PIXEL ARCADE</text>
+			<view class="ac-bulbs">
+				<view v-for="n in 4" :key="'r'+n" class="ac-bulb" :class="n % 2 ? 'ac-bulb--b' : 'ac-bulb--a'"></view>
+			</view>
 		</view>
 
-		<view class="ac-body">
-			<view class="ac-marquee">
-				<text class="ac-marquee__t">A R C A D E</text>
+		<!-- 投币口 -->
+		<view class="ac-slotrow">
+			<text class="ac-slotrow__t">COIN SLOT</text>
+			<view class="ac-slot" @click="insertCoin">
+				<view v-if="coinAni" class="ac-coin"></view>
 			</view>
-			<view class="ac-coin">
-				<text class="ac-coin__t">INSERT COIN</text>
-				<view class="ac-coin__slot"></view>
-				<view class="ac-coin__led"></view>
-			</view>
-			<view class="ac-card">
-				<view class="ac-brand">
-					<view class="ac-brand__logo"><view class="pxi pxi-invader"></view></view>
-					<view class="ac-brand__meta">
-						<text class="ac-brand__en">ARCADE ID</text>
-						<text class="ac-brand__cn">街机通行证</text>
+		</view>
+
+		<!-- 屏幕 -->
+		<view class="ac-screen" @click="screenTap">
+			<!-- attract：INSERT COIN -->
+			<block v-if="phase === 'attract'">
+				<text class="ac-insert">INSERT COIN</text>
+				<text class="ac-credit" :class="{ bump: bumped }">CREDIT {{ credit }}</text>
+				<view class="ac-hi">
+					<text class="ac-hi__l">1P 004500</text>
+					<text class="ac-hi__l">2P 012800</text>
+				</view>
+				<text class="ac-hint">TAP SCREEN / COIN SLOT</text>
+			</block>
+
+			<!-- select：SELECT MODE -->
+			<block v-else-if="phase === 'select'">
+				<text class="ac-scr__h">SELECT MODE</text>
+				<view v-for="(item, i) in modes" :key="i" class="ac-mode" @click.stop="pickMode(i)">
+					<view class="ac-mode__cur" :class="{ on: tab === i }"></view>
+					<text class="ac-mode__t">{{ item }}</text>
+				</view>
+				<text class="ac-hint">JOYSTICK + A BUTTON</text>
+			</block>
+
+			<!-- form：表单 -->
+			<block v-else-if="phase === 'form'">
+				<block v-if="tab === 0">
+					<view class="ac-f">
+						<text class="ac-f__k">1P ACCOUNT</text>
+						<input class="ac-f__in" v-model="account" placeholder="手机号 / 邮箱" placeholder-style="color:#5a5470" maxlength="40" />
 					</view>
+					<view class="ac-f">
+						<text class="ac-f__k">PASSWORD</text>
+						<input class="ac-f__in" v-model="password" :password="!showPwd" placeholder="请输入登录密码" placeholder-style="color:#5a5470" maxlength="20" />
+						<view class="ac-f__eye" @click.stop="showPwd = !showPwd"><view class="pxi pxi-eye"></view></view>
+					</view>
+					<view class="ac-f ac-f--lnk">
+						<text class="ac-f__lnk" @click.stop="goForget">忘记密码？</text>
+					</view>
+				</block>
+				<block v-else-if="tab === 1">
+					<view class="ac-f">
+						<text class="ac-f__k">2P PHONE</text>
+						<input class="ac-f__in ac-f__in--num" v-model="phone" type="number" placeholder="+86" placeholder-style="color:#5a5470" maxlength="11" />
+					</view>
+					<view class="ac-f">
+						<text class="ac-f__k">SMS CODE</text>
+						<input class="ac-f__in ac-f__in--num" v-model="smsCode" type="number" placeholder="短信验证码" placeholder-style="color:#5a5470" maxlength="6" />
+						<text class="ac-f__send" :class="{ off: smsLeft > 0 }" @click.stop="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + 's' : 'SEND' }}</text>
+					</view>
+				</block>
+				<block v-else>
+					<view class="ac-f">
+						<text class="ac-f__k">3P MAIL</text>
+						<input class="ac-f__in" v-model="email" placeholder="player@pixel.id" placeholder-style="color:#5a5470" maxlength="40" />
+					</view>
+					<view class="ac-f">
+						<text class="ac-f__k">MAIL CODE</text>
+						<input class="ac-f__in ac-f__in--num" v-model="mailCode" type="number" placeholder="邮箱验证码" placeholder-style="color:#5a5470" maxlength="6" />
+						<text class="ac-f__send" :class="{ off: mailLeft > 0 }" @click.stop="sendCode('mail')">{{ mailLeft > 0 ? mailLeft + 's' : 'SEND' }}</text>
+					</view>
+				</block>
+
+				<view class="ac-f ac-f--lnk">
+					<text class="ac-f__lnk" @click.stop="goRegister">{{ tabLinkText }}</text>
 				</view>
 
-				<text class="ac-title">投 币 开 始</text>
-				<text class="ac-lead">选择你的登录方式，按下 START 键继续</text>
-
-				<view class="ac-tabs">
-					<view v-for="(item, i) in tabs" :key="i" class="ac-tab" :class="{ on: tab === i }" @click="tab = i">{{ item }}</view>
+				<view class="ac-agree" @click.stop="agreed = !agreed">
+					<view class="ac-agree__box" :class="{ on: agreed }"></view>
+					<text class="ac-agree__t">我已阅读并同意《用户协议》与《隐私政策》</text>
 				</view>
 
-				<view class="ac-form">
-					<block v-if="tab === 0">
-						<view class="ac-field">
-							<view class="ac-field__ico"><view class="pxi pxi-user"></view></view>
-							<input class="ac-field__in" v-model="account" placeholder="手机号 / 邮箱" placeholder-style="color:#8f7cc4" maxlength="40" />
-						</view>
-						<view class="ac-field">
-							<view class="ac-field__ico"><view class="pxi pxi-lock"></view></view>
-							<input class="ac-field__in" v-model="password" :password="!showPwd" placeholder="请输入登录密码" placeholder-style="color:#8f7cc4" maxlength="20" />
-							<view class="ac-eye" @click="showPwd = !showPwd"><view class="pxi pxi-eye"></view></view>
-						</view>
-						<view class="ac-row">
-							<text class="ac-row__link" @click="goForget">忘记密码？</text>
-						</view>
-					</block>
-					<block v-else-if="tab === 1">
-						<view class="ac-field">
-							<view class="ac-field__ico"><view class="pxi pxi-phone"></view></view>
-							<input class="ac-field__in ac-field__in--en" v-model="phone" type="number" placeholder="+86" placeholder-style="color:#8f7cc4" maxlength="11" />
-						</view>
-						<view class="ac-field">
-							<view class="ac-field__ico"><view class="pxi pxi-shield"></view></view>
-							<input class="ac-field__in" v-model="smsCode" type="number" placeholder="短信验证码" placeholder-style="color:#8f7cc4" maxlength="6" />
-							<view class="ac-code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + 's' : '获取验证码' }}</view>
-						</view>
-					</block>
-					<block v-else>
-						<view class="ac-field">
-							<view class="ac-field__ico"><view class="pxi pxi-mail"></view></view>
-							<input class="ac-field__in" v-model="email" placeholder="player@pixel.id" placeholder-style="color:#8f7cc4" maxlength="40" />
-						</view>
-						<view class="ac-field">
-							<view class="ac-field__ico"><view class="pxi pxi-shield"></view></view>
-							<input class="ac-field__in" v-model="mailCode" type="number" placeholder="邮箱验证码" placeholder-style="color:#8f7cc4" maxlength="6" />
-							<view class="ac-code" :class="{ off: mailLeft > 0 }" @click="sendCode('mail')">{{ mailLeft > 0 ? mailLeft + 's' : '获取验证码' }}</view>
-						</view>
-					</block>
+				<text class="ac-push">PUSH START</text>
+			</block>
 
-					<view class="ac-btn" @click="submit">
-						<view class="pxi pxi-play"></view><text>START</text>
-					</view>
+			<text class="ac-credit-mini">CREDIT {{ credit }}</text>
+		</view>
 
-					<view class="ac-foot">
-						<text>还没有街机档案？</text>
-						<text class="ac-foot__link" @click="goRegister">立即注册</text>
-					</view>
+		<!-- 控制面板 -->
+		<view class="ac-panel">
+			<view class="ac-stick">
+				<view class="ac-stick__ball"></view>
+				<view class="ac-stick__rod"></view>
+				<view class="ac-stick__base"></view>
+			</view>
+			<view class="ac-btns">
+				<view class="ac-ab ac-ab--b" @click="pressB"><text>B</text></view>
+				<view class="ac-ab ac-ab--a" @click="pressA"><text>A</text></view>
+			</view>
+		</view>
 
-					<view class="ac-agree" @click="agreed = !agreed">
-						<view class="ac-check" :class="{ on: agreed }"></view>
-						<text>我已阅读并同意<text class="ac-link">《用户协议》</text>与<text class="ac-link">《隐私政策》</text></text>
-					</view>
-				</view>
-			</view>
-			<view class="ac-panel">
-				<view class="ac-stick"><view class="ac-stick__ball"></view></view>
-				<view class="ac-btns">
-					<view v-for="n in 6" :key="n" class="ac-key" :class="'ac-key--' + n"></view>
-				</view>
-			</view>
-			<view class="ac-hud">
-				<text class="ac-hud__l">1UP 004500</text>
-				<text class="ac-hud__l">HIGH 012800</text>
-				<text class="ac-hud__l">CREDIT 1</text>
-			</view>
+		<view class="ac-hud">
+			<text class="ac-hud__l">1UP 004500</text>
+			<text class="ac-hud__l">HIGH 012800</text>
+			<text class="ac-hud__l">1994 © PIXEL</text>
 		</view>
 	</view>
 </template>
@@ -105,6 +124,12 @@
 	export default {
 		data() {
 			return {
+				// 屏幕三阶段状态机：attract → select → form
+				phase: 'attract',
+				modes: ['1P PASSWORD LOGIN', '2P SMS VERIFY', '3P MAIL VERIFY'],
+				credit: 0,
+				coinAni: false,
+				bumped: false,
 				tabs: ["密码登录","手机验证码","邮箱验证码"],
 				tab: 0,
 				agreed: false,
@@ -120,9 +145,18 @@
 				timer: null
 			}
 		},
+		computed: {
+			tabLinkText() {
+				return this.tab === 0 ? '没有街机档案？去注册' : '还没有街机档案？立即注册'
+			}
+		},
 		onLoad(options) {
-			// 演示参数：?tab=1&demo=1
-			if (options && options.tab) this.tab = Number(options.tab) || 0
+			// 演示参数：?tab=1&demo=1（带 tab 直接从 select 开始）
+			if (options && options.tab) {
+				this.tab = Number(options.tab) || 0
+				this.credit = 1
+				this.phase = 'select'
+			}
 			if (options && options.demo) this.fillDemo()
 		},
 		onUnload() {
@@ -149,6 +183,47 @@
 
 			isEmail(v) {
 				return /^[\w.-]+@[\w-]+\.[\w.-]+$/.test(v)
+			},
+
+			// 投币：硬币下落动画 → CREDIT 跳动 → 进入 select
+			insertCoin() {
+				if (this.coinAni) return
+				if (this.credit > 0) {
+					if (this.phase === 'attract') this.phase = 'select'
+					return
+				}
+				this.coinAni = true
+				setTimeout(() => {
+					this.coinAni = false
+					this.credit = 1
+					this.bumped = true
+					setTimeout(() => {
+						this.bumped = false
+						this.phase = 'select'
+					}, 450)
+				}, 400)
+			},
+
+			// 点击屏幕：attract 阶段等同投币
+			screenTap() {
+				if (this.phase === 'attract') this.insertCoin()
+			},
+
+			pickMode(i) {
+				this.tab = i
+				this.phase = 'form'
+			},
+
+			// A 键：attract=投币 / select=确认当前行 / form=提交
+			pressA() {
+				if (this.phase === 'attract') return this.insertCoin()
+				if (this.phase === 'select') return this.pickMode(this.tab)
+				this.submit()
+			},
+
+			// B 键：form 退回 select
+			pressB() {
+				if (this.phase === 'form') this.phase = 'select'
 			},
 
 			sendCode(type) {
@@ -183,6 +258,7 @@
 			},
 
 			submit() {
+				if (this.phase !== 'form') return
 				if (!this.agreed) return this.toast('请先阅读并同意用户协议')
 				if (this.tab === 0) {
 					if (!this.account) return this.toast('请输入账号')
