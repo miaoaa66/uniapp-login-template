@@ -1,0 +1,829 @@
+/* ==========================================================================
+ * 主题 02 · 瑞士国际网格 Swiss Style
+ * pages/login126 —— 登录 / 注册 / 找回密码 三页共用
+ *
+ * 设计依据：docs/theme-styles.md 第 2 条
+ *   色板    底 #F5F3EF / 正文 #111111 / 次级 #6E6E6E / 强调红 #E2231A
+ *   字体    Helvetica / Arial + 等宽数字，标题 flush-left、字重 700、字距收紧；
+ *           标签 11px（22rpx）全大写 + 字距
+ *   网格    可见的 12 栏基线网格；标题上方 1rpx 黑色通栏线；红色仅用于
+ *           主按钮与必填标记，面积占比 < 5%
+ *   动效    标题按行 60ms 逐行上浮；聚焦时标签移动到输入框上方；
+ *           聚焦线由左向右生长；按钮仅做明度与 2rpx 位移反馈
+ *   兼容    纯 CSS 渐变 + 边框，无图片、无 filter、无 backdrop-filter，
+ *           全端表现一致
+ * ========================================================================== */
+
+/* ---------- 设计令牌 ---------- */
+$paper: #f5f3ef;
+$ink: #111111;
+$dim: #6e6e6e;
+$faint: #a7a39b;
+$line: #d7d2c7;
+$red: #e2231a;
+$red-dark: #b71b13;
+$white: #fffdf7;
+$sans: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+$mono: 'Courier New', Consolas, 'Roboto Mono', monospace;
+
+/* ---------- 页面：纸面 + 12 栏网格 ---------- */
+.sw-page {
+	position: relative;
+	min-height: 100vh;
+	box-sizing: border-box;
+	background-color: $paper;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	font-family: $sans;
+}
+
+.sw-grid {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	pointer-events: none;
+	background-image: repeating-linear-gradient(
+		to right,
+		rgba(17, 17, 17, 0.045) 0,
+		rgba(17, 17, 17, 0.045) 1rpx,
+		transparent 1rpx,
+		transparent 8.3333%
+	);
+}
+
+.sw-status {
+	flex: none;
+}
+
+/* ---------- 顶部信息栏 ---------- */
+.sw-top {
+	position: relative;
+	flex: none;
+	display: flex;
+	align-items: center;
+	padding: 12rpx 40rpx 16rpx;
+	animation: sw-rise 200ms ease-out both;
+}
+
+.sw-back {
+	flex: none;
+	width: 64rpx;
+	height: 54rpx;
+	border: 1rpx solid $ink;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background-color 120ms ease-out;
+}
+
+.sw-back:active {
+	background-color: $ink;
+}
+
+.sw-back__arrow {
+	position: relative;
+	width: 30rpx;
+	height: 2rpx;
+	background-color: $ink;
+}
+
+.sw-back__arrow::before {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: -8rpx;
+	width: 16rpx;
+	height: 16rpx;
+	border-left: 2rpx solid $ink;
+	border-bottom: 2rpx solid $ink;
+	transform: rotate(45deg);
+	box-sizing: border-box;
+}
+
+.sw-back:active .sw-back__arrow,
+.sw-back:active .sw-back__arrow::before {
+	background-color: $white;
+	border-color: $white;
+}
+
+.sw-top__meta {
+	flex: 1;
+	margin-left: 24rpx;
+	font-family: $mono;
+	font-size: 18rpx;
+	letter-spacing: 2rpx;
+	color: $dim;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.sw-top__idx {
+	flex: none;
+	font-family: $mono;
+	font-size: 18rpx;
+	letter-spacing: 1rpx;
+	color: $ink;
+}
+
+.sw-rule {
+	position: relative;
+	flex: none;
+	height: 2rpx;
+	background-color: $ink;
+	margin: 0 40rpx;
+}
+
+.sw-rule--full {
+	margin: 0;
+	height: 4rpx;
+}
+
+/* ---------- 主标题区 ---------- */
+.sw-hero {
+	position: relative;
+	flex: none;
+	padding: 36rpx 40rpx 0;
+}
+
+.sw-hero__accent {
+	position: absolute;
+	right: 40rpx;
+	top: 40rpx;
+	width: 84rpx;
+	height: 84rpx;
+	background-color: $red;
+	animation: sw-reveal 260ms 180ms ease-out both;
+}
+
+.sw-hero__head {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	padding-right: 116rpx;
+}
+
+.sw-hero__num {
+	display: block;
+	font-size: 104rpx;
+	font-weight: 700;
+	line-height: 0.9;
+	letter-spacing: -8rpx;
+	color: $ink;
+	animation: sw-rise 220ms 40ms ease-out both;
+}
+
+.sw-hero__meta {
+	padding-top: 4rpx;
+	text-align: right;
+}
+
+.sw-hero__kicker {
+	display: block;
+	font-family: $mono;
+	font-size: 17rpx;
+	line-height: 1.8;
+	letter-spacing: 3rpx;
+	color: $ink;
+}
+
+.sw-hero__kicker--dim {
+	color: $dim;
+	letter-spacing: 1rpx;
+}
+
+.sw-hero__title {
+	display: block;
+	margin-top: 24rpx;
+	font-size: 76rpx;
+	font-weight: 700;
+	line-height: 1.06;
+	letter-spacing: 4rpx;
+	color: $ink;
+	animation: sw-rise 220ms 100ms ease-out both;
+}
+
+.sw-hero__en {
+	display: block;
+	margin-top: 10rpx;
+	font-family: $mono;
+	font-size: 18rpx;
+	letter-spacing: 7rpx;
+	color: $dim;
+	animation: sw-rise 220ms 160ms ease-out both;
+}
+
+.sw-hero__desc {
+	display: block;
+	margin-top: 22rpx;
+	font-size: 23rpx;
+	line-height: 1.75;
+	color: $dim;
+	max-width: 540rpx;
+	animation: sw-rise 220ms 220ms ease-out both;
+}
+
+/* ---------- 方式切换：编号栏目 ---------- */
+.sw-tabs {
+	position: relative;
+	flex: none;
+	display: flex;
+	margin: 34rpx 40rpx 0;
+	border-top: 2rpx solid $ink;
+	border-bottom: 1rpx solid $line;
+	animation: sw-rise 220ms 260ms ease-out both;
+}
+
+.sw-tab {
+	position: relative;
+	flex: 1;
+	padding: 18rpx 0 18rpx 16rpx;
+	border-right: 1rpx solid $line;
+	box-sizing: border-box;
+}
+
+.sw-tab:last-child {
+	border-right: none;
+}
+
+.sw-tab__num {
+	display: block;
+	font-family: $mono;
+	font-size: 16rpx;
+	letter-spacing: 1rpx;
+	color: $faint;
+	margin-bottom: 6rpx;
+	transition: color 140ms ease-out;
+}
+
+.sw-tab__txt {
+	display: block;
+	font-size: 23rpx;
+	letter-spacing: 2rpx;
+	color: $dim;
+	transition: color 140ms ease-out;
+}
+
+.sw-tab.on .sw-tab__num {
+	color: $ink;
+}
+
+.sw-tab.on .sw-tab__txt {
+	color: $ink;
+	font-weight: 700;
+}
+
+.sw-tab__bar {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: -1rpx;
+	height: 5rpx;
+	background-color: transparent;
+	transition: background-color 140ms ease-out;
+}
+
+.sw-tab.on .sw-tab__bar {
+	background-color: $ink;
+}
+
+/* ---------- 表单 ---------- */
+.sw-form {
+	position: relative;
+	flex: none;
+	padding: 2rpx 40rpx 0;
+}
+
+.sw-field {
+	position: relative;
+	padding-top: 38rpx;
+	margin-top: 16rpx;
+}
+
+.sw-field__label {
+	position: absolute;
+	left: 0;
+	top: 54rpx;
+	font-size: 28rpx;
+	line-height: 1;
+	letter-spacing: 1rpx;
+	color: $dim;
+	transform-origin: left top;
+	transition: top 180ms cubic-bezier(0.2, 0.8, 0.2, 1), font-size 180ms ease-out,
+		letter-spacing 180ms ease-out, color 180ms ease-out;
+}
+
+.sw-field.is-on .sw-field__label {
+	top: 6rpx;
+	font-size: 17rpx;
+	letter-spacing: 3rpx;
+	color: $ink;
+}
+
+.sw-field__req {
+	color: $red;
+	font-size: 18rpx;
+}
+
+.sw-field__idx {
+	position: absolute;
+	right: 0;
+	top: 6rpx;
+	font-family: $mono;
+	font-size: 16rpx;
+	letter-spacing: 1rpx;
+	color: $faint;
+}
+
+.sw-field__input {
+	display: block;
+	width: 100%;
+	height: 62rpx;
+	font-size: 30rpx;
+	line-height: 62rpx;
+	color: $ink;
+	background-color: transparent;
+	background-image: none;
+	border: none;
+	border-radius: 0;
+	padding: 0;
+	margin: 0;
+	appearance: none;
+	box-sizing: border-box;
+}
+
+.sw-field--code .sw-field__input {
+	padding-right: 210rpx;
+}
+
+.sw-field--toggle .sw-field__input {
+	padding-right: 104rpx;
+}
+
+.sw-field__line {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 1rpx;
+	background-color: $line;
+}
+
+.sw-field__ink {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 3rpx;
+	background-color: $ink;
+	transform: scaleX(0);
+	transform-origin: left center;
+	transition: transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1), background-color 160ms ease-out;
+}
+
+.sw-field.is-focus .sw-field__ink {
+	transform: scaleX(1);
+}
+
+.sw-field.is-error .sw-field__ink {
+	background-color: $red;
+	transform: scaleX(1);
+}
+
+.sw-field.is-error .sw-field__label {
+	color: $red;
+}
+
+.sw-field__toggle {
+	position: absolute;
+	right: 0;
+	bottom: 12rpx;
+	width: 82rpx;
+	height: 42rpx;
+	line-height: 42rpx;
+	text-align: center;
+	font-size: 18rpx;
+	letter-spacing: 1rpx;
+	color: $ink;
+	border: 1rpx solid $ink;
+	box-sizing: border-box;
+}
+
+.sw-field__toggle:active {
+	background-color: $ink;
+	color: $paper;
+}
+
+.sw-field__code {
+	position: absolute;
+	right: 0;
+	bottom: 14rpx;
+	font-family: $mono;
+	font-size: 19rpx;
+	letter-spacing: 1rpx;
+	color: $ink;
+	border-bottom: 1rpx solid $ink;
+	padding-bottom: 3rpx;
+}
+
+.sw-field__code.off {
+	color: $faint;
+	border-bottom-color: $line;
+}
+
+.sw-err {
+	display: block;
+	margin-top: 10rpx;
+	font-size: 20rpx;
+	line-height: 1.5;
+	letter-spacing: 0.5rpx;
+	color: $red;
+}
+
+.sw-hint {
+	display: block;
+	margin-top: 10rpx;
+	font-size: 20rpx;
+	line-height: 1.5;
+	color: $faint;
+}
+
+/* 密码强度：四格刻度 */
+.sw-strength {
+	display: flex;
+	align-items: center;
+	margin-top: 14rpx;
+}
+
+.sw-strength__bars {
+	display: flex;
+	flex: 1;
+}
+
+.sw-strength__bar {
+	flex: 1;
+	height: 6rpx;
+	margin-right: 6rpx;
+	background-color: $line;
+	transition: background-color 160ms ease-out;
+}
+
+.sw-strength__bar:last-child {
+	margin-right: 0;
+}
+
+.sw-strength__bar.on {
+	background-color: $ink;
+}
+
+.sw-strength__txt {
+	flex: none;
+	margin-left: 14rpx;
+	font-family: $mono;
+	font-size: 17rpx;
+	letter-spacing: 1rpx;
+	color: $dim;
+}
+
+/* ---------- 选项行 ---------- */
+.sw-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin: 28rpx 0 30rpx;
+}
+
+.sw-check {
+	display: flex;
+	align-items: center;
+}
+
+.sw-check__box {
+	flex: none;
+	width: 28rpx;
+	height: 28rpx;
+	border: 1rpx solid $ink;
+	box-sizing: border-box;
+	margin-right: 12rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background-color 140ms ease-out;
+}
+
+.sw-check__box.on {
+	background-color: $ink;
+}
+
+.sw-check__tick {
+	width: 10rpx;
+	height: 17rpx;
+	border-right: 3rpx solid $white;
+	border-bottom: 3rpx solid $white;
+	transform: rotate(45deg) scale(0);
+	margin-top: -5rpx;
+	transition: transform 140ms ease-out;
+}
+
+.sw-check__box.on .sw-check__tick {
+	transform: rotate(45deg) scale(1);
+}
+
+.sw-check__txt {
+	font-size: 21rpx;
+	color: $dim;
+	line-height: 1.5;
+}
+
+.sw-link {
+	font-size: 21rpx;
+	color: $ink;
+	border-bottom: 1rpx solid $ink;
+	padding-bottom: 2rpx;
+}
+
+.sw-link--dim {
+	color: $dim;
+	border-bottom-color: $line;
+}
+
+/* ---------- 主按钮：唯一的红色大面积 ---------- */
+.sw-submit {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	height: 96rpx;
+	background-color: $red;
+	padding: 0 28rpx 0 32rpx;
+	box-sizing: border-box;
+	transition: background-color 120ms ease-out, transform 80ms ease-out, opacity 120ms ease-out;
+}
+
+.sw-submit:active {
+	background-color: $red-dark;
+	transform: translateY(2rpx);
+}
+
+.sw-submit.is-busy {
+	opacity: 0.6;
+}
+
+.sw-submit__txt {
+	font-size: 29rpx;
+	font-weight: 700;
+	letter-spacing: 8rpx;
+	color: $white;
+}
+
+.sw-submit__right {
+	display: flex;
+	align-items: center;
+}
+
+.sw-submit__en {
+	font-family: $mono;
+	font-size: 17rpx;
+	letter-spacing: 2rpx;
+	color: rgba(255, 253, 247, 0.78);
+}
+
+.sw-submit__arrow {
+	margin-left: 14rpx;
+	font-size: 32rpx;
+	line-height: 1;
+	color: $white;
+}
+
+.sw-submit--ghost {
+	margin-top: 20rpx;
+	height: 84rpx;
+	background-color: transparent;
+	border: 2rpx solid $ink;
+	justify-content: center;
+}
+
+.sw-submit--ghost:active {
+	background-color: $ink;
+}
+
+.sw-submit--ghost .sw-submit__txt {
+	color: $ink;
+	letter-spacing: 4rpx;
+	font-size: 24rpx;
+}
+
+.sw-submit--ghost:active .sw-submit__txt {
+	color: $white;
+}
+
+/* ---------- 协议 ---------- */
+.sw-agree {
+	display: flex;
+	align-items: flex-start;
+	margin-top: 26rpx;
+}
+
+.sw-agree__txt {
+	font-size: 20rpx;
+	line-height: 1.7;
+	color: $dim;
+}
+
+.sw-agree__link {
+	color: $ink;
+	border-bottom: 1rpx solid $ink;
+}
+
+/* ---------- 分隔与第三方 ---------- */
+.sw-div {
+	display: flex;
+	align-items: center;
+	margin-top: 38rpx;
+}
+
+.sw-div__line {
+	flex: 1;
+	height: 1rpx;
+	background-color: $line;
+}
+
+.sw-div__txt {
+	flex: none;
+	padding: 0 14rpx;
+	font-family: $mono;
+	font-size: 16rpx;
+	letter-spacing: 2rpx;
+	color: $faint;
+}
+
+.sw-alt {
+	display: flex;
+	margin-top: 20rpx;
+	border-top: 1rpx solid $ink;
+	border-bottom: 1rpx solid $ink;
+}
+
+.sw-alt__i {
+	flex: 1;
+	text-align: center;
+	padding: 22rpx 0;
+	font-size: 22rpx;
+	letter-spacing: 2rpx;
+	color: $ink;
+	border-right: 1rpx solid $line;
+	transition: background-color 120ms ease-out, color 120ms ease-out;
+}
+
+.sw-alt__i:last-child {
+	border-right: none;
+}
+
+.sw-alt__i:active {
+	background-color: $ink;
+	color: $paper;
+}
+
+/* ---------- 找回密码步骤 ---------- */
+.sw-steps {
+	display: flex;
+	margin: 34rpx 40rpx 0;
+	border-top: 2rpx solid $ink;
+	border-bottom: 1rpx solid $line;
+	animation: sw-rise 220ms 260ms ease-out both;
+}
+
+.sw-step {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	padding: 16rpx 20rpx;
+	border-right: 1rpx solid $line;
+	box-sizing: border-box;
+}
+
+.sw-step:last-child {
+	border-right: none;
+}
+
+.sw-step__num {
+	flex: none;
+	width: 34rpx;
+	height: 34rpx;
+	line-height: 32rpx;
+	text-align: center;
+	font-family: $mono;
+	font-size: 17rpx;
+	color: $faint;
+	border: 1rpx solid $line;
+	box-sizing: border-box;
+}
+
+.sw-step.on .sw-step__num {
+	background-color: $ink;
+	border-color: $ink;
+	color: $paper;
+}
+
+.sw-step__txt {
+	margin-left: 12rpx;
+	font-size: 21rpx;
+	letter-spacing: 1rpx;
+	color: $dim;
+}
+
+.sw-step.on .sw-step__txt {
+	color: $ink;
+	font-weight: 700;
+}
+
+.sw-note {
+	margin-top: 40rpx;
+	border-left: 4rpx solid $ink;
+	padding: 16rpx 0 16rpx 22rpx;
+}
+
+.sw-note__h {
+	display: block;
+	font-family: $mono;
+	font-size: 17rpx;
+	letter-spacing: 2rpx;
+	color: $ink;
+	margin-bottom: 8rpx;
+}
+
+.sw-note__txt {
+	display: block;
+	font-size: 20rpx;
+	line-height: 1.75;
+	color: $dim;
+}
+
+/* ---------- 页脚 ---------- */
+.sw-foot {
+	position: relative;
+	flex: none;
+	margin-top: auto;
+	padding-top: 40rpx;
+}
+
+.sw-foot__rule {
+	height: 4rpx;
+	background-color: $ink;
+}
+
+.sw-foot__body {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 24rpx 40rpx;
+}
+
+.sw-foot__txt {
+	font-size: 21rpx;
+	color: $dim;
+}
+
+.sw-foot__meta {
+	font-family: $mono;
+	font-size: 16rpx;
+	letter-spacing: 1rpx;
+	color: $faint;
+}
+
+.sw-foot__bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 14rpx 40rpx;
+	background-color: $ink;
+	color: $paper;
+	font-family: $mono;
+	font-size: 15rpx;
+	letter-spacing: 2rpx;
+}
+
+/* ---------- 动效 ---------- */
+@keyframes sw-rise {
+	from {
+		opacity: 0;
+		transform: translateY(18rpx);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes sw-reveal {
+	from {
+		opacity: 0;
+		transform: scale(0.6);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}

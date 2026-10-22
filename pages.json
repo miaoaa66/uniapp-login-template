@@ -1347,6 +1347,27 @@
 				"navigationStyle": "custom",
 				"navigationBarTitleText": "重型操作台 · 找回密码"
 			}
+		},
+		{
+			"path": "pages/login126/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "瑞士网格 · 登录"
+			}
+		},
+		{
+			"path": "pages/login126/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "瑞士网格 · 注册"
+			}
+		},
+		{
+			"path": "pages/login126/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "瑞士网格 · 找回密码"
+			}
 		}
 	],
 	"globalStyle": {

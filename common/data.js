@@ -624,5 +624,10 @@ export default {
 			path: "/pages/login125/login",
 			tags: ["工业", "机械", "登录", "注册", "密码", "验证码"]
 		},
+		{
+			cover: require('../static/cover/login126_cover.jpg'),
+			path: "/pages/login126/login",
+			tags: ["瑞士", "网格", "极简", "登录", "注册", "密码", "验证码", "手机号", "邮箱"]
+		},
 	]
 }
