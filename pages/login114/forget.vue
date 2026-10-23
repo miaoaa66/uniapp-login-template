@@ -3,7 +3,6 @@
 		<view class="deco deco-sky"></view>
 		<view class="deco deco-sun"></view>
 		<view class="deco deco-sun-stripes"></view>
-		<view class="deco deco-horizon"></view>
 		<view class="deco deco-floor"></view>
 		<view class="deco deco-scan"></view>
 
@@ -19,37 +18,47 @@
 		</view>
 
 		<view class="content">
-			<view class="brand">
-				<view class="logo"><view class="logo-core"></view></view>
-				<view class="brand-txt">
-					<text class="brand-name">蒸汽浪潮</text>
-					<text class="brand-sub">ＶＡＰＯＲ　１９９５</text>
-				</view>
-			</view>
-
-			<view class="head">
-				<text class="eyebrow">ＡＥＳＴＨＥＴＩＣ · RESET</text>
-				<text class="title">找回密码</text>
-				<text class="lead">验证注册手机号，重新打开通往 1995 的门。</text>
-			</view>
-
-			<view class="card">
-				<view class="steps">
-					<view class="step" :class="{ on: step === 0 }">
-						<view class="step-dot"></view>
-						<text>01 验证身份</text>
-					</view>
-					<view class="step-line"></view>
-					<view class="step" :class="{ on: step === 1 }">
-						<view class="step-dot"></view>
-						<text>02 设置密码</text>
+			<view class="win">
+				<view class="tabs">
+					<view class="tab on">
+						<text class="tab-cn">找回</text>
+						<text class="tab-en">RECOVER</text>
 					</view>
 				</view>
 
-				<block v-if="step === 0">
-					<view class="field">
-						<text class="field-label">注册手机号</text>
-						<view class="field-box" :class="{ active: focus === 'phone', error: !!err.phone }">
+				<view class="bar">
+					<text class="bar-title">▒ VAPORNET_RECOVER v1.5</text>
+					<view class="bar-btns">
+						<view class="bar-btn">_</view>
+						<view class="bar-btn">□</view>
+						<view class="bar-btn bar-btn-x">×</view>
+					</view>
+				</view>
+
+				<view class="win-body">
+					<view class="brand">
+						<text class="brand-name">黄昏终端</text>
+						<text class="brand-sub">VAPORWAVE // RECOVER ACCESS</text>
+					</view>
+
+					<view class="head">
+						<text class="title">恢复访问</text>
+						<text class="lead">通过注册手机号重新校验身份，随后重置访问密钥。</text>
+					</view>
+
+					<view class="steps">
+						<view class="step bevel-in" :class="{ on: step === 0, done: step > 0 }">
+							<text class="step-txt">{{ step > 0 ? '✓' : '1' }} 验证身份</text>
+						</view>
+						<view class="step-arrow">→</view>
+						<view class="step bevel-in" :class="{ on: step === 1 }">
+							<text class="step-txt">2 设置密码</text>
+						</view>
+					</view>
+
+					<block v-if="step === 0">
+						<view class="fwin" :class="{ active: focus === 'phone', error: !!err.phone }">
+							<text class="fwin-label">注册手机号</text>
 							<input
 								class="input input-num"
 								v-model="phone"
@@ -62,11 +71,9 @@
 							/>
 						</view>
 						<text v-if="err.phone" class="err">{{ err.phone }}</text>
-					</view>
 
-					<view class="field">
-						<text class="field-label">短信验证码</text>
-						<view class="field-box" :class="{ active: focus === 'sms', error: !!err.sms }">
+						<view class="fwin" :class="{ active: focus === 'sms', error: !!err.sms }">
+							<text class="fwin-label">短信验证码</text>
 							<input
 								class="input input-num"
 								v-model="sms"
@@ -77,18 +84,18 @@
 								@focus="focus = 'sms'"
 								@blur="focus = ''"
 							/>
-							<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + ' s' : '获取验证码' }}</text>
+							<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode">{{ smsLeft > 0 ? smsLeft + ' s' : '获取验证码' }}</text>
 						</view>
 						<text v-if="err.sms" class="err">{{ err.sms }}</text>
-					</view>
 
-					<view class="btn" @click="next">下 一 步</view>
-				</block>
+						<view class="btn bevel-out" @click="next">
+							<text>下一步</text>
+						</view>
+					</block>
 
-				<block v-else>
-					<view class="field">
-						<text class="field-label">新密码</text>
-						<view class="field-box" :class="{ active: focus === 'password', error: !!err.password }">
+					<block v-else>
+						<view class="fwin" :class="{ active: focus === 'password', error: !!err.password }">
+							<text class="fwin-label">新密码</text>
 							<input
 								class="input"
 								v-model="password"
@@ -102,11 +109,9 @@
 							<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐藏' : '显示' }}</text>
 						</view>
 						<text v-if="err.password" class="err">{{ err.password }}</text>
-					</view>
 
-					<view class="field">
-						<text class="field-label">确认新密码</text>
-						<view class="field-box" :class="{ active: focus === 'confirm', error: !!err.confirm }">
+						<view class="fwin" :class="{ active: focus === 'confirm', error: !!err.confirm }">
+							<text class="fwin-label">确认新密码</text>
 							<input
 								class="input"
 								v-model="confirm"
@@ -119,14 +124,18 @@
 							/>
 						</view>
 						<text v-if="err.confirm" class="err">{{ err.confirm }}</text>
+
+						<view class="btn bevel-out" :class="{ 'is-busy': submitting }" @click="submit">
+							<text>{{ submitting ? '重置中...' : '重置密码' }}</text>
+						</view>
+						<view class="btn-ghost" @click="back">← 上一步</view>
+					</block>
+
+					<view class="safe">
+						<text class="safe-h">» 安全提示</text>
+						<text class="safe-txt">重置成功后，其他设备上的登录状态将全部失效。若手机号已停用，请联系管理员核验身份。</text>
 					</view>
-
-					<view class="btn" :class="{ 'is-busy': submitting }" @click="submit">重 置 密 码</view>
-					<view class="btn btn-ghost" @click="back">上一步</view>
-				</block>
-
-				<text class="terms-h">安全提示</text>
-				<text class="terms">重置成功后，其他设备上的登录状态将全部失效。若手机号已停用，请联系管理员核验身份。</text>
+				</view>
 			</view>
 		</view>
 
@@ -135,13 +144,13 @@
 				<text class="foot-txt">想起密码了</text>
 				<text class="link" @click="goLogin">返回登录</text>
 			</view>
-			<text class="copy">© 1995—2026 VAPOR CLUB</text>
+			<text class="copy">© 2026 VAPORNET // DIAL-UP BBS</text>
 		</view>
 	</view>
 </template>
 
 <script>
-export default {
+	export default {
 		data() {
 			return {
 				statusBar: 0,
@@ -149,7 +158,7 @@ export default {
 				focus: '',
 				showPwd: false,
 				submitting: false,
-				phStyle: 'color:rgba(255,255,255,0.45);font-size:15px;',
+				phStyle: 'color:rgba(255,255,255,0.42);font-size:15px;',
 				phone: '',
 				sms: '',
 				password: '',
@@ -187,7 +196,7 @@ export default {
 				this.toast('验证码已发送');
 				if (this.timer) return;
 				this.timer = setInterval(() => {
-					this.smsLeft--;
+					if (this.smsLeft > 0) this.smsLeft--;
 					if (this.smsLeft <= 0) this.clearTimer();
 				}, 1000);
 			},

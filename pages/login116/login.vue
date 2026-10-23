@@ -1,9 +1,6 @@
 <template>
 	<view class="page">
 		<view class="deco deco-stripe"></view>
-		<view class="deco deco-block"></view>
-		<view class="deco deco-rows"></view>
-		<view class="deco deco-cross"></view>
 
 		<view class="status" :style="{ height: statusBar + 'px' }"></view>
 
@@ -17,146 +14,136 @@
 		</view>
 
 		<view class="content">
-			<view class="brand">
-				<view class="logo"><view class="logo-core"></view></view>
-				<view class="brand-txt">
-					<text class="brand-name">粗野俱乐部</text>
-					<text class="brand-sub">BRUTAL PRESS · 04</text>
+			<view class="big">
+				<text class="big-en">LOGIN</text>
+				<view class="big-bar"></view>
+				<text class="big-cn">直接登录 / NO NONSENSE</text>
+			</view>
+
+			<view class="blocks">
+				<view
+					v-for="(item, i) in tabs"
+					:key="i"
+					class="block"
+					:class="['block-' + i, { on: tab === i }]"
+					@click="switchTab(i)"
+				>
+					<text class="block-txt">{{ item }}</text>
 				</view>
 			</view>
 
-			<view class="head">
-				<text class="eyebrow">NO MERCY · SIGN IN</text>
-				<text class="title">直接登录</text>
-				<text class="lead">没有花架子：粗黑边、硬阴影、高饱和原色，一切都摆在明面上。</text>
-			</view>
-
-			<view class="tabs">
-				<text v-for="(item, i) in tabs" :key="i" class="tab" :class="{ on: tab === i }" @click="switchTab(i)">{{ item }}</text>
-			</view>
-
-			<view class="card">
+			<view class="forms">
 				<block v-if="tab === 0">
-					<view class="field">
-						<text class="field-label">手机号 / 邮箱</text>
-						<view class="field-box" :class="{ active: focus === 'account', error: !!err.account }">
-							<input
-								class="input input-num"
-								v-model="account"
-								:placeholder-style="phStyle"
-								placeholder="请输入手机号或邮箱"
-								maxlength="40"
-								@focus="focus = 'account'"
-								@blur="focus = ''"
-							/>
-						</view>
-						<text v-if="err.account" class="err">{{ err.account }}</text>
+					<view class="bfield" :class="{ active: focus === 'account', error: !!err.account }">
+						<text class="bfield-label">手机号 / 邮箱 *</text>
+						<input
+							class="input input-num"
+							v-model="account"
+							:placeholder-style="phStyle"
+							placeholder="请输入手机号或邮箱"
+							maxlength="40"
+							@focus="focus = 'account'"
+							@blur="focus = ''"
+						/>
 					</view>
+					<text v-if="err.account" class="err">{{ err.account }}</text>
 
-					<view class="field">
-						<text class="field-label">登录密码</text>
-						<view class="field-box" :class="{ active: focus === 'password', error: !!err.password }">
-							<input
-								class="input"
-								v-model="password"
-								:password="!showPwd"
-								:placeholder-style="phStyle"
-								placeholder="请输入登录密码"
-								maxlength="20"
-								@focus="focus = 'password'"
-								@blur="focus = ''"
-							/>
-							<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐藏' : '显示' }}</text>
-						</view>
-						<text v-if="err.password" class="err">{{ err.password }}</text>
+					<view class="bfield" :class="{ active: focus === 'password', error: !!err.password }">
+						<text class="bfield-label">登录密码 *</text>
+						<input
+							class="input"
+							v-model="password"
+							:password="!showPwd"
+							:placeholder-style="phStyle"
+							placeholder="请输入登录密码"
+							maxlength="20"
+							@focus="focus = 'password'"
+							@blur="focus = ''"
+						/>
+						<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐藏' : '显示' }}</text>
 					</view>
+					<text v-if="err.password" class="err">{{ err.password }}</text>
 				</block>
 
 				<block v-else-if="tab === 1">
-					<view class="field">
-						<text class="field-label">手机号</text>
-						<view class="field-box" :class="{ active: focus === 'phone', error: !!err.phone }">
-							<input
-								class="input input-num"
-								v-model="phone"
-								type="number"
-								:placeholder-style="phStyle"
-								placeholder="请输入 11 位手机号"
-								maxlength="11"
-								@focus="focus = 'phone'"
-								@blur="focus = ''"
-							/>
-						</view>
-						<text v-if="err.phone" class="err">{{ err.phone }}</text>
+					<view class="bfield" :class="{ active: focus === 'phone', error: !!err.phone }">
+						<text class="bfield-label">手机号 *</text>
+						<input
+							class="input input-num"
+							v-model="phone"
+							type="number"
+							:placeholder-style="phStyle"
+							placeholder="请输入 11 位手机号"
+							maxlength="11"
+							@focus="focus = 'phone'"
+							@blur="focus = ''"
+						/>
 					</view>
+					<text v-if="err.phone" class="err">{{ err.phone }}</text>
 
-					<view class="field">
-						<text class="field-label">短信验证码</text>
-						<view class="field-box" :class="{ active: focus === 'sms', error: !!err.sms }">
-							<input
-								class="input input-num"
-								v-model="sms"
-								type="number"
-								:placeholder-style="phStyle"
-								placeholder="6 位数字"
-								maxlength="6"
-								@focus="focus = 'sms'"
-								@blur="focus = ''"
-							/>
-							<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + ' s' : '获取验证码' }}</text>
-						</view>
-						<text v-if="err.sms" class="err">{{ err.sms }}</text>
+					<view class="bfield" :class="{ active: focus === 'sms', error: !!err.sms }">
+						<text class="bfield-label">短信验证码 *</text>
+						<input
+							class="input input-num"
+							v-model="sms"
+							type="number"
+							:placeholder-style="phStyle"
+							placeholder="6 位数字"
+							maxlength="6"
+							@focus="focus = 'sms'"
+							@blur="focus = ''"
+						/>
+						<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + ' s' : '获取验证码' }}</text>
 					</view>
+					<text v-if="err.sms" class="err">{{ err.sms }}</text>
 				</block>
 
 				<block v-else>
-					<view class="field">
-						<text class="field-label">邮箱地址</text>
-						<view class="field-box" :class="{ active: focus === 'email', error: !!err.email }">
-							<input
-								class="input"
-								v-model="email"
-								:placeholder-style="phStyle"
-								placeholder="name@example.com"
-								maxlength="40"
-								@focus="focus = 'email'"
-								@blur="focus = ''"
-							/>
-						</view>
-						<text v-if="err.email" class="err">{{ err.email }}</text>
+					<view class="bfield" :class="{ active: focus === 'email', error: !!err.email }">
+						<text class="bfield-label">邮箱地址 *</text>
+						<input
+							class="input"
+							v-model="email"
+							:placeholder-style="phStyle"
+							placeholder="name@example.com"
+							maxlength="40"
+							@focus="focus = 'email'"
+							@blur="focus = ''"
+						/>
 					</view>
+					<text v-if="err.email" class="err">{{ err.email }}</text>
 
-					<view class="field">
-						<text class="field-label">邮箱验证码</text>
-						<view class="field-box" :class="{ active: focus === 'mail', error: !!err.mail }">
-							<input
-								class="input input-num"
-								v-model="mail"
-								type="number"
-								:placeholder-style="phStyle"
-								placeholder="6 位数字"
-								maxlength="6"
-								@focus="focus = 'mail'"
-								@blur="focus = ''"
-							/>
-							<text class="code" :class="{ off: mailLeft > 0 }" @click="sendCode('mail')">{{ mailLeft > 0 ? mailLeft + ' s' : '获取验证码' }}</text>
-						</view>
-						<text v-if="err.mail" class="err">{{ err.mail }}</text>
+					<view class="bfield" :class="{ active: focus === 'mail', error: !!err.mail }">
+						<text class="bfield-label">邮箱验证码 *</text>
+						<input
+							class="input input-num"
+							v-model="mail"
+							type="number"
+							:placeholder-style="phStyle"
+							placeholder="6 位数字"
+							maxlength="6"
+							@focus="focus = 'mail'"
+							@blur="focus = ''"
+						/>
+						<text class="code" :class="{ off: mailLeft > 0 }" @click="sendCode('mail')">{{ mailLeft > 0 ? mailLeft + ' s' : '获取验证码' }}</text>
 					</view>
+					<text v-if="err.mail" class="err">{{ err.mail }}</text>
 				</block>
 
 				<view class="row">
 					<view class="check check-inline" @click="remember = !remember">
-						<view class="check-box" :class="{ on: remember }"><view class="check-tick"></view></view>
+						<view class="check-box" :class="{ on: remember }"><text v-if="remember" class="check-tick">✕</text></view>
 						<text class="check-txt">记住此设备</text>
 					</view>
-					<text class="link link-soft" @click="goForget">忘记密码</text>
+					<text class="link link-soft" @click="goForget">忘记密码 →</text>
 				</view>
 
-				<view class="btn" :class="{ 'is-busy': submitting }" @click="submit">登 录</view>
+				<view class="giant" :class="{ 'is-busy': submitting }" @click="submit">
+					<text class="giant-txt">{{ submitting ? '处理中…' : '登 录 →' }}</text>
+				</view>
 
 				<view class="check" @click="agreed = !agreed">
-					<view class="check-box" :class="{ on: agreed }"><view class="check-tick"></view></view>
+					<view class="check-box" :class="{ on: agreed }"><text v-if="agreed" class="check-tick">✕</text></view>
 					<text class="check-txt">我已阅读并同意 <text class="check-link">《用户协议》</text> 与 <text class="check-link">《隐私政策》</text></text>
 				</view>
 
@@ -170,16 +157,16 @@
 
 		<view class="foot">
 			<view class="foot-row">
-				<text class="foot-txt">还没有账号</text>
-				<text class="link" @click="goRegister">创建账号</text>
+				<text class="foot-txt">还没有账号？</text>
+				<text class="link" @click="goRegister">创建账号 →</text>
 			</view>
-			<text class="copy">© 2026 BRUTAL PRESS · RAW & LOUD</text>
+			<text class="copy">© 2026 BRUTAL SUPPLY CO.</text>
 		</view>
 	</view>
 </template>
 
 <script>
-export default {
+	export default {
 		data() {
 			return {
 				statusBar: 0,
@@ -190,7 +177,7 @@ export default {
 				remember: false,
 				agreed: false,
 				submitting: false,
-				phStyle: 'color:#a8a294;font-size:15px;',
+				phStyle: 'color:rgba(0,0,0,0.32);font-size:15px;',
 				account: '',
 				password: '',
 				phone: '',
@@ -213,18 +200,17 @@ export default {
 			this.clearTimer();
 		},
 		methods: {
-			fillDemo() {
-				this.agreed = true;
-				this.account = 'loud@brutal.press';
-				this.password = 'brut-0800';
-				this.phone = '13800001234';
-				this.sms = '202610';
-				this.email = 'loud@brutal.press';
-				this.mail = '202610';
-			},
-
 			toast(title) {
 				uni.showToast({ title, icon: 'none' });
+			},
+
+			fillDemo() {
+				this.account = '13800001234';
+				this.password = 'demo1234';
+				this.phone = '13800001234';
+				this.sms = '202610';
+				this.email = 'demo@work.com';
+				this.mail = '202610';
 			},
 
 			isPhone(v) {

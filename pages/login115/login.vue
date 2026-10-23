@@ -1,14 +1,7 @@
 <template>
 	<view class="page">
 		<view class="deco deco-grid"></view>
-		<view class="deco deco-ring deco-ring-a"></view>
-		<view class="deco deco-ring deco-ring-b"></view>
 		<view class="deco deco-ruler"></view>
-		<view class="deco deco-hud deco-hud-tl"></view>
-		<view class="deco deco-hud deco-hud-tr"></view>
-		<view class="deco deco-hud deco-hud-bl"></view>
-		<view class="deco deco-hud deco-hud-br"></view>
-		<view class="deco deco-sweep"></view>
 
 		<view class="status" :style="{ height: statusBar + 'px' }"></view>
 
@@ -22,29 +15,34 @@
 		</view>
 
 		<view class="content">
-			<view class="brand">
-				<view class="logo"><view class="logo-core"></view></view>
-				<view class="brand-txt">
-					<text class="brand-name">轨道控制台</text>
-					<text class="brand-sub">HUD // SYSTEM 04</text>
+			<view class="dial">
+				<view class="dial-ticks"></view>
+				<view class="dial-core">
+					<text class="dial-v">{{ submitting ? 'AUTH' : 'IDLE' }}</text>
+					<text class="dial-h">CREW ACCESS</text>
 				</view>
+				<view class="dial-bracket dial-bracket-tl"></view>
+				<view class="dial-bracket dial-bracket-br"></view>
 			</view>
 
 			<view class="head">
-				<text class="eyebrow">IDENTITY CHECK</text>
 				<text class="title">身份验证</text>
-				<text class="lead">链路已建立，等待凭证校验。校验通过后进入主控面板。</text>
+				<text class="lead">校验乘员凭证后放行。未授权访问将被追踪。</text>
 			</view>
 
-			<view class="tabs">
-				<text v-for="(item, i) in tabs" :key="i" class="tab" :class="{ on: tab === i }" @click="switchTab(i)">{{ item }}</text>
+			<view class="seg">
+				<view v-for="(item, i) in tabs" :key="i" class="seg-cell" :class="{ on: tab === i }" @click="switchTab(i)">
+					<text class="seg-idx">0{{ i + 1 }}</text>
+					<text class="seg-name">{{ item }}</text>
+				</view>
 			</view>
 
-			<view class="card">
+			<view class="slots">
 				<block v-if="tab === 0">
-					<view class="field">
-						<text class="field-label">手机号 / 邮箱</text>
-						<view class="field-box" :class="{ active: focus === 'account', error: !!err.account }">
+					<view class="slot" :class="{ active: focus === 'account', error: !!err.account }">
+						<text class="slot-tag">ACC</text>
+						<view class="slot-main">
+							<text class="slot-label">手机号 / 邮箱</text>
 							<input
 								class="input input-num"
 								v-model="account"
@@ -55,12 +53,15 @@
 								@blur="focus = ''"
 							/>
 						</view>
-						<text v-if="err.account" class="err">{{ err.account }}</text>
+						<view class="slot-bracket slot-bracket-l"></view>
+						<view class="slot-bracket slot-bracket-r"></view>
 					</view>
+					<text v-if="err.account" class="err">{{ err.account }}</text>
 
-					<view class="field">
-						<text class="field-label">登录密码</text>
-						<view class="field-box" :class="{ active: focus === 'password', error: !!err.password }">
+					<view class="slot" :class="{ active: focus === 'password', error: !!err.password }">
+						<text class="slot-tag">KEY</text>
+						<view class="slot-main">
+							<text class="slot-label">登录密码</text>
 							<input
 								class="input"
 								v-model="password"
@@ -71,16 +72,19 @@
 								@focus="focus = 'password'"
 								@blur="focus = ''"
 							/>
-							<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐藏' : '显示' }}</text>
 						</view>
-						<text v-if="err.password" class="err">{{ err.password }}</text>
+						<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐藏' : '显示' }}</text>
+						<view class="slot-bracket slot-bracket-l"></view>
+						<view class="slot-bracket slot-bracket-r"></view>
 					</view>
+					<text v-if="err.password" class="err">{{ err.password }}</text>
 				</block>
 
 				<block v-else-if="tab === 1">
-					<view class="field">
-						<text class="field-label">手机号</text>
-						<view class="field-box" :class="{ active: focus === 'phone', error: !!err.phone }">
+					<view class="slot" :class="{ active: focus === 'phone', error: !!err.phone }">
+						<text class="slot-tag">TEL</text>
+						<view class="slot-main">
+							<text class="slot-label">手机号</text>
 							<input
 								class="input input-num"
 								v-model="phone"
@@ -92,12 +96,15 @@
 								@blur="focus = ''"
 							/>
 						</view>
-						<text v-if="err.phone" class="err">{{ err.phone }}</text>
+						<view class="slot-bracket slot-bracket-l"></view>
+						<view class="slot-bracket slot-bracket-r"></view>
 					</view>
+					<text v-if="err.phone" class="err">{{ err.phone }}</text>
 
-					<view class="field">
-						<text class="field-label">短信验证码</text>
-						<view class="field-box" :class="{ active: focus === 'sms', error: !!err.sms }">
+					<view class="slot" :class="{ active: focus === 'sms', error: !!err.sms }">
+						<text class="slot-tag">OTP</text>
+						<view class="slot-main">
+							<text class="slot-label">短信验证码</text>
 							<input
 								class="input input-num"
 								v-model="sms"
@@ -108,16 +115,19 @@
 								@focus="focus = 'sms'"
 								@blur="focus = ''"
 							/>
-							<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + ' s' : '获取验证码' }}</text>
 						</view>
-						<text v-if="err.sms" class="err">{{ err.sms }}</text>
+						<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + ' s' : 'SEND' }}</text>
+						<view class="slot-bracket slot-bracket-l"></view>
+						<view class="slot-bracket slot-bracket-r"></view>
 					</view>
+					<text v-if="err.sms" class="err">{{ err.sms }}</text>
 				</block>
 
 				<block v-else>
-					<view class="field">
-						<text class="field-label">邮箱地址</text>
-						<view class="field-box" :class="{ active: focus === 'email', error: !!err.email }">
+					<view class="slot" :class="{ active: focus === 'email', error: !!err.email }">
+						<text class="slot-tag">ADR</text>
+						<view class="slot-main">
+							<text class="slot-label">邮箱地址</text>
 							<input
 								class="input"
 								v-model="email"
@@ -128,12 +138,15 @@
 								@blur="focus = ''"
 							/>
 						</view>
-						<text v-if="err.email" class="err">{{ err.email }}</text>
+						<view class="slot-bracket slot-bracket-l"></view>
+						<view class="slot-bracket slot-bracket-r"></view>
 					</view>
+					<text v-if="err.email" class="err">{{ err.email }}</text>
 
-					<view class="field">
-						<text class="field-label">邮箱验证码</text>
-						<view class="field-box" :class="{ active: focus === 'mail', error: !!err.mail }">
+					<view class="slot" :class="{ active: focus === 'mail', error: !!err.mail }">
+						<text class="slot-tag">OTP</text>
+						<view class="slot-main">
+							<text class="slot-label">邮箱验证码</text>
 							<input
 								class="input input-num"
 								v-model="mail"
@@ -144,10 +157,12 @@
 								@focus="focus = 'mail'"
 								@blur="focus = ''"
 							/>
-							<text class="code" :class="{ off: mailLeft > 0 }" @click="sendCode('mail')">{{ mailLeft > 0 ? mailLeft + ' s' : '获取验证码' }}</text>
 						</view>
-						<text v-if="err.mail" class="err">{{ err.mail }}</text>
+						<text class="code" :class="{ off: mailLeft > 0 }" @click="sendCode('mail')">{{ mailLeft > 0 ? mailLeft + ' s' : 'SEND' }}</text>
+						<view class="slot-bracket slot-bracket-l"></view>
+						<view class="slot-bracket slot-bracket-r"></view>
 					</view>
+					<text v-if="err.mail" class="err">{{ err.mail }}</text>
 				</block>
 
 				<view class="row">
@@ -158,7 +173,11 @@
 					<text class="link link-soft" @click="goForget">忘记密码</text>
 				</view>
 
-				<view class="btn" :class="{ 'is-busy': submitting }" @click="submit">登 录</view>
+				<view class="slider" :class="{ 'is-busy': submitting }" @click="submit">
+					<view class="slider-fill"></view>
+					<view class="slider-knob"></view>
+					<text class="slider-txt">{{ submitting ? 'AUTHORIZING' : 'AUTHORIZE ▸' }}</text>
+				</view>
 
 				<view class="check" @click="agreed = !agreed">
 					<view class="check-box" :class="{ on: agreed }"><view class="check-tick"></view></view>
@@ -178,13 +197,13 @@
 				<text class="foot-txt">还没有账号</text>
 				<text class="link" @click="goRegister">创建账号</text>
 			</view>
-			<text class="copy">© 2026 ORBITAL SYS · BUILD 4.02</text>
+			<text class="copy">© 2026 ORBITAL DECK · CLEARANCE L2</text>
 		</view>
 	</view>
 </template>
 
 <script>
-export default {
+	export default {
 		data() {
 			return {
 				statusBar: 0,
@@ -195,7 +214,7 @@ export default {
 				remember: false,
 				agreed: false,
 				submitting: false,
-				phStyle: 'color:rgba(214,253,246,0.36);font-size:15px;',
+				phStyle: 'color:rgba(214,253,246,0.4);font-size:15px;',
 				account: '',
 				password: '',
 				phone: '',
@@ -218,18 +237,17 @@ export default {
 			this.clearTimer();
 		},
 		methods: {
-			fillDemo() {
-				this.agreed = true;
-				this.account = 'ops@orbital.sys';
-				this.password = 'hud-4207';
-				this.phone = '13800001234';
-				this.sms = '202610';
-				this.email = 'ops@orbital.sys';
-				this.mail = '202610';
-			},
-
 			toast(title) {
 				uni.showToast({ title, icon: 'none' });
+			},
+
+			fillDemo() {
+				this.account = '13800001234';
+				this.password = 'demo1234';
+				this.phone = '13800001234';
+				this.sms = '202610';
+				this.email = 'demo@work.com';
+				this.mail = '202610';
 			},
 
 			isPhone(v) {

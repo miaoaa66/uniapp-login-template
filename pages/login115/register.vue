@@ -1,14 +1,7 @@
 <template>
 	<view class="page">
 		<view class="deco deco-grid"></view>
-		<view class="deco deco-ring deco-ring-a"></view>
-		<view class="deco deco-ring deco-ring-b"></view>
 		<view class="deco deco-ruler"></view>
-		<view class="deco deco-hud deco-hud-tl"></view>
-		<view class="deco deco-hud deco-hud-tr"></view>
-		<view class="deco deco-hud deco-hud-bl"></view>
-		<view class="deco deco-hud deco-hud-br"></view>
-		<view class="deco deco-sweep"></view>
 
 		<view class="status" :style="{ height: statusBar + 'px' }"></view>
 
@@ -22,24 +15,26 @@
 		</view>
 
 		<view class="content">
-			<view class="brand">
-				<view class="logo"><view class="logo-core"></view></view>
-				<view class="brand-txt">
-					<text class="brand-name">轨道控制台</text>
-					<text class="brand-sub">HUD // SYSTEM 04</text>
+			<view class="dial">
+				<view class="dial-ticks"></view>
+				<view class="dial-core">
+					<text class="dial-v">{{ submitting ? 'REG' : 'IDLE' }}</text>
+					<text class="dial-h">NEW CREW</text>
 				</view>
+				<view class="dial-bracket dial-bracket-tl"></view>
+				<view class="dial-bracket dial-bracket-br"></view>
 			</view>
 
 			<view class="head">
-				<text class="eyebrow">CREATE OPERATOR</text>
-				<text class="title">注册操作员</text>
-				<text class="lead">登记操作员身份，绑定通讯号以接收动态口令。</text>
+				<text class="title">乘员注册</text>
+				<text class="lead">录入新乘员身份并绑定通讯频道。</text>
 			</view>
 
-			<view class="card">
-				<view class="field">
-					<text class="field-label">手机号</text>
-					<view class="field-box" :class="{ active: focus === 'phone', error: !!err.phone }">
+			<view class="slots">
+				<view class="slot" :class="{ active: focus === 'phone', error: !!err.phone }">
+					<text class="slot-tag">TEL</text>
+					<view class="slot-main">
+						<text class="slot-label">手机号</text>
 						<input
 							class="input input-num"
 							v-model="phone"
@@ -51,12 +46,15 @@
 							@blur="focus = ''"
 						/>
 					</view>
-					<text v-if="err.phone" class="err">{{ err.phone }}</text>
+					<view class="slot-bracket slot-bracket-l"></view>
+					<view class="slot-bracket slot-bracket-r"></view>
 				</view>
+				<text v-if="err.phone" class="err">{{ err.phone }}</text>
 
-				<view class="field">
-					<text class="field-label">短信验证码</text>
-					<view class="field-box" :class="{ active: focus === 'sms', error: !!err.sms }">
+				<view class="slot" :class="{ active: focus === 'sms', error: !!err.sms }">
+					<text class="slot-tag">OTP</text>
+					<view class="slot-main">
+						<text class="slot-label">短信验证码</text>
 						<input
 							class="input input-num"
 							v-model="sms"
@@ -67,14 +65,17 @@
 							@focus="focus = 'sms'"
 							@blur="focus = ''"
 						/>
-						<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + ' s' : '获取验证码' }}</text>
 					</view>
-					<text v-if="err.sms" class="err">{{ err.sms }}</text>
+					<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode">{{ smsLeft > 0 ? smsLeft + ' s' : 'SEND' }}</text>
+					<view class="slot-bracket slot-bracket-l"></view>
+					<view class="slot-bracket slot-bracket-r"></view>
 				</view>
+				<text v-if="err.sms" class="err">{{ err.sms }}</text>
 
-				<view class="field">
-					<text class="field-label">设置密码</text>
-					<view class="field-box" :class="{ active: focus === 'password', error: !!err.password }">
+				<view class="slot" :class="{ active: focus === 'password', error: !!err.password }">
+					<text class="slot-tag">KEY</text>
+					<view class="slot-main">
+						<text class="slot-label">设置密码</text>
 						<input
 							class="input"
 							v-model="password"
@@ -85,15 +86,17 @@
 							@focus="focus = 'password'"
 							@blur="focus = ''"
 						/>
-						<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐藏' : '显示' }}</text>
 					</view>
-					<text v-if="err.password" class="err">{{ err.password }}</text>
-					<text v-else class="tip">建议使用字母、数字与符号的组合</text>
+					<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐藏' : '显示' }}</text>
+					<view class="slot-bracket slot-bracket-l"></view>
+					<view class="slot-bracket slot-bracket-r"></view>
 				</view>
+				<text v-if="err.password" class="err">{{ err.password }}</text>
 
-				<view class="field">
-					<text class="field-label">确认密码</text>
-					<view class="field-box" :class="{ active: focus === 'confirm', error: !!err.confirm }">
+				<view class="slot" :class="{ active: focus === 'confirm', error: !!err.confirm }">
+					<text class="slot-tag">KEY</text>
+					<view class="slot-main">
+						<text class="slot-label">确认密码</text>
 						<input
 							class="input"
 							v-model="confirm"
@@ -105,10 +108,16 @@
 							@blur="focus = ''"
 						/>
 					</view>
-					<text v-if="err.confirm" class="err">{{ err.confirm }}</text>
+					<view class="slot-bracket slot-bracket-l"></view>
+					<view class="slot-bracket slot-bracket-r"></view>
 				</view>
+				<text v-if="err.confirm" class="err">{{ err.confirm }}</text>
 
-				<view class="btn" :class="{ 'is-busy': submitting }" @click="submit">注 册</view>
+				<view class="slider" :class="{ 'is-busy': submitting }" @click="submit">
+					<view class="slider-fill"></view>
+					<view class="slider-knob"></view>
+					<text class="slider-txt">{{ submitting ? 'ENROLLING' : 'ENROLL ▸' }}</text>
+				</view>
 
 				<view class="check" @click="agreed = !agreed">
 					<view class="check-box" :class="{ on: agreed }"><view class="check-tick"></view></view>
@@ -119,16 +128,16 @@
 
 		<view class="foot">
 			<view class="foot-row">
-				<text class="foot-txt">已有账号</text>
+				<text class="foot-txt">已有乘员身份</text>
 				<text class="link" @click="goLogin">返回登录</text>
 			</view>
-			<text class="copy">© 2026 ORBITAL SYS · BUILD 4.02</text>
+			<text class="copy">© 2026 ORBITAL DECK · CLEARANCE L2</text>
 		</view>
 	</view>
 </template>
 
 <script>
-export default {
+	export default {
 		data() {
 			return {
 				statusBar: 0,
@@ -136,7 +145,7 @@ export default {
 				showPwd: false,
 				agreed: false,
 				submitting: false,
-				phStyle: 'color:rgba(214,253,246,0.36);font-size:15px;',
+				phStyle: 'color:rgba(214,253,246,0.4);font-size:15px;',
 				phone: '',
 				sms: '',
 				password: '',
@@ -155,16 +164,16 @@ export default {
 			this.clearTimer();
 		},
 		methods: {
-			fillDemo() {
-				this.agreed = true;
-				this.phone = '13800001234';
-				this.sms = '202610';
-				this.password = 'hud-4207';
-				this.confirm = 'hud-4207';
-			},
-
 			toast(title) {
 				uni.showToast({ title, icon: 'none' });
+			},
+
+			fillDemo() {
+				this.phone = '13800001234';
+				this.sms = '202610';
+				this.password = 'demo1234';
+				this.confirm = 'demo1234';
+				this.agreed = true;
 			},
 
 			isPhone(v) {
@@ -179,7 +188,7 @@ export default {
 				this.toast('验证码已发送');
 				if (this.timer) return;
 				this.timer = setInterval(() => {
-					this.smsLeft--;
+					if (this.smsLeft > 0) this.smsLeft--;
 					if (this.smsLeft <= 0) this.clearTimer();
 				}, 1000);
 			},
@@ -223,9 +232,7 @@ export default {
 			},
 
 			goLogin() {
-				const pages = getCurrentPages();
-				if (pages.length > 1) uni.navigateBack();
-				else uni.reLaunch({ url: '/pages/login115/login' });
+				uni.reLaunch({ url: '/pages/login115/login' });
 			}
 		}
 	};

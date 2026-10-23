@@ -1,54 +1,32 @@
 /* ==========================================================================
- * 主题 20 · 未来 HUD
+ * 主题 20 · 未来 HUD（重设计：环形仪表）
  * pages/login115 —— 登录 / 注册 / 找回密码 三页共用
- * 未来 HUD：令牌 + 共享骨架 + 主题装饰 + 皮肤覆盖
+ *
+ * 布局逻辑：像透过驾驶舱面罩看身份验证——
+ *   顶部旋转刻度环仪表（IDLE/AUTH 状态字）→ 三格刻度模式选择器 →
+ *   无框数据槽字段（聚焦时角括号锁定 + 底线发光）→ AUTHORIZE 滑轨充能提交。
  *
  * 设计依据：docs/theme-styles.md 第 20 条
- *   色板    $bg: #05121a; / $ink: #d6fdf6; / $accent: #35f0d0; / $accent-2: #ff5c00;
- *   栅格    1px = 2rpx，纵向间距取 8rpx 的整数倍
- *   落地    HUD 角标与面板切角用 clip-path 配合实心块裁切，方形兜底同样成立。
- *           扫描线为 120rpx 高的渐变条位移，不用 filter。
- *           落地风险：全屏网格 + 扫描线两层叠加，低端机需抽帧验证滚动性能。
+ *   色板    $bg: #04101a（加深）/ 主青 #35f0d0 / 辅橙 #ff5c00 / 正文 #d6fdf6
+ *   动效    仪表刻度环 24s 旋转、聚焦角括号 0.2s 张开、滑块 0.55s 充能滑行。
+ *   纪律    光晕只用 box-shadow，不用 filter: blur；clip-path 带方形兜底。
  * ========================================================================== */
 
 /* ---------- 设计令牌 ---------- */
-$bg: #05121a;              // 深空底
-$panel: rgba(53, 240, 208, 0.06);
-$ink: #d6fdf6;             // 正文
-$dim: #5e8c88;             // 次级
+$bg: #04101a;
+$ink: #d6fdf6;
+$dim: #5e8c88;
 $dim-2: #3c615f;
-$line: rgba(53, 240, 208, 0.24);
-$accent: #35f0d0;          // 主青
-$accent-2: #ff5c00;        // 辅橙（警示）
-$on-accent: #04212a;
-$err: #ff5c00;
+$accent: #35f0d0;
+$warn: #ff5c00;
+$err: $warn;
 
-$field-bg: rgba(53, 240, 208, 0.05);
-$field-line: rgba(53, 240, 208, 0.28);
-$btn-bg: transparent;
-$btn-ink: #35f0d0;
-$btn-border: #35f0d0;
-$shadow-card: inset 0 0 40rpx rgba(53, 240, 208, 0.06);
-$shadow-btn: 0 0 18rpx rgba(53, 240, 208, 0.28);
-$focus-shadow: 0 0 0 2rpx rgba(53, 240, 208, 0.3), 0 0 20rpx rgba(53, 240, 208, 0.32);
+$line: rgba(53, 240, 208, 0.22);
+$glow: 0 0 16rpx rgba(53, 240, 208, 0.4);
 
-$radius: 0;
-$radius-sm: 0;
-$radius-btn: 0;
-$radius-tick: 0;
-$gutter: 48rpx;
-
-$font: 'Oxanium', 'JetBrains Mono', 'PingFang SC', 'Noto Sans SC', -apple-system, sans-serif;
 $mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, 'Noto Sans SC', monospace;
-$ls: 0.5rpx;
-$label-ls: 3rpx;
-$title-size: 52rpx;
-$title-weight: 600;
-$title-ls: 6rpx;
-$enter-ms: 300ms;
-/* ---------- 结构常量 ---------- */
-$tap: 96rpx;                                  // 输入框 / 按钮高 48px
-$ease: cubic-bezier(.2, .6, .2, 1);
+$gutter: 40rpx;
+$ease: cubic-bezier(0.2, 0.6, 0.2, 1);
 
 /* ---------- 基础 ---------- */
 .page,
@@ -69,37 +47,57 @@ page {
 	padding: 0 $gutter;
 	background-color: $bg;
 	color: $ink;
-	font-family: $font;
-	font-size: 28rpx;
+	font-family: $mono;
+	font-size: 26rpx;
 	line-height: 1.5;
-	letter-spacing: $ls;
-	-webkit-font-smoothing: antialiased;
-	animation: mn-in $enter-ms $ease both;
+	letter-spacing: 1rpx;
+	animation: page-in 260ms $ease both;
 }
 
-@keyframes mn-in {
+@keyframes page-in {
 	from {
 		opacity: 0;
-		transform: translateY(16rpx);
 	}
 
 	to {
 		opacity: 1;
-		transform: translateY(0);
 	}
 }
 
-/* 装饰层纪律：不吃指针事件、层级低于内容一层 */
 .deco {
 	position: absolute;
 	z-index: 1;
 	pointer-events: none;
 }
 
+/* 细网格 */
+.deco-grid {
+	inset: 0;
+	background-image:
+		linear-gradient(rgba(53, 240, 208, 0.045) 1rpx, transparent 1rpx),
+		linear-gradient(90deg, rgba(53, 240, 208, 0.045) 1rpx, transparent 1rpx);
+	background-size: 56rpx 56rpx;
+}
+
+/* 左右边缘刻度尺 */
+.deco-ruler {
+	top: 0;
+	bottom: 0;
+	width: 16rpx;
+	background: repeating-linear-gradient(
+		180deg,
+		rgba(53, 240, 208, 0.25) 0 2rpx,
+		transparent 2rpx 24rpx
+	);
+	opacity: 0.4;
+}
+
 /* ---------- 自绘导航 ---------- */
 .status {
 	width: 100%;
 	flex: none;
+	position: relative;
+	z-index: 3;
 }
 
 .nav {
@@ -128,7 +126,6 @@ page {
 	background-color: $ink;
 }
 
-/* 箭头：两条短线以左端为轴张开，尖端与轴线重合 */
 .back-tip {
 	position: absolute;
 	left: 4rpx;
@@ -160,178 +157,267 @@ page {
 	padding-bottom: 24rpx;
 }
 
-/* ---------- 品牌 ---------- */
-.brand {
-	display: flex;
-	align-items: center;
-	padding-top: 24rpx;
-}
-
-.logo {
+/* ---------- 环形仪表 ---------- */
+.dial {
 	position: relative;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 64rpx;
-	height: 64rpx;
-	flex: none;
+	width: 260rpx;
+	height: 260rpx;
+	margin: 16rpx auto 8rpx;
+}
+
+.dial-ticks {
+	position: absolute;
+	inset: 0;
+	border-radius: 50%;
 	border: 2rpx solid $line;
-	border-radius: $radius-sm;
+	background: repeating-conic-gradient(
+		rgba(53, 240, 208, 0.3) 0 2deg,
+		transparent 2deg 15deg
+	);
+	mask-image: radial-gradient(circle, transparent 62%, #000 63%);
+	-webkit-mask-image: radial-gradient(circle, transparent 62%, #000 63%);
+	animation: dial-spin 24s linear infinite;
 }
 
-.logo-core {
-	width: 20rpx;
-	height: 20rpx;
-	background-color: $accent;
+@keyframes dial-spin {
+	from {
+		transform: rotate(0deg);
+	}
+
+	to {
+		transform: rotate(360deg);
+	}
 }
 
-.brand-txt {
-	padding-left: 20rpx;
+.dial-core {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	width: 176rpx;
+	height: 176rpx;
+	border-radius: 50%;
+	border: 2rpx solid $line;
+	background: rgba(53, 240, 208, 0.05);
+	box-shadow: inset 0 0 32rpx rgba(53, 240, 208, 0.08);
 }
 
-.brand-name {
-	display: block;
-	font-size: 28rpx;
-	font-weight: 600;
-	letter-spacing: 1rpx;
+.dial-v {
+	font-size: 40rpx;
+	font-weight: 700;
+	letter-spacing: 4rpx;
+	color: $accent;
+	text-shadow: $glow;
 }
 
-.brand-sub {
-	display: block;
-	margin-top: 4rpx;
+.dial-h {
+	margin-top: 6rpx;
 	font-size: 18rpx;
 	letter-spacing: 3rpx;
 	color: $dim;
 }
 
-/* ---------- 标题区 ---------- */
-.head {
-	padding-top: 56rpx;
+/* 仪表外角括号 */
+.dial-bracket {
+	position: absolute;
+	width: 36rpx;
+	height: 36rpx;
+	border: 3rpx solid $accent;
 }
 
-.eyebrow {
-	display: block;
-	font-size: 20rpx;
-	letter-spacing: 4rpx;
-	color: $dim;
+.dial-bracket-tl {
+	left: -6rpx;
+	top: -6rpx;
+	border-right: none;
+	border-bottom: none;
+}
+
+.dial-bracket-br {
+	right: -6rpx;
+	bottom: -6rpx;
+	border-left: none;
+	border-top: none;
+}
+
+/* ---------- 标题 ---------- */
+.head {
+	padding: 32rpx 0 36rpx;
+	text-align: center;
 }
 
 .title {
 	display: block;
-	margin-top: 20rpx;
-	font-size: $title-size;
-	font-weight: $title-weight;
-	line-height: 1.2;
-	letter-spacing: $title-ls;
+	font-size: 44rpx;
+	font-weight: 600;
+	letter-spacing: 8rpx;
 }
 
 .lead {
 	display: block;
-	margin-top: 16rpx;
-	font-size: 24rpx;
-	line-height: 1.72;
+	margin-top: 12rpx;
+	font-size: 22rpx;
+	line-height: 1.7;
+	letter-spacing: 1rpx;
 	color: $dim;
 }
 
-/* ---------- 登录方式 ---------- */
-.tabs {
+/* ---------- 三格刻度选择器 ---------- */
+.seg {
+	display: flex;
+	gap: 6rpx;
+	margin-bottom: 40rpx;
+	border: 1rpx solid $line;
+	padding: 6rpx;
+	background: rgba(53, 240, 208, 0.04);
+}
+
+.seg-cell {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 14rpx 0 12rpx;
+	background: transparent;
+	transition: background 0.2s, box-shadow 0.2s;
+}
+
+.seg-idx {
+	font-size: 18rpx;
+	letter-spacing: 2rpx;
+	color: $dim-2;
+}
+
+.seg-name {
+	margin-top: 4rpx;
+	font-size: 24rpx;
+	color: $dim;
+}
+
+.seg-cell.on {
+	background: rgba(53, 240, 208, 0.12);
+	box-shadow: inset 0 0 0 1rpx $line, inset 0 0 20rpx rgba(53, 240, 208, 0.1);
+}
+
+.seg-cell.on .seg-idx {
+	color: $accent;
+}
+
+.seg-cell.on .seg-name {
+	color: $ink;
+}
+
+.seg-cell.done .seg-idx {
+	color: $accent;
+}
+
+/* ---------- 数据槽字段 ---------- */
+.slots {
+	position: relative;
+}
+
+.slot {
+	position: relative;
 	display: flex;
 	align-items: flex-end;
-	margin-top: 48rpx;
+	min-height: 128rpx;
+	padding: 8rpx 0 16rpx;
+	border-bottom: 1rpx solid rgba(53, 240, 208, 0.18);
+	transition: border-color 0.2s;
 }
 
-.tab {
-	position: relative;
-	margin-right: 48rpx;
-	padding-bottom: 14rpx;
-	font-size: 26rpx;
-	color: $dim;
-	border-bottom: 2rpx solid transparent;
-	transition: color 160ms linear, border-color 160ms linear;
-}
-
-.tab:last-child {
-	margin-right: 0;
-}
-
-.tab.on {
-	color: $ink;
-	border-bottom-color: $accent;
-}
-
-/* ---------- 卡片 ---------- */
-.card {
-	position: relative;
-	margin-top: 32rpx;
-	padding: 40rpx 32rpx 36rpx;
-	background-color: $panel;
-	border: 1rpx solid $line;
-	border-radius: $radius;
-	box-shadow: $shadow-card;
-}
-
-/* ---------- 字段 ---------- */
-.field {
-	margin-top: 28rpx;
-}
-
-.card > .field:first-child {
-	margin-top: 0;
-}
-
-.field-label {
-	display: block;
-	margin-bottom: 12rpx;
+.slot-tag {
+	flex: none;
+	width: 72rpx;
+	padding-bottom: 20rpx;
 	font-size: 20rpx;
-	letter-spacing: $label-ls;
-	color: $dim;
+	letter-spacing: 2rpx;
+	color: $dim-2;
+	transition: color 0.2s;
 }
 
-.field-box {
-	display: flex;
-	align-items: center;
-	height: $tap;
-	padding: 0 24rpx;
-	background-color: $field-bg;
-	border: 1rpx solid $field-line;
-	border-radius: $radius-sm;
-	transition: border-color 180ms linear, box-shadow 180ms linear;
-}
-
-.field-box.active {
-	border-color: $accent;
-	box-shadow: $focus-shadow;
-}
-
-.field-box.error {
-	border-color: $err;
-}
-
-/* input 一律显式重置，避免各端默认样式渗入 */
-.input {
+.slot-main {
 	flex: 1;
+	min-width: 0;
+	padding-bottom: 4rpx;
+}
+
+.slot-label {
+	display: block;
+	font-size: 20rpx;
+	letter-spacing: 3rpx;
+	color: $dim-2;
+}
+
+.input {
 	width: 100%;
-	height: 100%;
-	padding: 0;
-	background-color: transparent;
-	border-width: 0;
-	border-radius: 0;
-	appearance: none;
+	height: 64rpx;
 	font-size: 28rpx;
 	color: $ink;
-	letter-spacing: $ls;
+	background: transparent;
+	font-variant-numeric: tabular-nums;
 }
 
-.input-num {
-	font-variant-numeric: tabular-nums;
-	letter-spacing: 2rpx;
+/* 聚焦：角括号锁定 + 底线发光 */
+.slot-bracket {
+	position: absolute;
+	bottom: 0;
+	width: 20rpx;
+	height: 20rpx;
+	opacity: 0;
+	transition: opacity 0.2s;
+}
+
+.slot-bracket-l {
+	left: 0;
+	border-left: 3rpx solid $accent;
+	border-bottom: 3rpx solid $accent;
+}
+
+.slot-bracket-r {
+	right: 0;
+	border-right: 3rpx solid $accent;
+	border-bottom: 3rpx solid $accent;
+}
+
+.slot.active {
+	border-bottom-color: rgba(53, 240, 208, 0.6);
+	box-shadow: 0 12rpx 24rpx -18rpx rgba(53, 240, 208, 0.55);
+}
+
+.slot.active .slot-bracket {
+	opacity: 1;
+}
+
+.slot.active .slot-tag {
+	color: $accent;
+}
+
+.slot.error {
+	border-bottom-color: rgba(255, 92, 0, 0.7);
+}
+
+.slot.error .slot-bracket {
+	border-color: $warn;
+	opacity: 1;
+}
+
+.err {
+	display: block;
+	padding: 4rpx 0 12rpx 72rpx;
+	font-size: 22rpx;
+	color: $warn;
 }
 
 .eye {
 	flex: none;
-	padding-left: 20rpx;
+	padding-bottom: 20rpx;
+	margin-left: 16rpx;
 	font-size: 22rpx;
-	color: $dim;
+	color: $dim-2;
 }
 
 .eye.on {
@@ -340,107 +426,66 @@ page {
 
 .code {
 	flex: none;
-	padding-left: 24rpx;
+	padding-bottom: 20rpx;
+	margin-left: 16rpx;
 	font-size: 22rpx;
+	letter-spacing: 2rpx;
 	color: $accent;
+	text-shadow: $glow;
 }
 
 .code.off {
 	color: $dim-2;
-	font-variant-numeric: tabular-nums;
+	text-shadow: none;
 }
 
-.err {
-	display: block;
-	margin-top: 12rpx;
-	font-size: 20rpx;
-	color: $err;
-}
-
-.tip {
-	display: block;
-	margin-top: 12rpx;
-	font-size: 20rpx;
-	color: $dim-2;
-}
-
-/* ---------- 行内操作 ---------- */
+/* ---------- 行 / 勾选 ---------- */
 .row {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	margin-top: 32rpx;
+	padding: 20rpx 0 12rpx 72rpx;
 }
 
-.row-end {
-	justify-content: flex-end;
-}
-
-.link {
-	font-size: 22rpx;
-	color: $accent;
-}
-
-.link-soft {
-	color: $dim;
-}
-
-/* ---------- 勾选 ---------- */
 .check {
 	display: flex;
-	align-items: flex-start;
-	margin-top: 28rpx;
+	align-items: center;
+	padding: 14rpx 0 14rpx 72rpx;
 }
 
 .check-inline {
-	align-items: center;
-	margin-top: 0;
-}
-
-.check-inline .check-txt {
-	flex: none;
+	padding: 0;
 }
 
 .check-box {
 	position: relative;
-	width: 28rpx;
-	height: 28rpx;
-	flex: none;
+	width: 32rpx;
+	height: 32rpx;
 	margin-right: 14rpx;
-	background-color: transparent;
-	border: 2rpx solid $line;
-	border-radius: $radius-tick;
-	transition: background-color 160ms linear, border-color 160ms linear;
+	border: 1rpx solid $line;
+	flex: none;
+	transition: border-color 0.2s, background 0.2s;
 }
 
 .check-box.on {
-	background-color: $accent;
+	background: rgba(53, 240, 208, 0.15);
 	border-color: $accent;
 }
 
-/* 勾选用实体元素绘制，规避小程序端伪元素差异 */
 .check-tick {
 	position: absolute;
 	left: 50%;
-	top: 44%;
-	width: 7rpx;
-	height: 13rpx;
-	border-right: 2rpx solid $on-accent;
-	border-bottom: 2rpx solid $on-accent;
-	transform: translate(-50%, -50%) rotate(43deg) scale(0.6);
-	opacity: 0;
-	transition: opacity 120ms linear, transform 120ms $ease;
-}
-
-.check-box.on .check-tick {
-	opacity: 1;
-	transform: translate(-50%, -50%) rotate(43deg) scale(1);
+	top: 50%;
+	width: 16rpx;
+	height: 9rpx;
+	margin: -6rpx 0 0 -8rpx;
+	border-left: 3rpx solid $accent;
+	border-bottom: 3rpx solid $accent;
+	transform: rotate(-45deg);
 }
 
 .check-txt {
-	flex: 1;
-	font-size: 22rpx;
-	line-height: 1.6;
+	font-size: 24rpx;
 	color: $dim;
 }
 
@@ -448,386 +493,160 @@ page {
 	color: $accent;
 }
 
-/* ---------- 主按钮 ---------- */
-.btn {
+.link {
+	font-size: 24rpx;
+	letter-spacing: 1rpx;
+	color: $accent;
+}
+
+.link-soft {
+	color: $dim;
+}
+
+/* ---------- AUTHORIZE 滑轨提交 ---------- */
+.slider {
 	position: relative;
 	display: flex;
 	align-items: center;
-	justify-content: center;
-	height: $tap;
-	margin-top: 40rpx;
-	background-color: $btn-bg;
-	color: $btn-ink;
-	border: 1rpx solid $btn-border;
-	border-radius: $radius-btn;
-	font-size: 28rpx;
-	letter-spacing: 8rpx;
-	text-indent: 8rpx;
-	box-shadow: $shadow-btn;
+	height: 104rpx;
+	margin: 24rpx 0 8rpx 72rpx;
+	border: 1rpx solid $line;
+	background: rgba(53, 240, 208, 0.04);
+	overflow: hidden;
 }
 
-.btn:active {
-	opacity: 0.88;
+.slider-fill {
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	width: 0;
+	background: linear-gradient(90deg, rgba(53, 240, 208, 0.25), rgba(53, 240, 208, 0.08));
+	transition: width 0.55s $ease;
 }
 
-.btn.is-busy {
-	opacity: 0.6;
+.slider-knob {
+	position: absolute;
+	left: 8rpx;
+	top: 8rpx;
+	bottom: 8rpx;
+	width: 88rpx;
+	background: $accent;
+	box-shadow: $glow;
+	transition: left 0.55s $ease;
 }
 
-.btn-ghost {
-	margin-top: 20rpx;
-	background-color: transparent;
+.slider-txt {
+	position: relative;
+	z-index: 2;
+	width: 100%;
+	text-align: center;
+	font-size: 26rpx;
+	font-weight: 700;
+	letter-spacing: 6rpx;
+	color: $accent;
+	transition: color 0.3s;
+}
+
+.slider.is-busy .slider-fill {
+	width: 100%;
+}
+
+.slider.is-busy .slider-knob {
+	left: calc(100% - 96rpx);
+}
+
+.slider.is-busy .slider-txt {
+	color: #04101a;
+	text-shadow: none;
+}
+
+/* ---------- BACK ---------- */
+.ghost {
+	display: inline-flex;
+	margin: 16rpx 0 0 72rpx;
+	padding: 10rpx 24rpx;
+	font-size: 22rpx;
+	letter-spacing: 3rpx;
 	color: $dim;
-	border-color: $line;
-	box-shadow: none;
-	letter-spacing: 4rpx;
-	text-indent: 4rpx;
+	border: 1rpx solid rgba(53, 240, 208, 0.18);
 }
 
-/* ---------- 其他入口 ---------- */
+.ghost:active {
+	color: $accent;
+	border-color: $line;
+}
+
+/* ---------- 安全提示 ---------- */
+.safe {
+	margin: 32rpx 0 0 72rpx;
+	padding: 20rpx 24rpx;
+	border: 1rpx dashed rgba(255, 92, 0, 0.45);
+}
+
+.safe-h {
+	display: block;
+	font-size: 20rpx;
+	letter-spacing: 3rpx;
+	color: $warn;
+}
+
+.safe-txt {
+	display: block;
+	margin-top: 8rpx;
+	font-size: 22rpx;
+	line-height: 1.7;
+	color: $dim;
+}
+
+/* ---------- 第三方 ---------- */
 .alt {
 	display: flex;
-	margin-top: 32rpx;
-	border-top: 1rpx solid $line;
+	gap: 14rpx;
+	margin: 24rpx 0 0 72rpx;
 }
 
 .alt-i {
 	flex: 1;
-	height: 84rpx;
-	line-height: 84rpx;
-	text-align: center;
+	height: 72rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	font-size: 22rpx;
 	color: $dim;
-	border-right: 1rpx solid $line;
+	border: 1rpx solid rgba(53, 240, 208, 0.16);
+	transition: color 0.2s, border-color 0.2s;
 }
 
-.alt-i:last-child {
-	border-right: 0;
+.alt-i:active {
+	color: $accent;
+	border-color: $line;
 }
 
 /* ---------- 页脚 ---------- */
 .foot {
 	position: relative;
 	z-index: 2;
-	flex: none;
-	padding-top: 40rpx;
-	padding-bottom: 40rpx;
-	padding-bottom: calc(40rpx + constant(safe-area-inset-bottom));
-	padding-bottom: calc(40rpx + env(safe-area-inset-bottom));
+	padding: 24rpx 0 calc(24rpx + env(safe-area-inset-bottom));
 }
 
 .foot-row {
 	display: flex;
-	align-items: baseline;
-	justify-content: space-between;
+	align-items: center;
+	justify-content: center;
+	gap: 16rpx;
 }
 
 .foot-txt {
-	font-size: 22rpx;
+	font-size: 24rpx;
 	color: $dim;
 }
 
 .copy {
 	display: block;
-	margin-top: 40rpx;
+	margin-top: 8rpx;
+	text-align: center;
 	font-size: 18rpx;
 	letter-spacing: 2rpx;
 	color: $dim-2;
-	text-align: center;
-}
-
-/* ---------- 步骤 ---------- */
-.steps {
-	display: flex;
-	align-items: center;
-	margin-top: 40rpx;
-}
-
-.step {
-	display: flex;
-	align-items: center;
-	font-size: 20rpx;
-	letter-spacing: 2rpx;
-	color: $dim-2;
-}
-
-.step.on {
-	color: $accent;
-}
-
-.step-dot {
-	width: 12rpx;
-	height: 12rpx;
-	margin-right: 12rpx;
-	background-color: $dim-2;
-}
-
-.step.on .step-dot {
-	background-color: $accent;
-}
-
-.step-line {
-	flex: none;
-	width: 48rpx;
-	height: 1rpx;
-	margin: 0 16rpx;
-	background-color: $line;
-}
-
-/* ---------- 安全提示 ---------- */
-.terms {
-	display: block;
-	margin-top: 40rpx;
-	font-size: 22rpx;
-	line-height: 1.9;
-	color: $dim;
-}
-
-.terms-h {
-	display: block;
-	margin-top: 40rpx;
-	margin-bottom: 12rpx;
-	font-size: 22rpx;
-	letter-spacing: 1rpx;
-	color: $ink;
-}
-
-/* ---------- 装饰层（纯 CSS，0 图片） ---------- */
-/* 细网格：40rpx 一格，透明度极低，只提供「面罩」质感 */
-.deco-grid {
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background-image:
-		repeating-linear-gradient(0deg, rgba(53, 240, 208, 0.14) 0, rgba(53, 240, 208, 0.14) 1rpx, transparent 1rpx, transparent 40rpx),
-		repeating-linear-gradient(90deg, rgba(53, 240, 208, 0.14) 0, rgba(53, 240, 208, 0.14) 1rpx, transparent 1rpx, transparent 40rpx);
-}
-
-/* 雷达环：两个同心圆环，右上角压出画面 */
-.deco-ring {
-	border-radius: 50%;
-	border: 1rpx solid rgba(53, 240, 208, 0.22);
-}
-
-.deco-ring-a {
-	top: -160rpx;
-	right: -160rpx;
-	width: 440rpx;
-	height: 440rpx;
-}
-
-.deco-ring-b {
-	top: -80rpx;
-	right: -80rpx;
-	width: 280rpx;
-	height: 280rpx;
-	border-color: rgba(53, 240, 208, 0.14);
-}
-
-/* 左侧刻度尺：每 8rpx 一格短线 */
-.deco-ruler {
-	top: 200rpx;
-	left: 0;
-	width: 16rpx;
-	height: 360rpx;
-	background-image: repeating-linear-gradient(180deg, rgba(53, 240, 208, 0.45) 0, rgba(53, 240, 208, 0.45) 1rpx, transparent 1rpx, transparent 16rpx);
-}
-
-/* 四角角标：clip-path 切出 L 形描边，方形兜底也可接受 */
-.deco-hud {
-	width: 56rpx;
-	height: 56rpx;
-	background-color: rgba(53, 240, 208, 0.55);
-}
-
-.deco-hud-tl {
-	top: 88rpx;
-	left: 24rpx;
-	clip-path: polygon(0 0, 100% 0, 100% 2rpx, 2rpx 2rpx, 2rpx 100%, 0 100%);
-}
-
-.deco-hud-tr {
-	top: 88rpx;
-	right: 24rpx;
-	clip-path: polygon(0 0, 100% 0, 100% 100%, calc(100% - 2rpx) 100%, calc(100% - 2rpx) 2rpx, 0 2rpx);
-}
-
-.deco-hud-bl {
-	bottom: 24rpx;
-	left: 24rpx;
-	clip-path: polygon(0 0, 2rpx 0, 2rpx calc(100% - 2rpx), 100% calc(100% - 2rpx), 100% 100%, 0 100%);
-}
-
-.deco-hud-br {
-	bottom: 24rpx;
-	right: 24rpx;
-	clip-path: polygon(calc(100% - 2rpx) 0, 100% 0, 100% 100%, 0 100%, 0 calc(100% - 2rpx), calc(100% - 2rpx) calc(100% - 2rpx));
-}
-
-/* 扫描线：自上而下 6s 循环，模拟设备自检 */
-.deco-sweep {
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 120rpx;
-	background-image: linear-gradient(180deg, rgba(53, 240, 208, 0), rgba(53, 240, 208, 0.10), rgba(53, 240, 208, 0));
-	animation: hud-sweep 6s linear infinite;
-}
-
-@keyframes hud-sweep {
-	0% {
-		transform: translateY(-120rpx);
-	}
-
-	100% {
-		transform: translateY(100vh);
-	}
-}
-/* ---------- 皮肤覆盖 ---------- */
-/* 面板：四角切角（clip-path）+ 青色描边；方形兜底时仍是硬边框，不违和 */
-.card {
-	border: 1rpx solid rgba(53, 240, 208, 0.34);
-	background-color: $panel;
-	clip-path: polygon(20rpx 0, 100% 0, 100% calc(100% - 20rpx), calc(100% - 20rpx) 100%, 0 100%, 0 20rpx);
-}
-
-/* 标题：全大写 + 宽字距，等宽技术体 */
-.title {
-	color: #e8fffb;
-	letter-spacing: 6rpx;
-	text-transform: uppercase;
-}
-
-.eyebrow {
-	color: $accent;
-	letter-spacing: 4rpx;
-	font-family: $mono;
-}
-
-.lead {
-	color: #7fb3ac;
-}
-
-.brand-sub {
-	color: $accent;
-	font-family: $mono;
-	letter-spacing: 3rpx;
-}
-
-/* 字段标签前加一段 12rpx 刻度条，暗示「已测量」 */
-.field-label {
-	color: $accent;
-	font-family: $mono;
-	text-transform: uppercase;
-	letter-spacing: 2rpx;
-}
-
-.field-box {
-	border: 1rpx solid $field-line;
-	background-color: $field-bg;
-	clip-path: polygon(12rpx 0, 100% 0, 100% calc(100% - 12rpx), calc(100% - 12rpx) 100%, 0 100%, 0 12rpx);
-	transition: border-color 180ms linear, box-shadow 180ms linear;
-}
-
-.field-box.active {
-	border-color: $accent;
-	box-shadow: $focus-shadow;
-}
-
-.input {
-	font-family: $mono;
-	letter-spacing: 1rpx;
-}
-
-/* Tab：等宽大写，选中为青色下划线 + 角标 */
-.tab {
-	font-family: $mono;
-	text-transform: uppercase;
-	letter-spacing: 2rpx;
-}
-
-.tab.on {
-	color: $accent;
-	border-bottom-color: $accent;
-}
-
-/* 按钮：描边式，按下填充青色 */
-.btn {
-	border: 1rpx solid $btn-border;
-	color: $btn-ink;
-	font-family: $mono;
-	letter-spacing: 6rpx;
-	transition: background-color 200ms linear, color 200ms linear;
-}
-
-.btn:active {
-	background-color: rgba(53, 240, 208, 0.9);
-	color: $on-accent;
-}
-
-.check-box {
-	border: 1rpx solid rgba(53, 240, 208, 0.4);
-}
-
-.check-box.on {
-	background-color: $accent;
-	border-color: $accent;
-}
-
-.check-tick {
-	border-color: $on-accent;
-}
-
-.link {
-	color: $accent;
-	font-family: $mono;
-}
-
-/* 其他入口：备用通道，描边方块 */
-.alt {
-	border-top: 1rpx solid rgba(53, 240, 208, 0.2);
-	margin-top: 36rpx;
-}
-
-.alt-i {
-	border-right: 1rpx solid rgba(53, 240, 208, 0.2);
-	font-family: $mono;
-	letter-spacing: 1rpx;
-}
-
-.alt-i:active {
-	background-color: rgba(53, 240, 208, 0.16);
-}
-
-/* 步骤：用等宽序号 + 角点，未激活保持暗青，激活转亮青 */
-.step {
-	font-family: $mono;
-}
-
-.step.on .step-dot {
-	background-color: $accent;
-}
-
-/* 错误态：切到辅橙，警示语义 */
-.field-box.error {
-	border-color: $accent-2;
-	box-shadow: 0 0 16rpx rgba(255, 92, 0, 0.35);
-}
-
-/* 入场：整体自下而上 + 扫描线先到 */
-@keyframes hud-in {
-	from {
-		opacity: 0;
-		transform: translateY(20rpx);
-	}
-
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
-}
-
-.content {
-	animation: hud-in 360ms cubic-bezier(.2, .7, .2, 1) both;
 }

@@ -1,8 +1,7 @@
 <template>
 	<view class="page">
-		<view class="deco deco-seal"><text class="deco-seal-txt">墨白</text></view>
-		<view class="deco deco-vertical"><text class="deco-vertical-txt">山静似太古</text></view>
-		<view class="deco deco-ink-line"></view>
+		<view class="deco deco-wash"></view>
+		<view class="deco deco-gold-v"></view>
 
 		<view class="status" :style="{ height: statusBar + 'px' }"></view>
 
@@ -12,58 +11,61 @@
 				<view class="back-tip"></view>
 				<view class="back-tip back-tip-2"></view>
 			</view>
-			<text class="nav-idx">03 / 03</text>
+			<text class="nav-idx">叁 / 叁</text>
 		</view>
 
 		<view class="content">
-			<view class="brand">
-				<view class="logo"><view class="logo-core"></view></view>
-				<view class="brand-txt">
-					<text class="brand-name">墨白山房</text>
-					<text class="brand-sub">ORIENTAL INK</text>
+			<view class="titlewrap">
+				<view class="seal"><text class="seal-txt">补契</text></view>
+				<view class="vtitle">
+					<text class="vchar">重</text>
+					<text class="vchar">立</text>
+					<text class="vchar">口</text>
+					<text class="vchar">令</text>
 				</view>
 			</view>
 
 			<view class="head">
-				<text class="eyebrow">甲辰 · 找回</text>
-				<text class="title">遗失钥匙</text>
-				<text class="lead">验证注册手机号，重新领取书房钥匙。</text>
+				<text class="lead">遗失口令勿忧。先核名帖，再立新契。</text>
 			</view>
 
-			<view class="card">
-				<view class="steps">
-					<view class="step" :class="{ on: step === 0 }">
-						<view class="step-dot"></view>
-						<text>01 验证身份</text>
-					</view>
-					<view class="step-line"></view>
-					<view class="step" :class="{ on: step === 1 }">
-						<view class="step-dot"></view>
-						<text>02 设置密码</text>
-					</view>
-				</view>
+			<view class="divider"><view class="divider-ink"></view></view>
 
+			<view class="steps">
+				<view class="stp" :class="{ on: step === 0, done: step > 0 }">
+					<text class="stp-dot"></text>
+					<text class="stp-name">一验名帖</text>
+				</view>
+				<view class="stp-line"></view>
+				<view class="stp" :class="{ on: step === 1 }">
+					<text class="stp-dot stp-dot-red"></text>
+					<text class="stp-name">二立新契</text>
+				</view>
+			</view>
+
+			<view class="fields">
 				<block v-if="step === 0">
-					<view class="field">
-						<text class="field-label">注册手机号</text>
-						<view class="field-box" :class="{ active: focus === 'phone', error: !!err.phone }">
+					<view class="ifield" :class="{ active: focus === 'phone', error: !!err.phone }">
+						<text class="ifield-label">名帖</text>
+						<view class="ifield-main">
 							<input
 								class="input input-num"
 								v-model="phone"
 								type="number"
 								:placeholder-style="phStyle"
-								placeholder="请输入 11 位手机号"
+								placeholder="11 位手机号"
 								maxlength="11"
 								@focus="focus = 'phone'"
 								@blur="focus = ''"
 							/>
+							<view class="ifield-inkline"></view>
 						</view>
-						<text v-if="err.phone" class="err">{{ err.phone }}</text>
 					</view>
+					<text v-if="err.phone" class="err">{{ err.phone }}</text>
 
-					<view class="field">
-						<text class="field-label">短信验证码</text>
-						<view class="field-box" :class="{ active: focus === 'sms', error: !!err.sms }">
+					<view class="ifield" :class="{ active: focus === 'sms', error: !!err.sms }">
+						<text class="ifield-label">符验</text>
+						<view class="ifield-main">
 							<input
 								class="input input-num"
 								v-model="sms"
@@ -74,18 +76,21 @@
 								@focus="focus = 'sms'"
 								@blur="focus = ''"
 							/>
-							<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + ' s' : '获取验证码' }}</text>
+							<view class="ifield-inkline"></view>
 						</view>
-						<text v-if="err.sms" class="err">{{ err.sms }}</text>
+						<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode">{{ smsLeft > 0 ? smsLeft + ' 秒' : '取符' }}</text>
 					</view>
+					<text v-if="err.sms" class="err">{{ err.sms }}</text>
 
-					<view class="btn" @click="next">下 一 步</view>
+					<view class="stampbtn" @click="next">
+						<text class="stampbtn-txt">核 名 过 帖</text>
+					</view>
 				</block>
 
 				<block v-else>
-					<view class="field">
-						<text class="field-label">新密码</text>
-						<view class="field-box" :class="{ active: focus === 'password', error: !!err.password }">
+					<view class="ifield" :class="{ active: focus === 'password', error: !!err.password }">
+						<text class="ifield-label">新口令</text>
+						<view class="ifield-main">
 							<input
 								class="input"
 								v-model="password"
@@ -96,49 +101,55 @@
 								@focus="focus = 'password'"
 								@blur="focus = ''"
 							/>
-							<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐藏' : '显示' }}</text>
+							<view class="ifield-inkline"></view>
 						</view>
-						<text v-if="err.password" class="err">{{ err.password }}</text>
+						<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐' : '显' }}</text>
 					</view>
+					<text v-if="err.password" class="err">{{ err.password }}</text>
 
-					<view class="field">
-						<text class="field-label">确认新密码</text>
-						<view class="field-box" :class="{ active: focus === 'confirm', error: !!err.confirm }">
+					<view class="ifield" :class="{ active: focus === 'confirm', error: !!err.confirm }">
+						<text class="ifield-label">复核</text>
+						<view class="ifield-main">
 							<input
 								class="input"
 								v-model="confirm"
 								:password="!showPwd"
 								:placeholder-style="phStyle"
-								placeholder="再次输入新密码"
+								placeholder="再次输入新口令"
 								maxlength="20"
 								@focus="focus = 'confirm'"
 								@blur="focus = ''"
 							/>
+							<view class="ifield-inkline"></view>
 						</view>
-						<text v-if="err.confirm" class="err">{{ err.confirm }}</text>
 					</view>
+					<text v-if="err.confirm" class="err">{{ err.confirm }}</text>
 
-					<view class="btn" :class="{ 'is-busy': submitting }" @click="submit">重 置 密 码</view>
-					<view class="btn btn-ghost" @click="back">上一步</view>
+					<view class="stampbtn" :class="{ 'is-busy': submitting }" @click="submit">
+						<text class="stampbtn-txt">{{ submitting ? '用印中…' : '钤 印 立 契' }}</text>
+					</view>
+					<view class="back-btn" @click="back">← 回到前一步</view>
 				</block>
 
-				<text class="terms-h">安全提示</text>
-				<text class="terms">重置成功后，其他设备上的登录状态将全部失效。若手机号已停用，请联系管理员核验身份。</text>
+				<view class="safe">
+					<text class="safe-h">※ 契约提示</text>
+					<text class="safe-txt">重置成功后，其他设备上的登录状态将全部失效。若手机号已停用，请联系管理员核验身份。</text>
+				</view>
 			</view>
 		</view>
 
 		<view class="foot">
 			<view class="foot-row">
-				<text class="foot-txt">想起密码了</text>
-				<text class="link" @click="goLogin">返回登录</text>
+				<text class="foot-txt">想起口令了</text>
+				<text class="link" @click="goLogin">返山门</text>
 			</view>
-			<text class="copy">© 2026 墨白山房 · 静水流深</text>
+			<text class="copy">山静似太古 · 日长如小年</text>
 		</view>
 	</view>
 </template>
 
 <script>
-export default {
+	export default {
 		data() {
 			return {
 				statusBar: 0,
@@ -146,7 +157,7 @@ export default {
 				focus: '',
 				showPwd: false,
 				submitting: false,
-				phStyle: 'color:#a09a8e;font-size:15px;',
+				phStyle: 'color:rgba(31,31,31,0.32);font-size:15px;',
 				phone: '',
 				sms: '',
 				password: '',
@@ -184,7 +195,7 @@ export default {
 				this.toast('验证码已发送');
 				if (this.timer) return;
 				this.timer = setInterval(() => {
-					this.smsLeft--;
+					if (this.smsLeft > 0) this.smsLeft--;
 					if (this.smsLeft <= 0) this.clearTimer();
 				}, 1000);
 			},

@@ -1,54 +1,31 @@
 /* ==========================================================================
- * 主题 16 · 手绘涂鸦
+ * 主题 16 · 手绘涂鸦（重设计：手账本）
  * pages/login118 —— 登录 / 注册 / 找回密码 三页共用
- * 手绘涂鸦：令牌 + 共享骨架 + 主题装饰 + 皮肤覆盖
+ *
+ * 布局逻辑：摊开一本方格手账——
+ *   和纸胶带贴住的封面标题 → 三张歪斜便利贴做模式切换（选中摆正放大）→
+ *   账本横线字段（下划线填写）→ 蜡笔虚线提交按钮（微微歪头）。
  *
  * 设计依据：docs/theme-styles.md 第 16 条
- *   色板    $bg: #fffdf7; / $ink: #2b2b2b; / $accent: #ff6b6b; / $accent-2: #ffe66d;
- *   栅格    1px = 2rpx，纵向间距取 8rpx 的整数倍
- *   落地    墨线描边 + 硬偏移阴影 + 1–3° 随机倾斜，胶带与便签为纯 CSS 贴纸。
- *           标题倾斜 -2°、卡片歪 0.5°，正文保持无衬线保证可读性。
- *           落地风险：装饰元素控制在 5 个以内，避免低端机掉帧。
+ *   色板    纸面 #faf7ef / 墨 #3a3630 / 红笔 #e2543e / 蓝笔 #3f7fbf / 荧光黄 #ffd95e
+ *   动效    元素贴纸式弹入（scale 1.2→1 回弹）、便利贴选中摆正 0.2s、
+ *           对勾手写描边（简化为符号弹出）。
+ *   纪律    边框用虚线/短划模拟手绘；圆角取不规则小值；禁用大阴影。
  * ========================================================================== */
 
 /* ---------- 设计令牌 ---------- */
-$bg: #fffdf7;              // 纸面底
-$panel: #ffffff;
-$ink: #2b2b2b;             // 墨线
-$dim: #8a8378;
-$dim-2: #b5ada0;
-$line: #e5ded2;
-$accent: #ff6b6b;          // 涂鸦红
-$accent-2: #ffe66d;        // 便签黄
-$on-accent: #ffffff;
-$err: #ff6b6b;
+$paper: #faf7ef;
+$ink: #3a3630;
+$pen-red: #e2543e;
+$pen-blue: #3f7fbf;
+$hi: #ffd95e;
+$dim: rgba(58, 54, 48, 0.55);
+$dim-2: rgba(58, 54, 48, 0.32);
+$err: $pen-red;
 
-$field-bg: #ffffff;
-$field-line: #2b2b2b;
-$btn-bg: #ff6b6b;
-$btn-ink: #ffffff;
-$btn-border: #2b2b2b;
-$shadow-card: 8rpx 8rpx 0 rgba(43, 43, 43, 0.16);
-$shadow-btn: 6rpx 6rpx 0 rgba(43, 43, 43, 0.9);
-$focus-shadow: 3rpx 3rpx 0 rgba(255, 107, 107, 0.55);
-
-$radius: 8rpx;
-$radius-sm: 8rpx;
-$radius-btn: 8rpx;
-$radius-tick: 4rpx;
-$gutter: 48rpx;
-
-$font: 'Yuanti SC', YouYuan, 'PingFang SC', 'Noto Sans SC', -apple-system, sans-serif;
-$mono: 'SFMono-Regular', Consolas, monospace;
-$ls: 0.5rpx;
-$label-ls: 1rpx;
-$title-size: 60rpx;
-$title-weight: 700;
-$title-ls: 0;
-$enter-ms: 320ms;
-/* ---------- 结构常量 ---------- */
-$tap: 96rpx;                                  // 输入框 / 按钮高 48px
-$ease: cubic-bezier(.2, .6, .2, 1);
+$hand: 'Yuanti SC', 'YouYuan', 'Comic Sans MS', 'PingFang SC', 'Noto Sans SC', sans-serif;
+$gutter: 44rpx;
+$ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
 
 /* ---------- 基础 ---------- */
 .page,
@@ -57,7 +34,7 @@ $ease: cubic-bezier(.2, .6, .2, 1);
 }
 
 page {
-	background-color: $bg;
+	background-color: $paper;
 }
 
 .page {
@@ -67,39 +44,63 @@ page {
 	min-height: 100vh;
 	overflow: hidden;
 	padding: 0 $gutter;
-	background-color: $bg;
+	background-color: $paper;
 	color: $ink;
-	font-family: $font;
+	font-family: $hand;
 	font-size: 28rpx;
 	line-height: 1.5;
-	letter-spacing: $ls;
-	-webkit-font-smoothing: antialiased;
-	animation: mn-in $enter-ms $ease both;
 }
 
-@keyframes mn-in {
-	from {
-		opacity: 0;
-		transform: translateY(16rpx);
-	}
-
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
-}
-
-/* 装饰层纪律：不吃指针事件、层级低于内容一层 */
+/* 方格纸 */
 .deco {
 	position: absolute;
 	z-index: 1;
 	pointer-events: none;
 }
 
+.deco-grid-paper {
+	inset: 0;
+	background-image:
+		linear-gradient(rgba(63, 127, 191, 0.1) 1rpx, transparent 1rpx),
+		linear-gradient(90deg, rgba(63, 127, 191, 0.1) 1rpx, transparent 1rpx);
+	background-size: 48rpx 48rpx;
+}
+
+/* 涂鸦符号 */
+.deco-doodle {
+	font-size: 36rpx;
+	color: $pen-blue;
+	opacity: 0.35;
+}
+
+.deco-doodle-a {
+	right: 48rpx;
+	top: 220rpx;
+	transform: rotate(12deg);
+}
+
+.deco-doodle-b {
+	left: 30rpx;
+	top: 460rpx;
+	color: $pen-red;
+	transform: rotate(-10deg);
+	font-size: 30rpx;
+}
+
+.deco-doodle-c {
+	right: 60rpx;
+	bottom: 300rpx;
+	color: $ink;
+	opacity: 0.2;
+	font-size: 26rpx;
+}
+
 /* ---------- 自绘导航 ---------- */
 .status {
 	width: 100%;
 	flex: none;
+	position: relative;
+	z-index: 3;
 }
 
 .nav {
@@ -123,26 +124,28 @@ page {
 	left: 4rpx;
 	top: 50%;
 	width: 40rpx;
-	height: 2rpx;
-	margin-top: -1rpx;
+	height: 3rpx;
+	margin-top: -2rpx;
+	border-radius: 2rpx;
 	background-color: $ink;
+	transform: rotate(-2deg);
 }
 
-/* 箭头：两条短线以左端为轴张开，尖端与轴线重合 */
 .back-tip {
 	position: absolute;
 	left: 4rpx;
 	top: 50%;
-	width: 14rpx;
-	height: 2rpx;
-	margin-top: -1rpx;
+	width: 15rpx;
+	height: 3rpx;
+	margin-top: -2rpx;
 	background-color: $ink;
+	border-radius: 2rpx;
 	transform-origin: left center;
-	transform: rotate(-43deg);
+	transform: rotate(-38deg);
 }
 
 .back-tip-2 {
-	transform: rotate(43deg);
+	transform: rotate(48deg);
 }
 
 .nav-idx {
@@ -160,567 +163,470 @@ page {
 	padding-bottom: 24rpx;
 }
 
-/* ---------- 品牌 ---------- */
-.brand {
+/* ---------- 胶带封面标题 ---------- */
+.cover {
+	position: relative;
 	display: flex;
+	flex-direction: column;
 	align-items: center;
-	padding-top: 24rpx;
+	padding: 48rpx 0 24rpx;
+	animation: pop-in 300ms $ease-pop both;
 }
 
-.logo {
+.cover-tape {
+	position: absolute;
+	top: 24rpx;
+	width: 180rpx;
+	height: 44rpx;
+	background: rgba(255, 217, 94, 0.75);
+	transform: rotate(-4deg);
+	border-left: 2rpx dashed rgba(58, 54, 48, 0.2);
+	border-right: 2rpx dashed rgba(58, 54, 48, 0.2);
+}
+
+.cover-title {
+	margin-top: 24rpx;
+	font-size: 56rpx;
+	font-weight: 700;
+	letter-spacing: 4rpx;
+	transform: rotate(-1deg);
+}
+
+.cover-sub {
+	margin-top: 8rpx;
+	font-size: 22rpx;
+	letter-spacing: 2rpx;
+	color: $dim;
+}
+
+@keyframes pop-in {
+	from {
+		opacity: 0;
+		transform: scale(1.2);
+	}
+
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+/* ---------- 歪斜便利贴（模式切换） ---------- */
+.notes {
+	display: flex;
+	gap: 20rpx;
+	margin: 24rpx 0 44rpx;
+}
+
+.note {
 	position: relative;
+	flex: 1;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 64rpx;
-	height: 64rpx;
-	flex: none;
-	border: 2rpx solid $line;
-	border-radius: $radius-sm;
+	padding: 30rpx 0 24rpx;
+	background: #fffdf6;
+	border: 2rpx solid rgba(58, 54, 48, 0.14);
+	box-shadow: 0 6rpx 14rpx rgba(58, 54, 48, 0.12);
+	transition: transform 0.2s $ease-pop, box-shadow 0.2s;
 }
 
-.logo-core {
-	width: 20rpx;
-	height: 20rpx;
-	background-color: $accent;
+.note-0 {
+	transform: rotate(-3deg);
 }
 
-.brand-txt {
-	padding-left: 20rpx;
+.note-1 {
+	transform: rotate(2deg);
 }
 
-.brand-name {
-	display: block;
-	font-size: 28rpx;
-	font-weight: 600;
-	letter-spacing: 1rpx;
+.note-2 {
+	transform: rotate(-1.5deg);
 }
 
-.brand-sub {
-	display: block;
-	margin-top: 4rpx;
-	font-size: 18rpx;
-	letter-spacing: 3rpx;
-	color: $dim;
+.note-tape {
+	position: absolute;
+	top: -14rpx;
+	left: 50%;
+	width: 76rpx;
+	height: 28rpx;
+	margin-left: -38rpx;
+	background: rgba(226, 84, 62, 0.35);
+	transform: rotate(-3deg);
 }
 
-/* ---------- 标题区 ---------- */
-.head {
-	padding-top: 56rpx;
+.note-1 .note-tape {
+	background: rgba(63, 127, 191, 0.35);
+	transform: rotate(2deg);
 }
 
-.eyebrow {
-	display: block;
-	font-size: 20rpx;
-	letter-spacing: 4rpx;
-	color: $dim;
+.note-2 .note-tape {
+	background: rgba(255, 217, 94, 0.65);
+	transform: rotate(-2deg);
 }
 
-.title {
-	display: block;
-	margin-top: 20rpx;
-	font-size: $title-size;
-	font-weight: $title-weight;
-	line-height: 1.2;
-	letter-spacing: $title-ls;
-}
-
-.lead {
-	display: block;
-	margin-top: 16rpx;
+.note-txt {
 	font-size: 24rpx;
-	line-height: 1.72;
+	font-weight: 700;
+	letter-spacing: 2rpx;
 	color: $dim;
 }
 
-/* ---------- 登录方式 ---------- */
-.tabs {
+.note.on {
+	transform: rotate(0deg) scale(1.08);
+	box-shadow: 0 10rpx 20rpx rgba(58, 54, 48, 0.18);
+}
+
+.note.on .note-txt {
+	color: $ink;
+}
+
+.note.on .note-tape {
+	background: $hi;
+}
+
+/* ---------- 账本横线字段 ---------- */
+.lines {
+	position: relative;
+}
+
+.wfield {
+	position: relative;
 	display: flex;
 	align-items: flex-end;
-	margin-top: 48rpx;
-}
-
-.tab {
-	position: relative;
-	margin-right: 48rpx;
-	padding-bottom: 14rpx;
-	font-size: 26rpx;
-	color: $dim;
-	border-bottom: 2rpx solid transparent;
-	transition: color 160ms linear, border-color 160ms linear;
-}
-
-.tab:last-child {
-	margin-right: 0;
-}
-
-.tab.on {
-	color: $ink;
-	border-bottom-color: $accent;
-}
-
-/* ---------- 卡片 ---------- */
-.card {
-	position: relative;
-	margin-top: 32rpx;
-	padding: 40rpx 32rpx 36rpx;
-	background-color: $panel;
-	border: 1rpx solid $line;
-	border-radius: $radius;
-	box-shadow: $shadow-card;
-}
-
-/* ---------- 字段 ---------- */
-.field {
-	margin-top: 28rpx;
-}
-
-.card > .field:first-child {
-	margin-top: 0;
-}
-
-.field-label {
-	display: block;
+	min-height: 116rpx;
+	padding: 8rpx 0 12rpx;
 	margin-bottom: 12rpx;
-	font-size: 20rpx;
-	letter-spacing: $label-ls;
+	border-bottom: 2rpx solid rgba(58, 54, 48, 0.35);
+	transition: border-color 0.15s;
+	animation: pop-in 280ms $ease-pop both;
+}
+
+.wfield-label {
+	flex: none;
+	width: 140rpx;
+	padding-bottom: 16rpx;
+	font-size: 24rpx;
+	letter-spacing: 2rpx;
 	color: $dim;
 }
 
-.field-box {
-	display: flex;
-	align-items: center;
-	height: $tap;
-	padding: 0 24rpx;
-	background-color: $field-bg;
-	border: 1rpx solid $field-line;
-	border-radius: $radius-sm;
-	transition: border-color 180ms linear, box-shadow 180ms linear;
-}
-
-.field-box.active {
-	border-color: $accent;
-	box-shadow: $focus-shadow;
-}
-
-.field-box.error {
-	border-color: $err;
-}
-
-/* input 一律显式重置，避免各端默认样式渗入 */
 .input {
 	flex: 1;
-	width: 100%;
-	height: 100%;
-	padding: 0;
-	background-color: transparent;
-	border-width: 0;
-	border-radius: 0;
-	appearance: none;
+	min-width: 0;
+	height: 60rpx;
+	padding-bottom: 4rpx;
 	font-size: 28rpx;
 	color: $ink;
-	letter-spacing: $ls;
+	background: transparent;
 }
 
-.input-num {
-	font-variant-numeric: tabular-nums;
-	letter-spacing: 2rpx;
+.wfield.active {
+	border-bottom-color: $pen-blue;
 }
 
-.eye {
-	flex: none;
-	padding-left: 20rpx;
-	font-size: 22rpx;
-	color: $dim;
+.wfield.active .wfield-label {
+	color: $pen-blue;
 }
 
-.eye.on {
-	color: $accent;
-}
-
-.code {
-	flex: none;
-	padding-left: 24rpx;
-	font-size: 22rpx;
-	color: $accent;
-}
-
-.code.off {
-	color: $dim-2;
-	font-variant-numeric: tabular-nums;
+.wfield.error {
+	border-bottom-color: $err;
 }
 
 .err {
 	display: block;
-	margin-top: 12rpx;
-	font-size: 20rpx;
+	margin: -4rpx 0 16rpx;
+	padding-left: 140rpx;
+	font-size: 22rpx;
 	color: $err;
+	transform: rotate(-0.5deg);
 }
 
-.tip {
-	display: block;
-	margin-top: 12rpx;
-	font-size: 20rpx;
+.eye {
+	flex: none;
+	padding-bottom: 16rpx;
+	margin-left: 12rpx;
+	font-size: 22rpx;
 	color: $dim-2;
 }
 
-/* ---------- 行内操作 ---------- */
+.eye.on {
+	color: $pen-red;
+}
+
+.code {
+	flex: none;
+	padding-bottom: 16rpx;
+	margin-left: 12rpx;
+	font-size: 22rpx;
+	color: $pen-blue;
+	text-decoration: underline dashed rgba(63, 127, 191, 0.5);
+}
+
+.code.off {
+	color: $dim-2;
+	text-decoration: none;
+}
+
+/* ---------- 行 / 勾选 ---------- */
 .row {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	margin-top: 32rpx;
+	padding: 12rpx 0 20rpx;
 }
 
-.row-end {
-	justify-content: flex-end;
-}
-
-.link {
-	font-size: 22rpx;
-	color: $accent;
-}
-
-.link-soft {
-	color: $dim;
-}
-
-/* ---------- 勾选 ---------- */
 .check {
 	display: flex;
-	align-items: flex-start;
-	margin-top: 28rpx;
+	align-items: center;
+	padding: 14rpx 0;
 }
 
 .check-inline {
-	align-items: center;
-	margin-top: 0;
-}
-
-.check-inline .check-txt {
-	flex: none;
+	padding: 0;
 }
 
 .check-box {
 	position: relative;
-	width: 28rpx;
-	height: 28rpx;
-	flex: none;
+	width: 40rpx;
+	height: 40rpx;
 	margin-right: 14rpx;
-	background-color: transparent;
-	border: 2rpx solid $line;
-	border-radius: $radius-tick;
-	transition: background-color 160ms linear, border-color 160ms linear;
+	border: 2rpx dashed rgba(58, 54, 48, 0.5);
+	border-radius: 10rpx 6rpx 12rpx 6rpx;
+	flex: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: #fffdf6;
 }
 
 .check-box.on {
-	background-color: $accent;
-	border-color: $accent;
+	border-color: $pen-red;
+	border-style: solid;
 }
 
-/* 勾选用实体元素绘制，规避小程序端伪元素差异 */
 .check-tick {
-	position: absolute;
-	left: 50%;
-	top: 44%;
-	width: 7rpx;
-	height: 13rpx;
-	border-right: 2rpx solid $on-accent;
-	border-bottom: 2rpx solid $on-accent;
-	transform: translate(-50%, -50%) rotate(43deg) scale(0.6);
-	opacity: 0;
-	transition: opacity 120ms linear, transform 120ms $ease;
+	font-size: 28rpx;
+	font-weight: 700;
+	color: $pen-red;
+	animation: tick-pop 180ms $ease-pop both;
 }
 
-.check-box.on .check-tick {
-	opacity: 1;
-	transform: translate(-50%, -50%) rotate(43deg) scale(1);
+@keyframes tick-pop {
+	from {
+		transform: scale(1.6);
+		opacity: 0;
+	}
+
+	to {
+		transform: scale(1);
+		opacity: 1;
+	}
 }
 
 .check-txt {
-	flex: 1;
-	font-size: 22rpx;
-	line-height: 1.6;
+	font-size: 24rpx;
 	color: $dim;
 }
 
 .check-link {
-	color: $accent;
+	color: $pen-blue;
+	text-decoration: underline;
 }
 
-/* ---------- 主按钮 ---------- */
+.link {
+	font-size: 24rpx;
+	font-weight: 700;
+	color: $pen-blue;
+}
+
+.link-soft {
+	color: $dim;
+	font-weight: 400;
+}
+
+/* ---------- 蜡笔提交按钮 ---------- */
 .btn {
-	position: relative;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	height: $tap;
-	margin-top: 40rpx;
-	background-color: $btn-bg;
-	color: $btn-ink;
-	border: 1rpx solid $btn-border;
-	border-radius: $radius-btn;
-	font-size: 28rpx;
-	letter-spacing: 8rpx;
-	text-indent: 8rpx;
-	box-shadow: $shadow-btn;
+	height: 100rpx;
+	margin: 20rpx 0 8rpx;
+	background: $hi;
+	border: 3rpx dashed rgba(58, 54, 48, 0.65);
+	border-radius: 16rpx 10rpx 18rpx 8rpx;
+	transform: rotate(-1deg);
+	transition: transform 0.12s $ease-pop;
+	animation: pop-in 280ms $ease-pop both;
+}
+
+.btn-txt {
+	font-size: 30rpx;
+	font-weight: 700;
+	letter-spacing: 4rpx;
 }
 
 .btn:active {
-	opacity: 0.88;
+	transform: rotate(-1deg) scale(0.96);
 }
 
-.btn.is-busy {
-	opacity: 0.6;
-}
-
-.btn-ghost {
-	margin-top: 20rpx;
-	background-color: transparent;
+.back-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 72rpx;
+	margin: 8rpx 0 0;
+	font-size: 24rpx;
 	color: $dim;
-	border-color: $line;
-	box-shadow: none;
-	letter-spacing: 4rpx;
-	text-indent: 4rpx;
 }
 
-/* ---------- 其他入口 ---------- */
+.back-btn:active {
+	color: $pen-red;
+}
+
+/* ---------- 找回步骤 ---------- */
+.steps {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 20rpx;
+	margin: 8rpx 0 36rpx;
+}
+
+.stp {
+	display: flex;
+	align-items: center;
+	gap: 10rpx;
+	opacity: 0.45;
+}
+
+.stp.on,
+.stp.done {
+	opacity: 1;
+}
+
+.stp-no {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 44rpx;
+	height: 44rpx;
+	font-size: 24rpx;
+	font-weight: 700;
+	color: $ink;
+	border: 2rpx dashed rgba(58, 54, 48, 0.5);
+	border-radius: 12rpx 8rpx 14rpx 8rpx;
+	background: #fffdf6;
+}
+
+.stp.on .stp-no {
+	border-color: $pen-red;
+	color: $pen-red;
+	transform: rotate(-3deg);
+}
+
+.stp.done .stp-no {
+	border-style: solid;
+	border-color: $pen-blue;
+	color: $pen-blue;
+}
+
+.stp-name {
+	font-size: 24rpx;
+}
+
+.stp-line {
+	color: $dim-2;
+	font-size: 22rpx;
+	letter-spacing: 4rpx;
+}
+
+/* ---------- 小贴士 ---------- */
+.safe {
+	margin-top: 32rpx;
+	padding: 20rpx 24rpx;
+	background: rgba(255, 217, 94, 0.3);
+	border: 2rpx dashed rgba(58, 54, 48, 0.3);
+	border-radius: 4rpx 14rpx 6rpx 12rpx;
+	transform: rotate(0.5deg);
+}
+
+.safe-h {
+	display: block;
+	font-size: 22rpx;
+	font-weight: 700;
+	color: $pen-red;
+}
+
+.safe-txt {
+	display: block;
+	margin-top: 8rpx;
+	font-size: 22rpx;
+	line-height: 1.7;
+	color: $dim;
+}
+
+/* ---------- 第三方 ---------- */
 .alt {
 	display: flex;
-	margin-top: 32rpx;
-	border-top: 1rpx solid $line;
+	gap: 18rpx;
+	margin-top: 28rpx;
 }
 
 .alt-i {
 	flex: 1;
-	height: 84rpx;
-	line-height: 84rpx;
-	text-align: center;
+	height: 76rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	font-size: 22rpx;
 	color: $dim;
-	border-right: 1rpx solid $line;
+	background: #fffdf6;
+	border: 2rpx solid rgba(58, 54, 48, 0.2);
+	border-radius: 12rpx 6rpx 14rpx 6rpx;
 }
 
-.alt-i:last-child {
-	border-right: 0;
+.alt-i:nth-child(1) {
+	transform: rotate(-1deg);
+}
+
+.alt-i:nth-child(2) {
+	transform: rotate(0.8deg);
+}
+
+.alt-i:nth-child(3) {
+	transform: rotate(-0.6deg);
+}
+
+.alt-i:active {
+	background: $hi;
+	color: $ink;
 }
 
 /* ---------- 页脚 ---------- */
 .foot {
 	position: relative;
 	z-index: 2;
-	flex: none;
-	padding-top: 40rpx;
-	padding-bottom: 40rpx;
-	padding-bottom: calc(40rpx + constant(safe-area-inset-bottom));
-	padding-bottom: calc(40rpx + env(safe-area-inset-bottom));
+	padding: 24rpx 0 calc(24rpx + env(safe-area-inset-bottom));
 }
 
 .foot-row {
 	display: flex;
-	align-items: baseline;
-	justify-content: space-between;
+	align-items: center;
+	justify-content: center;
+	gap: 12rpx;
 }
 
 .foot-txt {
-	font-size: 22rpx;
+	font-size: 24rpx;
 	color: $dim;
 }
 
 .copy {
 	display: block;
-	margin-top: 40rpx;
-	font-size: 18rpx;
-	letter-spacing: 2rpx;
-	color: $dim-2;
+	margin-top: 8rpx;
 	text-align: center;
-}
-
-/* ---------- 步骤 ---------- */
-.steps {
-	display: flex;
-	align-items: center;
-	margin-top: 40rpx;
-}
-
-.step {
-	display: flex;
-	align-items: center;
 	font-size: 20rpx;
 	letter-spacing: 2rpx;
 	color: $dim-2;
-}
-
-.step.on {
-	color: $accent;
-}
-
-.step-dot {
-	width: 12rpx;
-	height: 12rpx;
-	margin-right: 12rpx;
-	background-color: $dim-2;
-}
-
-.step.on .step-dot {
-	background-color: $accent;
-}
-
-.step-line {
-	flex: none;
-	width: 48rpx;
-	height: 1rpx;
-	margin: 0 16rpx;
-	background-color: $line;
-}
-
-/* ---------- 安全提示 ---------- */
-.terms {
-	display: block;
-	margin-top: 40rpx;
-	font-size: 22rpx;
-	line-height: 1.9;
-	color: $dim;
-}
-
-.terms-h {
-	display: block;
-	margin-top: 40rpx;
-	margin-bottom: 12rpx;
-	font-size: 22rpx;
-	letter-spacing: 1rpx;
-	color: $ink;
-}
-
-/* ---------- 装饰层（纯 CSS，0 图片） ---------- */
-/* 胶带：半透明矩形斜贴在页面上沿，模拟手账贴纸 */
-.deco-tape {
-	width: 160rpx;
-	height: 48rpx;
-	background-color: rgba(255, 230, 109, 0.55);
-	transform: rotate(-6deg);
-}
-
-.deco-tape-a {
-	top: 96rpx;
-	right: 64rpx;
-}
-
-.deco-tape-b {
-	top: 168rpx;
-	left: 24rpx;
-	background-color: rgba(168, 218, 220, 0.6);
-	transform: rotate(5deg);
-}
-
-/* 便签色块：带 1–3° 随机倾斜，避开文字区 */
-.deco-note {
-	width: 120rpx;
-	height: 120rpx;
-	border: 2rpx solid rgba(43, 43, 43, 0.35);
-}
-
-.deco-note-a {
-	top: 480rpx;
-	right: -48rpx;
-	background-color: rgba(255, 230, 109, 0.7);
-	transform: rotate(2deg);
-}
-
-.deco-note-b {
-	bottom: 200rpx;
-	left: -56rpx;
-	background-color: rgba(168, 218, 220, 0.7);
-	transform: rotate(-3deg);
-}
-
-/* 手绘波浪线：radial-gradient 半圆轮廓 repeat-x 拼出 */
-.deco-squiggle {
-	top: 232rpx;
-	right: 40rpx;
-	width: 160rpx;
-	height: 24rpx;
-	background-image: radial-gradient(circle at 12rpx 12rpx, rgba(43, 43, 43, 0) 8rpx, rgba(43, 43, 43, 0.4) 8rpx, rgba(43, 43, 43, 0.4) 10rpx, rgba(43, 43, 43, 0) 10rpx);
-	background-size: 24rpx 24rpx;
-	background-repeat: repeat-x;
-}
-/* ---------- 皮肤覆盖 ---------- */
-/* 标题：手写体气质 + 轻微倾斜 */
-.title {
-	transform: rotate(-2deg);
-}
-
-.eyebrow {
-	color: $accent;
-	font-weight: 700;
-}
-
-/* 面板：4rpx 墨线描边 + 硬偏移阴影，整体歪 0.5°，圆角不规则 */
-.card {
-	border: 4rpx solid #2b2b2b;
-	border-radius: 12rpx 8rpx 10rpx 8rpx;
-	box-shadow: $shadow-card;
-	transform: rotate(-0.5deg);
-}
-
-/* 输入框：3rpx 墨线，聚焦转红并偏移硬阴影 */
-.field-box {
-	border: 3rpx solid #2b2b2b;
-	transition: border-color 160ms linear, box-shadow 160ms linear;
-}
-
-.field-box.active {
-	border-color: $accent;
-	box-shadow: $focus-shadow;
-}
-
-/* Tab：选中像荧光笔划过 */
-.tab.on {
-	color: #2b2b2b;
-	border-bottom: 6rpx solid $accent-2;
-}
-
-/* 按钮：盖章式按压——下沉 + 旋转 1° */
-.btn {
-	font-weight: 700;
-}
-
-.btn:active {
-	transform: translateY(4rpx) rotate(1deg);
-	box-shadow: 2rpx 2rpx 0 rgba(43, 43, 43, 0.9);
-}
-
-/* 勾选：歪一点的墨线方框 */
-.check-box {
-	border: 3rpx solid #2b2b2b;
-	transform: rotate(-2deg);
-}
-
-.check-box.on {
-	background-color: $accent;
-	border-color: #2b2b2b;
-}
-
-.link {
-	font-weight: 700;
-	text-decoration: underline;
-}
-
-/* 入场：错位淡入（opacity-only，避免覆盖元素自身倾斜） */
-@keyframes dd-in {
-	from {
-		opacity: 0;
-	}
-
-	to {
-		opacity: 1;
-	}
-}
-
-.head {
-	animation: dd-in 320ms ease-out both;
-}
-
-.card {
-	animation: dd-in 320ms 60ms ease-out both;
+	transform: rotate(-0.8deg);
 }

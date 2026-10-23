@@ -1,10 +1,6 @@
 <template>
 	<view class="page">
 		<view class="deco deco-grid"></view>
-		<view class="deco deco-glow deco-glow-a"></view>
-		<view class="deco deco-glow deco-glow-b"></view>
-		<view class="deco deco-bracket deco-bracket-tl"></view>
-		<view class="deco deco-bracket deco-bracket-br"></view>
 		<view class="deco deco-scan"></view>
 
 		<view class="status" :style="{ height: statusBar + 'px' }"></view>
@@ -19,24 +15,22 @@
 		</view>
 
 		<view class="content">
-			<view class="brand">
-				<view class="logo"><view class="logo-core"></view></view>
-				<view class="brand-txt">
-					<text class="brand-name">霓虹终端</text>
-					<text class="brand-sub">NIGHT CITY // NODE 07</text>
-				</view>
+			<view class="sign">
+				<text class="sign-tube">NEON·07</text>
+				<text class="sign-sub">NIGHT CITY // NEW IDENTITY</text>
 			</view>
 
 			<view class="head">
-				<text class="eyebrow">REGISTER // NODE</text>
-				<text class="title">创建身份</text>
-				<text class="lead">注册一个新的接入身份，绑定手机号以接收校验码。</text>
+				<text class="head-cmd">&gt; new identity --register</text>
+				<text class="head-title">创建账号</text>
+				<text class="head-lead">分配新的城市节点身份。凭证将被加密存储于本地芯片。</text>
 			</view>
 
-			<view class="card">
-				<view class="field">
-					<text class="field-label">手机号</text>
-					<view class="field-box" :class="{ active: focus === 'phone', error: !!err.phone }">
+			<view class="term">
+				<view class="row" :class="{ active: focus === 'phone', error: !!err.phone }">
+					<text class="row-pre">&gt;</text>
+					<view class="row-main">
+						<text class="row-label">CALL // 手机号</text>
 						<input
 							class="input input-num"
 							v-model="phone"
@@ -48,12 +42,14 @@
 							@blur="focus = ''"
 						/>
 					</view>
-					<text v-if="err.phone" class="err">{{ err.phone }}</text>
+					<text v-if="err.phone" class="row-err">ERR</text>
 				</view>
+				<text v-if="err.phone" class="err">{{ err.phone }}</text>
 
-				<view class="field">
-					<text class="field-label">短信验证码</text>
-					<view class="field-box" :class="{ active: focus === 'sms', error: !!err.sms }">
+				<view class="row" :class="{ active: focus === 'sms', error: !!err.sms }">
+					<text class="row-pre">&gt;</text>
+					<view class="row-main">
+						<text class="row-label">OTP // 短信验证码</text>
 						<input
 							class="input input-num"
 							v-model="sms"
@@ -64,14 +60,16 @@
 							@focus="focus = 'sms'"
 							@blur="focus = ''"
 						/>
-						<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + ' s' : '获取验证码' }}</text>
 					</view>
-					<text v-if="err.sms" class="err">{{ err.sms }}</text>
+					<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode">{{ smsLeft > 0 ? smsLeft + ' s' : '[ GET ]' }}</text>
+					<text v-if="err.sms" class="row-err">ERR</text>
 				</view>
+				<text v-if="err.sms" class="err">{{ err.sms }}</text>
 
-				<view class="field">
-					<text class="field-label">设置密码</text>
-					<view class="field-box" :class="{ active: focus === 'password', error: !!err.password }">
+				<view class="row" :class="{ active: focus === 'password', error: !!err.password }">
+					<text class="row-pre">&gt;</text>
+					<view class="row-main">
+						<text class="row-label">KEY // 设置密码</text>
 						<input
 							class="input"
 							v-model="password"
@@ -82,15 +80,16 @@
 							@focus="focus = 'password'"
 							@blur="focus = ''"
 						/>
-						<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐藏' : '显示' }}</text>
 					</view>
-					<text v-if="err.password" class="err">{{ err.password }}</text>
-					<text v-else class="tip">建议使用字母、数字与符号的组合</text>
+					<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐藏' : '显示' }}</text>
+					<text v-if="err.password" class="row-err">ERR</text>
 				</view>
+				<text v-if="err.password" class="err">{{ err.password }}</text>
 
-				<view class="field">
-					<text class="field-label">确认密码</text>
-					<view class="field-box" :class="{ active: focus === 'confirm', error: !!err.confirm }">
+				<view class="row" :class="{ active: focus === 'confirm', error: !!err.confirm }">
+					<text class="row-pre">&gt;</text>
+					<view class="row-main">
+						<text class="row-label">KEY // 确认密码</text>
 						<input
 							class="input"
 							v-model="confirm"
@@ -102,13 +101,17 @@
 							@blur="focus = ''"
 						/>
 					</view>
-					<text v-if="err.confirm" class="err">{{ err.confirm }}</text>
+					<text v-if="err.confirm" class="row-err">ERR</text>
+				</view>
+				<text v-if="err.confirm" class="err">{{ err.confirm }}</text>
+
+				<view class="jack" :class="{ 'is-busy': submitting }" @click="submit">
+					<view class="jack-sweep"></view>
+					<text class="jack-txt">{{ submitting ? 'WRITING...' : 'CREATE ID ▸' }}</text>
 				</view>
 
-				<view class="btn" :class="{ 'is-busy': submitting }" @click="submit">注 册</view>
-
 				<view class="check" @click="agreed = !agreed">
-					<view class="check-box" :class="{ on: agreed }"><view class="check-tick"></view></view>
+					<text class="check-box mono">[{{ agreed ? '×' : '&nbsp;' }}]</text>
 					<text class="check-txt">我已阅读并同意 <text class="check-link">《用户协议》</text> 与 <text class="check-link">《隐私政策》</text></text>
 				</view>
 			</view>
@@ -116,16 +119,16 @@
 
 		<view class="foot">
 			<view class="foot-row">
-				<text class="foot-txt">已有账号</text>
+				<text class="foot-txt">已有身份</text>
 				<text class="link" @click="goLogin">返回登录</text>
 			</view>
-			<text class="copy">© 2026 NEON CITY · NODE 07</text>
+			<text class="copy">&copy; 2026 NEON CITY &middot; NODE 07</text>
 		</view>
 	</view>
 </template>
 
 <script>
-export default {
+	export default {
 		data() {
 			return {
 				statusBar: 0,
@@ -152,16 +155,16 @@ export default {
 			this.clearTimer();
 		},
 		methods: {
-			fillDemo() {
-				this.agreed = true;
-				this.phone = '13800001234';
-				this.sms = '202610';
-				this.password = 'n30n-5512';
-				this.confirm = 'n30n-5512';
-			},
-
 			toast(title) {
 				uni.showToast({ title, icon: 'none' });
+			},
+
+			fillDemo() {
+				this.phone = '13800001234';
+				this.sms = '202610';
+				this.password = 'demo1234';
+				this.confirm = 'demo1234';
+				this.agreed = true;
 			},
 
 			isPhone(v) {
@@ -176,7 +179,7 @@ export default {
 				this.toast('验证码已发送');
 				if (this.timer) return;
 				this.timer = setInterval(() => {
-					this.smsLeft--;
+					if (this.smsLeft > 0) this.smsLeft--;
 					if (this.smsLeft <= 0) this.clearTimer();
 				}, 1000);
 			},
@@ -220,9 +223,7 @@ export default {
 			},
 
 			goLogin() {
-				const pages = getCurrentPages();
-				if (pages.length > 1) uni.navigateBack();
-				else uni.reLaunch({ url: '/pages/login112/login' });
+				uni.reLaunch({ url: '/pages/login112/login' });
 			}
 		}
 	};

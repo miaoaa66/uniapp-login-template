@@ -1,9 +1,9 @@
 <template>
 	<view class="page">
 		<view class="deco deco-circle"></view>
-		<view class="deco deco-square"></view>
 		<view class="deco deco-tri"></view>
 		<view class="deco deco-bar"></view>
+		<view class="deco deco-rule"></view>
 
 		<view class="status" :style="{ height: statusBar + 'px' }"></view>
 
@@ -17,37 +17,35 @@
 		</view>
 
 		<view class="content">
-			<view class="brand">
-				<view class="logo"><view class="logo-core"></view></view>
-				<view class="brand-txt">
-					<text class="brand-name">构成学社</text>
-					<text class="brand-sub">BAUHAUS · 1919</text>
-				</view>
+			<view class="mark">
+				<view class="mark-sq"></view>
+				<view class="mark-tri"></view>
+				<view class="mark-cir"></view>
 			</view>
 
 			<view class="head">
-				<text class="eyebrow">FORM · RESET</text>
 				<text class="title">找回密码</text>
-				<text class="lead">验证注册手机号后，重新设置密码。</text>
+				<text class="lead">通过注册手机号重新校验身份，随后重置访问密钥。</text>
 			</view>
 
-			<view class="card">
-				<view class="steps">
-					<view class="step" :class="{ on: step === 0 }">
-						<view class="step-dot"></view>
-						<text>01 验证身份</text>
-					</view>
-					<view class="step-line"></view>
-					<view class="step" :class="{ on: step === 1 }">
-						<view class="step-dot"></view>
-						<text>02 设置密码</text>
-					</view>
+			<view class="steps">
+				<view class="stp" :class="{ on: step === 0, done: step > 0 }">
+					<view class="stp-fig stp-fig-sq"></view>
+					<text class="stp-name">验证身份</text>
 				</view>
+				<view class="stp-line"></view>
+				<view class="stp" :class="{ on: step === 1 }">
+					<view class="stp-fig stp-fig-cir"></view>
+					<text class="stp-name">设置密码</text>
+				</view>
+			</view>
 
+			<view class="forms">
 				<block v-if="step === 0">
-					<view class="field">
-						<text class="field-label">注册手机号</text>
-						<view class="field-box" :class="{ active: focus === 'phone', error: !!err.phone }">
+					<view class="gfield" :class="{ active: focus === 'phone', error: !!err.phone }">
+						<view class="gfield-dot gfield-dot-y"></view>
+						<view class="gfield-main">
+							<text class="gfield-label">注册手机号</text>
 							<input
 								class="input input-num"
 								v-model="phone"
@@ -59,12 +57,14 @@
 								@blur="focus = ''"
 							/>
 						</view>
-						<text v-if="err.phone" class="err">{{ err.phone }}</text>
+						<view class="focus-dot"></view>
 					</view>
+					<text v-if="err.phone" class="err">{{ err.phone }}</text>
 
-					<view class="field">
-						<text class="field-label">短信验证码</text>
-						<view class="field-box" :class="{ active: focus === 'sms', error: !!err.sms }">
+					<view class="gfield" :class="{ active: focus === 'sms', error: !!err.sms }">
+						<view class="gfield-dot gfield-dot-b"></view>
+						<view class="gfield-main">
+							<text class="gfield-label">短信验证码</text>
 							<input
 								class="input input-num"
 								v-model="sms"
@@ -75,18 +75,22 @@
 								@focus="focus = 'sms'"
 								@blur="focus = ''"
 							/>
-							<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + ' s' : '获取验证码' }}</text>
 						</view>
-						<text v-if="err.sms" class="err">{{ err.sms }}</text>
+						<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode">{{ smsLeft > 0 ? smsLeft + ' s' : '获取验证码' }}</text>
+						<view class="focus-dot"></view>
 					</view>
+					<text v-if="err.sms" class="err">{{ err.sms }}</text>
 
-					<view class="btn" @click="next">下 一 步</view>
+					<view class="btn" @click="next">
+						<text class="btn-txt">下一步</text>
+					</view>
 				</block>
 
 				<block v-else>
-					<view class="field">
-						<text class="field-label">新密码</text>
-						<view class="field-box" :class="{ active: focus === 'password', error: !!err.password }">
+					<view class="gfield" :class="{ active: focus === 'password', error: !!err.password }">
+						<view class="gfield-dot gfield-dot-y"></view>
+						<view class="gfield-main">
+							<text class="gfield-label">新密码</text>
 							<input
 								class="input"
 								v-model="password"
@@ -97,14 +101,16 @@
 								@focus="focus = 'password'"
 								@blur="focus = ''"
 							/>
-							<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐藏' : '显示' }}</text>
 						</view>
-						<text v-if="err.password" class="err">{{ err.password }}</text>
+						<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐藏' : '显示' }}</text>
+						<view class="focus-dot"></view>
 					</view>
+					<text v-if="err.password" class="err">{{ err.password }}</text>
 
-					<view class="field">
-						<text class="field-label">确认新密码</text>
-						<view class="field-box" :class="{ active: focus === 'confirm', error: !!err.confirm }">
+					<view class="gfield" :class="{ active: focus === 'confirm', error: !!err.confirm }">
+						<view class="gfield-dot gfield-dot-b"></view>
+						<view class="gfield-main">
+							<text class="gfield-label">确认新密码</text>
 							<input
 								class="input"
 								v-model="confirm"
@@ -116,15 +122,20 @@
 								@blur="focus = ''"
 							/>
 						</view>
-						<text v-if="err.confirm" class="err">{{ err.confirm }}</text>
+						<view class="focus-dot"></view>
 					</view>
+					<text v-if="err.confirm" class="err">{{ err.confirm }}</text>
 
-					<view class="btn" :class="{ 'is-busy': submitting }" @click="submit">重 置 密 码</view>
-					<view class="btn btn-ghost" @click="back">上一步</view>
+					<view class="btn" :class="{ 'is-busy': submitting }" @click="submit">
+						<text class="btn-txt">{{ submitting ? '提交中…' : '重置密码' }}</text>
+					</view>
+					<view class="back-btn" @click="back">← 上一步</view>
 				</block>
 
-				<text class="terms-h">安全提示</text>
-				<text class="terms">重置成功后，其他设备上的登录状态将全部失效。若手机号已停用，请联系管理员核验身份。</text>
+				<view class="safe">
+					<text class="safe-h">安全提示</text>
+					<text class="safe-txt">重置成功后，其他设备上的登录状态将全部失效。若手机号已停用，请联系管理员核验身份。</text>
+				</view>
 			</view>
 		</view>
 
@@ -133,13 +144,13 @@
 				<text class="foot-txt">想起密码了</text>
 				<text class="link" @click="goLogin">返回登录</text>
 			</view>
-			<text class="copy">© 2026 FORM UND FUNKTION</text>
+			<text class="copy">© 2026 STAATLICHES BAUHAUS · 1926</text>
 		</view>
 	</view>
 </template>
 
 <script>
-export default {
+	export default {
 		data() {
 			return {
 				statusBar: 0,
@@ -147,7 +158,7 @@ export default {
 				focus: '',
 				showPwd: false,
 				submitting: false,
-				phStyle: 'color:#a39b8d;font-size:15px;',
+				phStyle: 'color:rgba(17,17,17,0.34);font-size:15px;',
 				phone: '',
 				sms: '',
 				password: '',
@@ -185,7 +196,7 @@ export default {
 				this.toast('验证码已发送');
 				if (this.timer) return;
 				this.timer = setInterval(() => {
-					this.smsLeft--;
+					if (this.smsLeft > 0) this.smsLeft--;
 					if (this.smsLeft <= 0) this.clearTimer();
 				}, 1000);
 			},

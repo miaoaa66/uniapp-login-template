@@ -1,10 +1,6 @@
 <template>
 	<view class="page">
 		<view class="deco deco-grid"></view>
-		<view class="deco deco-glow deco-glow-a"></view>
-		<view class="deco deco-glow deco-glow-b"></view>
-		<view class="deco deco-bracket deco-bracket-tl"></view>
-		<view class="deco deco-bracket deco-bracket-br"></view>
 		<view class="deco deco-scan"></view>
 
 		<view class="status" :style="{ height: statusBar + 'px' }"></view>
@@ -19,37 +15,34 @@
 		</view>
 
 		<view class="content">
-			<view class="brand">
-				<view class="logo"><view class="logo-core"></view></view>
-				<view class="brand-txt">
-					<text class="brand-name">霓虹终端</text>
-					<text class="brand-sub">NIGHT CITY // NODE 07</text>
-				</view>
+			<view class="sign">
+				<text class="sign-tube">NEON·07</text>
+				<text class="sign-sub">NIGHT CITY // RECOVER ACCESS</text>
 			</view>
 
 			<view class="head">
-				<text class="eyebrow">RECOVER // ACCESS</text>
-				<text class="title">恢复访问</text>
-				<text class="lead">通过注册手机号重新校验身份，随后重置访问密钥。</text>
+				<text class="head-cmd">&gt; recover --key lost</text>
+				<text class="head-title">恢复访问</text>
+				<text class="head-lead">通过注册手机号重新校验身份，随后重置访问密钥。</text>
 			</view>
 
-			<view class="card">
-				<view class="steps">
-					<view class="step" :class="{ on: step === 0 }">
-						<view class="step-dot"></view>
-						<text>01 验证身份</text>
+			<view class="term">
+				<view class="logs">
+					<view class="log" :class="{ done: step >= 1, on: step === 0 }">
+						<text class="log-mark">{{ step >= 1 ? '✓' : '▸' }}</text>
+						<text class="log-txt">STEP_1 // 验证身份</text>
 					</view>
-					<view class="step-line"></view>
-					<view class="step" :class="{ on: step === 1 }">
-						<view class="step-dot"></view>
-						<text>02 设置密码</text>
+					<view class="log" :class="{ on: step === 1 }">
+						<text class="log-mark">{{ step >= 1 ? '▸' : '·' }}</text>
+						<text class="log-txt">STEP_2 // 设置新密钥</text>
 					</view>
 				</view>
 
 				<block v-if="step === 0">
-					<view class="field">
-						<text class="field-label">注册手机号</text>
-						<view class="field-box" :class="{ active: focus === 'phone', error: !!err.phone }">
+					<view class="row" :class="{ active: focus === 'phone', error: !!err.phone }">
+						<text class="row-pre">&gt;</text>
+						<view class="row-main">
+							<text class="row-label">CALL // 注册手机号</text>
 							<input
 								class="input input-num"
 								v-model="phone"
@@ -61,12 +54,14 @@
 								@blur="focus = ''"
 							/>
 						</view>
-						<text v-if="err.phone" class="err">{{ err.phone }}</text>
+						<text v-if="err.phone" class="row-err">ERR</text>
 					</view>
+					<text v-if="err.phone" class="err">{{ err.phone }}</text>
 
-					<view class="field">
-						<text class="field-label">短信验证码</text>
-						<view class="field-box" :class="{ active: focus === 'sms', error: !!err.sms }">
+					<view class="row" :class="{ active: focus === 'sms', error: !!err.sms }">
+						<text class="row-pre">&gt;</text>
+						<view class="row-main">
+							<text class="row-label">OTP // 短信验证码</text>
 							<input
 								class="input input-num"
 								v-model="sms"
@@ -77,18 +72,23 @@
 								@focus="focus = 'sms'"
 								@blur="focus = ''"
 							/>
-							<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + ' s' : '获取验证码' }}</text>
 						</view>
-						<text v-if="err.sms" class="err">{{ err.sms }}</text>
+						<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode">{{ smsLeft > 0 ? smsLeft + ' s' : '[ GET ]' }}</text>
+						<text v-if="err.sms" class="row-err">ERR</text>
 					</view>
+					<text v-if="err.sms" class="err">{{ err.sms }}</text>
 
-					<view class="btn" @click="next">下 一 步</view>
+					<view class="jack" @click="next">
+						<view class="jack-sweep"></view>
+						<text class="jack-txt">VERIFY ▸</text>
+					</view>
 				</block>
 
 				<block v-else>
-					<view class="field">
-						<text class="field-label">新密码</text>
-						<view class="field-box" :class="{ active: focus === 'password', error: !!err.password }">
+					<view class="row" :class="{ active: focus === 'password', error: !!err.password }">
+						<text class="row-pre">&gt;</text>
+						<view class="row-main">
+							<text class="row-label">KEY // 新密码</text>
 							<input
 								class="input"
 								v-model="password"
@@ -99,14 +99,16 @@
 								@focus="focus = 'password'"
 								@blur="focus = ''"
 							/>
-							<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐藏' : '显示' }}</text>
 						</view>
-						<text v-if="err.password" class="err">{{ err.password }}</text>
+						<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐藏' : '显示' }}</text>
+						<text v-if="err.password" class="row-err">ERR</text>
 					</view>
+					<text v-if="err.password" class="err">{{ err.password }}</text>
 
-					<view class="field">
-						<text class="field-label">确认新密码</text>
-						<view class="field-box" :class="{ active: focus === 'confirm', error: !!err.confirm }">
+					<view class="row" :class="{ active: focus === 'confirm', error: !!err.confirm }">
+						<text class="row-pre">&gt;</text>
+						<view class="row-main">
+							<text class="row-label">KEY // 确认新密码</text>
 							<input
 								class="input"
 								v-model="confirm"
@@ -118,15 +120,21 @@
 								@blur="focus = ''"
 							/>
 						</view>
-						<text v-if="err.confirm" class="err">{{ err.confirm }}</text>
+						<text v-if="err.confirm" class="row-err">ERR</text>
 					</view>
+					<text v-if="err.confirm" class="err">{{ err.confirm }}</text>
 
-					<view class="btn" :class="{ 'is-busy': submitting }" @click="submit">重 置 密 码</view>
-					<view class="btn btn-ghost" @click="back">上一步</view>
+					<view class="jack" :class="{ 'is-busy': submitting }" @click="submit">
+						<view class="jack-sweep"></view>
+						<text class="jack-txt">{{ submitting ? 'WRITING...' : 'RESET KEY ▸' }}</text>
+					</view>
+					<view class="ghost" @click="back">&lt; BACK</view>
 				</block>
 
-				<text class="terms-h">安全提示</text>
-				<text class="terms">重置成功后，其他设备上的登录状态将全部失效。若手机号已停用，请联系管理员核验身份。</text>
+				<view class="safe">
+					<text class="safe-h">SECURITY // 安全提示</text>
+					<text class="safe-txt">重置成功后，其他设备上的登录状态将全部失效。若手机号已停用，请联系管理员核验身份。</text>
+				</view>
 			</view>
 		</view>
 
@@ -135,13 +143,13 @@
 				<text class="foot-txt">想起密码了</text>
 				<text class="link" @click="goLogin">返回登录</text>
 			</view>
-			<text class="copy">© 2026 NEON CITY · NODE 07</text>
+			<text class="copy">&copy; 2026 NEON CITY &middot; NODE 07</text>
 		</view>
 	</view>
 </template>
 
 <script>
-export default {
+	export default {
 		data() {
 			return {
 				statusBar: 0,
@@ -187,7 +195,7 @@ export default {
 				this.toast('验证码已发送');
 				if (this.timer) return;
 				this.timer = setInterval(() => {
-					this.smsLeft--;
+					if (this.smsLeft > 0) this.smsLeft--;
 					if (this.smsLeft <= 0) this.clearTimer();
 				}, 1000);
 			},

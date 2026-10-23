@@ -1,9 +1,9 @@
 <template>
 	<view class="page">
 		<view class="deco deco-circle"></view>
-		<view class="deco deco-square"></view>
 		<view class="deco deco-tri"></view>
 		<view class="deco deco-bar"></view>
+		<view class="deco deco-rule"></view>
 
 		<view class="status" :style="{ height: statusBar + 'px' }"></view>
 
@@ -17,29 +17,34 @@
 		</view>
 
 		<view class="content">
-			<view class="brand">
-				<view class="logo"><view class="logo-core"></view></view>
-				<view class="brand-txt">
-					<text class="brand-name">构成学社</text>
-					<text class="brand-sub">BAUHAUS · 1919</text>
-				</view>
+			<view class="mark">
+				<view class="mark-sq"></view>
+				<view class="mark-tri"></view>
+				<view class="mark-cir"></view>
 			</view>
 
 			<view class="head">
-				<text class="eyebrow">FORM · SIGN IN</text>
 				<text class="title">登录</text>
-				<text class="lead">圆、方、三角构成一切。功能与形式，在这里是同一件事。</text>
+				<text class="lead">形式追随功能。输入凭证，进入工作台。</text>
 			</view>
 
-			<view class="tabs">
-				<text v-for="(item, i) in tabs" :key="i" class="tab" :class="{ on: tab === i }" @click="switchTab(i)">{{ item }}</text>
+			<view class="shapes">
+				<view v-for="(item, i) in tabs" :key="i" class="shape" :class="['shape-' + i, { on: tab === i }]" @click="switchTab(i)">
+					<view class="shape-fig">
+						<view class="fig fig-sq"></view>
+						<view class="fig fig-tri"></view>
+						<view class="fig fig-cir"></view>
+					</view>
+					<text class="shape-name">{{ item }}</text>
+				</view>
 			</view>
 
-			<view class="card">
+			<view class="forms">
 				<block v-if="tab === 0">
-					<view class="field">
-						<text class="field-label">手机号 / 邮箱</text>
-						<view class="field-box" :class="{ active: focus === 'account', error: !!err.account }">
+					<view class="gfield" :class="{ active: focus === 'account', error: !!err.account }">
+						<view class="gfield-dot gfield-dot-y"></view>
+						<view class="gfield-main">
+							<text class="gfield-label">手机号 / 邮箱</text>
 							<input
 								class="input input-num"
 								v-model="account"
@@ -50,12 +55,14 @@
 								@blur="focus = ''"
 							/>
 						</view>
-						<text v-if="err.account" class="err">{{ err.account }}</text>
+						<view class="focus-dot"></view>
 					</view>
+					<text v-if="err.account" class="err">{{ err.account }}</text>
 
-					<view class="field">
-						<text class="field-label">登录密码</text>
-						<view class="field-box" :class="{ active: focus === 'password', error: !!err.password }">
+					<view class="gfield" :class="{ active: focus === 'password', error: !!err.password }">
+						<view class="gfield-dot gfield-dot-b"></view>
+						<view class="gfield-main">
+							<text class="gfield-label">登录密码</text>
 							<input
 								class="input"
 								v-model="password"
@@ -66,16 +73,18 @@
 								@focus="focus = 'password'"
 								@blur="focus = ''"
 							/>
-							<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐藏' : '显示' }}</text>
 						</view>
-						<text v-if="err.password" class="err">{{ err.password }}</text>
+						<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐藏' : '显示' }}</text>
+						<view class="focus-dot"></view>
 					</view>
+					<text v-if="err.password" class="err">{{ err.password }}</text>
 				</block>
 
 				<block v-else-if="tab === 1">
-					<view class="field">
-						<text class="field-label">手机号</text>
-						<view class="field-box" :class="{ active: focus === 'phone', error: !!err.phone }">
+					<view class="gfield" :class="{ active: focus === 'phone', error: !!err.phone }">
+						<view class="gfield-dot gfield-dot-y"></view>
+						<view class="gfield-main">
+							<text class="gfield-label">手机号</text>
 							<input
 								class="input input-num"
 								v-model="phone"
@@ -87,12 +96,14 @@
 								@blur="focus = ''"
 							/>
 						</view>
-						<text v-if="err.phone" class="err">{{ err.phone }}</text>
+						<view class="focus-dot"></view>
 					</view>
+					<text v-if="err.phone" class="err">{{ err.phone }}</text>
 
-					<view class="field">
-						<text class="field-label">短信验证码</text>
-						<view class="field-box" :class="{ active: focus === 'sms', error: !!err.sms }">
+					<view class="gfield" :class="{ active: focus === 'sms', error: !!err.sms }">
+						<view class="gfield-dot gfield-dot-b"></view>
+						<view class="gfield-main">
+							<text class="gfield-label">短信验证码</text>
 							<input
 								class="input input-num"
 								v-model="sms"
@@ -103,16 +114,18 @@
 								@focus="focus = 'sms'"
 								@blur="focus = ''"
 							/>
-							<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + ' s' : '获取验证码' }}</text>
 						</view>
-						<text v-if="err.sms" class="err">{{ err.sms }}</text>
+						<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + ' s' : '获取验证码' }}</text>
+						<view class="focus-dot"></view>
 					</view>
+					<text v-if="err.sms" class="err">{{ err.sms }}</text>
 				</block>
 
 				<block v-else>
-					<view class="field">
-						<text class="field-label">邮箱地址</text>
-						<view class="field-box" :class="{ active: focus === 'email', error: !!err.email }">
+					<view class="gfield" :class="{ active: focus === 'email', error: !!err.email }">
+						<view class="gfield-dot gfield-dot-y"></view>
+						<view class="gfield-main">
+							<text class="gfield-label">邮箱地址</text>
 							<input
 								class="input"
 								v-model="email"
@@ -123,12 +136,14 @@
 								@blur="focus = ''"
 							/>
 						</view>
-						<text v-if="err.email" class="err">{{ err.email }}</text>
+						<view class="focus-dot"></view>
 					</view>
+					<text v-if="err.email" class="err">{{ err.email }}</text>
 
-					<view class="field">
-						<text class="field-label">邮箱验证码</text>
-						<view class="field-box" :class="{ active: focus === 'mail', error: !!err.mail }">
+					<view class="gfield" :class="{ active: focus === 'mail', error: !!err.mail }">
+						<view class="gfield-dot gfield-dot-b"></view>
+						<view class="gfield-main">
+							<text class="gfield-label">邮箱验证码</text>
 							<input
 								class="input input-num"
 								v-model="mail"
@@ -139,24 +154,27 @@
 								@focus="focus = 'mail'"
 								@blur="focus = ''"
 							/>
-							<text class="code" :class="{ off: mailLeft > 0 }" @click="sendCode('mail')">{{ mailLeft > 0 ? mailLeft + ' s' : '获取验证码' }}</text>
 						</view>
-						<text v-if="err.mail" class="err">{{ err.mail }}</text>
+						<text class="code" :class="{ off: mailLeft > 0 }" @click="sendCode('mail')">{{ mailLeft > 0 ? mailLeft + ' s' : '获取验证码' }}</text>
+						<view class="focus-dot"></view>
 					</view>
+					<text v-if="err.mail" class="err">{{ err.mail }}</text>
 				</block>
 
 				<view class="row">
 					<view class="check check-inline" @click="remember = !remember">
-						<view class="check-box" :class="{ on: remember }"><view class="check-tick"></view></view>
+						<view class="check-box" :class="{ on: remember }"><view v-if="remember" class="check-tick"></view></view>
 						<text class="check-txt">记住此设备</text>
 					</view>
 					<text class="link link-soft" @click="goForget">忘记密码</text>
 				</view>
 
-				<view class="btn" :class="{ 'is-busy': submitting }" @click="submit">登 录</view>
+				<view class="btn" :class="{ 'is-busy': submitting }" @click="submit">
+					<text class="btn-txt">{{ submitting ? '提交中…' : '登　录' }}</text>
+				</view>
 
 				<view class="check" @click="agreed = !agreed">
-					<view class="check-box" :class="{ on: agreed }"><view class="check-tick"></view></view>
+					<view class="check-box" :class="{ on: agreed }"><view v-if="agreed" class="check-tick"></view></view>
 					<text class="check-txt">我已阅读并同意 <text class="check-link">《用户协议》</text> 与 <text class="check-link">《隐私政策》</text></text>
 				</view>
 
@@ -173,13 +191,13 @@
 				<text class="foot-txt">还没有账号</text>
 				<text class="link" @click="goRegister">创建账号</text>
 			</view>
-			<text class="copy">© 2026 FORM UND FUNKTION</text>
+			<text class="copy">© 2026 STAATLICHES BAUHAUS · 1926</text>
 		</view>
 	</view>
 </template>
 
 <script>
-export default {
+	export default {
 		data() {
 			return {
 				statusBar: 0,
@@ -190,7 +208,7 @@ export default {
 				remember: false,
 				agreed: false,
 				submitting: false,
-				phStyle: 'color:#a39b8d;font-size:15px;',
+				phStyle: 'color:rgba(17,17,17,0.34);font-size:15px;',
 				account: '',
 				password: '',
 				phone: '',
@@ -213,18 +231,17 @@ export default {
 			this.clearTimer();
 		},
 		methods: {
-			fillDemo() {
-				this.agreed = true;
-				this.account = 'form@bauhaus.art';
-				this.password = 'bhu-1919';
-				this.phone = '13800001234';
-				this.sms = '202610';
-				this.email = 'form@bauhaus.art';
-				this.mail = '202610';
-			},
-
 			toast(title) {
 				uni.showToast({ title, icon: 'none' });
+			},
+
+			fillDemo() {
+				this.account = '13800001234';
+				this.password = 'demo1234';
+				this.phone = '13800001234';
+				this.sms = '202610';
+				this.email = 'demo@work.com';
+				this.mail = '202610';
 			},
 
 			isPhone(v) {

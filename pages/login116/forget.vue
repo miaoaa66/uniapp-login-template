@@ -1,9 +1,6 @@
 <template>
 	<view class="page">
 		<view class="deco deco-stripe"></view>
-		<view class="deco deco-block"></view>
-		<view class="deco deco-rows"></view>
-		<view class="deco deco-cross"></view>
 
 		<view class="status" :style="{ height: statusBar + 'px' }"></view>
 
@@ -17,129 +14,118 @@
 		</view>
 
 		<view class="content">
-			<view class="brand">
-				<view class="logo"><view class="logo-core"></view></view>
-				<view class="brand-txt">
-					<text class="brand-name">粗野俱乐部</text>
-					<text class="brand-sub">BRUTAL PRESS · 04</text>
+			<view class="big">
+				<text class="big-en">RESET</text>
+				<view class="big-bar big-bar-orange"></view>
+				<text class="big-cn">重置密码 / KEY LOST</text>
+			</view>
+
+			<view class="steps">
+				<view class="step" :class="{ on: step === 0, done: step > 0 }">
+					<text class="step-no">{{ step > 0 ? 'OK' : '01' }}</text>
+					<text class="step-name">验证身份</text>
+				</view>
+				<view class="step" :class="{ on: step === 1 }">
+					<text class="step-no">02</text>
+					<text class="step-name">设置密码</text>
 				</view>
 			</view>
 
-			<view class="head">
-				<text class="eyebrow">NO MERCY · RESET</text>
-				<text class="title">找回密码</text>
-				<text class="lead">验证注册手机号，重设一个新密码。</text>
-			</view>
-
-			<view class="card">
-				<view class="steps">
-					<view class="step" :class="{ on: step === 0 }">
-						<view class="step-dot"></view>
-						<text>01 验证身份</text>
-					</view>
-					<view class="step-line"></view>
-					<view class="step" :class="{ on: step === 1 }">
-						<view class="step-dot"></view>
-						<text>02 设置密码</text>
-					</view>
-				</view>
-
+			<view class="forms">
 				<block v-if="step === 0">
-					<view class="field">
-						<text class="field-label">注册手机号</text>
-						<view class="field-box" :class="{ active: focus === 'phone', error: !!err.phone }">
-							<input
-								class="input input-num"
-								v-model="phone"
-								type="number"
-								:placeholder-style="phStyle"
-								placeholder="请输入 11 位手机号"
-								maxlength="11"
-								@focus="focus = 'phone'"
-								@blur="focus = ''"
-							/>
-						</view>
-						<text v-if="err.phone" class="err">{{ err.phone }}</text>
+					<view class="bfield" :class="{ active: focus === 'phone', error: !!err.phone }">
+						<text class="bfield-label">注册手机号 *</text>
+						<input
+							class="input input-num"
+							v-model="phone"
+							type="number"
+							:placeholder-style="phStyle"
+							placeholder="请输入 11 位手机号"
+							maxlength="11"
+							@focus="focus = 'phone'"
+							@blur="focus = ''"
+						/>
 					</view>
+					<text v-if="err.phone" class="err">{{ err.phone }}</text>
 
-					<view class="field">
-						<text class="field-label">短信验证码</text>
-						<view class="field-box" :class="{ active: focus === 'sms', error: !!err.sms }">
-							<input
-								class="input input-num"
-								v-model="sms"
-								type="number"
-								:placeholder-style="phStyle"
-								placeholder="6 位数字"
-								maxlength="6"
-								@focus="focus = 'sms'"
-								@blur="focus = ''"
-							/>
-							<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + ' s' : '获取验证码' }}</text>
-						</view>
-						<text v-if="err.sms" class="err">{{ err.sms }}</text>
+					<view class="bfield" :class="{ active: focus === 'sms', error: !!err.sms }">
+						<text class="bfield-label">短信验证码 *</text>
+						<input
+							class="input input-num"
+							v-model="sms"
+							type="number"
+							:placeholder-style="phStyle"
+							placeholder="6 位数字"
+							maxlength="6"
+							@focus="focus = 'sms'"
+							@blur="focus = ''"
+						/>
+						<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode">{{ smsLeft > 0 ? smsLeft + ' s' : '获取验证码' }}</text>
 					</view>
+					<text v-if="err.sms" class="err">{{ err.sms }}</text>
 
-					<view class="btn" @click="next">下 一 步</view>
+					<view class="giant giant-teal" @click="next">
+						<text class="giant-txt">下一步 →</text>
+					</view>
 				</block>
 
 				<block v-else>
-					<view class="field">
-						<text class="field-label">新密码</text>
-						<view class="field-box" :class="{ active: focus === 'password', error: !!err.password }">
-							<input
-								class="input"
-								v-model="password"
-								:password="!showPwd"
-								:placeholder-style="phStyle"
-								placeholder="至少 8 位，含字母与数字"
-								maxlength="20"
-								@focus="focus = 'password'"
-								@blur="focus = ''"
-							/>
-							<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐藏' : '显示' }}</text>
-						</view>
-						<text v-if="err.password" class="err">{{ err.password }}</text>
+					<view class="bfield" :class="{ active: focus === 'password', error: !!err.password }">
+						<text class="bfield-label">新密码 *</text>
+						<input
+							class="input"
+							v-model="password"
+							:password="!showPwd"
+							:placeholder-style="phStyle"
+							placeholder="至少 8 位，含字母与数字"
+							maxlength="20"
+							@focus="focus = 'password'"
+							@blur="focus = ''"
+						/>
+						<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐藏' : '显示' }}</text>
 					</view>
+					<text v-if="err.password" class="err">{{ err.password }}</text>
 
-					<view class="field">
-						<text class="field-label">确认新密码</text>
-						<view class="field-box" :class="{ active: focus === 'confirm', error: !!err.confirm }">
-							<input
-								class="input"
-								v-model="confirm"
-								:password="!showPwd"
-								:placeholder-style="phStyle"
-								placeholder="再次输入新密码"
-								maxlength="20"
-								@focus="focus = 'confirm'"
-								@blur="focus = ''"
-							/>
-						</view>
-						<text v-if="err.confirm" class="err">{{ err.confirm }}</text>
+					<view class="bfield" :class="{ active: focus === 'confirm', error: !!err.confirm }">
+						<text class="bfield-label">确认新密码 *</text>
+						<input
+							class="input"
+							v-model="confirm"
+							:password="!showPwd"
+							:placeholder-style="phStyle"
+							placeholder="再次输入新密码"
+							maxlength="20"
+							@focus="focus = 'confirm'"
+							@blur="focus = ''"
+						/>
 					</view>
+					<text v-if="err.confirm" class="err">{{ err.confirm }}</text>
 
-					<view class="btn" :class="{ 'is-busy': submitting }" @click="submit">重 置 密 码</view>
-					<view class="btn btn-ghost" @click="back">上一步</view>
+					<view class="giant" :class="{ 'is-busy': submitting }" @click="submit">
+						<text class="giant-txt">{{ submitting ? '处理中…' : '重置密码 →' }}</text>
+					</view>
+					<view class="back-btn" @click="back">← 上一步</view>
 				</block>
 
-				<text class="terms-h">安全提示</text>
-				<text class="terms">重置成功后，其他设备上的登录状态将全部失效。若手机号已停用，请联系管理员核验身份。</text>
+				<view class="safe">
+					<text class="safe-h">! 安全提示</text>
+					<text class="safe-txt">重置成功后，其他设备上的登录状态将全部失效。若手机号已停用，请联系管理员核验身份。</text>
+				</view>
 			</view>
 		</view>
 
 		<view class="foot">
 			<view class="foot-row">
-				<text class="foot-txt">想起密码了</text>
-				<text class="link" @click="goLogin">返回登录</text>
+				<text class="foot-txt">想起密码了？</text>
+				<text class="link" @click="goLogin">返回登录 →</text>
 			</view>
-			<text class="copy">© 2026 BRUTAL PRESS · RAW & LOUD</text>
+			<text class="copy">© 2026 BRUTAL SUPPLY CO.</text>
 		</view>
 	</view>
 </template>
 
 <script>
-export default {
+	export default {
 		data() {
 			return {
 				statusBar: 0,
@@ -147,7 +133,7 @@ export default {
 				focus: '',
 				showPwd: false,
 				submitting: false,
-				phStyle: 'color:#a8a294;font-size:15px;',
+				phStyle: 'color:rgba(0,0,0,0.32);font-size:15px;',
 				phone: '',
 				sms: '',
 				password: '',
@@ -185,7 +171,7 @@ export default {
 				this.toast('验证码已发送');
 				if (this.timer) return;
 				this.timer = setInterval(() => {
-					this.smsLeft--;
+					if (this.smsLeft > 0) this.smsLeft--;
 					if (this.smsLeft <= 0) this.clearTimer();
 				}, 1000);
 			},

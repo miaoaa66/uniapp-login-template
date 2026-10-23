@@ -3,7 +3,6 @@
 		<view class="deco deco-sky"></view>
 		<view class="deco deco-sun"></view>
 		<view class="deco deco-sun-stripes"></view>
-		<view class="deco deco-horizon"></view>
 		<view class="deco deco-floor"></view>
 		<view class="deco deco-scan"></view>
 
@@ -19,29 +18,37 @@
 		</view>
 
 		<view class="content">
-			<view class="brand">
-				<view class="logo"><view class="logo-core"></view></view>
-				<view class="brand-txt">
-					<text class="brand-name">蒸汽浪潮</text>
-					<text class="brand-sub">ＶＡＰＯＲ　１９９５</text>
+			<view class="win">
+				<view class="tabs">
+					<view v-for="(item, i) in tabs" :key="i" class="tab" :class="{ on: tab === i }" @click="switchTab(i)">
+						<text class="tab-cn">{{ item }}</text>
+						<text class="tab-en">{{ tabEn[i] }}</text>
+					</view>
 				</view>
-			</view>
 
-			<view class="head">
-				<text class="eyebrow">ＡＥＳＴＨＥＴＩＣ · SIGN IN</text>
-				<text class="title">登录</text>
-				<text class="lead">在这里，日落永远不会结束。输入账号，回到那个粉紫色的夏天。</text>
-			</view>
+				<view class="bar">
+					<text class="bar-title">▒ VAPORNET_ACCESS v1.5</text>
+					<view class="bar-btns">
+						<view class="bar-btn">_</view>
+						<view class="bar-btn">□</view>
+						<view class="bar-btn bar-btn-x">×</view>
+					</view>
+				</view>
 
-			<view class="tabs">
-				<text v-for="(item, i) in tabs" :key="i" class="tab" :class="{ on: tab === i }" @click="switchTab(i)">{{ item }}</text>
-			</view>
+				<view class="win-body">
+					<view class="brand">
+						<text class="brand-name">黄昏终端</text>
+						<text class="brand-sub">VAPORWAVE // DIAL-UP BBS</text>
+					</view>
 
-			<view class="card">
-				<block v-if="tab === 0">
-					<view class="field">
-						<text class="field-label">手机号 / 邮箱</text>
-						<view class="field-box" :class="{ active: focus === 'account', error: !!err.account }">
+					<view class="head">
+						<text class="title">欢迎回来</text>
+						<text class="lead">连接到 1995 年的落日网络。输入凭证以继续。</text>
+					</view>
+
+					<block v-if="tab === 0">
+						<view class="fwin" :class="{ active: focus === 'account', error: !!err.account }">
+							<text class="fwin-label">手机号 / 邮箱</text>
 							<input
 								class="input input-num"
 								v-model="account"
@@ -53,11 +60,9 @@
 							/>
 						</view>
 						<text v-if="err.account" class="err">{{ err.account }}</text>
-					</view>
 
-					<view class="field">
-						<text class="field-label">登录密码</text>
-						<view class="field-box" :class="{ active: focus === 'password', error: !!err.password }">
+						<view class="fwin" :class="{ active: focus === 'password', error: !!err.password }">
+							<text class="fwin-label">登录密码</text>
 							<input
 								class="input"
 								v-model="password"
@@ -71,13 +76,11 @@
 							<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐藏' : '显示' }}</text>
 						</view>
 						<text v-if="err.password" class="err">{{ err.password }}</text>
-					</view>
-				</block>
+					</block>
 
-				<block v-else-if="tab === 1">
-					<view class="field">
-						<text class="field-label">手机号</text>
-						<view class="field-box" :class="{ active: focus === 'phone', error: !!err.phone }">
+					<block v-else-if="tab === 1">
+						<view class="fwin" :class="{ active: focus === 'phone', error: !!err.phone }">
+							<text class="fwin-label">手机号</text>
 							<input
 								class="input input-num"
 								v-model="phone"
@@ -90,11 +93,9 @@
 							/>
 						</view>
 						<text v-if="err.phone" class="err">{{ err.phone }}</text>
-					</view>
 
-					<view class="field">
-						<text class="field-label">短信验证码</text>
-						<view class="field-box" :class="{ active: focus === 'sms', error: !!err.sms }">
+						<view class="fwin" :class="{ active: focus === 'sms', error: !!err.sms }">
+							<text class="fwin-label">短信验证码</text>
 							<input
 								class="input input-num"
 								v-model="sms"
@@ -108,13 +109,11 @@
 							<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + ' s' : '获取验证码' }}</text>
 						</view>
 						<text v-if="err.sms" class="err">{{ err.sms }}</text>
-					</view>
-				</block>
+					</block>
 
-				<block v-else>
-					<view class="field">
-						<text class="field-label">邮箱地址</text>
-						<view class="field-box" :class="{ active: focus === 'email', error: !!err.email }">
+					<block v-else>
+						<view class="fwin" :class="{ active: focus === 'email', error: !!err.email }">
+							<text class="fwin-label">邮箱地址</text>
 							<input
 								class="input"
 								v-model="email"
@@ -126,11 +125,9 @@
 							/>
 						</view>
 						<text v-if="err.email" class="err">{{ err.email }}</text>
-					</view>
 
-					<view class="field">
-						<text class="field-label">邮箱验证码</text>
-						<view class="field-box" :class="{ active: focus === 'mail', error: !!err.mail }">
+						<view class="fwin" :class="{ active: focus === 'mail', error: !!err.mail }">
+							<text class="fwin-label">邮箱验证码</text>
 							<input
 								class="input input-num"
 								v-model="mail"
@@ -144,28 +141,30 @@
 							<text class="code" :class="{ off: mailLeft > 0 }" @click="sendCode('mail')">{{ mailLeft > 0 ? mailLeft + ' s' : '获取验证码' }}</text>
 						</view>
 						<text v-if="err.mail" class="err">{{ err.mail }}</text>
+					</block>
+
+					<view class="row">
+						<view class="check check-inline" @click="remember = !remember">
+							<view class="check-box bevel-in" :class="{ on: remember }"><text v-if="remember" class="check-tick">✓</text></view>
+							<text class="check-txt">记住此设备</text>
+						</view>
+						<text class="link link-soft" @click="goForget">忘记密码</text>
 					</view>
-				</block>
 
-				<view class="row">
-					<view class="check check-inline" @click="remember = !remember">
-						<view class="check-box" :class="{ on: remember }"><view class="check-tick"></view></view>
-						<text class="check-txt">记住此设备</text>
+					<view class="btn bevel-out" :class="{ 'is-busy': submitting }" @click="submit">
+						<text>{{ submitting ? '连接中...' : '连　接' }}</text>
 					</view>
-					<text class="link link-soft" @click="goForget">忘记密码</text>
-				</view>
 
-				<view class="btn" :class="{ 'is-busy': submitting }" @click="submit">登 录</view>
+					<view class="check" @click="agreed = !agreed">
+						<view class="check-box bevel-in" :class="{ on: agreed }"><text v-if="agreed" class="check-tick">✓</text></view>
+						<text class="check-txt">我已阅读并同意 <text class="check-link">《用户协议》</text> 与 <text class="check-link">《隐私政策》</text></text>
+					</view>
 
-				<view class="check" @click="agreed = !agreed">
-					<view class="check-box" :class="{ on: agreed }"><view class="check-tick"></view></view>
-					<text class="check-txt">我已阅读并同意 <text class="check-link">《用户协议》</text> 与 <text class="check-link">《隐私政策》</text></text>
-				</view>
-
-				<view class="alt">
-					<view class="alt-i" @click="toast('微信登录未接入')">微信</view>
-					<view class="alt-i" @click="toast('企业微信登录未接入')">企业微信</view>
-					<view class="alt-i" @click="toast('单点登录未接入')">SSO</view>
+					<view class="alt">
+						<view class="alt-i bevel-out" @click="toast('微信登录未接入')">微信</view>
+						<view class="alt-i bevel-out" @click="toast('企业微信登录未接入')">企业微信</view>
+						<view class="alt-i bevel-out" @click="toast('单点登录未接入')">SSO</view>
+					</view>
 				</view>
 			</view>
 		</view>
@@ -175,24 +174,25 @@
 				<text class="foot-txt">还没有账号</text>
 				<text class="link" @click="goRegister">创建账号</text>
 			</view>
-			<text class="copy">© 1995—2026 VAPOR CLUB</text>
+			<text class="copy">© 2026 VAPORNET // DIAL-UP BBS</text>
 		</view>
 	</view>
 </template>
 
 <script>
-export default {
+	export default {
 		data() {
 			return {
 				statusBar: 0,
 				tabs: ['密码', '手机', '邮箱'],
+				tabEn: ['KEY', 'SMS', 'MAIL'],
 				tab: 0,
 				focus: '',
 				showPwd: false,
 				remember: false,
 				agreed: false,
 				submitting: false,
-				phStyle: 'color:rgba(255,255,255,0.45);font-size:15px;',
+				phStyle: 'color:rgba(255,255,255,0.42);font-size:15px;',
 				account: '',
 				password: '',
 				phone: '',
@@ -215,18 +215,17 @@ export default {
 			this.clearTimer();
 		},
 		methods: {
-			fillDemo() {
-				this.agreed = true;
-				this.account = 'summer@vapor.club';
-				this.password = 'v4p0r-1985';
-				this.phone = '13800001234';
-				this.sms = '202610';
-				this.email = 'summer@vapor.club';
-				this.mail = '202610';
-			},
-
 			toast(title) {
 				uni.showToast({ title, icon: 'none' });
+			},
+
+			fillDemo() {
+				this.account = '13800001234';
+				this.password = 'demo1234';
+				this.phone = '13800001234';
+				this.sms = '202610';
+				this.email = 'demo@work.com';
+				this.mail = '202610';
 			},
 
 			isPhone(v) {

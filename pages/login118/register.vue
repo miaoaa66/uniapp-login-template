@@ -1,10 +1,9 @@
 <template>
 	<view class="page">
-		<view class="deco deco-tape deco-tape-a"></view>
-		<view class="deco deco-tape deco-tape-b"></view>
-		<view class="deco deco-note deco-note-a"></view>
-		<view class="deco deco-note deco-note-b"></view>
-		<view class="deco deco-squiggle"></view>
+		<view class="deco deco-grid-paper"></view>
+		<view class="deco deco-doodle deco-doodle-a">✦</view>
+		<view class="deco deco-doodle deco-doodle-b">✧</view>
+		<view class="deco deco-doodle deco-doodle-c">○</view>
 
 		<view class="status" :style="{ height: statusBar + 'px' }"></view>
 
@@ -18,96 +17,81 @@
 		</view>
 
 		<view class="content">
-			<view class="brand">
-				<view class="logo"><view class="logo-core"></view></view>
-				<view class="brand-txt">
-					<text class="brand-name">随手涂鸦</text>
-					<text class="brand-sub">DOODLE NOTE</text>
-				</view>
+			<view class="cover">
+				<view class="cover-tape"></view>
+				<text class="cover-title">开一本新账本</text>
+				<text class="cover-sub">— 新的记录开始啦 —</text>
 			</view>
 
-			<view class="head">
-				<text class="eyebrow">SCRIBBLE · 注册</text>
-				<text class="title">开一个新本子</text>
-				<text class="lead">注册一个账号，把灵感随手记下来。</text>
-			</view>
-
-			<view class="card">
-				<view class="field">
-					<text class="field-label">手机号</text>
-					<view class="field-box" :class="{ active: focus === 'phone', error: !!err.phone }">
-						<input
-							class="input input-num"
-							v-model="phone"
-							type="number"
-							:placeholder-style="phStyle"
-							placeholder="请输入 11 位手机号"
-							maxlength="11"
-							@focus="focus = 'phone'"
-							@blur="focus = ''"
-						/>
-					</view>
-					<text v-if="err.phone" class="err">{{ err.phone }}</text>
+			<view class="lines">
+				<view class="wfield" :class="{ active: focus === 'phone', error: !!err.phone }">
+					<text class="wfield-label">手机号</text>
+					<input
+						class="input input-num"
+						v-model="phone"
+						type="number"
+						:placeholder-style="phStyle"
+						placeholder="请输入 11 位手机号"
+						maxlength="11"
+						@focus="focus = 'phone'"
+						@blur="focus = ''"
+					/>
 				</view>
+				<text v-if="err.phone" class="err">{{ err.phone }}</text>
 
-				<view class="field">
-					<text class="field-label">短信验证码</text>
-					<view class="field-box" :class="{ active: focus === 'sms', error: !!err.sms }">
-						<input
-							class="input input-num"
-							v-model="sms"
-							type="number"
-							:placeholder-style="phStyle"
-							placeholder="6 位数字"
-							maxlength="6"
-							@focus="focus = 'sms'"
-							@blur="focus = ''"
-						/>
-						<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + ' s' : '获取验证码' }}</text>
-					</view>
-					<text v-if="err.sms" class="err">{{ err.sms }}</text>
+				<view class="wfield" :class="{ active: focus === 'sms', error: !!err.sms }">
+					<text class="wfield-label">验证码</text>
+					<input
+						class="input input-num"
+						v-model="sms"
+						type="number"
+						:placeholder-style="phStyle"
+						placeholder="6 位数字"
+						maxlength="6"
+						@focus="focus = 'sms'"
+						@blur="focus = ''"
+					/>
+					<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode">{{ smsLeft > 0 ? smsLeft + ' s' : '获取验证码' }}</text>
 				</view>
+				<text v-if="err.sms" class="err">{{ err.sms }}</text>
 
-				<view class="field">
-					<text class="field-label">设置密码</text>
-					<view class="field-box" :class="{ active: focus === 'password', error: !!err.password }">
-						<input
-							class="input"
-							v-model="password"
-							:password="!showPwd"
-							:placeholder-style="phStyle"
-							placeholder="至少 8 位，含字母与数字"
-							maxlength="20"
-							@focus="focus = 'password'"
-							@blur="focus = ''"
-						/>
-						<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐藏' : '显示' }}</text>
-					</view>
-					<text v-if="err.password" class="err">{{ err.password }}</text>
-					<text v-else class="tip">建议使用字母、数字与符号的组合</text>
+				<view class="wfield" :class="{ active: focus === 'password', error: !!err.password }">
+					<text class="wfield-label">设个密码</text>
+					<input
+						class="input"
+						v-model="password"
+						:password="!showPwd"
+						:placeholder-style="phStyle"
+						placeholder="至少 8 位，含字母与数字"
+						maxlength="20"
+						@focus="focus = 'password'"
+						@blur="focus = ''"
+					/>
+					<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐藏' : '显示' }}</text>
 				</view>
+				<text v-if="err.password" class="err">{{ err.password }}</text>
 
-				<view class="field">
-					<text class="field-label">确认密码</text>
-					<view class="field-box" :class="{ active: focus === 'confirm', error: !!err.confirm }">
-						<input
-							class="input"
-							v-model="confirm"
-							:password="!showPwd"
-							:placeholder-style="phStyle"
-							placeholder="再次输入密码"
-							maxlength="20"
-							@focus="focus = 'confirm'"
-							@blur="focus = ''"
-						/>
-					</view>
-					<text v-if="err.confirm" class="err">{{ err.confirm }}</text>
+				<view class="wfield" :class="{ active: focus === 'confirm', error: !!err.confirm }">
+					<text class="wfield-label">再写一遍</text>
+					<input
+						class="input"
+						v-model="confirm"
+						:password="!showPwd"
+						:placeholder-style="phStyle"
+						placeholder="再次输入密码"
+						maxlength="20"
+						@focus="focus = 'confirm'"
+						@blur="focus = ''"
+					/>
 				</view>
+				<text v-if="err.confirm" class="err">{{ err.confirm }}</text>
 
-				<view class="btn" :class="{ 'is-busy': submitting }" @click="submit">注 册</view>
+				<view class="btn" :class="{ 'is-busy': submitting }" @click="submit">
+					<text class="btn-txt">{{ submitting ? '写好了…' : '记好了，提交 ✓' }}</text>
+				</view>
 
 				<view class="check" @click="agreed = !agreed">
-					<view class="check-box" :class="{ on: agreed }"><view class="check-tick"></view></view>
+					<view class="check-box" :class="{ on: agreed }"><text v-if="agreed" class="check-tick">✓</text></view>
 					<text class="check-txt">我已阅读并同意 <text class="check-link">《用户协议》</text> 与 <text class="check-link">《隐私政策》</text></text>
 				</view>
 			</view>
@@ -115,16 +99,16 @@
 
 		<view class="foot">
 			<view class="foot-row">
-				<text class="foot-txt">已有账号</text>
-				<text class="link" @click="goLogin">返回登录</text>
+				<text class="foot-txt">已经有账本了？</text>
+				<text class="link" @click="goLogin">回去登录 →</text>
 			</view>
-			<text class="copy">© 2026 DOODLE NOTE · 手账本</text>
+			<text class="copy">♡ 今日也要认真记录 ♡</text>
 		</view>
 	</view>
 </template>
 
 <script>
-export default {
+	export default {
 		data() {
 			return {
 				statusBar: 0,
@@ -132,7 +116,7 @@ export default {
 				showPwd: false,
 				agreed: false,
 				submitting: false,
-				phStyle: 'color:#b5ada0;font-size:15px;',
+				phStyle: 'color:rgba(58,54,48,0.35);font-size:15px;',
 				phone: '',
 				sms: '',
 				password: '',
@@ -151,16 +135,16 @@ export default {
 			this.clearTimer();
 		},
 		methods: {
-			fillDemo() {
-				this.agreed = true;
-				this.phone = '13800001234';
-				this.sms = '202610';
-				this.password = 'doo-1212';
-				this.confirm = 'doo-1212';
-			},
-
 			toast(title) {
 				uni.showToast({ title, icon: 'none' });
+			},
+
+			fillDemo() {
+				this.phone = '13800001234';
+				this.sms = '202610';
+				this.password = 'demo1234';
+				this.confirm = 'demo1234';
+				this.agreed = true;
 			},
 
 			isPhone(v) {
@@ -175,7 +159,7 @@ export default {
 				this.toast('验证码已发送');
 				if (this.timer) return;
 				this.timer = setInterval(() => {
-					this.smsLeft--;
+					if (this.smsLeft > 0) this.smsLeft--;
 					if (this.smsLeft <= 0) this.clearTimer();
 				}, 1000);
 			},
@@ -219,9 +203,7 @@ export default {
 			},
 
 			goLogin() {
-				const pages = getCurrentPages();
-				if (pages.length > 1) uni.navigateBack();
-				else uni.reLaunch({ url: '/pages/login118/login' });
+				uni.reLaunch({ url: '/pages/login118/login' });
 			}
 		}
 	};

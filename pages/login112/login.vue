@@ -1,10 +1,6 @@
 <template>
 	<view class="page">
 		<view class="deco deco-grid"></view>
-		<view class="deco deco-glow deco-glow-a"></view>
-		<view class="deco deco-glow deco-glow-b"></view>
-		<view class="deco deco-bracket deco-bracket-tl"></view>
-		<view class="deco deco-bracket deco-bracket-br"></view>
 		<view class="deco deco-scan"></view>
 
 		<view class="status" :style="{ height: statusBar + 'px' }"></view>
@@ -19,29 +15,37 @@
 		</view>
 
 		<view class="content">
-			<view class="brand">
-				<view class="logo"><view class="logo-core"></view></view>
-				<view class="brand-txt">
-					<text class="brand-name">霓虹终端</text>
-					<text class="brand-sub">NIGHT CITY // NODE 07</text>
-				</view>
+			<view class="sign">
+				<text class="sign-tube">NEON·07</text>
+				<text class="sign-sub">NIGHT CITY // NIGHT ACCESS NODE</text>
 			</view>
 
 			<view class="head">
-				<text class="eyebrow">ACCESS // TERMINAL</text>
-				<text class="title">接入系统</text>
-				<text class="lead">校验通道已开启，输入凭证以连接节点。异常登录将被记录。</text>
+				<text class="head-cmd">&gt; init access --node 07</text>
+				<text class="head-title">接入系统</text>
+				<text class="head-lead">校验通道已开启，输入凭证以连接节点。异常登录将被记录。</text>
 			</view>
 
-			<view class="tabs">
-				<text v-for="(item, i) in tabs" :key="i" class="tab" :class="{ on: tab === i }" @click="switchTab(i)">{{ item }}</text>
+			<view class="ports">
+				<view
+					v-for="(item, i) in tabs"
+					:key="i"
+					class="port"
+					:class="{ on: tab === i }"
+					@click="switchTab(i)"
+				>
+					<view class="port-led"></view>
+					<text class="port-name">PORT_0{{ i + 1 }}</text>
+					<text class="port-mode">{{ item }}</text>
+				</view>
 			</view>
 
-			<view class="card">
+			<view class="term">
 				<block v-if="tab === 0">
-					<view class="field">
-						<text class="field-label">手机号 / 邮箱</text>
-						<view class="field-box" :class="{ active: focus === 'account', error: !!err.account }">
+					<view class="row" :class="{ active: focus === 'account', error: !!err.account }">
+						<text class="row-pre">&gt;</text>
+						<view class="row-main">
+							<text class="row-label">ACC // 手机号 / 邮箱</text>
 							<input
 								class="input input-num"
 								v-model="account"
@@ -52,12 +56,14 @@
 								@blur="focus = ''"
 							/>
 						</view>
-						<text v-if="err.account" class="err">{{ err.account }}</text>
+						<text v-if="err.account" class="row-err">ERR</text>
 					</view>
+					<text v-if="err.account" class="err">{{ err.account }}</text>
 
-					<view class="field">
-						<text class="field-label">登录密码</text>
-						<view class="field-box" :class="{ active: focus === 'password', error: !!err.password }">
+					<view class="row" :class="{ active: focus === 'password', error: !!err.password }">
+						<text class="row-pre">&gt;</text>
+						<view class="row-main">
+							<text class="row-label">KEY // 登录密码</text>
 							<input
 								class="input"
 								v-model="password"
@@ -68,16 +74,18 @@
 								@focus="focus = 'password'"
 								@blur="focus = ''"
 							/>
-							<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐藏' : '显示' }}</text>
 						</view>
-						<text v-if="err.password" class="err">{{ err.password }}</text>
+						<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐藏' : '显示' }}</text>
+						<text v-if="err.password" class="row-err">ERR</text>
 					</view>
+					<text v-if="err.password" class="err">{{ err.password }}</text>
 				</block>
 
 				<block v-else-if="tab === 1">
-					<view class="field">
-						<text class="field-label">手机号</text>
-						<view class="field-box" :class="{ active: focus === 'phone', error: !!err.phone }">
+					<view class="row" :class="{ active: focus === 'phone', error: !!err.phone }">
+						<text class="row-pre">&gt;</text>
+						<view class="row-main">
+							<text class="row-label">CALL // 手机号</text>
 							<input
 								class="input input-num"
 								v-model="phone"
@@ -89,12 +97,14 @@
 								@blur="focus = ''"
 							/>
 						</view>
-						<text v-if="err.phone" class="err">{{ err.phone }}</text>
+						<text v-if="err.phone" class="row-err">ERR</text>
 					</view>
+					<text v-if="err.phone" class="err">{{ err.phone }}</text>
 
-					<view class="field">
-						<text class="field-label">短信验证码</text>
-						<view class="field-box" :class="{ active: focus === 'sms', error: !!err.sms }">
+					<view class="row" :class="{ active: focus === 'sms', error: !!err.sms }">
+						<text class="row-pre">&gt;</text>
+						<view class="row-main">
+							<text class="row-label">OTP // 短信验证码</text>
 							<input
 								class="input input-num"
 								v-model="sms"
@@ -105,16 +115,18 @@
 								@focus="focus = 'sms'"
 								@blur="focus = ''"
 							/>
-							<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + ' s' : '获取验证码' }}</text>
 						</view>
-						<text v-if="err.sms" class="err">{{ err.sms }}</text>
+						<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + ' s' : '[ GET ]' }}</text>
+						<text v-if="err.sms" class="row-err">ERR</text>
 					</view>
+					<text v-if="err.sms" class="err">{{ err.sms }}</text>
 				</block>
 
 				<block v-else>
-					<view class="field">
-						<text class="field-label">邮箱地址</text>
-						<view class="field-box" :class="{ active: focus === 'email', error: !!err.email }">
+					<view class="row" :class="{ active: focus === 'email', error: !!err.email }">
+						<text class="row-pre">&gt;</text>
+						<view class="row-main">
+							<text class="row-label">MAIL // 邮箱地址</text>
 							<input
 								class="input"
 								v-model="email"
@@ -125,12 +137,14 @@
 								@blur="focus = ''"
 							/>
 						</view>
-						<text v-if="err.email" class="err">{{ err.email }}</text>
+						<text v-if="err.email" class="row-err">ERR</text>
 					</view>
+					<text v-if="err.email" class="err">{{ err.email }}</text>
 
-					<view class="field">
-						<text class="field-label">邮箱验证码</text>
-						<view class="field-box" :class="{ active: focus === 'mail', error: !!err.mail }">
+					<view class="row" :class="{ active: focus === 'mail', error: !!err.mail }">
+						<text class="row-pre">&gt;</text>
+						<view class="row-main">
+							<text class="row-label">OTP // 邮箱验证码</text>
 							<input
 								class="input input-num"
 								v-model="mail"
@@ -141,30 +155,34 @@
 								@focus="focus = 'mail'"
 								@blur="focus = ''"
 							/>
-							<text class="code" :class="{ off: mailLeft > 0 }" @click="sendCode('mail')">{{ mailLeft > 0 ? mailLeft + ' s' : '获取验证码' }}</text>
 						</view>
-						<text v-if="err.mail" class="err">{{ err.mail }}</text>
+						<text class="code" :class="{ off: mailLeft > 0 }" @click="sendCode('mail')">{{ mailLeft > 0 ? mailLeft + ' s' : '[ GET ]' }}</text>
+						<text v-if="err.mail" class="row-err">ERR</text>
 					</view>
+					<text v-if="err.mail" class="err">{{ err.mail }}</text>
 				</block>
 
-				<view class="row">
+				<view class="row-aux">
 					<view class="check check-inline" @click="remember = !remember">
-						<view class="check-box" :class="{ on: remember }"><view class="check-tick"></view></view>
+						<text class="check-box mono">[{{ remember ? '×' : ' ' }}]</text>
 						<text class="check-txt">记住此设备</text>
 					</view>
 					<text class="link link-soft" @click="goForget">忘记密码</text>
 				</view>
 
-				<view class="btn" :class="{ 'is-busy': submitting }" @click="submit">登 录</view>
+				<view class="jack" :class="{ 'is-busy': submitting }" @click="submit">
+					<view class="jack-sweep"></view>
+					<text class="jack-txt">{{ submitting ? 'CONNECTING...' : 'JACK IN ▸' }}</text>
+				</view>
 
 				<view class="check" @click="agreed = !agreed">
-					<view class="check-box" :class="{ on: agreed }"><view class="check-tick"></view></view>
+					<text class="check-box mono">[{{ agreed ? '×' : ' ' }}]</text>
 					<text class="check-txt">我已阅读并同意 <text class="check-link">《用户协议》</text> 与 <text class="check-link">《隐私政策》</text></text>
 				</view>
 
 				<view class="alt">
-					<view class="alt-i" @click="toast('微信登录未接入')">微信</view>
-					<view class="alt-i" @click="toast('企业微信登录未接入')">企业微信</view>
+					<view class="alt-i" @click="toast('微信登录未接入')">WECHAT</view>
+					<view class="alt-i" @click="toast('企业微信登录未接入')">WECOM</view>
 					<view class="alt-i" @click="toast('单点登录未接入')">SSO</view>
 				</view>
 			</view>
@@ -175,13 +193,13 @@
 				<text class="foot-txt">还没有账号</text>
 				<text class="link" @click="goRegister">创建账号</text>
 			</view>
-			<text class="copy">© 2026 NEON CITY · NODE 07</text>
+			<text class="copy">&copy; 2026 NEON CITY &middot; NODE 07</text>
 		</view>
 	</view>
 </template>
 
 <script>
-export default {
+	export default {
 		data() {
 			return {
 				statusBar: 0,
@@ -215,18 +233,17 @@ export default {
 			this.clearTimer();
 		},
 		methods: {
-			fillDemo() {
-				this.agreed = true;
-				this.account = 'runner@neon.city';
-				this.password = 'n30n-5512';
-				this.phone = '13800001234';
-				this.sms = '202610';
-				this.email = 'runner@neon.city';
-				this.mail = '202610';
-			},
-
 			toast(title) {
 				uni.showToast({ title, icon: 'none' });
+			},
+
+			fillDemo() {
+				this.account = '13800001234';
+				this.password = 'demo1234';
+				this.phone = '13800001234';
+				this.sms = '202610';
+				this.email = 'demo@work.com';
+				this.mail = '202610';
 			},
 
 			isPhone(v) {

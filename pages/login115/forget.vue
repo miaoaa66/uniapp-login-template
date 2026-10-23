@@ -1,14 +1,7 @@
 <template>
 	<view class="page">
 		<view class="deco deco-grid"></view>
-		<view class="deco deco-ring deco-ring-a"></view>
-		<view class="deco deco-ring deco-ring-b"></view>
 		<view class="deco deco-ruler"></view>
-		<view class="deco deco-hud deco-hud-tl"></view>
-		<view class="deco deco-hud deco-hud-tr"></view>
-		<view class="deco deco-hud deco-hud-bl"></view>
-		<view class="deco deco-hud deco-hud-br"></view>
-		<view class="deco deco-sweep"></view>
 
 		<view class="status" :style="{ height: statusBar + 'px' }"></view>
 
@@ -22,37 +15,38 @@
 		</view>
 
 		<view class="content">
-			<view class="brand">
-				<view class="logo"><view class="logo-core"></view></view>
-				<view class="brand-txt">
-					<text class="brand-name">轨道控制台</text>
-					<text class="brand-sub">HUD // SYSTEM 04</text>
+			<view class="dial">
+				<view class="dial-ticks"></view>
+				<view class="dial-core">
+					<text class="dial-v">RST</text>
+					<text class="dial-h">KEY RESET</text>
 				</view>
+				<view class="dial-bracket dial-bracket-tl"></view>
+				<view class="dial-bracket dial-bracket-br"></view>
 			</view>
 
 			<view class="head">
-				<text class="eyebrow">RECOVER ACCESS</text>
-				<text class="title">恢复访问</text>
-				<text class="lead">通过登记通讯号重新校验身份，随后重置访问密钥。</text>
+				<text class="title">重置密钥</text>
+				<text class="lead">通过注册手机号重新校验身份，随后重置访问密钥。</text>
 			</view>
 
-			<view class="card">
-				<view class="steps">
-					<view class="step" :class="{ on: step === 0 }">
-						<view class="step-dot"></view>
-						<text>01 验证身份</text>
-					</view>
-					<view class="step-line"></view>
-					<view class="step" :class="{ on: step === 1 }">
-						<view class="step-dot"></view>
-						<text>02 设置密码</text>
-					</view>
+			<view class="seg seg-steps">
+				<view class="seg-cell" :class="{ on: step === 0, done: step > 0 }">
+					<text class="seg-idx">{{ step > 0 ? '✓' : '01' }}</text>
+					<text class="seg-name">验证身份</text>
 				</view>
+				<view class="seg-cell" :class="{ on: step === 1 }">
+					<text class="seg-idx">02</text>
+					<text class="seg-name">设置密码</text>
+				</view>
+			</view>
 
+			<view class="slots">
 				<block v-if="step === 0">
-					<view class="field">
-						<text class="field-label">注册手机号</text>
-						<view class="field-box" :class="{ active: focus === 'phone', error: !!err.phone }">
+					<view class="slot" :class="{ active: focus === 'phone', error: !!err.phone }">
+						<text class="slot-tag">TEL</text>
+						<view class="slot-main">
+							<text class="slot-label">注册手机号</text>
 							<input
 								class="input input-num"
 								v-model="phone"
@@ -64,12 +58,15 @@
 								@blur="focus = ''"
 							/>
 						</view>
-						<text v-if="err.phone" class="err">{{ err.phone }}</text>
+						<view class="slot-bracket slot-bracket-l"></view>
+						<view class="slot-bracket slot-bracket-r"></view>
 					</view>
+					<text v-if="err.phone" class="err">{{ err.phone }}</text>
 
-					<view class="field">
-						<text class="field-label">短信验证码</text>
-						<view class="field-box" :class="{ active: focus === 'sms', error: !!err.sms }">
+					<view class="slot" :class="{ active: focus === 'sms', error: !!err.sms }">
+						<text class="slot-tag">OTP</text>
+						<view class="slot-main">
+							<text class="slot-label">短信验证码</text>
 							<input
 								class="input input-num"
 								v-model="sms"
@@ -80,18 +77,25 @@
 								@focus="focus = 'sms'"
 								@blur="focus = ''"
 							/>
-							<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + ' s' : '获取验证码' }}</text>
 						</view>
-						<text v-if="err.sms" class="err">{{ err.sms }}</text>
+						<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode">{{ smsLeft > 0 ? smsLeft + ' s' : 'SEND' }}</text>
+						<view class="slot-bracket slot-bracket-l"></view>
+						<view class="slot-bracket slot-bracket-r"></view>
 					</view>
+					<text v-if="err.sms" class="err">{{ err.sms }}</text>
 
-					<view class="btn" @click="next">下 一 步</view>
+					<view class="slider" @click="next">
+						<view class="slider-fill"></view>
+						<view class="slider-knob"></view>
+						<text class="slider-txt">VERIFY ▸</text>
+					</view>
 				</block>
 
 				<block v-else>
-					<view class="field">
-						<text class="field-label">新密码</text>
-						<view class="field-box" :class="{ active: focus === 'password', error: !!err.password }">
+					<view class="slot" :class="{ active: focus === 'password', error: !!err.password }">
+						<text class="slot-tag">KEY</text>
+						<view class="slot-main">
+							<text class="slot-label">新密码</text>
 							<input
 								class="input"
 								v-model="password"
@@ -102,14 +106,17 @@
 								@focus="focus = 'password'"
 								@blur="focus = ''"
 							/>
-							<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐藏' : '显示' }}</text>
 						</view>
-						<text v-if="err.password" class="err">{{ err.password }}</text>
+						<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐藏' : '显示' }}</text>
+						<view class="slot-bracket slot-bracket-l"></view>
+						<view class="slot-bracket slot-bracket-r"></view>
 					</view>
+					<text v-if="err.password" class="err">{{ err.password }}</text>
 
-					<view class="field">
-						<text class="field-label">确认新密码</text>
-						<view class="field-box" :class="{ active: focus === 'confirm', error: !!err.confirm }">
+					<view class="slot" :class="{ active: focus === 'confirm', error: !!err.confirm }">
+						<text class="slot-tag">KEY</text>
+						<view class="slot-main">
+							<text class="slot-label">确认新密码</text>
 							<input
 								class="input"
 								v-model="confirm"
@@ -121,15 +128,23 @@
 								@blur="focus = ''"
 							/>
 						</view>
-						<text v-if="err.confirm" class="err">{{ err.confirm }}</text>
+						<view class="slot-bracket slot-bracket-l"></view>
+						<view class="slot-bracket slot-bracket-r"></view>
 					</view>
+					<text v-if="err.confirm" class="err">{{ err.confirm }}</text>
 
-					<view class="btn" :class="{ 'is-busy': submitting }" @click="submit">重 置 密 码</view>
-					<view class="btn btn-ghost" @click="back">上一步</view>
+					<view class="slider" :class="{ 'is-busy': submitting }" @click="submit">
+						<view class="slider-fill"></view>
+						<view class="slider-knob"></view>
+						<text class="slider-txt">{{ submitting ? 'RESETTING' : 'RESET KEY ▸' }}</text>
+					</view>
+					<view class="ghost" @click="back">◂ BACK</view>
 				</block>
 
-				<text class="terms-h">安全提示</text>
-				<text class="terms">重置成功后，其他设备上的登录状态将全部失效。若手机号已停用，请联系管理员核验身份。</text>
+				<view class="safe">
+					<text class="safe-h">// 安全提示</text>
+					<text class="safe-txt">重置成功后，其他设备上的登录状态将全部失效。若手机号已停用，请联系管理员核验身份。</text>
+				</view>
 			</view>
 		</view>
 
@@ -138,13 +153,13 @@
 				<text class="foot-txt">想起密码了</text>
 				<text class="link" @click="goLogin">返回登录</text>
 			</view>
-			<text class="copy">© 2026 ORBITAL SYS · BUILD 4.02</text>
+			<text class="copy">© 2026 ORBITAL DECK · CLEARANCE L2</text>
 		</view>
 	</view>
 </template>
 
 <script>
-export default {
+	export default {
 		data() {
 			return {
 				statusBar: 0,
@@ -152,7 +167,7 @@ export default {
 				focus: '',
 				showPwd: false,
 				submitting: false,
-				phStyle: 'color:rgba(214,253,246,0.36);font-size:15px;',
+				phStyle: 'color:rgba(214,253,246,0.4);font-size:15px;',
 				phone: '',
 				sms: '',
 				password: '',
@@ -190,7 +205,7 @@ export default {
 				this.toast('验证码已发送');
 				if (this.timer) return;
 				this.timer = setInterval(() => {
-					this.smsLeft--;
+					if (this.smsLeft > 0) this.smsLeft--;
 					if (this.smsLeft <= 0) this.clearTimer();
 				}, 1000);
 			},

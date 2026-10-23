@@ -1,9 +1,5 @@
 <template>
 	<view class="page">
-		<view class="deco deco-stamp"><text class="deco-stamp-txt">NO.2026</text></view>
-		<view class="deco deco-punch"></view>
-		<view class="deco deco-grain"></view>
-
 		<view class="status" :style="{ height: statusBar + 'px' }"></view>
 
 		<view class="nav">
@@ -16,41 +12,39 @@
 		</view>
 
 		<view class="content">
-			<view class="brand">
-				<view class="logo"><view class="logo-core"></view></view>
-				<view class="brand-txt">
-					<text class="brand-name">纸间票务</text>
-					<text class="brand-sub">PAPER TICKET</text>
+			<view class="receipt">
+				<view class="head">
+					<text class="shop">A&middot;G MARKET</text>
+					<text class="slogan">— 入会登记联 / NEW MEMBER —</text>
 				</view>
-			</view>
 
-			<view class="head">
-				<text class="eyebrow">TICKET NO.001</text>
-				<text class="title">购买年票</text>
-				<text class="lead">注册即办理年票，全年不限场次。</text>
-			</view>
+				<view class="meta">
+					<text class="meta-line">单号 NO.2026-1023-08</text>
+					<text class="meta-line">机台 TERMINAL 03 // 收银员 07</text>
+				</view>
 
-			<view class="card">
-				<view class="field">
-					<text class="field-label">手机号</text>
-					<view class="field-box" :class="{ active: focus === 'phone', error: !!err.phone }">
+				<view class="dash"></view>
+
+				<view class="entries">
+					<view class="entry" :class="{ active: focus === 'phone', error: !!err.phone }">
+						<text class="entry-label">手机</text>
+						<view class="entry-leader"></view>
 						<input
 							class="input input-num"
 							v-model="phone"
 							type="number"
 							:placeholder-style="phStyle"
-							placeholder="请输入 11 位手机号"
+							placeholder="11 位手机号"
 							maxlength="11"
 							@focus="focus = 'phone'"
 							@blur="focus = ''"
 						/>
 					</view>
 					<text v-if="err.phone" class="err">{{ err.phone }}</text>
-				</view>
 
-				<view class="field">
-					<text class="field-label">短信验证码</text>
-					<view class="field-box" :class="{ active: focus === 'sms', error: !!err.sms }">
+					<view class="entry" :class="{ active: focus === 'sms', error: !!err.sms }">
+						<text class="entry-label">短码</text>
+						<view class="entry-leader"></view>
 						<input
 							class="input input-num"
 							v-model="sms"
@@ -61,14 +55,13 @@
 							@focus="focus = 'sms'"
 							@blur="focus = ''"
 						/>
-						<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + ' s' : '获取验证码' }}</text>
+						<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode">{{ smsLeft > 0 ? smsLeft + 's' : '取码' }}</text>
 					</view>
 					<text v-if="err.sms" class="err">{{ err.sms }}</text>
-				</view>
 
-				<view class="field">
-					<text class="field-label">设置密码</text>
-					<view class="field-box" :class="{ active: focus === 'password', error: !!err.password }">
+					<view class="entry" :class="{ active: focus === 'password', error: !!err.password }">
+						<text class="entry-label">密码</text>
+						<view class="entry-leader"></view>
 						<input
 							class="input"
 							v-model="password"
@@ -79,15 +72,13 @@
 							@focus="focus = 'password'"
 							@blur="focus = ''"
 						/>
-						<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐藏' : '显示' }}</text>
+						<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐' : '显' }}</text>
 					</view>
 					<text v-if="err.password" class="err">{{ err.password }}</text>
-					<text v-else class="tip">建议使用字母、数字与符号的组合</text>
-				</view>
 
-				<view class="field">
-					<text class="field-label">确认密码</text>
-					<view class="field-box" :class="{ active: focus === 'confirm', error: !!err.confirm }">
+					<view class="entry" :class="{ active: focus === 'confirm', error: !!err.confirm }">
+						<text class="entry-label">复核</text>
+						<view class="entry-leader"></view>
 						<input
 							class="input"
 							v-model="confirm"
@@ -100,29 +91,39 @@
 						/>
 					</view>
 					<text v-if="err.confirm" class="err">{{ err.confirm }}</text>
+
+					<view class="tear" :class="{ 'is-busy': submitting }" @click="submit">
+						<text class="tear-txt">{{ submitting ? '打印中…' : '✂ - - - 撕下此联 注册 - - -' }}</text>
+					</view>
+
+					<view class="check" @click="agreed = !agreed">
+						<view class="check-box" :class="{ on: agreed }"><text v-if="agreed" class="check-tick">●</text></view>
+						<text class="check-txt">我已阅读并同意 <text class="check-link">《用户协议》</text> 与 <text class="check-link">《隐私政策》</text></text>
+					</view>
 				</view>
 
-				<view class="btn" :class="{ 'is-busy': submitting }" @click="submit">注 册</view>
+				<view class="dash"></view>
 
-				<view class="check" @click="agreed = !agreed">
-					<view class="check-box" :class="{ on: agreed }"><view class="check-tick"></view></view>
-					<text class="check-txt">我已阅读并同意 <text class="check-link">《用户协议》</text> 与 <text class="check-link">《隐私政策》</text></text>
+				<view class="barcode">
+					<view class="barcode-bars"></view>
+					<text class="barcode-num">2 0 2 6 1 0 2 3 0 8</text>
 				</view>
+
+				<text class="thanks">MEMBER CARD WILL BE PRINTED</text>
 			</view>
 		</view>
 
 		<view class="foot">
 			<view class="foot-row">
-				<text class="foot-txt">已有账号</text>
-				<text class="link" @click="goLogin">返回登录</text>
+				<text class="foot-txt">已是会员？</text>
+				<text class="link" @click="goLogin">去登录</text>
 			</view>
-			<text class="copy">© 2026 PAPER TICKET · 检票口 04</text>
 		</view>
 	</view>
 </template>
 
 <script>
-export default {
+	export default {
 		data() {
 			return {
 				statusBar: 0,
@@ -130,7 +131,7 @@ export default {
 				showPwd: false,
 				agreed: false,
 				submitting: false,
-				phStyle: 'color:#b0a494;font-size:15px;',
+				phStyle: 'color:rgba(58,50,42,0.35);font-size:15px;',
 				phone: '',
 				sms: '',
 				password: '',
@@ -149,16 +150,16 @@ export default {
 			this.clearTimer();
 		},
 		methods: {
-			fillDemo() {
-				this.agreed = true;
-				this.phone = '13800001234';
-				this.sms = '202610';
-				this.password = 'tkt-1024';
-				this.confirm = 'tkt-1024';
-			},
-
 			toast(title) {
 				uni.showToast({ title, icon: 'none' });
+			},
+
+			fillDemo() {
+				this.phone = '13800001234';
+				this.sms = '202610';
+				this.password = 'demo1234';
+				this.confirm = 'demo1234';
+				this.agreed = true;
 			},
 
 			isPhone(v) {
@@ -173,7 +174,7 @@ export default {
 				this.toast('验证码已发送');
 				if (this.timer) return;
 				this.timer = setInterval(() => {
-					this.smsLeft--;
+					if (this.smsLeft > 0) this.smsLeft--;
 					if (this.smsLeft <= 0) this.clearTimer();
 				}, 1000);
 			},
@@ -217,9 +218,7 @@ export default {
 			},
 
 			goLogin() {
-				const pages = getCurrentPages();
-				if (pages.length > 1) uni.navigateBack();
-				else uni.reLaunch({ url: '/pages/login119/login' });
+				uni.reLaunch({ url: '/pages/login119/login' });
 			}
 		}
 	};

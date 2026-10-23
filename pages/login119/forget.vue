@@ -1,9 +1,5 @@
 <template>
 	<view class="page">
-		<view class="deco deco-stamp"><text class="deco-stamp-txt">NO.2026</text></view>
-		<view class="deco deco-punch"></view>
-		<view class="deco deco-grain"></view>
-
 		<view class="status" :style="{ height: statusBar + 'px' }"></view>
 
 		<view class="nav">
@@ -16,54 +12,40 @@
 		</view>
 
 		<view class="content">
-			<view class="brand">
-				<view class="logo"><view class="logo-core"></view></view>
-				<view class="brand-txt">
-					<text class="brand-name">纸间票务</text>
-					<text class="brand-sub">PAPER TICKET</text>
-				</view>
-			</view>
-
-			<view class="head">
-				<text class="eyebrow">TICKET NO.00X</text>
-				<text class="title">补办票根</text>
-				<text class="lead">验证注册手机号，补一张新票根。</text>
-			</view>
-
-			<view class="card">
-				<view class="steps">
-					<view class="step" :class="{ on: step === 0 }">
-						<view class="step-dot"></view>
-						<text>01 验证身份</text>
-					</view>
-					<view class="step-line"></view>
-					<view class="step" :class="{ on: step === 1 }">
-						<view class="step-dot"></view>
-						<text>02 设置密码</text>
-					</view>
+			<view class="receipt">
+				<view class="head">
+					<text class="shop">A&middot;G MARKET</text>
+					<text class="slogan">— 挂失补办联 / KEY LOST —</text>
 				</view>
 
-				<block v-if="step === 0">
-					<view class="field">
-						<text class="field-label">注册手机号</text>
-						<view class="field-box" :class="{ active: focus === 'phone', error: !!err.phone }">
+				<view class="meta">
+					<text class="meta-line">单号 NO.2026-1023-09</text>
+					<text class="meta-line">联次 {{ step === 0 ? '第一联 // 核验身份' : '第二联 // 重设密码' }}</text>
+				</view>
+
+				<view class="dash"></view>
+
+				<view class="entries">
+					<block v-if="step === 0">
+						<view class="entry" :class="{ active: focus === 'phone', error: !!err.phone }">
+							<text class="entry-label">手机</text>
+							<view class="entry-leader"></view>
 							<input
 								class="input input-num"
 								v-model="phone"
 								type="number"
 								:placeholder-style="phStyle"
-								placeholder="请输入 11 位手机号"
+								placeholder="11 位手机号"
 								maxlength="11"
 								@focus="focus = 'phone'"
 								@blur="focus = ''"
 							/>
 						</view>
 						<text v-if="err.phone" class="err">{{ err.phone }}</text>
-					</view>
 
-					<view class="field">
-						<text class="field-label">短信验证码</text>
-						<view class="field-box" :class="{ active: focus === 'sms', error: !!err.sms }">
+						<view class="entry" :class="{ active: focus === 'sms', error: !!err.sms }">
+							<text class="entry-label">短码</text>
+							<view class="entry-leader"></view>
 							<input
 								class="input input-num"
 								v-model="sms"
@@ -74,18 +56,19 @@
 								@focus="focus = 'sms'"
 								@blur="focus = ''"
 							/>
-							<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + ' s' : '获取验证码' }}</text>
+							<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode">{{ smsLeft > 0 ? smsLeft + 's' : '取码' }}</text>
 						</view>
 						<text v-if="err.sms" class="err">{{ err.sms }}</text>
-					</view>
 
-					<view class="btn" @click="next">下 一 步</view>
-				</block>
+						<view class="tear" @click="next">
+							<text class="tear-txt">✂ - - - 核验通过 进入第二联 - - -</text>
+						</view>
+					</block>
 
-				<block v-else>
-					<view class="field">
-						<text class="field-label">新密码</text>
-						<view class="field-box" :class="{ active: focus === 'password', error: !!err.password }">
+					<block v-else>
+						<view class="entry" :class="{ active: focus === 'password', error: !!err.password }">
+							<text class="entry-label">新密码</text>
+							<view class="entry-leader"></view>
 							<input
 								class="input"
 								v-model="password"
@@ -96,14 +79,13 @@
 								@focus="focus = 'password'"
 								@blur="focus = ''"
 							/>
-							<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐藏' : '显示' }}</text>
+							<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐' : '显' }}</text>
 						</view>
 						<text v-if="err.password" class="err">{{ err.password }}</text>
-					</view>
 
-					<view class="field">
-						<text class="field-label">确认新密码</text>
-						<view class="field-box" :class="{ active: focus === 'confirm', error: !!err.confirm }">
+						<view class="entry" :class="{ active: focus === 'confirm', error: !!err.confirm }">
+							<text class="entry-label">复核</text>
+							<view class="entry-leader"></view>
 							<input
 								class="input"
 								v-model="confirm"
@@ -116,29 +98,45 @@
 							/>
 						</view>
 						<text v-if="err.confirm" class="err">{{ err.confirm }}</text>
+
+						<view class="tear" :class="{ 'is-busy': submitting }" @click="submit">
+							<text class="tear-txt">{{ submitting ? '打印中…' : '✂ - - - 撕下此联 重置完成 - - -' }}</text>
+						</view>
+						<view class="back-btn" @click="back">← 回到第一联</view>
+					</block>
+
+					<view class="safe">
+						<text class="safe-h">※ 温馨提示</text>
+						<text class="safe-txt">重置成功后，其他设备上的登录状态将全部失效。若手机号已停用，请联系管理员核验身份。</text>
 					</view>
+				</view>
 
-					<view class="btn" :class="{ 'is-busy': submitting }" @click="submit">重 置 密 码</view>
-					<view class="btn btn-ghost" @click="back">上一步</view>
-				</block>
+				<view class="dash"></view>
 
-				<text class="terms-h">安全提示</text>
-				<text class="terms">重置成功后，其他设备上的登录状态将全部失效。若手机号已停用，请联系管理员核验身份。</text>
+				<view class="barcode">
+					<view class="barcode-bars"></view>
+					<text class="barcode-num">2 0 2 6 1 0 2 3 0 9</text>
+				</view>
+
+				<text class="thanks">KEEP THIS RECEIPT SAFELY</text>
+
+				<view class="stamp">
+					<text class="stamp-txt">已核验</text>
+				</view>
 			</view>
 		</view>
 
 		<view class="foot">
 			<view class="foot-row">
-				<text class="foot-txt">想起密码了</text>
-				<text class="link" @click="goLogin">返回登录</text>
+				<text class="foot-txt">想起密码了？</text>
+				<text class="link" @click="goLogin">去登录</text>
 			</view>
-			<text class="copy">© 2026 PAPER TICKET · 检票口 04</text>
 		</view>
 	</view>
 </template>
 
 <script>
-export default {
+	export default {
 		data() {
 			return {
 				statusBar: 0,
@@ -146,7 +144,7 @@ export default {
 				focus: '',
 				showPwd: false,
 				submitting: false,
-				phStyle: 'color:#b0a494;font-size:15px;',
+				phStyle: 'color:rgba(58,50,42,0.35);font-size:15px;',
 				phone: '',
 				sms: '',
 				password: '',
@@ -184,7 +182,7 @@ export default {
 				this.toast('验证码已发送');
 				if (this.timer) return;
 				this.timer = setInterval(() => {
-					this.smsLeft--;
+					if (this.smsLeft > 0) this.smsLeft--;
 					if (this.smsLeft <= 0) this.clearTimer();
 				}, 1000);
 			},

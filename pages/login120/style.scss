@@ -1,54 +1,31 @@
 /* ==========================================================================
- * 主题 18 · 新中式
+ * 主题 18 · 新中式（重设计：卷轴书房）
  * pages/login120 —— 登录 / 注册 / 找回密码 三页共用
- * 新中式：令牌 + 共享骨架 + 主题装饰 + 皮肤覆盖
+ *
+ * 布局逻辑：一间留白讲究的书房——
+ *   左上朱红小方章 + 右上竖排标题（逐字堆叠，不用 writing-mode）→
+ *   水墨晕染分隔线 → 三枚竖排木牌挂牌式模式切换（红绳系选中牌）→
+ *   墨线字段（聚焦时墨线自中心晕开）→ 朱红方章按钮（按下盖印动画）。
  *
  * 设计依据：docs/theme-styles.md 第 18 条
- *   色板    $bg: #f7f4ed; / $ink: #1f1f1f; / $accent: #a62b1f; / $accent-2: #b08d57;
- *   栅格    1px = 2rpx，纵向间距取 8rpx 的整数倍
- *   落地    竖排诗句为纯装饰且定高 320rpx，writing-mode 不支持时自动回退横排。
- *           聚焦态用 inset 底部墨线 + 极淡外环模拟「墨晕」。
- *           落地风险：clip-path 洇开入场在部分 WebView 需 -webkit- 前缀，失败时无动画不影响可读。
+ *   色板    宣纸 #f7f4ed / 墨 #1f1f1f / 次级 #6e6a63 / 朱红 #a62b1f / 黛青 #4a5a5f / 描金 #b08d57
+ *   动效    标题逐字「洇开」入场（opacity + blur→clear 用 filter 禁用，改为透明度）；
+ *           墨线 scaleX 展开；盖印 scale 1.15→1。
+ *   纪律    竖排用逐字 text 堆叠（兼容安卓 WebView）；留白不少于下缘 30%。
  * ========================================================================== */
 
 /* ---------- 设计令牌 ---------- */
-$bg: #f7f4ed;              // 宣纸
-$panel: #fcfaf5;
-$ink: #1f1f1f;             // 墨
+$paper: #f7f4ed;
+$ink: #1f1f1f;
 $dim: #6e6a63;
-$dim-2: #a09a8e;
-$line: #ddd6c8;
-$accent: #a62b1f;          // 朱红
-$accent-2: #b08d57;        // 描金
-$on-accent: #f7f4ed;
-$err: #a62b1f;
+$dim-2: rgba(31, 31, 31, 0.28);
+$red: #a62b1f;
+$teal: #4a5a5f;
+$gold: #b08d57;
 
-$field-bg: #fffdf9;
-$field-line: #ddd6c8;
-$btn-bg: #a62b1f;
-$btn-ink: #f7f4ed;
-$btn-border: #a62b1f;
-$shadow-card: 0 16rpx 40rpx rgba(31, 31, 31, 0.08);
-$shadow-btn: none;
-$focus-shadow: inset 0 -2rpx 0 rgba(31, 31, 31, 0.55), 0 0 0 6rpx rgba(31, 31, 31, 0.04);
-
-$radius: 0;
-$radius-sm: 0;
-$radius-btn: 0;
-$radius-tick: 0;
+$serif: 'Songti SC', 'Noto Serif SC', 'SimSun', serif;
 $gutter: 48rpx;
-
-$font: 'Songti SC', 'Noto Serif SC', SimSun, 'PingFang SC', serif;
-$mono: 'SFMono-Regular', Consolas, monospace;
-$ls: 1rpx;
-$label-ls: 2rpx;
-$title-size: 60rpx;
-$title-weight: 500;
-$title-ls: 3rpx;
-$enter-ms: 360ms;
-/* ---------- 结构常量 ---------- */
-$tap: 96rpx;                                  // 输入框 / 按钮高 48px
-$ease: cubic-bezier(.2, .6, .2, 1);
+$ease: cubic-bezier(0.25, 0.6, 0.2, 1);
 
 /* ---------- 基础 ---------- */
 .page,
@@ -57,7 +34,7 @@ $ease: cubic-bezier(.2, .6, .2, 1);
 }
 
 page {
-	background-color: $bg;
+	background-color: $paper;
 }
 
 .page {
@@ -67,39 +44,45 @@ page {
 	min-height: 100vh;
 	overflow: hidden;
 	padding: 0 $gutter;
-	background-color: $bg;
+	background-color: $paper;
 	color: $ink;
-	font-family: $font;
+	font-family: $serif;
 	font-size: 28rpx;
 	line-height: 1.5;
-	letter-spacing: $ls;
-	-webkit-font-smoothing: antialiased;
-	animation: mn-in $enter-ms $ease both;
+	letter-spacing: 1rpx;
 }
 
-@keyframes mn-in {
-	from {
-		opacity: 0;
-		transform: translateY(16rpx);
-	}
-
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
-}
-
-/* 装饰层纪律：不吃指针事件、层级低于内容一层 */
+/* 水墨底纹（右上一团淡墨晕） */
 .deco {
 	position: absolute;
 	z-index: 1;
 	pointer-events: none;
 }
 
+.deco-wash {
+	right: -120rpx;
+	top: -80rpx;
+	width: 480rpx;
+	height: 480rpx;
+	border-radius: 50%;
+	background: radial-gradient(circle, rgba(74, 90, 95, 0.08) 0%, rgba(74, 90, 95, 0.03) 45%, transparent 70%);
+}
+
+/* 右缘描金竖线 */
+.deco-gold-v {
+	right: 24rpx;
+	top: 200rpx;
+	bottom: 260rpx;
+	width: 2rpx;
+	background: linear-gradient(180deg, transparent, rgba(176, 141, 87, 0.6) 20%, rgba(176, 141, 87, 0.6) 80%, transparent);
+}
+
 /* ---------- 自绘导航 ---------- */
 .status {
 	width: 100%;
 	flex: none;
+	position: relative;
+	z-index: 3;
 }
 
 .nav {
@@ -128,7 +111,6 @@ page {
 	background-color: $ink;
 }
 
-/* 箭头：两条短线以左端为轴张开，尖端与轴线重合 */
 .back-tip {
 	position: absolute;
 	left: 4rpx;
@@ -146,10 +128,9 @@ page {
 }
 
 .nav-idx {
-	font-size: 20rpx;
-	letter-spacing: 3rpx;
-	color: $dim-2;
-	font-variant-numeric: tabular-nums;
+	font-size: 22rpx;
+	letter-spacing: 4rpx;
+	color: $dim;
 }
 
 /* ---------- 内容区 ---------- */
@@ -160,578 +141,525 @@ page {
 	padding-bottom: 24rpx;
 }
 
-/* ---------- 品牌 ---------- */
-.brand {
+/* ---------- 题签区 ---------- */
+.titlewrap {
+	position: relative;
 	display: flex;
-	align-items: center;
-	padding-top: 24rpx;
+	justify-content: flex-end;
+	padding: 24rpx 24rpx 0 0;
+	min-height: 280rpx;
 }
 
-.logo {
-	position: relative;
+/* 朱红小方章 */
+.seal {
+	position: absolute;
+	left: 8rpx;
+	top: 48rpx;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 64rpx;
-	height: 64rpx;
-	flex: none;
-	border: 2rpx solid $line;
-	border-radius: $radius-sm;
+	width: 72rpx;
+	height: 72rpx;
+	background: $red;
+	animation: seal-in 320ms $ease both;
 }
 
-.logo-core {
-	width: 20rpx;
-	height: 20rpx;
-	background-color: $accent;
-}
-
-.brand-txt {
-	padding-left: 20rpx;
-}
-
-.brand-name {
-	display: block;
-	font-size: 28rpx;
-	font-weight: 600;
-	letter-spacing: 1rpx;
-}
-
-.brand-sub {
-	display: block;
-	margin-top: 4rpx;
-	font-size: 18rpx;
-	letter-spacing: 3rpx;
-	color: $dim;
-}
-
-/* ---------- 标题区 ---------- */
-.head {
-	padding-top: 56rpx;
-}
-
-.eyebrow {
-	display: block;
-	font-size: 20rpx;
-	letter-spacing: 4rpx;
-	color: $dim;
-}
-
-.title {
-	display: block;
-	margin-top: 20rpx;
-	font-size: $title-size;
-	font-weight: $title-weight;
+.seal-txt {
+	font-size: 26rpx;
+	font-weight: 700;
+	letter-spacing: 2rpx;
+	color: #f7f4ed;
 	line-height: 1.2;
-	letter-spacing: $title-ls;
+}
+
+@keyframes seal-in {
+	from {
+		opacity: 0;
+		transform: scale(1.2);
+	}
+
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+/* 竖排标题：逐字堆叠 */
+.vtitle {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 8rpx 20rpx;
+	border-right: 2rpx solid rgba(176, 141, 87, 0.55);
+}
+
+.vchar {
+	font-size: 52rpx;
+	font-weight: 500;
+	line-height: 1.3;
+	letter-spacing: 0;
+	animation: ink-in 500ms $ease both;
+}
+
+.vchar:nth-child(1) {
+	animation-delay: 60ms;
+}
+
+.vchar:nth-child(2) {
+	animation-delay: 160ms;
+}
+
+.vchar:nth-child(3) {
+	animation-delay: 260ms;
+}
+
+.vchar:nth-child(4) {
+	animation-delay: 360ms;
+}
+
+@keyframes ink-in {
+	from {
+		opacity: 0;
+		transform: translateY(10rpx);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* ---------- 引导语 ---------- */
+.head {
+	padding: 8rpx 0 28rpx;
 }
 
 .lead {
 	display: block;
-	margin-top: 16rpx;
 	font-size: 24rpx;
-	line-height: 1.72;
+	line-height: 1.8;
 	color: $dim;
 }
 
-/* ---------- 登录方式 ---------- */
-.tabs {
-	display: flex;
-	align-items: flex-end;
-	margin-top: 48rpx;
-}
-
-.tab {
-	position: relative;
-	margin-right: 48rpx;
-	padding-bottom: 14rpx;
-	font-size: 26rpx;
-	color: $dim;
-	border-bottom: 2rpx solid transparent;
-	transition: color 160ms linear, border-color 160ms linear;
-}
-
-.tab:last-child {
-	margin-right: 0;
-}
-
-.tab.on {
-	color: $ink;
-	border-bottom-color: $accent;
-}
-
-/* ---------- 卡片 ---------- */
-.card {
-	position: relative;
-	margin-top: 32rpx;
-	padding: 40rpx 32rpx 36rpx;
-	background-color: $panel;
-	border: 1rpx solid $line;
-	border-radius: $radius;
-	box-shadow: $shadow-card;
-}
-
-/* ---------- 字段 ---------- */
-.field {
-	margin-top: 28rpx;
-}
-
-.card > .field:first-child {
-	margin-top: 0;
-}
-
-.field-label {
-	display: block;
-	margin-bottom: 12rpx;
-	font-size: 20rpx;
-	letter-spacing: $label-ls;
-	color: $dim;
-}
-
-.field-box {
+/* ---------- 水墨分隔 ---------- */
+.divider {
 	display: flex;
 	align-items: center;
-	height: $tap;
-	padding: 0 24rpx;
-	background-color: $field-bg;
-	border: 1rpx solid $field-line;
-	border-radius: $radius-sm;
-	transition: border-color 180ms linear, box-shadow 180ms linear;
+	margin-bottom: 40rpx;
 }
 
-.field-box.active {
-	border-color: $accent;
-	box-shadow: $focus-shadow;
-}
-
-.field-box.error {
-	border-color: $err;
-}
-
-/* input 一律显式重置，避免各端默认样式渗入 */
-.input {
+.divider-ink {
 	flex: 1;
-	width: 100%;
-	height: 100%;
-	padding: 0;
-	background-color: transparent;
-	border-width: 0;
-	border-radius: 0;
-	appearance: none;
-	font-size: 28rpx;
-	color: $ink;
-	letter-spacing: $ls;
+	height: 3rpx;
+	background: radial-gradient(ellipse at center, rgba(31, 31, 31, 0.5) 0%, rgba(31, 31, 31, 0.12) 60%, transparent 100%);
 }
 
-.input-num {
-	font-variant-numeric: tabular-nums;
-	letter-spacing: 2rpx;
+/* ---------- 挂牌模式切换 ---------- */
+.tags {
+	display: flex;
+	gap: 44rpx;
+	margin-bottom: 44rpx;
 }
 
-.eye {
-	flex: none;
-	padding-left: 20rpx;
-	font-size: 22rpx;
+.tag {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.tag-string {
+	width: 2rpx;
+	height: 0;
+	background: $red;
+	transition: height 0.25s $ease;
+}
+
+.tag-string.show {
+	height: 28rpx;
+}
+
+/* 绳结 */
+.tag-string::after {
+	content: '';
+	display: block;
+	width: 10rpx;
+	height: 10rpx;
+	margin: 4rpx auto 0;
+	border-radius: 50%;
+	background: $red;
+}
+
+.tag-plate {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 64rpx;
+	padding: 16rpx 0;
+	background: rgba(74, 90, 95, 0.08);
+	border: 1rpx solid rgba(74, 90, 95, 0.35);
+	border-radius: 4rpx;
+	transition: background 0.2s, border-color 0.2s, transform 0.2s $ease;
+}
+
+.tag-char {
+	font-size: 26rpx;
+	line-height: 1.4;
 	color: $dim;
 }
 
-.eye.on {
-	color: $accent;
+.tag.on .tag-plate {
+	background: rgba(166, 43, 31, 0.08);
+	border-color: $red;
+	transform: translateY(4rpx);
 }
 
-.code {
+.tag.on .tag-char {
+	color: $ink;
+	font-weight: 700;
+}
+
+/* ---------- 墨线字段 ---------- */
+.fields {
+	position: relative;
+}
+
+.ifield {
+	position: relative;
+	display: flex;
+	align-items: flex-end;
+	min-height: 124rpx;
+	padding: 8rpx 0 16rpx;
+}
+
+.ifield-label {
 	flex: none;
-	padding-left: 24rpx;
-	font-size: 22rpx;
-	color: $accent;
+	width: 128rpx;
+	padding-bottom: 22rpx;
+	font-size: 24rpx;
+	letter-spacing: 4rpx;
+	color: $dim;
 }
 
-.code.off {
-	color: $dim-2;
-	font-variant-numeric: tabular-nums;
+.ifield-main {
+	position: relative;
+	flex: 1;
+	min-width: 0;
+}
+
+.input {
+	width: 100%;
+	height: 64rpx;
+	font-size: 28rpx;
+	color: $ink;
+	background: transparent;
+}
+
+/* 墨线：淡常驻 + 聚焦晕开 */
+.ifield-inkline {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 2rpx;
+	background: rgba(31, 31, 31, 0.25);
+}
+
+.ifield-main::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: -1rpx;
+	height: 4rpx;
+	background: radial-gradient(ellipse at center, rgba(31, 31, 31, 0.75) 0%, rgba(31, 31, 31, 0.2) 70%, transparent 100%);
+	transform: scaleX(0);
+	transition: transform 0.35s $ease;
+}
+
+.ifield.active .ifield-main::after {
+	transform: scaleX(1);
+}
+
+.ifield.active .ifield-label {
+	color: $ink;
+}
+
+.ifield.error .ifield-main::after {
+	background: radial-gradient(ellipse at center, rgba(166, 43, 31, 0.75) 0%, rgba(166, 43, 31, 0.2) 70%, transparent 100%);
+	transform: scaleX(1);
 }
 
 .err {
 	display: block;
-	margin-top: 12rpx;
-	font-size: 20rpx;
-	color: $err;
+	margin: -4rpx 0 12rpx;
+	padding-left: 128rpx;
+	font-size: 22rpx;
+	color: $red;
 }
 
-.tip {
-	display: block;
-	margin-top: 12rpx;
-	font-size: 20rpx;
+.eye {
+	flex: none;
+	padding-bottom: 20rpx;
+	margin-left: 16rpx;
+	font-size: 22rpx;
 	color: $dim-2;
 }
 
-/* ---------- 行内操作 ---------- */
+.eye.on {
+	color: $teal;
+}
+
+.code {
+	flex: none;
+	padding-bottom: 20rpx;
+	margin-left: 16rpx;
+	font-size: 22rpx;
+	letter-spacing: 2rpx;
+	color: $red;
+}
+
+.code.off {
+	color: $dim;
+}
+
+/* ---------- 行 / 勾选 ---------- */
 .row {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	margin-top: 32rpx;
+	padding: 16rpx 0 20rpx;
 }
 
-.row-end {
-	justify-content: flex-end;
+.check {
+	display: flex;
+	align-items: center;
+	padding: 14rpx 0;
+}
+
+.check-inline {
+	padding: 0;
+}
+
+.check-box {
+	position: relative;
+	width: 34rpx;
+	height: 34rpx;
+	margin-right: 14rpx;
+	border: 1rpx solid rgba(31, 31, 31, 0.4);
+	flex: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: border-color 0.2s, background 0.2s;
+}
+
+.check-box.on {
+	background: $red;
+	border-color: $red;
+}
+
+.check-tick {
+	width: 16rpx;
+	height: 9rpx;
+	border-left: 3rpx solid #f7f4ed;
+	border-bottom: 3rpx solid #f7f4ed;
+	transform: rotate(-45deg) translateY(-2rpx);
+}
+
+.check-txt {
+	font-size: 24rpx;
+	color: $dim;
+}
+
+.check-link {
+	color: $red;
 }
 
 .link {
-	font-size: 22rpx;
-	color: $accent;
+	font-size: 24rpx;
+	color: $teal;
+	letter-spacing: 2rpx;
 }
 
 .link-soft {
 	color: $dim;
 }
 
-/* ---------- 勾选 ---------- */
-.check {
-	display: flex;
-	align-items: flex-start;
-	margin-top: 28rpx;
-}
-
-.check-inline {
-	align-items: center;
-	margin-top: 0;
-}
-
-.check-inline .check-txt {
-	flex: none;
-}
-
-.check-box {
-	position: relative;
-	width: 28rpx;
-	height: 28rpx;
-	flex: none;
-	margin-right: 14rpx;
-	background-color: transparent;
-	border: 2rpx solid $line;
-	border-radius: $radius-tick;
-	transition: background-color 160ms linear, border-color 160ms linear;
-}
-
-.check-box.on {
-	background-color: $accent;
-	border-color: $accent;
-}
-
-/* 勾选用实体元素绘制，规避小程序端伪元素差异 */
-.check-tick {
-	position: absolute;
-	left: 50%;
-	top: 44%;
-	width: 7rpx;
-	height: 13rpx;
-	border-right: 2rpx solid $on-accent;
-	border-bottom: 2rpx solid $on-accent;
-	transform: translate(-50%, -50%) rotate(43deg) scale(0.6);
-	opacity: 0;
-	transition: opacity 120ms linear, transform 120ms $ease;
-}
-
-.check-box.on .check-tick {
-	opacity: 1;
-	transform: translate(-50%, -50%) rotate(43deg) scale(1);
-}
-
-.check-txt {
-	flex: 1;
-	font-size: 22rpx;
-	line-height: 1.6;
-	color: $dim;
-}
-
-.check-link {
-	color: $accent;
-}
-
-/* ---------- 主按钮 ---------- */
-.btn {
-	position: relative;
+/* ---------- 朱红方章按钮 ---------- */
+.stampbtn {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	height: $tap;
-	margin-top: 40rpx;
-	background-color: $btn-bg;
-	color: $btn-ink;
-	border: 1rpx solid $btn-border;
-	border-radius: $radius-btn;
-	font-size: 28rpx;
+	width: 320rpx;
+	height: 112rpx;
+	margin: 24rpx auto 8rpx;
+	background: $red;
+	box-shadow: 0 8rpx 24rpx rgba(166, 43, 31, 0.3);
+	transition: transform 0.15s $ease, box-shadow 0.15s;
+}
+
+.stampbtn-txt {
+	font-size: 30rpx;
+	font-weight: 700;
 	letter-spacing: 8rpx;
-	text-indent: 8rpx;
-	box-shadow: $shadow-btn;
+	color: #f7f4ed;
 }
 
-.btn:active {
-	opacity: 0.88;
+.stampbtn:active {
+	animation: stamp 160ms $ease 1;
 }
 
-.btn.is-busy {
-	opacity: 0.6;
+.stampbtn.is-busy {
+	animation: stamp 160ms $ease 1;
+	opacity: 0.85;
 }
 
-.btn-ghost {
-	margin-top: 20rpx;
-	background-color: transparent;
+@keyframes stamp {
+	from {
+		transform: scale(1.15);
+	}
+
+	to {
+		transform: scale(1);
+	}
+}
+
+.back-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 72rpx;
+	margin: 8rpx 0 0;
+	font-size: 24rpx;
 	color: $dim;
-	border-color: $line;
-	box-shadow: none;
-	letter-spacing: 4rpx;
-	text-indent: 4rpx;
+	letter-spacing: 2rpx;
 }
 
-/* ---------- 其他入口 ---------- */
+.back-btn:active {
+	color: $red;
+}
+
+/* ---------- 找回步骤 ---------- */
+.steps {
+	display: flex;
+	align-items: center;
+	gap: 16rpx;
+	margin-bottom: 36rpx;
+}
+
+.stp {
+	display: flex;
+	align-items: center;
+	gap: 12rpx;
+	opacity: 0.45;
+}
+
+.stp.on,
+.stp.done {
+	opacity: 1;
+}
+
+.stp-dot {
+	width: 14rpx;
+	height: 14rpx;
+	border-radius: 50%;
+	border: 2rpx solid $ink;
+}
+
+.stp.on .stp-dot {
+	background: $red;
+	border-color: $red;
+}
+
+.stp.done .stp-dot {
+	background: $ink;
+	border-color: $ink;
+}
+
+.stp-name {
+	font-size: 24rpx;
+	letter-spacing: 2rpx;
+}
+
+.stp-line {
+	flex: 1;
+	height: 1rpx;
+	background: rgba(31, 31, 31, 0.2);
+}
+
+/* ---------- 契约提示 ---------- */
+.safe {
+	margin-top: 32rpx;
+	padding: 20rpx 24rpx;
+	border-left: 4rpx solid $gold;
+	background: rgba(176, 141, 87, 0.08);
+}
+
+.safe-h {
+	display: block;
+	font-size: 22rpx;
+	letter-spacing: 2rpx;
+	color: $teal;
+}
+
+.safe-txt {
+	display: block;
+	margin-top: 8rpx;
+	font-size: 22rpx;
+	line-height: 1.8;
+	color: $dim;
+}
+
+/* ---------- 第三方 ---------- */
 .alt {
 	display: flex;
-	margin-top: 32rpx;
-	border-top: 1rpx solid $line;
+	gap: 20rpx;
+	margin-top: 28rpx;
 }
 
 .alt-i {
 	flex: 1;
-	height: 84rpx;
-	line-height: 84rpx;
-	text-align: center;
+	height: 76rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	font-size: 22rpx;
+	letter-spacing: 2rpx;
 	color: $dim;
-	border-right: 1rpx solid $line;
+	border: 1rpx solid rgba(31, 31, 31, 0.25);
 }
 
-.alt-i:last-child {
-	border-right: 0;
+.alt-i:active {
+	background: rgba(166, 43, 31, 0.06);
+	color: $red;
+	border-color: $red;
 }
 
 /* ---------- 页脚 ---------- */
 .foot {
 	position: relative;
 	z-index: 2;
-	flex: none;
-	padding-top: 40rpx;
-	padding-bottom: 40rpx;
-	padding-bottom: calc(40rpx + constant(safe-area-inset-bottom));
-	padding-bottom: calc(40rpx + env(safe-area-inset-bottom));
+	padding: 24rpx 0 calc(24rpx + env(safe-area-inset-bottom));
 }
 
 .foot-row {
 	display: flex;
-	align-items: baseline;
-	justify-content: space-between;
+	align-items: center;
+	justify-content: center;
+	gap: 16rpx;
 }
 
 .foot-txt {
-	font-size: 22rpx;
-	color: $dim;
-}
-
-.copy {
-	display: block;
-	margin-top: 40rpx;
-	font-size: 18rpx;
-	letter-spacing: 2rpx;
-	color: $dim-2;
-	text-align: center;
-}
-
-/* ---------- 步骤 ---------- */
-.steps {
-	display: flex;
-	align-items: center;
-	margin-top: 40rpx;
-}
-
-.step {
-	display: flex;
-	align-items: center;
-	font-size: 20rpx;
-	letter-spacing: 2rpx;
-	color: $dim-2;
-}
-
-.step.on {
-	color: $accent;
-}
-
-.step-dot {
-	width: 12rpx;
-	height: 12rpx;
-	margin-right: 12rpx;
-	background-color: $dim-2;
-}
-
-.step.on .step-dot {
-	background-color: $accent;
-}
-
-.step-line {
-	flex: none;
-	width: 48rpx;
-	height: 1rpx;
-	margin: 0 16rpx;
-	background-color: $line;
-}
-
-/* ---------- 安全提示 ---------- */
-.terms {
-	display: block;
-	margin-top: 40rpx;
-	font-size: 22rpx;
-	line-height: 1.9;
-	color: $dim;
-}
-
-.terms-h {
-	display: block;
-	margin-top: 40rpx;
-	margin-bottom: 12rpx;
-	font-size: 22rpx;
-	letter-spacing: 1rpx;
-	color: $ink;
-}
-
-/* ---------- 装饰层（纯 CSS，0 图片） ---------- */
-/* 朱红方章：红底白字，压在右上，作品牌印记 */
-.deco-seal {
-	top: 120rpx;
-	right: 40rpx;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 64rpx;
-	height: 64rpx;
-	background-color: $accent;
-}
-
-.deco-seal-txt {
-	font-size: 20rpx;
-	color: #f7f4ed;
-	letter-spacing: 2rpx;
-	line-height: 1.2;
-	text-align: center;
-}
-
-/* 竖排诗句：纯装饰且定高，writing-mode 不支持时自动回退横排 */
-.deco-vertical {
-	top: 300rpx;
-	right: 40rpx;
-	height: 320rpx;
-	writing-mode: vertical-rl;
-	text-orientation: upright;
-}
-
-.deco-vertical-txt {
 	font-size: 24rpx;
-	letter-spacing: 8rpx;
-	color: rgba(110, 106, 99, 0.5);
+	color: $dim;
 }
 
-/* 水墨晕染横线：径向渐变做柔边（置于右上方章与竖排之间，避开眉标） */
-.deco-ink-line {
-	top: 224rpx;
-	right: 40rpx;
-	width: 120rpx;
-	height: 8rpx;
-	background-image: radial-gradient(ellipse at center, rgba(31, 31, 31, 0.22) 0, rgba(31, 31, 31, 0) 70%);
-}
-/* ---------- 皮肤覆盖 ---------- */
-/* 标题：宋体 + 宽字距，讲究气韵 */
-.title {
-	letter-spacing: 6rpx;
-}
-
-.eyebrow {
-	color: $accent-2;
-	letter-spacing: 4rpx;
-}
-
-.brand-name {
-	letter-spacing: 4rpx;
-}
-
-.brand-sub {
-	color: $accent-2;
-}
-
-/* 面板：宣纸留白，圆角 0，描金细边 */
-.card {
-	border: 1rpx solid rgba(176, 141, 87, 0.45);
-}
-
-/* 输入框：聚焦时下缘晕开一笔淡墨 */
-.field-box {
-	border: 1rpx solid $field-line;
-	background-color: $field-bg;
-	transition: border-color 200ms linear, box-shadow 200ms linear;
-}
-
-.field-box.active {
-	border-color: rgba(31, 31, 31, 0.55);
-	box-shadow: $focus-shadow;
-}
-
-.field-label {
-	letter-spacing: 4rpx;
-}
-
-/* Tab：选中为朱红下划线 */
-.tab.on {
-	color: $accent;
-	border-bottom-color: $accent;
-}
-
-/* 按钮：朱红方块，按下颜色加深并轻微收缩 */
-.btn {
-	font-weight: 500;
-	letter-spacing: 10rpx;
-}
-
-.btn:active {
-	background-color: #8a221a;
-	transform: scale(0.98);
-}
-
-/* 勾选：方形朱红填充 */
-.check-box {
-	border: 2rpx solid #8a8478;
-}
-
-.check-box.on {
-	background-color: $accent;
-	border-color: $accent;
-}
-
-/* logo：方章形制 */
-.logo {
-	border-radius: 0;
-	border-color: #1f1f1f;
-}
-
-.logo-core {
-	border-radius: 0;
-	background-color: $accent;
-}
-
-/* 版权：描金小字 */
 .copy {
-	color: rgba(176, 141, 87, 0.75);
-}
-
-/* 入场：墨色自上而下洇开（clip-path 展开，失败时无动画不影响可读） */
-@keyframes ink-in {
-	from {
-		clip-path: inset(0 0 100% 0);
-		opacity: 0;
-	}
-
-	to {
-		clip-path: inset(0 0 0 0);
-		opacity: 1;
-	}
-}
-
-.head {
-	animation: ink-in 480ms cubic-bezier(.2, .6, .2, 1) both;
+	display: block;
+	margin-top: 10rpx;
+	text-align: center;
+	font-size: 20rpx;
+	letter-spacing: 4rpx;
+	color: $dim-2;
 }

@@ -1,9 +1,9 @@
 <template>
 	<view class="page">
 		<view class="deco deco-circle"></view>
-		<view class="deco deco-square"></view>
 		<view class="deco deco-tri"></view>
 		<view class="deco deco-bar"></view>
+		<view class="deco deco-rule"></view>
 
 		<view class="status" :style="{ height: statusBar + 'px' }"></view>
 
@@ -17,24 +17,22 @@
 		</view>
 
 		<view class="content">
-			<view class="brand">
-				<view class="logo"><view class="logo-core"></view></view>
-				<view class="brand-txt">
-					<text class="brand-name">构成学社</text>
-					<text class="brand-sub">BAUHAUS · 1919</text>
-				</view>
+			<view class="mark">
+				<view class="mark-sq"></view>
+				<view class="mark-tri"></view>
+				<view class="mark-cir"></view>
 			</view>
 
 			<view class="head">
-				<text class="eyebrow">FORM · SIGN UP</text>
-				<text class="title">注册学员</text>
-				<text class="lead">一个手机号即可注册，开始你的构成练习。</text>
+				<text class="title">创建账号</text>
+				<text class="lead">登记新的成员档案，加入设计公社。</text>
 			</view>
 
-			<view class="card">
-				<view class="field">
-					<text class="field-label">手机号</text>
-					<view class="field-box" :class="{ active: focus === 'phone', error: !!err.phone }">
+			<view class="forms">
+				<view class="gfield" :class="{ active: focus === 'phone', error: !!err.phone }">
+					<view class="gfield-dot gfield-dot-y"></view>
+					<view class="gfield-main">
+						<text class="gfield-label">手机号</text>
 						<input
 							class="input input-num"
 							v-model="phone"
@@ -46,12 +44,14 @@
 							@blur="focus = ''"
 						/>
 					</view>
-					<text v-if="err.phone" class="err">{{ err.phone }}</text>
+					<view class="focus-dot"></view>
 				</view>
+				<text v-if="err.phone" class="err">{{ err.phone }}</text>
 
-				<view class="field">
-					<text class="field-label">短信验证码</text>
-					<view class="field-box" :class="{ active: focus === 'sms', error: !!err.sms }">
+				<view class="gfield" :class="{ active: focus === 'sms', error: !!err.sms }">
+					<view class="gfield-dot gfield-dot-b"></view>
+					<view class="gfield-main">
+						<text class="gfield-label">短信验证码</text>
 						<input
 							class="input input-num"
 							v-model="sms"
@@ -62,14 +62,16 @@
 							@focus="focus = 'sms'"
 							@blur="focus = ''"
 						/>
-						<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + ' s' : '获取验证码' }}</text>
 					</view>
-					<text v-if="err.sms" class="err">{{ err.sms }}</text>
+					<text class="code" :class="{ off: smsLeft > 0 }" @click="sendCode">{{ smsLeft > 0 ? smsLeft + ' s' : '获取验证码' }}</text>
+					<view class="focus-dot"></view>
 				</view>
+				<text v-if="err.sms" class="err">{{ err.sms }}</text>
 
-				<view class="field">
-					<text class="field-label">设置密码</text>
-					<view class="field-box" :class="{ active: focus === 'password', error: !!err.password }">
+				<view class="gfield" :class="{ active: focus === 'password', error: !!err.password }">
+					<view class="gfield-dot gfield-dot-y"></view>
+					<view class="gfield-main">
+						<text class="gfield-label">设置密码</text>
 						<input
 							class="input"
 							v-model="password"
@@ -80,15 +82,16 @@
 							@focus="focus = 'password'"
 							@blur="focus = ''"
 						/>
-						<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐藏' : '显示' }}</text>
 					</view>
-					<text v-if="err.password" class="err">{{ err.password }}</text>
-					<text v-else class="tip">建议使用字母、数字与符号的组合</text>
+					<text class="eye" :class="{ on: showPwd }" @click="showPwd = !showPwd">{{ showPwd ? '隐藏' : '显示' }}</text>
+					<view class="focus-dot"></view>
 				</view>
+				<text v-if="err.password" class="err">{{ err.password }}</text>
 
-				<view class="field">
-					<text class="field-label">确认密码</text>
-					<view class="field-box" :class="{ active: focus === 'confirm', error: !!err.confirm }">
+				<view class="gfield" :class="{ active: focus === 'confirm', error: !!err.confirm }">
+					<view class="gfield-dot gfield-dot-b"></view>
+					<view class="gfield-main">
+						<text class="gfield-label">确认密码</text>
 						<input
 							class="input"
 							v-model="confirm"
@@ -100,13 +103,16 @@
 							@blur="focus = ''"
 						/>
 					</view>
-					<text v-if="err.confirm" class="err">{{ err.confirm }}</text>
+					<view class="focus-dot"></view>
+				</view>
+				<text v-if="err.confirm" class="err">{{ err.confirm }}</text>
+
+				<view class="btn" :class="{ 'is-busy': submitting }" @click="submit">
+					<text class="btn-txt">{{ submitting ? '提交中…' : '注　册' }}</text>
 				</view>
 
-				<view class="btn" :class="{ 'is-busy': submitting }" @click="submit">注 册</view>
-
 				<view class="check" @click="agreed = !agreed">
-					<view class="check-box" :class="{ on: agreed }"><view class="check-tick"></view></view>
+					<view class="check-box" :class="{ on: agreed }"><view v-if="agreed" class="check-tick"></view></view>
 					<text class="check-txt">我已阅读并同意 <text class="check-link">《用户协议》</text> 与 <text class="check-link">《隐私政策》</text></text>
 				</view>
 			</view>
@@ -117,13 +123,13 @@
 				<text class="foot-txt">已有账号</text>
 				<text class="link" @click="goLogin">返回登录</text>
 			</view>
-			<text class="copy">© 2026 FORM UND FUNKTION</text>
+			<text class="copy">© 2026 STAATLICHES BAUHAUS · 1926</text>
 		</view>
 	</view>
 </template>
 
 <script>
-export default {
+	export default {
 		data() {
 			return {
 				statusBar: 0,
@@ -131,7 +137,7 @@ export default {
 				showPwd: false,
 				agreed: false,
 				submitting: false,
-				phStyle: 'color:#a39b8d;font-size:15px;',
+				phStyle: 'color:rgba(17,17,17,0.34);font-size:15px;',
 				phone: '',
 				sms: '',
 				password: '',
@@ -150,16 +156,16 @@ export default {
 			this.clearTimer();
 		},
 		methods: {
-			fillDemo() {
-				this.agreed = true;
-				this.phone = '13800001234';
-				this.sms = '202610';
-				this.password = 'bhu-1919';
-				this.confirm = 'bhu-1919';
-			},
-
 			toast(title) {
 				uni.showToast({ title, icon: 'none' });
+			},
+
+			fillDemo() {
+				this.phone = '13800001234';
+				this.sms = '202610';
+				this.password = 'demo1234';
+				this.confirm = 'demo1234';
+				this.agreed = true;
 			},
 
 			isPhone(v) {
@@ -174,7 +180,7 @@ export default {
 				this.toast('验证码已发送');
 				if (this.timer) return;
 				this.timer = setInterval(() => {
-					this.smsLeft--;
+					if (this.smsLeft > 0) this.smsLeft--;
 					if (this.smsLeft <= 0) this.clearTimer();
 				}, 1000);
 			},
@@ -218,9 +224,7 @@ export default {
 			},
 
 			goLogin() {
-				const pages = getCurrentPages();
-				if (pages.length > 1) uni.navigateBack();
-				else uni.reLaunch({ url: '/pages/login117/login' });
+				uni.reLaunch({ url: '/pages/login117/login' });
 			}
 		}
 	};
