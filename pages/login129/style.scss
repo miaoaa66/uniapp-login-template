@@ -1,0 +1,453 @@
+/* ==========================================================================
+ * 主题 20 · 未来 HUD / Sci-Fi —— 「全息舷窗 HOLO DECK」
+ * pages/login129 —— 登录 / 注册 / 找回密码 / 手机号验证码登录 / 邮箱验证码登录 五页共用
+ *
+ * 独特布局与操作逻辑：
+ *   1. 中央圆形「雷达舷窗」：同心环 + 半透明扇形扫描线持续旋转；中心状态字
+ *      IDLE / AUTH / SCAN 随操作切换。
+ *   2. 登录主操作为「滑动授权滑轨 SLIDE TO AUTHORIZE」：向右拖动滑块越过阈值即触发授权，
+ *      轨道随拖动填充青色；松手未过阈值则自动回弹。
+ *   3. 输入框四角切角（clip-path） + 角标，聚焦时青描边多层发光；验证码倒计时
+ *      以 HUD 数字跳变呈现。
+ *
+ * 设计依据：docs/theme-styles.md 第 20 条
+ *   色板    底 #05121A / 主青 #35F0D0 / 辅橙 #FF5C00 / 正文 #D6FDF6 / 次级 #5E8C88 / 网格 rgba(53,240,208,0.14)
+ *   质感    四角切角边框 + 背景细网格 + 半透明青底 + 1px 青描边
+ *   动效    扫描线旋转；聚焦角标亮起 + 青光环扩散；按钮环形进度
+ *
+ * 兼容约定：clip-path 保留方形兜底；避免 filter: blur 大面积发光，改用多层 box-shadow。
+ * 栅格约定：1px = 2rpx，纵向间距取 8px（16rpx）整数倍。
+ * ========================================================================== */
+
+page {
+	background-color: #05121a;
+}
+
+.page {
+	position: relative;
+	min-height: 100vh;
+	padding: 0 40rpx 40rpx;
+	box-sizing: border-box;
+	background-color: #05121a;
+	background-image:
+		repeating-linear-gradient(0deg, rgba(53, 240, 208, 0.04) 0, rgba(53, 240, 208, 0.04) 2rpx, transparent 2rpx, transparent 64rpx),
+		repeating-linear-gradient(90deg, rgba(53, 240, 208, 0.04) 0, rgba(53, 240, 208, 0.04) 2rpx, transparent 2rpx, transparent 64rpx);
+	font-family: "JetBrains Mono", "Oxanium", "PingFang SC", "Microsoft YaHei", monospace;
+	color: #d6fdf6;
+}
+
+/* ---------- 顶部状态 / 导航 ---------- */
+.status {
+	width: 100%;
+}
+
+.nav {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 20rpx 0;
+}
+
+.back {
+	display: flex;
+	align-items: center;
+	width: 88rpx;
+	height: 88rpx;
+	border: 2rpx solid rgba(53, 240, 208, 0.4);
+	clip-path: polygon(12rpx 0, 100% 0, 100% calc(100% - 12rpx), calc(100% - 12rpx) 100%, 0 100%, 0 12rpx);
+	background-color: rgba(53, 240, 208, 0.05);
+}
+
+.back-line {
+	position: relative;
+	width: 34rpx;
+	height: 2rpx;
+	margin-left: 22rpx;
+	background-color: #35f0d0;
+}
+
+.back-line::before,
+.back-line::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	width: 16rpx;
+	height: 2rpx;
+	background-color: #35f0d0;
+	transform-origin: left center;
+}
+
+.back-line::before {
+	top: -8rpx;
+	transform: rotate(-45deg);
+}
+
+.back-line::after {
+	top: 8rpx;
+	transform: rotate(45deg);
+}
+
+.nav-idx {
+	font-size: 22rpx;
+	letter-spacing: 3rpx;
+	color: #5e8c88;
+}
+
+/* ---------- 雷达舷窗 ---------- */
+.radar {
+	position: relative;
+	width: 300rpx;
+	height: 300rpx;
+	margin: 20rpx auto 0;
+	border: 2rpx solid rgba(53, 240, 208, 0.35);
+	border-radius: 50%;
+	box-shadow: 0 0 30rpx rgba(53, 240, 208, 0.12);
+}
+
+.radar::before {
+	content: '';
+	position: absolute;
+	inset: 22%;
+	border: 2rpx solid rgba(53, 240, 208, 0.22);
+	border-radius: 50%;
+}
+
+.radar::after {
+	content: '';
+	position: absolute;
+	inset: 44%;
+	border: 2rpx solid rgba(53, 240, 208, 0.18);
+	border-radius: 50%;
+}
+
+.radar-line-h {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 50%;
+	height: 2rpx;
+	background-color: rgba(53, 240, 208, 0.16);
+}
+
+.radar-line-v {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 50%;
+	width: 2rpx;
+	background-color: rgba(53, 240, 208, 0.16);
+}
+
+.radar-sweep {
+	position: absolute;
+	inset: 0;
+	border-radius: 50%;
+	overflow: hidden;
+}
+
+.radar-sweep::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 50% 100%);
+	background-color: rgba(53, 240, 208, 0.16);
+	animation: sweep 2.8s linear infinite;
+}
+
+@keyframes sweep {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.radar-core {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.radar-v {
+	font-size: 30rpx;
+	font-weight: 600;
+	letter-spacing: 4rpx;
+	color: #35f0d0;
+}
+
+.radar-h {
+	margin-top: 6rpx;
+	font-size: 18rpx;
+	letter-spacing: 2rpx;
+	color: #5e8c88;
+}
+
+/* ---------- 标题 ---------- */
+.head {
+	margin-top: 30rpx;
+	text-align: center;
+}
+
+.title {
+	font-size: 40rpx;
+	font-weight: 600;
+	letter-spacing: 6rpx;
+	color: #d6fdf6;
+	text-shadow: 0 0 16rpx rgba(53, 240, 208, 0.4);
+}
+
+.lead {
+	margin-top: 12rpx;
+	font-size: 22rpx;
+	letter-spacing: 2rpx;
+	color: #5e8c88;
+}
+
+/* ---------- 输入槽（四角切角 + 角标） ---------- */
+.slots {
+	margin-top: 32rpx;
+}
+
+.slot {
+	position: relative;
+	padding: 20rpx 28rpx;
+	border: 2rpx solid rgba(53, 240, 208, 0.32);
+	clip-path: polygon(16rpx 0, 100% 0, 100% calc(100% - 16rpx), calc(100% - 16rpx) 100%, 0 100%, 0 16rpx);
+	background-color: rgba(53, 240, 208, 0.05);
+	transition: box-shadow 200ms ease, border-color 200ms ease;
+}
+
+.slot + .slot {
+	margin-top: 20rpx;
+}
+
+.slot.active {
+	border-color: #35f0d0;
+	box-shadow: 0 0 0 2rpx rgba(53, 240, 208, 0.2), 0 0 24rpx rgba(53, 240, 208, 0.28);
+}
+
+.slot.error {
+	border-color: #ff5c00;
+	box-shadow: 0 0 0 2rpx rgba(255, 92, 0, 0.2), 0 0 24rpx rgba(255, 92, 0, 0.28);
+}
+
+.slot-tag {
+	position: absolute;
+	top: -14rpx;
+	left: 28rpx;
+	padding: 0 10rpx;
+	font-size: 18rpx;
+	letter-spacing: 2rpx;
+	color: #35f0d0;
+	background-color: #05121a;
+}
+
+.slot-main {
+	display: flex;
+	align-items: center;
+}
+
+.slot-label {
+	font-size: 22rpx;
+	letter-spacing: 1rpx;
+	color: #5e8c88;
+}
+
+.input {
+	flex: 1;
+	height: 56rpx;
+	margin-left: 16rpx;
+	font-size: 26rpx;
+	letter-spacing: 1rpx;
+	color: #d6fdf6;
+}
+
+.input-num {
+	font-variant-numeric: tabular-nums;
+}
+
+.ph {
+	color: rgba(94, 140, 136, 0.7);
+}
+
+.eye,
+.code {
+	flex: none;
+	margin-left: 16rpx;
+	font-size: 22rpx;
+	letter-spacing: 2rpx;
+	color: #35f0d0;
+}
+
+.code.off {
+	color: #5e8c88;
+}
+
+.err {
+	display: block;
+	margin-top: 10rpx;
+	font-size: 20rpx;
+	letter-spacing: 1rpx;
+	color: #ff5c00;
+}
+
+/* ---------- 辅助行 ---------- */
+.row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 24rpx;
+}
+
+.check {
+	display: flex;
+	align-items: center;
+}
+
+.check-box {
+	position: relative;
+	width: 34rpx;
+	height: 34rpx;
+	margin-right: 12rpx;
+	border: 2rpx solid rgba(53, 240, 208, 0.5);
+	box-sizing: border-box;
+}
+
+.check-box.on {
+	background-color: rgba(53, 240, 208, 0.18);
+}
+
+.check-box.on .check-tick {
+	position: absolute;
+	left: 8rpx;
+	top: 4rpx;
+	width: 10rpx;
+	height: 18rpx;
+	border-right: 3rpx solid #35f0d0;
+	border-bottom: 3rpx solid #35f0d0;
+	transform: rotate(40deg);
+}
+
+.check-txt {
+	font-size: 22rpx;
+	letter-spacing: 1rpx;
+	color: #5e8c88;
+}
+
+.link {
+	font-size: 22rpx;
+	letter-spacing: 1rpx;
+	color: #35f0d0;
+}
+
+.link-soft {
+	color: #5e8c88;
+}
+
+/* ---------- 滑动授权滑轨 ---------- */
+.slider-wrap {
+	margin-top: 36rpx;
+}
+
+.track {
+	position: relative;
+	display: flex;
+	align-items: center;
+	height: 96rpx;
+	border: 2rpx solid rgba(53, 240, 208, 0.4);
+	clip-path: polygon(16rpx 0, 100% 0, 100% calc(100% - 16rpx), calc(100% - 16rpx) 100%, 0 100%, 0 16rpx);
+	background-color: rgba(53, 240, 208, 0.04);
+	overflow: hidden;
+}
+
+.track-fill {
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	background-color: rgba(53, 240, 208, 0.18);
+}
+
+.track-txt {
+	position: absolute;
+	left: 0;
+	right: 0;
+	text-align: center;
+	font-size: 22rpx;
+	letter-spacing: 3rpx;
+	color: #5e8c88;
+	transition: opacity 200ms ease;
+}
+
+.track-txt.gone {
+	opacity: 0;
+}
+
+.knob {
+	position: relative;
+	z-index: 2;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 92rpx;
+	height: 92rpx;
+	margin-left: 4rpx;
+	background-color: #35f0d0;
+	clip-path: polygon(10rpx 0, 100% 0, 100% calc(100% - 10rpx), calc(100% - 10rpx) 100%, 0 100%, 0 10rpx);
+	box-shadow: 0 0 20rpx rgba(53, 240, 208, 0.4);
+	transition: transform 120ms ease-out;
+}
+
+.knob-arrow {
+	font-size: 34rpx;
+	font-weight: 700;
+	color: #05121a;
+}
+
+/* ---------- 页脚 ---------- */
+.foot {
+	margin-top: 28rpx;
+	text-align: center;
+}
+
+.foot-row {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 22rpx;
+	letter-spacing: 1rpx;
+	color: #5e8c88;
+}
+
+.foot-row .link {
+	margin-left: 10rpx;
+}
+
+.copy {
+	margin-top: 12rpx;
+	font-size: 18rpx;
+	letter-spacing: 2rpx;
+	color: rgba(94, 140, 136, 0.6);
+}
+
+/* ---------- 确认按钮（注册 / 找回 / 验证码页使用） ---------- */
+.btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 96rpx;
+	margin-top: 36rpx;
+	border: 2rpx solid #35f0d0;
+	clip-path: polygon(16rpx 0, 100% 0, 100% calc(100% - 16rpx), calc(100% - 16rpx) 100%, 0 100%, 0 16rpx);
+	background-color: rgba(53, 240, 208, 0.10);
+	font-size: 26rpx;
+	letter-spacing: 4rpx;
+	color: #35f0d0;
+	box-shadow: 0 0 18rpx rgba(53, 240, 208, 0.16);
+}
+
+.btn:active {
+	background-color: #35f0d0;
+	color: #05121a;
+}

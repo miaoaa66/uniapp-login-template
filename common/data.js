@@ -629,5 +629,20 @@ export default {
 			path: "/pages/login126/login",
 			tags: ["瑞士", "网格", "极简", "登录", "注册", "密码", "验证码", "手机号", "邮箱"]
 		},
+		{
+			cover: require('../static/cover/login127_cover.png'),
+			path: "/pages/login127/login",
+			tags: ["杂志", "编辑", "登录", "注册", "密码", "验证码", "手机号", "邮箱"]
+		},
+		{
+			cover: require('../static/cover/login128_cover.png'),
+			path: "/pages/login128/login",
+			tags: ["粘土拟态", "工坊", "登录", "注册", "密码", "验证码", "手机号", "邮箱"]
+		},
+		{
+			cover: require('../static/cover/login129_cover.png'),
+			path: "/pages/login129/login",
+			tags: ["HUD", "全息", "登录", "注册", "密码", "验证码", "手机号", "邮箱"]
+		},
 	]
 }

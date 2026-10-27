@@ -1368,6 +1368,141 @@
 				"navigationStyle": "custom",
 				"navigationBarTitleText": "瑞士网格 · 找回密码"
 			}
+		},
+		{
+			"path": "pages/login127/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "文学季刊 · 登录",
+				"navigationBarBackgroundColor": "#faf7f2",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/login127/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "文学季刊 · 读者登记",
+				"navigationBarBackgroundColor": "#faf7f2",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/login127/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "文学季刊 · 找回口令",
+				"navigationBarBackgroundColor": "#faf7f2",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/login127/phone-login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "文学季刊 · 短信凭证",
+				"navigationBarBackgroundColor": "#faf7f2",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/login127/email-login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "文学季刊 · 邮件凭证",
+				"navigationBarBackgroundColor": "#faf7f2",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/login128/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "黏土工坊 · 登录",
+				"navigationBarBackgroundColor": "#fff5f0",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/login128/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "黏土工坊 · 分步注册",
+				"navigationBarBackgroundColor": "#fff5f0",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/login128/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "黏土工坊 · 找回密码",
+				"navigationBarBackgroundColor": "#fff5f0",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/login128/phone-login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "黏土工坊 · 手机登录",
+				"navigationBarBackgroundColor": "#fff5f0",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/login128/email-login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "黏土工坊 · 邮箱登录",
+				"navigationBarBackgroundColor": "#fff5f0",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/login129/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "全息舷窗 · 登录",
+				"navigationBarBackgroundColor": "#05121a",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/login129/register",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "全息舷窗 · 登记乘员",
+				"navigationBarBackgroundColor": "#05121a",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/login129/forget",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "全息舷窗 · 重设口令",
+				"navigationBarBackgroundColor": "#05121a",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/login129/phone-login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "全息舷窗 · 短信登录",
+				"navigationBarBackgroundColor": "#05121a",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/login129/email-login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "全息舷窗 · 邮箱登录",
+				"navigationBarBackgroundColor": "#05121a",
+				"navigationBarTextStyle": "white"
+			}
 		}
 	],
 	"globalStyle": {
