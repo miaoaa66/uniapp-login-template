@@ -1,25 +1,26 @@
 /* ==========================================================================
- * 主题 06 · 粘土拟态 CLAYMORPHISM —— 「黏土工坊 CLAY STUDIO」
+ * 主题 06 · 粘土拟态 CLAYMORPHISM —— 「果冻托盘 JELLY TRAY」v2
  * pages/login128 —— 登录 / 注册 / 找回密码 / 手机号验证码登录 / 邮箱验证码登录 五页共用
  *
- * 独特布局与操作逻辑：
- *   1. 顶部「黏土工作台」：方形黏土 LOGO + 工坊铭牌；背景糖果色块错落。
- *   2. 注册采用「分步捏合」三步：① 捏身份（学生/创作者/访客黏土单选块）→
- *      ② 填信息 → ③ 完成；顶部三个黏土进度球随步骤亮起/回弹。
- *   3. 主按钮为弹性按压交互：按下下沉 6rpx 并加深内阴影，松手回弹；
- *      身份选择块按下亦有「被捏扁」的 scale 反馈。
+ * v2 全新布局与操作逻辑（区别于 v1 进度球分步捏合）：
+ *   1. 顶部「黏土托盘」：一只大圆盘凹槽里浮着果冻 LOGO 块，持续轻轻漂浮
+ *      （translateY 呼吸浮动 + 投影同步缩放），像托盘上的一块软糖。
+ *   2. 登录方式以三颗「黏土软糖芯片」横排切换（密码/短信/邮箱），选中的
+ *      芯片被按进托盘（内凹 + 深内阴影），未选中呈微凸起。
+ *   3. 主操作为「长按充能」：按住按钮，果冻浆从底部涨起充能，松手未满
+ *      则回落；充满 100% 触发登录，按钮全程保持 Q 弹 squash 形变。
+ *   4. 注册改为「横向滑动卡片」：三张圆角卡左右滑动切换步骤，
+ *      底部软糖圆点指示进度，支持手势滑动与按钮双通道翻页。
  *
- * 设计依据：docs/theme-styles.md 第 6 条
- *   色板    底 #FFF5F0 / 主块 #FF7B54 / 辅块 #6C63FF / 正文 #3D2C29 / 高光 #FFFFFF
- *   质感    圆角 28–32px；inset 双层阴影 + 同色外投影；色块间留 16px 缝
- *   动效    色块按 80ms 间隔「弹入」(scale 0.8→1.06→1)；按钮按下下沉并加深内阴影
- *
- * 性能约定：内阴影层数多，同时动画元素限制在 6 个以内。
+ * 设计依据：docs/theme-styles.md 第 6 条（配色在原基础上调整：
+ *   底 #EFF9F4 薄荷奶油 / 主块 #2EC4A0 薄荷 / 辅块 #FF9A85 蜜桃 /
+ *   点缀 #FFD66B 柠檬 / 正文 #3D3229 深可可）
+ * 性能约定：同时动画元素 ≤ 6 个；充能用 rAF-free 定时器，松手即停。
  * 栅格约定：1px = 2rpx，纵向间距取 8px（16rpx）整数倍。
  * ========================================================================== */
 
 page {
-	background-color: #fff5f0;
+	background-color: #eff9f4;
 }
 
 .page {
@@ -28,310 +29,302 @@ page {
 	overflow: hidden;
 	padding: 0 40rpx 32rpx;
 	box-sizing: border-box;
-	background-color: #fff5f0;
+	background-color: #eff9f4;
 	background-image:
-		radial-gradient(circle at 90% 6%, rgba(108, 99, 255, 0.16) 0%, rgba(108, 99, 255, 0) 40%),
-		radial-gradient(circle at 8% 30%, rgba(255, 123, 84, 0.18) 0%, rgba(255, 123, 84, 0) 44%),
-		radial-gradient(circle at 86% 90%, rgba(255, 209, 102, 0.20) 0%, rgba(255, 209, 102, 0) 42%);
+		radial-gradient(circle at 88% 4%, rgba(46, 196, 160, 0.16) 0%, rgba(46, 196, 160, 0) 42%),
+		radial-gradient(circle at 6% 26%, rgba(255, 154, 133, 0.20) 0%, rgba(255, 154, 133, 0) 44%),
+		radial-gradient(circle at 90% 88%, rgba(255, 214, 107, 0.22) 0%, rgba(255, 214, 107, 0) 40%);
 	font-family: "Baloo 2", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-	color: #3d2c29;
+	color: #3d3229;
 }
 
 /* ---------- 背景黏土色块（纯 CSS，0 图片） ---------- */
 .blob {
 	position: absolute;
-	z-index: 0;
+	border-radius: 42% 58% 55% 45% / 52% 44% 56% 48%;
 	pointer-events: none;
-	border-radius: 34% 66% 58% 42% / 52% 44% 56% 48%;
 }
 
 .blob-1 {
-	top: -140rpx;
-	right: -100rpx;
-	width: 300rpx;
-	height: 300rpx;
-	background-color: rgba(108, 99, 255, 0.20);
-	box-shadow: inset -12rpx -12rpx 24rpx rgba(0, 0, 0, 0.06),
-		inset 12rpx 12rpx 24rpx rgba(255, 255, 255, 0.4);
+	top: -80rpx;
+	left: -100rpx;
+	width: 360rpx;
+	height: 320rpx;
+	background-color: rgba(255, 154, 133, 0.28);
 }
 
 .blob-2 {
-	bottom: -140rpx;
-	left: -120rpx;
-	width: 340rpx;
-	height: 340rpx;
-	background-color: rgba(255, 123, 84, 0.20);
-	box-shadow: inset -12rpx -12rpx 24rpx rgba(0, 0, 0, 0.06),
-		inset 12rpx 12rpx 24rpx rgba(255, 255, 255, 0.4);
+	bottom: -60rpx;
+	right: -80rpx;
+	width: 320rpx;
+	height: 300rpx;
+	background-color: rgba(46, 196, 160, 0.18);
 }
 
 .content {
 	position: relative;
 	z-index: 2;
-}
-
-/* ---------- 工坊铭牌（方形黏土 LOGO） ---------- */
-.studio {
-	display: flex;
-	align-items: center;
 	padding-top: 40rpx;
 }
 
-.studio-logo {
+/* ---------- 弹入动画 ---------- */
+.pop {
+	animation: pop-in 420ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.pop-1 { animation-delay: 0ms; }
+.pop-2 { animation-delay: 80ms; }
+.pop-3 { animation-delay: 160ms; }
+.pop-4 { animation-delay: 240ms; }
+
+@keyframes pop-in {
+	from {
+		opacity: 0;
+		transform: scale(0.82) translateY(16rpx);
+	}
+	60% {
+		transform: scale(1.05) translateY(-4rpx);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1) translateY(0);
+	}
+}
+
+/* ---------- 黏土托盘 ---------- */
+.tray {
 	display: flex;
+	flex-direction: column;
 	align-items: center;
+	margin-bottom: 8rpx;
+}
+
+.tray-disc {
+	position: relative;
+	width: 200rpx;
+	height: 120rpx;
+	display: flex;
+	align-items: flex-start;
 	justify-content: center;
-	width: 108rpx;
-	height: 108rpx;
-	border-radius: 32rpx;
-	background-color: #ff7b54;
-	box-shadow: inset -10rpx -10rpx 22rpx rgba(0, 0, 0, 0.16),
-		inset 10rpx 10rpx 22rpx rgba(255, 255, 255, 0.45),
-		0 20rpx 40rpx rgba(255, 123, 84, 0.32);
+	/* 托盘凹槽：深内阴影 */
+	background: linear-gradient(180deg, #e2f2ea, #f6fdf9);
+	border-radius: 100rpx;
+	box-shadow:
+		inset 0 10rpx 18rpx rgba(61, 50, 41, 0.14),
+		inset 0 -4rpx 8rpx rgba(255, 255, 255, 0.9),
+		0 6rpx 14rpx rgba(61, 50, 41, 0.08);
 }
 
-.studio-logo::after {
+/* 果冻 LOGO：漂浮 + 投影同步 */
+.tray-jelly {
+	position: relative;
+	top: -28rpx;
+	width: 104rpx;
+	height: 104rpx;
+	background: linear-gradient(145deg, #4fd9b8, #2ec4a0);
+	border-radius: 38% 62% 56% 44% / 50% 46% 54% 50%;
+	box-shadow:
+		inset -8rpx -10rpx 16rpx rgba(255, 255, 255, 0.55),
+		inset 8rpx 8rpx 14rpx rgba(20, 120, 98, 0.35),
+		0 16rpx 22rpx rgba(46, 196, 160, 0.35);
+	animation: jelly-float 3s ease-in-out infinite;
+}
+
+.tray-jelly::after {
 	content: '';
-	width: 46rpx;
-	height: 46rpx;
-	border-radius: 16rpx;
-	background-color: #ffffff;
-	box-shadow: inset -6rpx -6rpx 12rpx rgba(0, 0, 0, 0.10),
-		inset 6rpx 6rpx 12rpx rgba(255, 255, 255, 0.9);
-	transform: rotate(45deg);
+	position: absolute;
+	right: 14rpx;
+	top: 12rpx;
+	width: 26rpx;
+	height: 18rpx;
+	background-color: rgba(255, 255, 255, 0.65);
+	border-radius: 50%;
+	transform: rotate(-24deg);
 }
 
-.studio-name {
-	margin-left: 24rpx;
-	font-size: 36rpx;
+@keyframes jelly-float {
+	0%, 100% {
+		transform: translateY(0) scale(1);
+	}
+	50% {
+		transform: translateY(12rpx) scale(1.04, 0.96);
+	}
+}
+
+/* 托盘下的软投影（与果冻同步缩放） */
+.tray-shadow {
+	width: 120rpx;
+	height: 20rpx;
+	margin-top: 14rpx;
+	background-color: rgba(61, 50, 41, 0.16);
+	border-radius: 50%;
+	filter: blur(6rpx);
+	animation: shadow-pulse 3s ease-in-out infinite;
+}
+
+@keyframes shadow-pulse {
+	0%, 100% {
+		transform: scaleX(1);
+		opacity: 1;
+	}
+	50% {
+		transform: scaleX(0.82);
+		opacity: 0.7;
+	}
+}
+
+.tray-name {
+	margin-top: 18rpx;
+	font-size: 40rpx;
 	font-weight: 800;
 	letter-spacing: 4rpx;
-	color: #3d2c29;
+	color: #3d3229;
 }
 
-.studio-sub {
-	margin-left: 24rpx;
-	margin-top: 4rpx;
+.tray-sub {
+	margin-top: 2rpx;
 	font-size: 20rpx;
-	letter-spacing: 2rpx;
-	color: rgba(61, 44, 41, 0.42);
+	letter-spacing: 4rpx;
+	color: rgba(61, 50, 41, 0.45);
 }
 
 /* ---------- 标题 ---------- */
 .head {
-	margin-top: 32rpx;
-	padding-left: 8rpx;
+	margin-top: 26rpx;
+	text-align: center;
 }
 
 .head-title {
-	font-size: 56rpx;
+	font-size: 48rpx;
 	font-weight: 800;
-	line-height: 1.25;
-	letter-spacing: 2rpx;
-	color: #3d2c29;
+	letter-spacing: 3rpx;
+	color: #3d3229;
 }
 
 .head-sub {
-	margin-top: 12rpx;
+	margin-top: 10rpx;
 	font-size: 24rpx;
 	line-height: 1.6;
-	color: rgba(61, 44, 41, 0.52);
+	color: rgba(61, 50, 41, 0.55);
 }
 
-/* ---------- 黏土进度球（注册分步） ---------- */
-.steps {
+/* ---------- 黏土软糖芯片（模块切换） ---------- */
+.chips {
 	display: flex;
-	align-items: center;
+	justify-content: center;
 	margin-top: 30rpx;
 }
 
-.step-dot {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 72rpx;
-	height: 72rpx;
-	border-radius: 50%;
-	font-size: 28rpx;
-	font-weight: 800;
-	color: #ffffff;
-	background-color: #ffd9c9;
-	box-shadow: inset -8rpx -8rpx 16rpx rgba(0, 0, 0, 0.10),
-		inset 8rpx 8rpx 16rpx rgba(255, 255, 255, 0.9);
+.chip {
+	padding: 16rpx 34rpx;
+	margin: 0 12rpx;
+	font-size: 26rpx;
+	font-weight: 700;
+	letter-spacing: 2rpx;
+	color: rgba(61, 50, 41, 0.6);
+	background: linear-gradient(180deg, #ffffff, #eef8f2);
+	border-radius: 40rpx;
+	box-shadow:
+		0 8rpx 14rpx rgba(61, 50, 41, 0.10),
+		inset 0 -4rpx 8rpx rgba(61, 50, 41, 0.06);
+	transition: all 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.step-dot.on {
-	background-color: #6c63ff;
-	box-shadow: inset -8rpx -8rpx 16rpx rgba(0, 0, 0, 0.18),
-		inset 8rpx 8rpx 16rpx rgba(255, 255, 255, 0.3),
-		0 12rpx 24rpx rgba(108, 99, 255, 0.32);
-	animation: clay-pop 420ms cubic-bezier(0.34, 1.4, 0.64, 1) both;
+.chip:active {
+	transform: scale(0.94);
 }
 
-.step-dot.done {
-	background-color: #ff7b54;
+/* 选中：被按进托盘（内凹） */
+.chip.on {
+	color: #1d7a63;
+	background: linear-gradient(180deg, #dff3ea, #eefaf4);
+	box-shadow:
+		inset 0 6rpx 12rpx rgba(46, 196, 160, 0.35),
+		inset 0 -2rpx 6rpx rgba(255, 255, 255, 0.9);
+	transform: translateY(4rpx) scale(0.98);
 }
 
-.step-bar {
-	flex: 1;
-	height: 12rpx;
-	margin: 0 16rpx;
-	border-radius: 999rpx;
-	background-color: rgba(61, 44, 41, 0.10);
-	box-shadow: inset 0 2rpx 4rpx rgba(0, 0, 0, 0.08);
-}
-
-.step-bar.fill {
-	background-color: #ff7b54;
-}
-
-.step-tip {
-	margin-top: 14rpx;
-	font-size: 22rpx;
-	font-weight: 500;
-	color: rgba(61, 44, 41, 0.5);
-}
-
-/* ---------- 黏土卡片 ---------- */
+/* ---------- 卡片容器 ---------- */
 .card {
-	margin-top: 28rpx;
-	padding: 30rpx 30rpx 26rpx;
-	border-radius: 64rpx;
-	background-color: #fffaf6;
-	box-shadow: inset -14rpx -14rpx 28rpx rgba(0, 0, 0, 0.10),
-		inset 14rpx 14rpx 28rpx rgba(255, 255, 255, 0.9),
-		0 28rpx 56rpx rgba(255, 123, 84, 0.20);
+	margin-top: 30rpx;
+	padding: 40rpx 36rpx;
+	background: linear-gradient(180deg, #fdfffe, #f2fbf7);
+	border-radius: 48rpx;
+	box-shadow:
+		inset 0 -8rpx 16rpx rgba(255, 255, 255, 0.9),
+		inset 0 4rpx 10rpx rgba(61, 50, 41, 0.05),
+		0 18rpx 32rpx rgba(61, 50, 41, 0.10);
 }
 
-.field + .field {
-	margin-top: 20rpx;
+/* ---------- 凹陷软槽输入框 ---------- */
+.field {
+	margin-bottom: 28rpx;
 }
 
 .field-label {
-	font-size: 22rpx;
-	font-weight: 500;
-	letter-spacing: 1rpx;
-	color: rgba(61, 44, 41, 0.55);
+	display: block;
+	margin-bottom: 12rpx;
+	font-size: 24rpx;
+	font-weight: 700;
+	letter-spacing: 2rpx;
+	color: rgba(61, 50, 41, 0.65);
 }
 
 .field-box {
 	display: flex;
 	align-items: center;
-	margin-top: 12rpx;
-	height: 100rpx;
+	height: 92rpx;
 	padding: 0 28rpx;
-	border-radius: 40rpx;
-	background-color: #fff5f0;
-	box-shadow: inset -10rpx -10rpx 20rpx rgba(0, 0, 0, 0.10),
-		inset 10rpx 10rpx 20rpx rgba(255, 255, 255, 0.95);
-	box-sizing: border-box;
-	transition: transform 160ms ease-out;
+	background: linear-gradient(180deg, #e6f4ec, #f4fcf8);
+	border-radius: 28rpx;
+	box-shadow:
+		inset 0 6rpx 12rpx rgba(61, 50, 41, 0.12),
+		inset 0 -3rpx 6rpx rgba(255, 255, 255, 0.9);
+	transition: box-shadow 200ms ease, background 200ms ease;
 }
 
+/* 聚焦：凹槽底部透出薄荷光 */
 .field-box.active {
-	background-color: #ffffff;
-	box-shadow: inset -8rpx -8rpx 16rpx rgba(0, 0, 0, 0.08),
-		inset 8rpx 8rpx 16rpx rgba(255, 255, 255, 1),
-		0 0 0 6rpx rgba(255, 123, 84, 0.18);
-	transform: scale(1.015);
-}
-
-.field-prefix {
-	flex: none;
-	margin-right: 18rpx;
-	padding-right: 18rpx;
-	font-size: 26rpx;
-	font-weight: 800;
-	color: #6c63ff;
-	border-right: 2rpx solid rgba(108, 99, 255, 0.24);
+	background: linear-gradient(180deg, #e0f5eb, #f0fbf6);
+	box-shadow:
+		inset 0 6rpx 12rpx rgba(61, 50, 41, 0.14),
+		inset 0 -3rpx 6rpx rgba(255, 255, 255, 0.9),
+		0 0 0 3rpx rgba(46, 196, 160, 0.35);
 }
 
 .input {
 	flex: 1;
+	min-width: 0;
 	height: 100%;
-	font-size: 28rpx;
-	font-weight: 500;
-	color: #3d2c29;
+	font-size: 30rpx;
+	letter-spacing: 1rpx;
+	color: #3d3229;
+	background-color: transparent;
 }
 
 .ph {
-	color: rgba(61, 44, 41, 0.3);
+	color: rgba(61, 50, 41, 0.35);
 }
 
-.eye {
+.field-prefix {
 	flex: none;
-	padding-left: 20rpx;
-	font-size: 22rpx;
-	font-weight: 800;
-	color: #ff7b54;
+	margin-right: 14rpx;
+	font-size: 28rpx;
+	font-weight: 700;
+	color: #2ec4a0;
 }
 
+.eye,
 .code-btn {
 	flex: none;
-	margin-left: 16rpx;
-	padding: 12rpx 24rpx;
-	border-radius: 999rpx;
-	font-size: 22rpx;
-	font-weight: 800;
-	color: #ffffff;
-	background-color: #ff7b54;
-	box-shadow: inset -6rpx -6rpx 12rpx rgba(0, 0, 0, 0.16),
-		inset 6rpx 6rpx 12rpx rgba(255, 255, 255, 0.35),
-		0 10rpx 20rpx rgba(255, 123, 84, 0.32);
+	margin-left: 14rpx;
+	font-size: 24rpx;
+	font-weight: 700;
+	color: #2ec4a0;
 }
 
 .code-btn.dim {
-	color: rgba(61, 44, 41, 0.4);
-	background-color: #fff5f0;
-	box-shadow: inset -8rpx -8rpx 16rpx rgba(0, 0, 0, 0.10),
-		inset 8rpx 8rpx 16rpx rgba(255, 255, 255, 0.9);
-}
-
-/* ---------- 身份选择黏土块（注册第一步） ---------- */
-.identity-row {
-	display: flex;
-	justify-content: space-between;
-	margin-top: 20rpx;
-}
-
-.identity {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	width: 31%;
-	height: 160rpx;
-	border-radius: 40rpx;
-	background-color: #fff5f0;
-	box-shadow: inset -10rpx -10rpx 20rpx rgba(0, 0, 0, 0.10),
-		inset 10rpx 10rpx 20rpx rgba(255, 255, 255, 0.95);
-	transition: transform 160ms cubic-bezier(0.34, 1.4, 0.64, 1);
-}
-
-.identity:active {
-	transform: scale(0.94);
-}
-
-.identity.on {
-	background-color: #6c63ff;
-	box-shadow: inset -8rpx -8rpx 16rpx rgba(0, 0, 0, 0.18),
-		inset 8rpx 8rpx 16rpx rgba(255, 255, 255, 0.3),
-		0 14rpx 26rpx rgba(108, 99, 255, 0.32);
-}
-
-.identity-emoji {
-	font-size: 52rpx;
-}
-
-.identity-name {
-	margin-top: 10rpx;
-	font-size: 24rpx;
-	font-weight: 800;
-	color: #3d2c29;
-}
-
-.identity.on .identity-name {
-	color: #ffffff;
+	color: rgba(61, 50, 41, 0.4);
 }
 
 /* ---------- 辅助行 ---------- */
@@ -339,105 +332,190 @@ page {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	margin-top: 22rpx;
+	margin-top: 4rpx;
+	margin-bottom: 28rpx;
 }
 
 .remember {
 	display: flex;
 	align-items: center;
-	font-size: 22rpx;
-	color: rgba(61, 44, 41, 0.6);
+	font-size: 24rpx;
+	color: rgba(61, 50, 41, 0.6);
 }
 
+/* 软糖复选块 */
 .checkbox {
 	position: relative;
-	width: 32rpx;
-	height: 32rpx;
+	flex: none;
+	width: 40rpx;
+	height: 40rpx;
 	margin-right: 12rpx;
-	border-radius: 12rpx;
-	background-color: #fff5f0;
-	box-shadow: inset -6rpx -6rpx 12rpx rgba(0, 0, 0, 0.12),
-		inset 6rpx 6rpx 12rpx rgba(255, 255, 255, 0.95);
-	box-sizing: border-box;
+	background: linear-gradient(180deg, #e6f4ec, #f4fcf8);
+	border-radius: 14rpx;
+	box-shadow:
+		inset 0 4rpx 8rpx rgba(61, 50, 41, 0.14),
+		inset 0 -2rpx 4rpx rgba(255, 255, 255, 0.9);
+	transition: all 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .checkbox.on {
-	background-color: #6c63ff;
-	box-shadow: inset -6rpx -6rpx 12rpx rgba(0, 0, 0, 0.18),
-		inset 6rpx 6rpx 12rpx rgba(255, 255, 255, 0.3);
+	background: linear-gradient(180deg, #4fd9b8, #2ec4a0);
+	box-shadow:
+		inset 0 -4rpx 8rpx rgba(20, 120, 98, 0.4),
+		0 4rpx 10rpx rgba(46, 196, 160, 0.4);
+	transform: scale(1.05);
 }
 
 .checkbox.on::after {
 	content: '';
 	position: absolute;
-	left: 10rpx;
-	top: 3rpx;
+	left: 12rpx;
+	top: 8rpx;
 	width: 10rpx;
 	height: 18rpx;
 	border-right: 4rpx solid #ffffff;
 	border-bottom: 4rpx solid #ffffff;
-	box-sizing: border-box;
 	transform: rotate(40deg);
 }
 
 .link {
-	font-size: 22rpx;
-	font-weight: 800;
-	color: #6c63ff;
+	font-size: 24rpx;
+	font-weight: 700;
+	color: #ff7a5f;
 }
 
-/* ---------- 主按钮（弹性按压） ---------- */
+/* ---------- 长按充能按钮 ---------- */
+.hold-btn {
+	position: relative;
+	height: 104rpx;
+	margin-top: 8rpx;
+	border-radius: 52rpx;
+	background: linear-gradient(180deg, #e6f4ec, #f4fcf8);
+	box-shadow:
+		inset 0 8rpx 16rpx rgba(61, 50, 41, 0.14),
+		inset 0 -4rpx 8rpx rgba(255, 255, 255, 0.9);
+	overflow: hidden;
+}
+
+/* 果冻浆充能层：宽度由脚本控制 */
+.hold-fill {
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	width: 0%;
+	background: linear-gradient(90deg, #4fd9b8, #2ec4a0);
+	border-radius: 52rpx;
+	transition: width 60ms linear;
+}
+
+/* 充能层上的高光泡泡 */
+.hold-fill::after {
+	content: '';
+	position: absolute;
+	right: 10rpx;
+	top: 12rpx;
+	width: 22rpx;
+	height: 14rpx;
+	background-color: rgba(255, 255, 255, 0.5);
+	border-radius: 50%;
+}
+
+.hold-btn.pressing {
+	transform: scale(0.97);
+}
+
+/* 充满时的 Q 弹抖动 */
+.hold-btn.charged {
+	animation: jelly-jump 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes jelly-jump {
+	0% { transform: scale(0.97, 0.97); }
+	40% { transform: scale(1.05, 0.94); }
+	70% { transform: scale(0.97, 1.04); }
+	100% { transform: scale(1, 1); }
+}
+
+.hold-text {
+	position: relative;
+	z-index: 2;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	font-size: 30rpx;
+	font-weight: 800;
+	letter-spacing: 4rpx;
+	color: rgba(61, 50, 41, 0.75);
+	transition: color 200ms ease;
+}
+
+.hold-text.on {
+	color: #ffffff;
+}
+
+/* 松手回落提示 */
+.hold-tip {
+	margin-top: 12rpx;
+	min-height: 32rpx;
+	text-align: center;
+	font-size: 20rpx;
+	letter-spacing: 1rpx;
+	color: rgba(255, 122, 95, 0.85);
+}
+
+/* ---------- 普通弹性按压按钮（非充能页用） ---------- */
 .submit {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	height: 100rpx;
-	margin-top: 26rpx;
-	border-radius: 999rpx;
-	background-color: #ff7b54;
-	box-shadow: inset -10rpx -10rpx 22rpx rgba(0, 0, 0, 0.18),
-		inset 10rpx 10rpx 22rpx rgba(255, 255, 255, 0.35),
-		0 20rpx 36rpx rgba(255, 123, 84, 0.36);
+	height: 104rpx;
+	margin-top: 8rpx;
+	background: linear-gradient(180deg, #4fd9b8, #2ec4a0);
+	border-radius: 52rpx;
+	box-shadow:
+		inset 0 -8rpx 12rpx rgba(20, 120, 98, 0.35),
+		inset 0 4rpx 8rpx rgba(255, 255, 255, 0.5),
+		0 12rpx 20rpx rgba(46, 196, 160, 0.35);
+	transition: transform 140ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .submit:active {
-	transform: translateY(6rpx);
-	box-shadow: inset -6rpx -6rpx 14rpx rgba(0, 0, 0, 0.26),
-		inset 6rpx 6rpx 14rpx rgba(255, 255, 255, 0.22),
-		0 8rpx 16rpx rgba(255, 123, 84, 0.30);
+	transform: translateY(6rpx) scale(0.98);
+	box-shadow:
+		inset 0 6rpx 12rpx rgba(20, 120, 98, 0.4),
+		0 4rpx 8rpx rgba(46, 196, 160, 0.3);
 }
 
 .submit-text {
-	font-size: 32rpx;
+	font-size: 30rpx;
 	font-weight: 800;
-	letter-spacing: 8rpx;
+	letter-spacing: 4rpx;
 	color: #ffffff;
 }
 
 .submit.plain {
-	background-color: #ffffff;
-	box-shadow: inset -10rpx -10rpx 22rpx rgba(0, 0, 0, 0.10),
-		inset 10rpx 10rpx 22rpx rgba(255, 255, 255, 0.95),
-		0 16rpx 30rpx rgba(108, 99, 255, 0.20);
+	background: linear-gradient(180deg, #ffffff, #eef8f2);
+	box-shadow:
+		0 8rpx 14rpx rgba(61, 50, 41, 0.10),
+		inset 0 -4rpx 8rpx rgba(61, 50, 41, 0.06);
 }
 
 .submit.plain .submit-text {
-	font-size: 26rpx;
-	letter-spacing: 2rpx;
-	color: #6c63ff;
+	color: rgba(61, 50, 41, 0.7);
 }
 
 /* ---------- 页脚 ---------- */
 .foot-link {
-	margin-top: 24rpx;
+	margin-top: 26rpx;
 	text-align: center;
 	font-size: 24rpx;
-	color: rgba(61, 44, 41, 0.55);
+	color: rgba(61, 50, 41, 0.55);
 }
 
 .foot-link .link {
-	margin-left: 8rpx;
-	font-size: 24rpx;
+	margin-left: 6rpx;
 }
 
 .agreement {
@@ -445,13 +523,20 @@ page {
 	align-items: flex-start;
 	margin-top: 22rpx;
 	font-size: 20rpx;
-	line-height: 1.6;
-	color: rgba(61, 44, 41, 0.5);
+	line-height: 1.7;
+	color: rgba(61, 50, 41, 0.55);
 }
 
 .agreement .checkbox {
-	flex: none;
-	margin-top: 0;
+	width: 34rpx;
+	height: 34rpx;
+	border-radius: 12rpx;
+	margin-top: 2rpx;
+}
+
+.agreement .checkbox.on::after {
+	left: 10rpx;
+	top: 6rpx;
 }
 
 .agreement .link {
@@ -459,45 +544,123 @@ page {
 }
 
 .foot-note {
-	margin-top: 18rpx;
+	margin-top: 22rpx;
 	text-align: center;
 	font-size: 18rpx;
-	letter-spacing: 1rpx;
-	color: rgba(61, 44, 41, 0.28);
+	letter-spacing: 2rpx;
+	color: rgba(61, 50, 41, 0.35);
 }
 
-/* ---------- 弹入动效（限制在 6 个元素以内） ---------- */
-@keyframes clay-pop {
-	0% {
-		opacity: 0;
-		transform: scale(0.8);
-	}
-	70% {
-		opacity: 1;
-		transform: scale(1.06);
-	}
-	100% {
-		opacity: 1;
-		transform: scale(1);
-	}
+/* ---------- 注册：横向滑动卡片 ---------- */
+.deck-wrap {
+	margin-top: 26rpx;
+	overflow: hidden;
+	border-radius: 48rpx;
+	box-shadow:
+		0 18rpx 32rpx rgba(61, 50, 41, 0.10);
 }
 
-.pop {
-	animation: clay-pop 420ms cubic-bezier(0.34, 1.4, 0.64, 1) both;
+.deck-track {
+	display: flex;
+	transition: transform 360ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.pop-1 {
-	animation-delay: 0ms;
+.deck-card {
+	flex: none;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 40rpx 36rpx;
+	background: linear-gradient(180deg, #fdfffe, #f2fbf7);
 }
 
-.pop-2 {
-	animation-delay: 80ms;
+/* 软糖圆点进度 */
+.dots {
+	display: flex;
+	justify-content: center;
+	margin-top: 26rpx;
 }
 
-.pop-3 {
-	animation-delay: 160ms;
+.dot {
+	width: 18rpx;
+	height: 18rpx;
+	margin: 0 8rpx;
+	background: linear-gradient(180deg, #e6f4ec, #f4fcf8);
+	border-radius: 50%;
+	box-shadow:
+		inset 0 3rpx 6rpx rgba(61, 50, 41, 0.14);
+	transition: all 240ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.pop-4 {
-	animation-delay: 240ms;
+.dot.on {
+	width: 40rpx;
+	border-radius: 12rpx;
+	background: linear-gradient(180deg, #4fd9b8, #2ec4a0);
+	box-shadow:
+		inset 0 -3rpx 6rpx rgba(20, 120, 98, 0.4),
+		0 4rpx 8rpx rgba(46, 196, 160, 0.4);
+}
+
+/* 身份软糖 */
+.identity-row {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 8rpx;
+}
+
+.identity {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 28rpx 0;
+	margin: 0 10rpx;
+	background: linear-gradient(180deg, #e6f4ec, #f4fcf8);
+	border-radius: 32rpx;
+	box-shadow:
+		inset 0 6rpx 12rpx rgba(61, 50, 41, 0.12),
+		inset 0 -3rpx 6rpx rgba(255, 255, 255, 0.9);
+	transition: all 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.identity:active {
+	transform: scale(0.93);
+}
+
+.identity.on {
+	background: linear-gradient(180deg, #ffd0c4, #ffc2b3);
+	box-shadow:
+		inset 0 -6rpx 10rpx rgba(224, 90, 60, 0.25),
+		inset 0 4rpx 8rpx rgba(255, 255, 255, 0.7),
+		0 8rpx 16rpx rgba(255, 154, 133, 0.4);
+	transform: scale(1.04);
+}
+
+.identity-emoji {
+	font-size: 56rpx;
+	line-height: 1.2;
+}
+
+.identity-name {
+	margin-top: 8rpx;
+	font-size: 24rpx;
+	font-weight: 700;
+	color: #3d3229;
+}
+
+/* 步骤提示 */
+.step-tip {
+	margin-top: 20rpx;
+	text-align: center;
+	font-size: 22rpx;
+	letter-spacing: 2rpx;
+	color: rgba(61, 50, 41, 0.5);
+}
+
+/* ---------- 错误提示 ---------- */
+.err {
+	display: block;
+	margin: -14rpx 0 22rpx;
+	padding-left: 8rpx;
+	font-size: 22rpx;
+	color: #ff7a5f;
 }

@@ -1,35 +1,30 @@
 <template>
 	<view class="page">
-		<text class="spine">纸页之间 · 文学季刊</text>
+		<text class="watermark">127</text>
 
-		<view class="masthead">
-			<view class="rule-double"></view>
-			<view class="kicker">
-				<text class="kicker-cn">VOL.127 · 登录特辑</text>
-				<text class="kicker-en">SIGN-IN SPECIAL</text>
+		<view class="extra">
+			<view class="extra-stamp">季</view>
+			<view class="extra-txt">
+				<text class="extra-cn">THE EXTRA · 第 127 期 · 号外</text>
+				<text class="extra-en">Extra Issue, Ink &amp; Print</text>
 			</view>
-			<view class="rule-thin"></view>
 		</view>
 
 		<view class="head">
-			<view class="title">欢迎回到，纸页之间</view>
-			<view class="deck">请以你的署名与口令，续写这一期的篇章。所有登录记录，均按档案规范归档留存。</view>
+			<view class="title">纸上重逢</view>
+			<view class="deck">在署名处落笔，在印鉴处盖章。油墨未干之前，这一页仍然属于你。</view>
 		</view>
 
-		<view class="toc">
-			<view v-for="(item, i) in chapters" :key="i" class="toc-item" :class="{ on: i === current }" @click="goChapter(item)">
-				<text class="toc-idx">{{ item.idx }}</text>{{ item.name }}
-			</view>
+		<view class="bookmarks">
+			<view v-for="(item, i) in bookmarks" :key="i" class="bm" :class="{ on: i === current }" @click="go(item)">{{ item.name }}</view>
 		</view>
 
 		<view class="form">
 			<view class="field">
-				<view class="label">
-					<text>署名</text>
-					<text class="label-en">ACCOUNT</text>
-				</view>
 				<view class="field-box" :class="{ active: focusField === 'account' }">
 					<view class="field-line">
+						<text class="field-name">署名：</text>
+						<text class="field-en">ACCOUNT</text>
 						<input class="input" v-model="account" placeholder="手机号 / 邮箱 / 工号" placeholder-class="ph" maxlength="40"
 							@focus="focusField = 'account'" @blur="focusField = ''" />
 					</view>
@@ -37,12 +32,10 @@
 			</view>
 
 			<view class="field">
-				<view class="label">
-					<text>口令</text>
-					<text class="label-en">PASSWORD</text>
-				</view>
 				<view class="field-box" :class="{ active: focusField === 'password' }">
 					<view class="field-line">
+						<text class="field-name">口令：</text>
+						<text class="field-en">PASSWORD</text>
 						<input class="input" v-model="password" :password="!showPassword" placeholder="请输入登录口令" placeholder-class="ph" maxlength="20"
 							@focus="focusField = 'password'" @blur="focusField = ''" />
 						<text class="eye" @click="showPassword = !showPassword">{{ showPassword ? '隐去' : '显露' }}</text>
@@ -55,23 +48,26 @@
 					<view class="checkbox" :class="{ on: remember }"></view>
 					<text>记住此设备</text>
 				</view>
-				<text class="link" @click="goChapter(chapters[4])">忘记口令？</text>
+				<text class="link" @click="go(bookmarks[4])">口令遗失？登报挂失</text>
 			</view>
 
-			<view class="submit" @click="submit">
-				<text class="submit-text">签 署 登 录</text>
+			<view class="stamp-wrap">
+				<view class="stamp-btn" :class="{ stamping: stamping }" @click="submit">
+					<text class="stamp-char">盖印</text>
+				</view>
+				<text class="stamp-legend">STAMP TO SIGN IN</text>
 			</view>
 
 			<view class="foot-link">
-				尚未订阅？<text class="link" @click="goChapter(chapters[3])">登记为读者</text>
+				尚未登记？<text class="link" @click="go(bookmarks[3])">填写读者登记表</text>
 			</view>
 
 			<view class="agreement">
 				<view class="checkbox" :class="{ on: agreed }" @click="agreed = !agreed"></view>
-				<text>本人已阅读并同意<text class="link">《读者协议》</text>与<text class="link">《信息保密条款》</text></text>
+				<text>本人已阅读并同意<text class="link">《读者协议》</text>与<text class="link">《信息保密条款》</text>，盖章即视为签署。</text>
 			</view>
 
-			<view class="foot-note">THE QUARTERLY · 文学季刊编辑部</view>
+			<view class="foot-note">THE EXTRA · 特刊编辑部承印</view>
 		</view>
 	</view>
 </template>
@@ -80,12 +76,12 @@
 	export default {
 		data() {
 			return {
-				chapters: [
-					{ idx: '01', name: '密码登录', path: '/pages/login127/login' },
-					{ idx: '02', name: '手机验证码', path: '/pages/login127/phone-login' },
-					{ idx: '03', name: '邮箱验证码', path: '/pages/login127/email-login' },
-					{ idx: '04', name: '注册账号', path: '/pages/login127/register' },
-					{ idx: '05', name: '找回密码', path: '/pages/login127/forget' }
+				bookmarks: [
+					{ name: '密码', path: '/pages/login127/login' },
+					{ name: '短信', path: '/pages/login127/phone-login' },
+					{ name: '邮箱', path: '/pages/login127/email-login' },
+					{ name: '注册', path: '/pages/login127/register' },
+					{ name: '挂失', path: '/pages/login127/forget' }
 				],
 				current: 0,
 				account: '',
@@ -93,7 +89,8 @@
 				showPassword: false,
 				remember: true,
 				agreed: false,
-				focusField: ''
+				focusField: '',
+				stamping: false
 			}
 		},
 		methods: {
@@ -104,19 +101,24 @@
 				})
 			},
 
-			goChapter(item) {
-				if (item.idx === '01') return
+			go(item) {
+				if (item.path === '/pages/login127/login') return
 				uni.redirectTo({
 					url: item.path
 				})
 			},
 
 			submit() {
+				if (this.stamping) return
 				if (!this.agreed) return this.toast('请先阅读并同意读者协议')
-				if (!this.account) return this.toast('请输入署名')
+				if (!this.account) return this.toast('请在署名处落笔')
 				if (!this.password) return this.toast('请输入登录口令')
+				this.stamping = true
 				// TODO: 调用后端登录接口，成功后跳转首页
-				this.toast('登录成功')
+				setTimeout(() => {
+					this.stamping = false
+					this.toast('盖章生效 · 登录成功')
+				}, 600)
 			}
 		}
 	}

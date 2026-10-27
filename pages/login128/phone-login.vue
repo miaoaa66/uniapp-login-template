@@ -4,17 +4,24 @@
 		<view class="blob blob-2"></view>
 
 		<view class="content">
-			<view class="studio pop pop-1">
-				<view class="studio-logo"></view>
-				<view>
-					<view class="studio-name">黏土工坊</view>
-					<view class="studio-sub">CLAY STUDIO</view>
+			<view class="tray pop pop-1">
+				<view class="tray-disc">
+					<view class="tray-jelly"></view>
 				</view>
+				<view class="tray-shadow"></view>
+				<view class="tray-name">果冻工坊</view>
+				<view class="tray-sub">JELLY TRAY</view>
 			</view>
 
 			<view class="head pop pop-2">
-				<view class="head-title">手机号登录</view>
-				<view class="head-sub">未注册的手机号将自动为你创建一个账号。</view>
+				<view class="head-title">短信开门</view>
+				<view class="head-sub">未注册的手机号将自动获得一颗账号软糖。</view>
+			</view>
+
+			<view class="chips pop pop-3">
+				<view class="chip" @click="goPwd">密码</view>
+				<view class="chip on">短信</view>
+				<view class="chip" @click="goEmail">邮箱</view>
 			</view>
 
 			<view class="card pop pop-3">
@@ -30,16 +37,16 @@
 				<view class="field">
 					<text class="field-label">短信验证码</text>
 					<view class="field-box" :class="{ active: focusField === 'code' }">
-						<input class="input" v-model="code" type="number" placeholder="请输入 6 位验证码" placeholder-class="ph" maxlength="6"
+						<input class="input" v-model="code" type="number" placeholder="6 位验证码" placeholder-class="ph" maxlength="6"
 							@focus="focusField = 'code'" @blur="focusField = ''" />
 						<text class="code-btn" :class="{ dim: countdown > 0 }" @click="sendCode">
-							{{ countdown > 0 ? countdown + 's' : '获取验证码' }}
+							{{ countdown > 0 ? countdown + 's' : '发送' }}
 						</text>
 					</view>
 				</view>
 
 				<view class="submit" @click="submit">
-					<text class="submit-text">登 录</text>
+					<text class="submit-text">验证登录</text>
 				</view>
 
 				<view class="agreement">
@@ -48,11 +55,7 @@
 				</view>
 			</view>
 
-			<view class="submit plain pop pop-4" @click="goEmailLogin">
-				<text class="submit-text">邮箱验证码登录</text>
-			</view>
-
-			<view class="foot-note pop pop-4">© 2026 CLAY STUDIO · 黏土工坊</view>
+			<view class="foot-note pop pop-4">© 2026 JELLY TRAY · 果冻工坊</view>
 		</view>
 	</view>
 </template>
@@ -61,9 +64,9 @@
 	export default {
 		data() {
 			return {
-				agreed: false,
 				phone: '',
 				code: '',
+				agreed: false,
 				focusField: '',
 				countdown: 0,
 				timer: null
@@ -80,8 +83,18 @@
 				})
 			},
 
-			isPhone(value) {
-				return /^1\d{10}$/.test(value)
+			isPhone(v) {
+				return /^1\d{10}$/.test(v)
+			},
+
+			goPwd() {
+				uni.navigateBack()
+			},
+
+			goEmail() {
+				uni.navigateTo({
+					url: '/pages/login128/email-login'
+				})
 			},
 
 			sendCode() {
@@ -114,16 +127,6 @@
 				if (!this.code) return this.toast('请输入短信验证码')
 				// TODO: 调用后端验证码登录接口，成功后跳转首页
 				this.toast('登录成功')
-			},
-
-			goLogin() {
-				uni.navigateBack()
-			},
-
-			goEmailLogin() {
-				uni.redirectTo({
-					url: '/pages/login128/email-login'
-				})
 			}
 		}
 	}

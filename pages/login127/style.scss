@@ -1,99 +1,108 @@
 /* ==========================================================================
- * 主题 03 · 杂志编辑风 EDITORIAL —— 「文学季刊 THE QUARTERLY」
+ * 主题 03 · 杂志编辑风 EDITORIAL —— 「特刊号外 THE EXTRA」v2
  * pages/login127 —— 登录 / 注册 / 找回密码 / 手机号验证码登录 / 邮箱验证码登录 五页共用
  *
- * 独特布局与操作逻辑：
- *   1. 把登录做成一本文艺季刊：眉标双细线夹「期号 + 特辑」；右侧竖排刊名作装饰；
- *      大衬线标题 clip-path 自下而上揭示；正文副标首行缩进。
- *   2. 登录方式以「目录 / CONTENTS」章节条目呈现（01 密码 / 02 手机 / 03 邮箱 /
- *      04 注册 / 05 找回），当前页高亮为「● 正在阅读」，像翻阅一本杂志。
- *   3. 输入框为「下划线式」：1px 细线，聚焦时由左向右生长并转为朱红强调色。
+ * v2 全新布局与操作逻辑（区别于 v1 目录翻阅式）：
+ *   1. 「号外横幅」开场：克莱因蓝色块印章 + 细规则线；底部超大衬线期号数字
+ *      「127」作低透明度水印，模拟报纸印刷底纹。
+ *   2. 模块切换改为右缘「书签页签」：竖排字书签自上而下悬挂（密码/短信/邮箱/
+ *      注册/找回），当前页书签沉入蓝底，像夹在期刊里的阅览书签。
+ *   3. 输入框改为「印刷填空式」：字段名后接冒号，点状虚线作填写基线，
+ *      聚焦时虚线被实线（克莱因蓝）自左向右覆盖。
+ *   4. 主操作为「油墨盖印」：圆形印章按钮，按下旋转按压，松手回弹并激起
+ *      一圈油墨涟漪；提交语义 = 盖章生效。
  *
- * 设计依据：docs/theme-styles.md 第 3 条
- *   色板    底 #FAF7F2 / 正文 #1C1A17 / 次级 #7A7268 / 强调 #9B2C1F / 细线 #D9D2C6
- *   字体    标题衬线 32–40px·字重 700·行高 1.15；副标无衬线 12px·字距 0.8px
- *   动效    大标题 clip-path 揭示 400ms；聚焦下划线由左向右生长
- *
- * 兼容约定：clip-path 揭示同时提供 opacity 降级；writing-mode 竖排仅作装饰且固定高度。
+ * 设计依据：docs/theme-styles.md 第 3 条（配色在原基础上调整：
+ *   底 #F2EFE8 暖纸灰 / 正文 #17150F / 强调 #2436C9 克莱因蓝 / 次级 #7A7466）
+ * 动效：标题自左向右 clip 揭示；涟漪扩散 600ms；盖印 squash & rotate。
+ * 兼容约定：writing-mode 竖排仅用于书签与印文，固定宽度不参与布局流。
  * 栅格约定：1px = 2rpx，纵向间距取 8px（16rpx）整数倍。
  * ========================================================================== */
 
 page {
-	background-color: #faf7f2;
+	background-color: #f2efe8;
 }
 
 .page {
 	position: relative;
 	min-height: 100vh;
-	padding: 36rpx 48rpx 40rpx;
+	padding: 40rpx 132rpx 56rpx 48rpx;
 	box-sizing: border-box;
-	background-color: #faf7f2;
-	background-image:
-		linear-gradient(180deg, rgba(217, 210, 198, 0.14) 0%, rgba(217, 210, 198, 0) 26%);
+	background-color: #f2efe8;
 	font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-	color: #1c1a17;
+	color: #17150f;
 	overflow: hidden;
 }
 
-/* ---------- 右侧竖排刊名装饰（仅作装饰，固定高度） ---------- */
-.spine {
+/* ---------- 底部超大期号水印 ---------- */
+.watermark {
 	position: absolute;
-	top: 120rpx;
-	right: 20rpx;
+	right: 96rpx;
+	bottom: -40rpx;
 	z-index: 0;
-	height: 640rpx;
-	writing-mode: vertical-rl;
-	letter-spacing: 6rpx;
 	font-family: "Noto Serif SC", "Songti SC", "SimSun", serif;
-	font-size: 22rpx;
-	font-weight: 500;
-	color: rgba(28, 26, 23, 0.14);
+	font-size: 380rpx;
+	font-weight: 700;
+	line-height: 1;
+	letter-spacing: -10rpx;
+	color: rgba(23, 21, 15, 0.045);
 	pointer-events: none;
+	user-select: none;
 }
 
-/* ---------- 眉标（上下双细线夹住） ---------- */
-.masthead {
+/* ---------- 号外横幅 ---------- */
+.extra {
 	position: relative;
 	z-index: 2;
-}
-
-.rule-thin {
-	height: 2rpx;
-	background-color: #d9d2c6;
-}
-
-.rule-double {
-	height: 4rpx;
-	border-top: 2rpx solid #1c1a17;
-	border-bottom: 2rpx solid #1c1a17;
-	box-sizing: border-box;
-}
-
-.kicker {
 	display: flex;
-	justify-content: space-between;
-	align-items: baseline;
-	padding: 20rpx 0;
-	font-size: 22rpx;
-	letter-spacing: 2rpx;
-	color: #7a7268;
+	align-items: center;
+	padding-bottom: 24rpx;
+	border-bottom: 4rpx solid #17150f;
 }
 
-.kicker .kicker-cn {
+.extra-stamp {
+	flex: none;
+	width: 72rpx;
+	height: 72rpx;
+	margin-right: 20rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: #2436c9;
+	border-radius: 6rpx;
+	font-family: "Noto Serif SC", "Songti SC", "SimSun", serif;
+	font-size: 38rpx;
 	font-weight: 700;
-	color: #1c1a17;
+	color: #f2efe8;
 }
 
-.kicker .kicker-en {
+.extra-txt {
+	flex: 1;
+	min-width: 0;
+}
+
+.extra-cn {
+	font-size: 24rpx;
+	font-weight: 700;
+	letter-spacing: 3rpx;
+	color: #17150f;
+}
+
+.extra-en {
+	display: block;
+	margin-top: 4rpx;
 	font-family: "Georgia", serif;
 	font-style: italic;
+	font-size: 20rpx;
 	letter-spacing: 1rpx;
-	color: #7a7268;
+	color: #7a7466;
 }
 
-/* ---------- 大标题（衬线 + clip-path 揭示） ---------- */
+/* ---------- 大标题（自左向右揭示） ---------- */
 .head {
-	margin-top: 36rpx;
+	position: relative;
+	z-index: 2;
+	margin-top: 40rpx;
 }
 
 .title {
@@ -102,112 +111,99 @@ page {
 	font-weight: 700;
 	line-height: 1.18;
 	letter-spacing: 2rpx;
-	color: #1c1a17;
-	animation: reveal 480ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+	color: #17150f;
+	animation: reveal-x 480ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
 
 .deck {
-	margin-top: 20rpx;
+	margin-top: 18rpx;
+	max-width: 480rpx;
 	font-size: 24rpx;
 	line-height: 1.7;
-	text-indent: 2em;
 	letter-spacing: 1rpx;
-	color: #7a7268;
-	animation: reveal 480ms 90ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+	color: #7a7466;
+	animation: reveal-x 480ms 90ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
 
-@keyframes reveal {
+@keyframes reveal-x {
 	from {
 		opacity: 0;
-		clip-path: inset(0 0 100% 0);
-		transform: translateY(10rpx);
+		clip-path: inset(0 100% 0 0);
+		transform: translateX(12rpx);
 	}
 	to {
 		opacity: 1;
 		clip-path: inset(0 0 0 0);
-		transform: translateY(0);
+		transform: translateX(0);
 	}
 }
 
-/* ---------- 目录导航（章节翻阅） ---------- */
-.toc {
+/* ---------- 右缘书签页签 ---------- */
+.bookmarks {
+	position: absolute;
+	top: 216rpx;
+	right: 20rpx;
+	z-index: 5;
 	display: flex;
-	margin-top: 34rpx;
-	padding-bottom: 14rpx;
-	border-bottom: 2rpx solid #1c1a17;
-	white-space: nowrap;
+	flex-direction: column;
 }
 
-.toc-item {
-	position: relative;
-	flex: none;
-	margin-right: 36rpx;
-	padding: 10rpx 0;
-	font-size: 24rpx;
-	letter-spacing: 1rpx;
-	color: #7a7268;
-}
-
-.toc-item .toc-idx {
-	margin-right: 6rpx;
-	font-family: "Georgia", serif;
-	font-size: 20rpx;
-	font-style: italic;
-}
-
-.toc-item.on {
-	color: #9b2c1f;
-	font-weight: 700;
-}
-
-.toc-item.on::after {
-	content: '●';
-	margin-left: 6rpx;
-	font-size: 16rpx;
-	color: #9b2c1f;
-}
-
-/* ---------- 表单 ---------- */
-.form {
-	margin-top: 30rpx;
-}
-
-.field + .field {
-	margin-top: 34rpx;
-}
-
-.label {
-	display: flex;
-	justify-content: space-between;
+.bm {
+	writing-mode: vertical-rl;
+	padding: 22rpx 10rpx;
+	margin-bottom: 14rpx;
+	font-family: "Noto Serif SC", "Songti SC", "SimSun", serif;
 	font-size: 22rpx;
-	letter-spacing: 3rpx;
-	color: #7a7268;
+	letter-spacing: 6rpx;
+	color: #7a7466;
+	background-color: #eae6d9;
+	border: 2rpx solid #d8d2c2;
+	border-right: none;
+	border-radius: 8rpx 0 0 8rpx;
+	transition: all 200ms ease;
 }
 
-.label .label-en {
-	font-family: "Georgia", serif;
-	font-style: italic;
-	letter-spacing: 1rpx;
-	color: rgba(122, 114, 104, 0.6);
+.bm.on {
+	background-color: #2436c9;
+	border-color: #2436c9;
+	color: #f2efe8;
+	font-weight: 700;
+	transform: translateX(-8rpx);
 }
 
+/* ---------- 表单（印刷填空式） ---------- */
+.form {
+	position: relative;
+	z-index: 2;
+	margin-top: 40rpx;
+}
+
+.field {
+	margin-bottom: 30rpx;
+	animation: reveal-x 420ms both;
+}
+
+.field:nth-child(1) { animation-delay: 120ms; }
+.field:nth-child(2) { animation-delay: 190ms; }
+.field:nth-child(3) { animation-delay: 260ms; }
+
+/* 点状虚线基线，聚焦时被克莱因蓝实线覆盖 */
 .field-line {
+	position: relative;
 	display: flex;
 	align-items: center;
-	position: relative;
-	height: 84rpx;
-	border-bottom: 2rpx solid #d9d2c6;
+	height: 88rpx;
+	border-bottom: 3rpx dotted #b9b19d;
 }
 
-/* 聚焦：下划线由左向右生长为朱红 */
 .field-line::after {
 	content: '';
 	position: absolute;
 	left: 0;
-	bottom: -2rpx;
+	bottom: -3rpx;
 	width: 0;
-	height: 4rpx;
-	background-color: #9b2c1f;
+	height: 3rpx;
+	background-color: #2436c9;
 	transition: width 320ms ease;
 }
 
@@ -215,24 +211,44 @@ page {
 	width: 100%;
 }
 
+.field-name {
+	flex: none;
+	padding-right: 10rpx;
+	font-size: 26rpx;
+	font-weight: 600;
+	letter-spacing: 2rpx;
+	color: #17150f;
+}
+
+.field-en {
+	flex: none;
+	margin-left: 8rpx;
+	font-family: "Georgia", serif;
+	font-style: italic;
+	font-size: 20rpx;
+	color: rgba(122, 116, 102, 0.6);
+}
+
 .input {
 	flex: 1;
+	min-width: 0;
 	height: 100%;
 	font-size: 30rpx;
 	letter-spacing: 1rpx;
-	color: #1c1a17;
+	color: #17150f;
+	background-color: transparent;
 }
 
 .ph {
-	color: rgba(122, 114, 104, 0.5);
+	color: rgba(122, 116, 102, 0.5);
 }
 
 .field-prefix {
 	flex: none;
-	margin-right: 16rpx;
+	margin-right: 14rpx;
 	font-family: "Georgia", serif;
 	font-size: 28rpx;
-	color: #9b2c1f;
+	color: #2436c9;
 }
 
 .eye,
@@ -241,11 +257,11 @@ page {
 	margin-left: 16rpx;
 	font-size: 24rpx;
 	letter-spacing: 1rpx;
-	color: #9b2c1f;
+	color: #2436c9;
 }
 
 .code-btn.dim {
-	color: #7a7268;
+	color: #7a7466;
 }
 
 /* ---------- 辅助行 ---------- */
@@ -253,28 +269,29 @@ page {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	margin-top: 28rpx;
+	margin-top: 24rpx;
 }
 
 .remember {
 	display: flex;
 	align-items: center;
 	font-size: 24rpx;
-	color: #7a7268;
+	color: #7a7466;
 }
 
 .checkbox {
 	position: relative;
+	flex: none;
 	width: 34rpx;
 	height: 34rpx;
 	margin-right: 12rpx;
-	border: 2rpx solid #1c1a17;
+	border: 2rpx solid #17150f;
 	box-sizing: border-box;
 }
 
 .checkbox.on {
-	background-color: #9b2c1f;
-	border-color: #9b2c1f;
+	background-color: #2436c9;
+	border-color: #2436c9;
 }
 
 .checkbox.on::after {
@@ -284,51 +301,107 @@ page {
 	top: 3rpx;
 	width: 8rpx;
 	height: 16rpx;
-	border-right: 3rpx solid #faf7f2;
-	border-bottom: 3rpx solid #faf7f2;
+	border-right: 3rpx solid #f2efe8;
+	border-bottom: 3rpx solid #f2efe8;
 	transform: rotate(40deg);
 }
 
 .link {
 	font-size: 24rpx;
 	letter-spacing: 1rpx;
-	color: #9b2c1f;
+	color: #2436c9;
 }
 
-/* ---------- 主按钮（衬线字，hover 字距微增） ---------- */
-.submit {
+/* ---------- 油墨盖印按钮 ---------- */
+.stamp-wrap {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-top: 48rpx;
+}
+
+.stamp-btn {
+	position: relative;
+	width: 152rpx;
+	height: 152rpx;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	height: 100rpx;
-	margin-top: 40rpx;
-	background-color: #1c1a17;
+	background-color: #2436c9;
+	border-radius: 50%;
+	box-shadow: 0 10rpx 0 rgba(36, 54, 201, 0.22);
+	transition: transform 120ms ease;
 }
 
-.submit-text {
+.stamp-btn:active {
+	transform: scale(0.92) rotate(-8deg);
+}
+
+/* 盖章动效：按压 → 回弹 → 涟漪 */
+.stamp-btn.stamping {
+	animation: stamp-press 600ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+@keyframes stamp-press {
+	0% { transform: scale(1); }
+	30% { transform: scale(0.88) rotate(-10deg); }
+	60% { transform: scale(1.06) rotate(5deg); }
+	100% { transform: scale(1) rotate(0deg); }
+}
+
+/* 油墨涟漪环 */
+.stamp-btn::after {
+	content: '';
+	position: absolute;
+	left: -6rpx;
+	top: -6rpx;
+	right: -6rpx;
+	bottom: -6rpx;
+	border: 3rpx solid #2436c9;
+	border-radius: 50%;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.stamp-btn.stamping::after {
+	animation: ink-ripple 600ms ease-out;
+}
+
+@keyframes ink-ripple {
+	from {
+		opacity: 0.8;
+		transform: scale(0.92);
+	}
+	to {
+		opacity: 0;
+		transform: scale(1.55);
+	}
+}
+
+/* 印文：竖排双字 */
+.stamp-char {
+	writing-mode: vertical-rl;
 	font-family: "Noto Serif SC", "Songti SC", "SimSun", serif;
-	font-size: 30rpx;
+	font-size: 40rpx;
 	font-weight: 700;
-	letter-spacing: 8rpx;
-	color: #faf7f2;
-	transition: letter-spacing 200ms ease;
+	letter-spacing: 10rpx;
+	color: #f2efe8;
 }
 
-.submit:active {
-	background-color: #9b2c1f;
-}
-
-.submit:active .submit-text {
-	letter-spacing: 12rpx;
+.stamp-legend {
+	margin-top: 16rpx;
+	font-size: 22rpx;
+	letter-spacing: 6rpx;
+	color: #7a7466;
 }
 
 /* ---------- 页脚 ---------- */
 .foot-link {
-	margin-top: 30rpx;
+	margin-top: 36rpx;
 	text-align: center;
 	font-size: 24rpx;
 	letter-spacing: 1rpx;
-	color: #7a7268;
+	color: #7a7466;
 }
 
 .foot-link .link {
@@ -338,16 +411,15 @@ page {
 .agreement {
 	display: flex;
 	align-items: flex-start;
-	margin-top: 24rpx;
+	margin-top: 26rpx;
 	font-size: 20rpx;
 	line-height: 1.7;
 	letter-spacing: 1rpx;
-	color: #7a7268;
+	color: #7a7466;
 }
 
 .agreement .checkbox {
-	flex: none;
-	margin-top: 0;
+	margin-top: 2rpx;
 }
 
 .agreement .link {
@@ -355,9 +427,18 @@ page {
 }
 
 .foot-note {
-	margin-top: 22rpx;
+	margin-top: 24rpx;
 	text-align: center;
 	font-size: 18rpx;
 	letter-spacing: 2rpx;
-	color: rgba(122, 114, 104, 0.5);
+	color: rgba(122, 116, 102, 0.5);
+}
+
+/* ---------- 错误提示 ---------- */
+.err {
+	display: block;
+	margin: -16rpx 0 24rpx;
+	font-size: 22rpx;
+	letter-spacing: 1rpx;
+	color: #2436c9;
 }
