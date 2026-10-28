@@ -1,6 +1,9 @@
 <template>
 	<view class="sw-page">
-		<view class="sw-grid"></view>
+		<view class="sw-grid">
+			<!-- 改造新增：聚焦时对应网格栏高亮条 -->
+			<view class="sw-grid__hl" :class="{ show: gridCol >= 0 }" :style="{ transform: 'translateX(' + (gridCol >= 0 ? gridCol * 100 : 0) + '%)' }"></view>
+		</view>
 		<view class="sw-status" :style="{ height: statusBar + 'px' }"></view>
 
 		<view class="sw-top">
@@ -8,20 +11,12 @@
 				<view class="sw-back__arrow"></view>
 			</view>
 			<text class="sw-top__meta">SWISS GRID SYSTEM · 12 COL / CH</text>
-			<text class="sw-top__idx">02—126</text>
 		</view>
 		<view class="sw-rule"></view>
 
 		<!-- 标题区 -->
 		<view class="sw-hero">
 			<view class="sw-hero__accent"></view>
-			<view class="sw-hero__head">
-				<text class="sw-hero__num">02</text>
-				<view class="sw-hero__meta">
-					<text class="sw-hero__kicker">ACCOUNT ACCESS</text>
-					<text class="sw-hero__kicker sw-hero__kicker--dim">用户登录 · EINLOGGEN</text>
-				</view>
-			</view>
 			<text class="sw-hero__title">登录</text>
 			<text class="sw-hero__en">SIGN IN / ANMELDEN</text>
 			<text class="sw-hero__desc">秩序、留白与字重，构成全部界面。请选择一种方式验证身份。</text>
@@ -32,8 +27,9 @@
 			<view v-for="(item, i) in tabs" :key="i" class="sw-tab" :class="{ on: tab === i }" @click="switchTab(i)">
 				<text class="sw-tab__num">0{{ i + 1 }}</text>
 				<text class="sw-tab__txt">{{ item }}</text>
-				<view class="sw-tab__bar"></view>
 			</view>
+			<!-- 改造新增：红色方块滑动指示器 -->
+			<view class="sw-tabs__ind" :style="{ transform: 'translateX(' + tab * 100 + '%)' }"><view class="sw-tabs__sq"></view></view>
 		</view>
 
 		<view class="sw-form">
@@ -44,15 +40,14 @@
 					:class="{ 'is-focus': focus === 'account', 'is-on': focus === 'account' || !!account, 'is-error': !!err.account }"
 				>
 					<text class="sw-field__label">账号<text class="sw-field__req">*</text> / ACCOUNT</text>
-					<text class="sw-field__idx">01</text>
 					<input
 						class="sw-field__input"
 						v-model="account"
 						:placeholder-style="phStyle"
 						placeholder=""
 						maxlength="40"
-						@focus="focus = 'account'"
-						@blur="focus = ''"
+						@focus="focus = 'account'; gridCol = 1"
+						@blur="focus = ''; gridCol = -1"
 					/>
 					<view class="sw-field__line"><view class="sw-field__ink"></view></view>
 				</view>
@@ -63,7 +58,6 @@
 					:class="{ 'is-focus': focus === 'password', 'is-on': focus === 'password' || !!password, 'is-error': !!err.password }"
 				>
 					<text class="sw-field__label">密码<text class="sw-field__req">*</text> / PASSWORD</text>
-					<text class="sw-field__idx">02</text>
 					<input
 						class="sw-field__input"
 						v-model="password"
@@ -71,8 +65,8 @@
 						:placeholder-style="phStyle"
 						placeholder=""
 						maxlength="20"
-						@focus="focus = 'password'"
-						@blur="focus = ''"
+						@focus="focus = 'password'; gridCol = 3"
+						@blur="focus = ''; gridCol = -1"
 					/>
 					<text class="sw-field__toggle" @click="showPwd = !showPwd">{{ showPwd ? '隐藏' : '显示' }}</text>
 					<view class="sw-field__line"><view class="sw-field__ink"></view></view>
@@ -87,7 +81,6 @@
 					:class="{ 'is-focus': focus === 'phone', 'is-on': focus === 'phone' || !!phone, 'is-error': !!err.phone }"
 				>
 					<text class="sw-field__label">手机号<text class="sw-field__req">*</text> / MOBILE</text>
-					<text class="sw-field__idx">01</text>
 					<input
 						class="sw-field__input"
 						v-model="phone"
@@ -95,8 +88,8 @@
 						:placeholder-style="phStyle"
 						placeholder=""
 						maxlength="11"
-						@focus="focus = 'phone'"
-						@blur="focus = ''"
+						@focus="focus = 'phone'; gridCol = 2"
+						@blur="focus = ''; gridCol = -1"
 					/>
 					<view class="sw-field__line"><view class="sw-field__ink"></view></view>
 				</view>
@@ -107,7 +100,6 @@
 					:class="{ 'is-focus': focus === 'sms', 'is-on': focus === 'sms' || !!sms, 'is-error': !!err.sms }"
 				>
 					<text class="sw-field__label">验证码<text class="sw-field__req">*</text> / SMS CODE</text>
-					<text class="sw-field__idx">02</text>
 					<input
 						class="sw-field__input"
 						v-model="sms"
@@ -115,8 +107,8 @@
 						:placeholder-style="phStyle"
 						placeholder=""
 						maxlength="6"
-						@focus="focus = 'sms'"
-						@blur="focus = ''"
+						@focus="focus = 'sms'; gridCol = 5"
+						@blur="focus = ''; gridCol = -1"
 					/>
 					<text class="sw-field__code" :class="{ off: smsLeft > 0 }" @click="sendCode('sms')">{{ smsLeft > 0 ? smsLeft + ' s' : '获取验证码' }}</text>
 					<view class="sw-field__line"><view class="sw-field__ink"></view></view>
@@ -131,15 +123,14 @@
 					:class="{ 'is-focus': focus === 'email', 'is-on': focus === 'email' || !!email, 'is-error': !!err.email }"
 				>
 					<text class="sw-field__label">邮箱<text class="sw-field__req">*</text> / E-MAIL</text>
-					<text class="sw-field__idx">01</text>
 					<input
 						class="sw-field__input"
 						v-model="email"
 						:placeholder-style="phStyle"
 						placeholder=""
 						maxlength="40"
-						@focus="focus = 'email'"
-						@blur="focus = ''"
+						@focus="focus = 'email'; gridCol = 1"
+						@blur="focus = ''; gridCol = -1"
 					/>
 					<view class="sw-field__line"><view class="sw-field__ink"></view></view>
 				</view>
@@ -150,7 +141,6 @@
 					:class="{ 'is-focus': focus === 'mail', 'is-on': focus === 'mail' || !!mail, 'is-error': !!err.mail }"
 				>
 					<text class="sw-field__label">验证码<text class="sw-field__req">*</text> / MAIL CODE</text>
-					<text class="sw-field__idx">02</text>
 					<input
 						class="sw-field__input"
 						v-model="mail"
@@ -158,8 +148,8 @@
 						:placeholder-style="phStyle"
 						placeholder=""
 						maxlength="6"
-						@focus="focus = 'mail'"
-						@blur="focus = ''"
+						@focus="focus = 'mail'; gridCol = 3"
+						@blur="focus = ''; gridCol = -1"
 					/>
 					<text class="sw-field__code" :class="{ off: mailLeft > 0 }" @click="sendCode('mail')">{{ mailLeft > 0 ? mailLeft + ' s' : '获取验证码' }}</text>
 					<view class="sw-field__line"><view class="sw-field__ink"></view></view>
@@ -205,11 +195,6 @@
 			<view class="sw-foot__rule"></view>
 			<view class="sw-foot__body">
 				<text class="sw-foot__txt">还没有账号？<text class="sw-link" @click="goRegister">立即注册</text></text>
-				<text class="sw-foot__meta">SWISS · 02/20</text>
-			</view>
-			<view class="sw-foot__bar">
-				<text>© 2026 GRID SYSTEM</text>
-				<text>750 / 12 COL</text>
 			</view>
 		</view>
 	</view>
@@ -223,6 +208,7 @@
 				tabs: ['密码', '手机', '邮箱'],
 				tab: 0,
 				focus: '',
+				gridCol: -1,
 				showPwd: false,
 				remember: false,
 				agreed: false,

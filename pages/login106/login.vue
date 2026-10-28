@@ -10,7 +10,7 @@
 				<view class="mn-back__tip"></view>
 				<view class="mn-back__tip mn-back__tip--2"></view>
 			</view>
-			<text class="mn-nav__idx">01 / 03</text>
+			<text class="mn-nav__idx">{{ doneCount }} / 2</text>
 		</view>
 
 		<view class="mn-main">
@@ -33,7 +33,7 @@
 					<view class="mn-field">
 						<view class="mn-field__bar">
 							<text class="mn-label">手机号 / 邮箱</text>
-							<text class="mn-index">01</text>
+							<text class="mn-index" :class="{ done: fieldOk[0] }">{{ fieldOk[0] ? '01 ✓' : '01' }}</text>
 						</view>
 						<view class="mn-control" :class="{ 'is-focus': focus === 'account', 'is-error': !!err.account }">
 							<input
@@ -52,7 +52,7 @@
 					<view class="mn-field">
 						<view class="mn-field__bar">
 							<text class="mn-label">登录密码</text>
-							<text class="mn-index">02</text>
+							<text class="mn-index" :class="{ done: fieldOk[1] }">{{ fieldOk[1] ? '02 ✓' : '02' }}</text>
 						</view>
 						<view class="mn-control" :class="{ 'is-focus': focus === 'password', 'is-error': !!err.password }">
 							<input
@@ -76,7 +76,7 @@
 					<view class="mn-field">
 						<view class="mn-field__bar">
 							<text class="mn-label">手机号</text>
-							<text class="mn-index">01</text>
+							<text class="mn-index" :class="{ done: fieldOk[0] }">{{ fieldOk[0] ? '01 ✓' : '01' }}</text>
 						</view>
 						<view class="mn-control" :class="{ 'is-focus': focus === 'phone', 'is-error': !!err.phone }">
 							<input
@@ -96,7 +96,7 @@
 					<view class="mn-field">
 						<view class="mn-field__bar">
 							<text class="mn-label">短信验证码</text>
-							<text class="mn-index">02</text>
+							<text class="mn-index" :class="{ done: fieldOk[1] }">{{ fieldOk[1] ? '02 ✓' : '02' }}</text>
 						</view>
 						<view class="mn-control" :class="{ 'is-focus': focus === 'sms', 'is-error': !!err.sms }">
 							<input
@@ -120,7 +120,7 @@
 					<view class="mn-field">
 						<view class="mn-field__bar">
 							<text class="mn-label">邮箱地址</text>
-							<text class="mn-index">01</text>
+							<text class="mn-index" :class="{ done: fieldOk[0] }">{{ fieldOk[0] ? '01 ✓' : '01' }}</text>
 						</view>
 						<view class="mn-control" :class="{ 'is-focus': focus === 'email', 'is-error': !!err.email }">
 							<input
@@ -139,7 +139,7 @@
 					<view class="mn-field">
 						<view class="mn-field__bar">
 							<text class="mn-label">邮箱验证码</text>
-							<text class="mn-index">02</text>
+							<text class="mn-index" :class="{ done: fieldOk[1] }">{{ fieldOk[1] ? '02 ✓' : '02' }}</text>
 						</view>
 						<view class="mn-control" :class="{ 'is-focus': focus === 'mail', 'is-error': !!err.mail }">
 							<input
@@ -173,11 +173,6 @@
 					<text class="mn-check__txt">我已阅读并同意 <text class="mn-check__link">《用户协议》</text> 与 <text class="mn-check__link">《隐私政策》</text></text>
 				</view>
 
-				<view class="mn-alt">
-					<view class="mn-alt__i" @click="toast('微信登录未接入')">微信</view>
-					<view class="mn-alt__i" @click="toast('企业微信登录未接入')">企业微信</view>
-					<view class="mn-alt__i" @click="toast('单点登录未接入')">SSO</view>
-				</view>
 			</view>
 		</view>
 
@@ -215,6 +210,22 @@
 				timer: null,
 				err: {}
 			};
+		},
+		computed: {
+			// 与 validate() 的校验规则保持一致（仅做只读镜像，不写 err，避免提前触发错误显示）
+			fieldOk() {
+				if (this.tab === 0) {
+					const accOk = !!this.account && (this.account.indexOf('@') > -1 ? this.isEmail(this.account) : this.isPhone(this.account));
+					return [accOk, this.password.length >= 6];
+				}
+				if (this.tab === 1) {
+					return [this.isPhone(this.phone), !!this.sms];
+				}
+				return [this.isEmail(this.email), !!this.mail];
+			},
+			doneCount() {
+				return this.fieldOk.filter(Boolean).length;
+			}
 		},
 		onLoad(options) {
 			const info = uni.getSystemInfoSync();

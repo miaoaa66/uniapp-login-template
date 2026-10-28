@@ -537,3 +537,18 @@ $mn-ease: cubic-bezier(.2, .6, .2, 1);
 	margin: 0 16rpx;
 	background-color: $mn-line;
 }
+
+/* ==================== 改造新增：字段进度指示（login.vue 专用，register/forget 不使用） ==================== */
+
+.mn-index {
+	transition: color 160ms linear;
+}
+
+.mn-index.done {
+	color: $mn-ink;
+	font-weight: 500;
+}
+
+.mn-nav__idx {
+	transition: color 160ms linear;
+}

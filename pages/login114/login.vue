@@ -18,7 +18,9 @@
 		</view>
 
 		<view class="content">
-			<view class="win">
+			<view class="win" :class="{ 'is-flash': flash }" :style="{ transform: 'translate(' + winX + 'px, ' + winY + 'px)' }">
+				<!-- 改造新增：标签切换时的 CRT 重绘闪动覆盖层 -->
+				<view v-if="flash" class="win-flash"></view>
 				<view class="tabs">
 					<view v-for="(item, i) in tabs" :key="i" class="tab" :class="{ on: tab === i }" @click="switchTab(i)">
 						<text class="tab-cn">{{ item }}</text>
@@ -26,13 +28,9 @@
 					</view>
 				</view>
 
-				<view class="bar">
-					<text class="bar-title">▒ VAPORNET_ACCESS v1.5</text>
-					<view class="bar-btns">
-						<view class="bar-btn">_</view>
-						<view class="bar-btn">□</view>
-						<view class="bar-btn bar-btn-x">×</view>
-					</view>
+				<!-- 改造：标题栏显示真实登录模式，移除 _ □ × 假按钮，并支持拖拽窗体 -->
+				<view class="bar" @touchstart="onDragStart" @touchmove.stop.prevent="onDragMove">
+					<text class="bar-title">▒ MODE:{{ tabEn[tab] }} // VAPORNET_ACCESS<text class="bar-cursor">▌</text></text>
 				</view>
 
 				<view class="win-body">
@@ -188,6 +186,12 @@
 				tabEn: ['KEY', 'SMS', 'MAIL'],
 				tab: 0,
 				focus: '',
+				winX: 0,
+				winY: 0,
+				dragBase: { x: 0, y: 0, sx: 0, sy: 0 },
+				dragRange: { minX: 0, maxX: 0, minY: 0, maxY: 0 },
+				flash: false,
+				flashTimer: null,
 				showPwd: false,
 				remember: false,
 				agreed: false,
@@ -208,11 +212,16 @@
 		onLoad(options) {
 			const info = uni.getSystemInfoSync();
 			this.statusBar = info.statusBarHeight || 0;
+			// 拖拽范围：允许窗体在视口内有限度移动，避免拖出可达区域
+			const w = (info.windowWidth || 375) * 0.6;
+			const h = info.windowHeight || 667;
+			this.dragRange = { minX: -w, maxX: w, minY: -h * 0.3, maxY: h * 0.5 };
 			if (options && options.tab) this.tab = Number(options.tab) || 0;
 			if (options && options.demo) this.fillDemo();
 		},
 		onUnload() {
 			this.clearTimer();
+			if (this.flashTimer) clearTimeout(this.flashTimer);
 		},
 		methods: {
 			toast(title) {
@@ -240,6 +249,32 @@
 				this.tab = i;
 				this.err = {};
 				this.focus = '';
+				// 改造新增：切换标签时触发一次 CRT 重绘闪动
+				this.flash = false;
+				clearTimeout(this.flashTimer);
+				this.$nextTick(() => {
+					this.flash = true;
+					this.flashTimer = setTimeout(() => {
+						this.flash = false;
+					}, 240);
+				});
+			},
+
+			// 改造新增：按住标题栏拖拽窗体
+			onDragStart(e) {
+				const t = e.touches && e.touches[0];
+				if (!t) return;
+				this.dragBase = { x: this.winX, y: this.winY, sx: t.clientX, sy: t.clientY };
+			},
+
+			onDragMove(e) {
+				const t = e.touches && e.touches[0];
+				if (!t) return;
+				const r = this.dragRange;
+				const nx = this.dragBase.x + (t.clientX - this.dragBase.sx);
+				const ny = this.dragBase.y + (t.clientY - this.dragBase.sy);
+				this.winX = Math.min(r.maxX, Math.max(r.minX, nx));
+				this.winY = Math.min(r.maxY, Math.max(r.minY, ny));
 			},
 
 			sendCode(type) {

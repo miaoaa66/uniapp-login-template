@@ -827,3 +827,55 @@ $mono: 'Courier New', Consolas, 'Roboto Mono', monospace;
 		transform: scale(1);
 	}
 }
+
+/* ==================== 改造新增：聚焦网格列高亮 + 红方块指示器 + 箭头位移（login.vue 专用） ==================== */
+
+/* 聚焦输入框时，对应 12 栏中的一栏高亮（红色极淡，守住红色面积 <5% 约束） */
+.sw-grid__hl {
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	width: 8.3333%;
+	background-color: rgba(226, 35, 26, 0.06);
+	border-left: 2rpx solid rgba(226, 35, 26, 0.55);
+	opacity: 0;
+	transition: opacity 180ms ease-out, transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.sw-grid__hl.show {
+	opacity: 1;
+}
+
+/* tab 红色方块滑动指示器（替代原 sw-tab__bar 下划线） */
+.sw-tabs__ind {
+	position: absolute;
+	left: 0;
+	bottom: -1rpx;
+	width: 33.3333%;
+	height: 0;
+	display: flex;
+	justify-content: center;
+	transition: transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.sw-tabs__sq {
+	width: 14rpx;
+	height: 14rpx;
+	margin-bottom: -7rpx;
+	background-color: $red;
+}
+
+/* 主按钮 SIGN IN 箭头按下右移 */
+.sw-submit__arrow {
+	transition: transform 120ms ease-out;
+}
+
+.sw-submit:active .sw-submit__arrow {
+	transform: translateX(8rpx);
+}
+
+/* 删除 hero 头部后标题与顶部留白的补偿 */
+.sw-hero__title {
+	margin-top: 40rpx;
+}

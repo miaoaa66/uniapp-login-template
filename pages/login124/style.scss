@@ -602,3 +602,36 @@ $err: #ff8fb8;
 	color: rgba(232, 236, 255, 0.3);
 	letter-spacing: 1rpx;
 }
+
+/* ==================== 改造新增：落日条纹下沉 + 聚焦网格加速（login.vue 专用） ==================== */
+
+/* login 页改用真实子元素承载条纹，关闭伪元素避免双重条纹（register/forget 仍用 ::after） */
+.vp-sun {
+	overflow: hidden;
+}
+
+.vp-sun::after {
+	display: none;
+}
+
+.vp-sun__stripes {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	border-radius: 50%;
+	background: repeating-linear-gradient(
+		to bottom,
+		rgba(26, 11, 46, 0) 0,
+		rgba(26, 11, 46, 0) 26rpx,
+		rgba(26, 11, 46, 0.55) 26rpx,
+		rgba(26, 11, 46, 0.55) 38rpx
+	);
+	transition: transform 600ms cubic-bezier(0.2, 0.6, 0.2, 1);
+}
+
+/* 聚焦任一输入框时，透视网格流速加快 */
+.vp-grid__mesh.fast {
+	animation-duration: 2.2s;
+}

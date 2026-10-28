@@ -204,7 +204,7 @@ page {
 		inset 2rpx 2rpx 0 $bevel-light,
 		inset -2rpx -2rpx 0 $bevel-dark,
 		0 24rpx 64rpx rgba(8, 2, 18, 0.55);
-	animation: win-pop 300ms $ease 40ms both;
+	animation: win-pop 300ms $ease 40ms backwards; /* 改造：both→backwards，避免末帧 transform 永久覆盖拖拽行内位移 */
 }
 
 @keyframes win-pop {
@@ -637,4 +637,48 @@ page {
 	font-size: 18rpx;
 	letter-spacing: 2rpx;
 	color: $dim-2;
+}
+
+/* ==================== 改造新增：窗体拖拽 + 重绘闪动 + 标题光标（login.vue 专用） ==================== */
+
+.win {
+	position: relative;
+}
+
+/* 切换文件夹标签时的 CRT 逐格重绘闪动 */
+.win-flash {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	z-index: 9;
+	pointer-events: none;
+	background: repeating-linear-gradient(180deg, rgba(148, 208, 255, 0.18) 0 4rpx, transparent 4rpx 10rpx);
+	animation: win-redraw 220ms steps(3) both;
+}
+
+@keyframes win-redraw {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}
+
+/* 标题栏终端光标闪烁 */
+.bar-cursor {
+	animation: bar-blink 1s steps(1) infinite;
+}
+
+@keyframes bar-blink {
+	0%,
+	49% {
+		opacity: 1;
+	}
+	50%,
+	100% {
+		opacity: 0;
+	}
 }

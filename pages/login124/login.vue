@@ -2,15 +2,14 @@
 	<view class="vp-page">
 		<!-- 天地分屏：上 = 渐变天空 + 半出画面的落日；下 = 透视网格地平线 -->
 		<view class="vp-sky">
-			<view class="vp-sun"></view>
-			<view class="vp-star vp-star--1"></view>
-			<view class="vp-star vp-star--2"></view>
-			<view class="vp-star vp-star--3"></view>
-			<text class="vp-kana">ヴェイパーウェイヴ · FM 89.0</text>
+			<view class="vp-sun">
+				<!-- 改造新增：落日条纹改为真实子元素，随表单完成度下沉 -->
+				<view class="vp-sun__stripes" :style="{ transform: 'translateY(' + doneCount * 38 + 'rpx)' }"></view>
+			</view>
 		</view>
 		<view class="vp-horizon"></view>
 		<view class="vp-grid">
-			<view class="vp-grid__mesh"></view>
+			<view class="vp-grid__mesh" :class="{ fast: !!focus }"></view>
 		</view>
 		<view class="vp-scan"></view>
 
@@ -209,6 +208,19 @@
 				timer: null,
 				err: {}
 			};
+		},
+		computed: {
+			// 与 validate() 的校验规则保持一致（只读镜像）：完成字段数驱动落日条纹下沉
+			doneCount() {
+				if (this.tab === 0) {
+					const accOk = !!this.account && (this.account.indexOf('@') > -1 ? this.isEmail(this.account) : this.isPhone(this.account));
+					return [accOk, this.password.length >= 6].filter(Boolean).length;
+				}
+				if (this.tab === 1) {
+					return [this.isPhone(this.phone), !!this.sms].filter(Boolean).length;
+				}
+				return [this.isEmail(this.email), !!this.mail].filter(Boolean).length;
+			}
 		},
 		onLoad(options) {
 			const info = uni.getSystemInfoSync();
