@@ -24,7 +24,6 @@
 				<view class="field-box" :class="{ active: focusField === 'account' }">
 					<view class="field-line">
 						<text class="field-name">署名：</text>
-						<text class="field-en">ACCOUNT</text>
 						<input class="input" v-model="account" placeholder="手机号 / 邮箱 / 工号" placeholder-class="ph" maxlength="40"
 							@focus="focusField = 'account'" @blur="focusField = ''" />
 					</view>
@@ -35,7 +34,6 @@
 				<view class="field-box" :class="{ active: focusField === 'password' }">
 					<view class="field-line">
 						<text class="field-name">口令：</text>
-						<text class="field-en">PASSWORD</text>
 						<input class="input" v-model="password" :password="!showPassword" placeholder="请输入登录口令" placeholder-class="ph" maxlength="20"
 							@focus="focusField = 'password'" @blur="focusField = ''" />
 						<text class="eye" @click="showPassword = !showPassword">{{ showPassword ? '隐去' : '显露' }}</text>

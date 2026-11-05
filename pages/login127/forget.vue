@@ -24,7 +24,6 @@
 				<view class="field-box" :class="{ active: focusField === 'account' }">
 					<view class="field-line">
 						<text class="field-name">通联：</text>
-						<text class="field-en">CONTACT</text>
 						<input class="input" v-model="account" placeholder="注册时的手机号 / 邮箱" placeholder-class="ph" maxlength="40"
 							@focus="focusField = 'account'" @blur="focusField = ''" />
 					</view>
@@ -36,7 +35,6 @@
 				<view class="field-box" :class="{ active: focusField === 'code' }">
 					<view class="field-line">
 						<text class="field-name">凭证：</text>
-						<text class="field-en">CODE</text>
 						<input class="input" v-model="code" type="number" placeholder="6 位验证码" placeholder-class="ph" maxlength="6"
 							@focus="focusField = 'code'" @blur="focusField = ''" />
 						<text class="code-btn" :class="{ dim: countdown > 0 }" @click="sendCode">
@@ -51,7 +49,6 @@
 				<view class="field-box" :class="{ active: focusField === 'password' }">
 					<view class="field-line">
 						<text class="field-name">新印：</text>
-						<text class="field-en">NEW KEY</text>
 						<input class="input" v-model="password" :password="!showPassword" placeholder="8-20 位新口令" placeholder-class="ph" maxlength="20"
 							@focus="focusField = 'password'" @blur="focusField = ''" />
 						<text class="eye" @click="showPassword = !showPassword">{{ showPassword ? '隐去' : '显露' }}</text>

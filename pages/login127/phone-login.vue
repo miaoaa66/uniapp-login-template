@@ -24,7 +24,6 @@
 				<view class="field-box" :class="{ active: focusField === 'phone' }">
 					<view class="field-line">
 						<text class="field-name">号码：</text>
-						<text class="field-prefix">+86</text>
 						<input class="input" v-model="phone" type="number" placeholder="请输入手机号" placeholder-class="ph" maxlength="11"
 							@focus="focusField = 'phone'" @blur="focusField = ''" />
 					</view>
@@ -36,7 +35,6 @@
 				<view class="field-box" :class="{ active: focusField === 'code' }">
 					<view class="field-line">
 						<text class="field-name">电码：</text>
-						<text class="field-en">CODE</text>
 						<input class="input" v-model="code" type="number" placeholder="6 位验证码" placeholder-class="ph" maxlength="6"
 							@focus="focusField = 'code'" @blur="focusField = ''" />
 						<text class="code-btn" :class="{ dim: countdown > 0 }" @click="sendCode">

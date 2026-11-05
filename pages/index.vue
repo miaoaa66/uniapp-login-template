@@ -62,12 +62,10 @@
 		.row-box {
 			display: flex;
 			justify-content: flex-start;
-			align-items: center;
 			border-radius: 10rpx;
 			margin: 15rpx;
-			padding: 0 15rpx;
+			padding: 15rpx;
 			width: 327rpx;
-			height: 160rpx;
 			background-color: #fef9d1;
 			border: 5rpx solid #8a7719;
 			box-shadow: 0rpx 8rpx 10rpx #54690d;
@@ -88,7 +86,7 @@
 			}
 
 			.tag-box {
-				padding: 10rpx;
+				margin-left: 10rpx;
 				width: 70%;
 
 				.title {

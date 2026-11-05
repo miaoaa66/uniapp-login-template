@@ -23,7 +23,7 @@
 			<view v-for="(f, i) in fieldDefs" :key="f.key" class="field">
 				<view class="field-box" :class="{ active: focusField === f.key }">
 					<view class="field-line">
-						<text class="field-name">{{ f.no }} {{ f.name }}：</text>
+						<text class="field-name">{{ f.name }}：</text>
 						<input v-if="f.key !== 'password' && f.key !== 'password2'" class="input" v-model="form[f.key]"
 							:type="f.type || 'text'" :placeholder="f.ph" placeholder-class="ph" :maxlength="f.max || 40"
 							@focus="focusField = f.key" @blur="focusField = ''" />
