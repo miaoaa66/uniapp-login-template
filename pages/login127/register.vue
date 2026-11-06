@@ -20,20 +20,60 @@
 		</view>
 
 		<view class="form">
-			<view v-for="(f, i) in fieldDefs" :key="f.key" class="field">
-				<view class="field-box" :class="{ active: focusField === f.key }">
+			<view class="field">
+				<view class="field-box" :class="{ active: focusField === 'nickname' }">
 					<view class="field-line">
-						<text class="field-name">{{ f.name }}：</text>
-						<input v-if="f.key !== 'password' && f.key !== 'password2'" class="input" v-model="form[f.key]"
-							:type="f.type || 'text'" :placeholder="f.ph" placeholder-class="ph" :maxlength="f.max || 40"
-							@focus="focusField = f.key" @blur="focusField = ''" />
-						<input v-else class="input" v-model="form[f.key]" :password="!(f.key === 'password' && showPassword)"
-							:placeholder="f.ph" placeholder-class="ph" maxlength="20"
-							@focus="focusField = f.key" @blur="focusField = ''" />
-						<text v-if="f.key === 'password'" class="eye" @click="showPassword = !showPassword">{{ showPassword ? '隐去' : '显露' }}</text>
+						<text class="field-name">笔名：</text>
+						<input class="input" v-model="nickname" placeholder="将印在读者名册上" placeholder-class="ph" maxlength="20"
+							@focus="focusField = 'nickname'" @blur="focusField = ''" />
 					</view>
 				</view>
-				<text v-if="err[f.key]" class="err">{{ err[f.key] }}</text>
+				<text v-if="err.nickname" class="err">{{ err.nickname }}</text>
+			</view>
+
+			<view class="field">
+				<view class="field-box" :class="{ active: focusField === 'phone' }">
+					<view class="field-line">
+						<text class="field-name">手机号：</text>
+						<input class="input" v-model="phone" type="number" placeholder="11 位手机号" placeholder-class="ph" maxlength="11"
+							@focus="focusField = 'phone'" @blur="focusField = ''" />
+					</view>
+				</view>
+				<text v-if="err.phone" class="err">{{ err.phone }}</text>
+			</view>
+
+			<view class="field">
+				<view class="field-box" :class="{ active: focusField === 'email' }">
+					<view class="field-line">
+						<text class="field-name">邮箱：</text>
+						<input class="input" v-model="email" placeholder="用于接收样刊通知" placeholder-class="ph" maxlength="60"
+							@focus="focusField = 'email'" @blur="focusField = ''" />
+					</view>
+				</view>
+				<text v-if="err.email" class="err">{{ err.email }}</text>
+			</view>
+
+			<view class="field">
+				<view class="field-box" :class="{ active: focusField === 'password' }">
+					<view class="field-line">
+						<text class="field-name">口令：</text>
+						<input class="input" v-model="password" :password="!showPassword" placeholder="8-20 位，建议字母加数字" placeholder-class="ph" maxlength="20"
+							@focus="focusField = 'password'" @blur="focusField = ''" />
+						<text class="eye" @click="showPassword = !showPassword">{{ showPassword ? '隐去' : '显露' }}</text>
+					</view>
+				</view>
+				<text v-if="err.password" class="err">{{ err.password }}</text>
+			</view>
+
+			<view class="field">
+				<view class="field-box" :class="{ active: focusField === 'password2' }">
+					<view class="field-line">
+						<text class="field-name">复核口令：</text>
+						<input class="input" v-model="password2" :password="true" placeholder="请再次输入口令" placeholder-class="ph" maxlength="20"
+							@focus="focusField = 'password2'" @blur="focusField = ''" />
+					</view>
+				</view>
+				<text v-if="err.password2" class="err">{{ err.password2 }}</text>
 			</view>
 
 			<view class="stamp-wrap">
@@ -69,20 +109,11 @@
 					{ name: '挂失', path: '/pages/login127/forget' }
 				],
 				current: 3,
-				fieldDefs: [
-					{ key: 'nickname', no: 'No.01', name: '笔名', ph: '将印在读者名册上', max: 20 },
-					{ key: 'phone', no: 'No.02', name: '手机号', ph: '11 位手机号', type: 'number', max: 11 },
-					{ key: 'email', no: 'No.03', name: '邮箱', ph: '用于接收样刊通知', max: 60 },
-					{ key: 'password', no: 'No.04', name: '口令', ph: '8-20 位，建议字母加数字' },
-					{ key: 'password2', no: 'No.05', name: '复核口令', ph: '请再次输入口令' }
-				],
-				form: {
-					nickname: '',
-					phone: '',
-					email: '',
-					password: '',
-					password2: ''
-				},
+				nickname: '',
+				phone: '',
+				email: '',
+				password: '',
+				password2: '',
 				showPassword: false,
 				agreed: false,
 				focusField: '',
@@ -107,11 +138,11 @@
 
 			validate() {
 				const e = {}
-				if (!this.form.nickname) e.nickname = 'No.01 尚未填写笔名'
-				if (!/^1\d{10}$/.test(this.form.phone)) e.phone = 'No.02 手机号格式不正确'
-				if (!/^[\w.-]+@[\w-]+\.[\w.-]+$/.test(this.form.email)) e.email = 'No.03 邮箱格式不正确'
-				if (!this.form.password || this.form.password.length < 8) e.password = 'No.04 口令不少于 8 位'
-				if (this.form.password !== this.form.password2) e.password2 = 'No.05 两次口令不一致'
+				if (!this.nickname) e.nickname = 'No.01 尚未填写笔名'
+				if (!/^1\d{10}$/.test(this.phone)) e.phone = 'No.02 手机号格式不正确'
+				if (!/^[\w.-]+@[\w-]+\.[\w.-]+$/.test(this.email)) e.email = 'No.03 邮箱格式不正确'
+				if (!this.password || this.password.length < 8) e.password = 'No.04 口令不少于 8 位'
+				if (this.password !== this.password2) e.password2 = 'No.05 两次口令不一致'
 				this.err = e
 				return Object.keys(e).length === 0
 			},

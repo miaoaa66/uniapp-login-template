@@ -24,7 +24,7 @@
 				<view class="field-box" :class="{ active: focusField === 'account' }">
 					<view class="field-line">
 						<text class="field-name">署名：</text>
-						<input class="input" v-model="account" placeholder="手机号 / 邮箱 / 工号" placeholder-class="ph" maxlength="40"
+						<input class="input" v-model="account" placeholder="手机号 / 邮箱" placeholder-class="ph" maxlength="40"
 							@focus="focusField = 'account'" @blur="focusField = ''" />
 					</view>
 				</view>
